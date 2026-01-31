@@ -2,7 +2,7 @@ const principles = [
 	{ id: "1.1", title: "composable", desc: "small pieces that combine freely. no monolithic architecture." },
 	{ id: "1.2", title: "editable", desc: "change anything without fighting the framework." },
 	{ id: "1.3", title: "customizable", desc: "swap any component, style, or behavior." },
-	{ id: "1.4", title: "flexible", desc: "tsx or mdx, your choice. no lock-in." },
+	{ id: "1.4", title: "optimized", desc: "incremental builds only. scales to thousands of files." },
 ]
 
 const features = [
@@ -24,7 +24,7 @@ export function Compare() {
 						<h2 className="text-xl mt-1">why fromsrc</h2>
 					</div>
 					<p className="text-muted max-w-xl">
-						Documentation should be as flexible as the code it describes. 
+						Documentation should be as flexible as the code it describes.
 						We built fromsrc around four principles.
 					</p>
 				</div>
