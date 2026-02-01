@@ -58,7 +58,8 @@ export default async function DocPage({ params }: Props) {
 							href={prev.slug ? `/docs/${prev.slug}` : "/docs"}
 							className="group flex-1"
 						>
-							<span className="text-[10px] text-muted group-hover:text-dim transition-colors">
+							<span className="flex items-center gap-2 text-[10px] text-muted group-hover:text-dim transition-colors">
+								<kbd className="px-1.5 py-0.5 bg-surface border border-line rounded text-[9px]">←</kbd>
 								previous
 							</span>
 							<span className="block text-sm text-fg group-hover:text-muted transition-colors">
@@ -73,8 +74,9 @@ export default async function DocPage({ params }: Props) {
 							href={next.slug ? `/docs/${next.slug}` : "/docs"}
 							className="group flex-1 text-right"
 						>
-							<span className="text-[10px] text-muted group-hover:text-dim transition-colors">
+							<span className="flex items-center justify-end gap-2 text-[10px] text-muted group-hover:text-dim transition-colors">
 								next
+								<kbd className="px-1.5 py-0.5 bg-surface border border-line rounded text-[9px]">→</kbd>
 							</span>
 							<span className="block text-sm text-fg group-hover:text-muted transition-colors">
 								{next.title}
