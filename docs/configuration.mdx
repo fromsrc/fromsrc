@@ -1,0 +1,63 @@
+---
+title: configuration
+description: customize fromsrc behavior
+order: 3
+---
+
+## fromsrc.config.ts
+
+create a config file in your project root:
+
+```typescript
+import { defineConfig } from "fromsrc"
+
+export default defineConfig({
+  title: "my docs",
+  description: "documentation for my project",
+
+  navigation: {
+    // auto-generate from file structure
+    auto: true,
+  },
+
+  search: {
+    // enable client-side search
+    enabled: true,
+  },
+
+  theme: {
+    // dark mode by default
+    defaultTheme: "dark",
+  },
+})
+```
+
+## options
+
+### title
+
+the site title shown in the header and metadata.
+
+### description
+
+default meta description for pages without one.
+
+### navigation
+
+configure sidebar navigation:
+
+- `auto: true` - generate from file structure
+- `items: []` - manual navigation items
+
+### search
+
+configure search behavior:
+
+- `enabled: boolean` - enable/disable search
+- `placeholder: string` - search input placeholder
+
+### theme
+
+configure theming:
+
+- `defaultTheme: "dark" | "light"` - default color scheme

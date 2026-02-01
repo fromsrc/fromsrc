@@ -34,6 +34,14 @@
 	}
 }
 
+@layer components {
+	.shiki,
+	.shiki span {
+		color: var(--shiki-dark) !important;
+		background-color: transparent !important;
+	}
+}
+
 @layer utilities {
 	.font-serif {
 		font-family: var(--font-serif);

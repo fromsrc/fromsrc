@@ -1,0 +1,55 @@
+---
+title: code
+description: syntax highlighted code blocks
+order: 1
+---
+
+the code component displays syntax highlighted code with copy functionality.
+
+## usage
+
+use fenced code blocks in your mdx:
+
+````mdx
+```javascript
+const greeting = "hello world"
+console.log(greeting)
+```
+````
+
+renders as:
+
+```javascript
+const greeting = "hello world"
+console.log(greeting)
+```
+
+## with filename
+
+add a filename to show a header:
+
+````mdx
+```typescript filename="app.ts"
+export function main() {
+  console.log("starting...")
+}
+```
+````
+
+## supported languages
+
+fromsrc supports all languages via shiki:
+
+- javascript, typescript
+- python, ruby, go, rust
+- html, css, json, yaml
+- bash, sql, graphql
+- and many more
+
+## props
+
+| prop | type | description |
+|------|------|-------------|
+| language | string | syntax highlighting language |
+| filename | string | optional filename header |
+| highlight | string | lines to highlight (e.g. "1,3-5") |
