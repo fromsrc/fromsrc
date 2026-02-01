@@ -48,11 +48,23 @@ function MobileFolder({
 		if (hasActiveChild) setOpen(true)
 	}, [hasActiveChild])
 
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === "ArrowRight" && !open) {
+			e.preventDefault()
+			setOpen(true)
+		}
+		if (e.key === "ArrowLeft" && open) {
+			e.preventDefault()
+			setOpen(false)
+		}
+	}
+
 	return (
 		<li>
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
+				onKeyDown={handleKeyDown}
 				className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
 			>
 				{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
