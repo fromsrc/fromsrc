@@ -83,6 +83,7 @@ export default async function DocPage({ params }: Props) {
 					)}
 				</nav>
 			</article>
+			<div className="flex-1" />
 			<Toc variant="minimal" zigzag />
 		</div>
 	)
