@@ -57,7 +57,7 @@ function Folder({
 		return false
 	})
 
-	const [open, setOpen] = useState(folder.defaultOpen ?? hasActiveChild)
+	const [open, setOpen] = useState(folder.defaultOpen ?? false)
 
 	useEffect(() => {
 		if (hasActiveChild) setOpen(true)
