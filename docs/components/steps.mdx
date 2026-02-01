@@ -10,23 +10,52 @@ the steps component creates numbered guides.
 
 ```mdx
 <Steps>
+<Step>
+
 ### install fromsrc
 
 ```bash
 bun add fromsrc
 ```
 
+</Step>
+<Step>
+
 ### create your first doc
 
 add an mdx file to your docs folder.
+
+</Step>
+</Steps>
+```
+
+<Steps>
+<Step>
+
+### install fromsrc
+
+```bash
+bun add fromsrc
+```
+
+</Step>
+<Step>
+
+### create your first doc
+
+add an mdx file to your docs folder.
+
+</Step>
+<Step>
 
 ### run the dev server
 
 ```bash
 bun dev
 ```
+
+</Step>
 </Steps>
-```
 
 ## styling
 
@@ -34,7 +63,7 @@ steps automatically:
 
 - add vertical connector lines
 - number each step
-- highlight the current step
+- support nested content
 
 ## nested content
 
