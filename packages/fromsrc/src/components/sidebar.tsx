@@ -11,6 +11,7 @@ export interface SidebarItem {
 	type: "item"
 	title: string
 	href: string
+	icon?: ReactNode
 }
 
 export interface SidebarFolder {
@@ -18,6 +19,7 @@ export interface SidebarFolder {
 	title: string
 	items: (SidebarItem | SidebarFolder)[]
 	defaultOpen?: boolean
+	icon?: ReactNode
 }
 
 export interface SidebarSection {
@@ -68,9 +70,10 @@ function Folder({
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
-				className="w-full flex items-center justify-between px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
+				className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
 			>
-				{folder.title}
+				{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
+				<span className="flex-1 text-left">{folder.title}</span>
 				<svg
 					className={`w-3.5 h-3.5 transition-transform ${open ? "" : "-rotate-90"}`}
 					fill="none"
@@ -89,7 +92,7 @@ function Folder({
 						}
 						return (
 							<li key={i}>
-								<NavLink href={item.href}>{item.title}</NavLink>
+								<NavLink href={item.href} icon={item.icon}>{item.title}</NavLink>
 							</li>
 						)
 					})}
@@ -135,7 +138,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 								}
 								return (
 									<li key={i}>
-										<NavLink href={item.href}>{item.title}</NavLink>
+										<NavLink href={item.href} icon={item.icon}>{item.title}</NavLink>
 									</li>
 								)
 							})}
