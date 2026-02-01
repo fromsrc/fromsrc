@@ -11,6 +11,7 @@ import { Tabs, Tab } from "./tabs"
 import { Cards, Card } from "./cards"
 import { Accordion, AccordionItem } from "./accordion"
 import { Files, File, Folder } from "./files"
+import { Badge } from "./badge"
 
 interface Props {
 	source: string
@@ -145,6 +146,7 @@ const components = {
 	Files,
 	File,
 	Folder,
+	Badge,
 }
 
 export function Content({ source }: Props) {
