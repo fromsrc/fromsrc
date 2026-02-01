@@ -1,7 +1,7 @@
-import { getAllDocs } from "@/app/docs/_lib/content"
+import { getAllDocs, getDoc } from "@/app/docs/_lib/content"
 
 export async function GET() {
-	const docs = await getAllDocs()
+	const metas = await getAllDocs()
 
 	const lines: string[] = [
 		"# fromsrc documentation",
@@ -12,16 +12,19 @@ export async function GET() {
 		"",
 	]
 
-	for (const doc of docs) {
-		const url = doc.slug ? `/docs/${doc.slug}` : "/docs"
-		lines.push(`- [${doc.title}](${url}): ${doc.description || ""}`)
+	for (const meta of metas) {
+		const url = meta.slug ? `/docs/${meta.slug}` : "/docs"
+		lines.push(`- [${meta.title}](${url}): ${meta.description || ""}`)
 	}
 
 	lines.push("")
 	lines.push("## content")
 	lines.push("")
 
-	for (const doc of docs) {
+	for (const meta of metas) {
+		const doc = await getDoc(meta.slug ? meta.slug.split("/") : [])
+		if (!doc) continue
+
 		lines.push(`### ${doc.title}`)
 		lines.push("")
 		if (doc.description) {
