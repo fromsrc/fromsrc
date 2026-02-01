@@ -5,6 +5,12 @@ import type { MDXModule } from "mdx/types"
 import { CodeBlock } from "./codeblock"
 import { Install } from "./install"
 import { Create } from "./create"
+import { Callout } from "./callout"
+import { Steps, Step } from "./steps"
+import { Tabs, Tab } from "./tabs"
+import { Cards, Card } from "./cards"
+import { Accordion, AccordionItem } from "./accordion"
+import { Files, File, Folder } from "./files"
 
 interface Props {
 	source: string
@@ -127,6 +133,18 @@ const components = {
 	tr: (props: TrProps) => <tr className="hover:bg-surface/50 transition-colors" {...props} />,
 	Install,
 	Create,
+	Callout,
+	Steps,
+	Step,
+	Tabs,
+	Tab,
+	Cards,
+	Card,
+	Accordion,
+	AccordionItem,
+	Files,
+	File,
+	Folder,
 }
 
 export function Content({ source }: Props) {
