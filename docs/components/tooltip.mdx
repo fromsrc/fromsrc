@@ -1,0 +1,51 @@
+---
+title: tooltip
+description: hover hints for additional context
+order: 19
+---
+
+small popover that appears on hover.
+
+## usage
+
+```mdx
+<Tooltip content="additional info here">
+  hover me
+</Tooltip>
+```
+
+<Tooltip content="this is a tooltip">hover over this text</Tooltip>
+
+## position
+
+### top
+
+default position above the element.
+
+<Tooltip content="above" side="top">hover (top)</Tooltip>
+
+### bottom
+
+position below the element.
+
+<Tooltip content="below" side="bottom">hover (bottom)</Tooltip>
+
+## delay
+
+control how long before the tooltip appears.
+
+```mdx
+<Tooltip content="quick" delay={0}>instant</Tooltip>
+<Tooltip content="slow" delay={500}>half second</Tooltip>
+```
+
+<Tooltip content="instant tooltip" delay={0}>instant</Tooltip> · <Tooltip content="delayed tooltip" delay={500}>half second delay</Tooltip>
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| content | ReactNode | required | tooltip content |
+| children | ReactNode | required | trigger element |
+| side | "top" \| "bottom" | "top" | position |
+| delay | number | 200 | ms before showing |
