@@ -1,0 +1,54 @@
+---
+title: badge
+description: status and label badges
+order: 11
+---
+
+small labels for status indicators.
+
+## usage
+
+```mdx
+<Badge>default</Badge>
+<Badge variant="success">stable</Badge>
+```
+
+<Badge>default</Badge> <Badge variant="success">stable</Badge> <Badge variant="warning">beta</Badge> <Badge variant="error">deprecated</Badge> <Badge variant="info">new</Badge>
+
+## variants
+
+### default
+
+neutral style for general labels.
+
+<Badge>v1.0.0</Badge>
+
+### success
+
+for positive status.
+
+<Badge variant="success">stable</Badge>
+
+### warning
+
+for cautionary status.
+
+<Badge variant="warning">beta</Badge>
+
+### error
+
+for negative status.
+
+<Badge variant="error">deprecated</Badge>
+
+### info
+
+for informational status.
+
+<Badge variant="info">new</Badge>
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| variant | "default" \| "success" \| "warning" \| "error" \| "info" | "default" | badge style |
