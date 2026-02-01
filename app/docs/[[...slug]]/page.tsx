@@ -52,7 +52,20 @@ export default async function DocPage({ params }: Props) {
 				<div className="prose">
 					<Content source={doc.content} />
 				</div>
-				<nav className="mt-16 pt-8 border-t border-line flex justify-between gap-4">
+				<div className="mt-12 flex justify-end">
+					<a
+						href={`https://github.com/fromsrc/fromsrc/edit/main/docs/${doc.slug || "index"}.mdx`}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="text-xs text-muted hover:text-fg transition-colors flex items-center gap-1.5"
+					>
+						<svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+						</svg>
+						edit this page
+					</a>
+				</div>
+				<nav className="mt-8 pt-8 border-t border-line flex justify-between gap-4">
 					{prev ? (
 						<Link
 							href={prev.slug ? `/docs/${prev.slug}` : "/docs"}
