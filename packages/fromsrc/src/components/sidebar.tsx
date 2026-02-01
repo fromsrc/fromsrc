@@ -1,23 +1,98 @@
 "use client"
 
 import Link from "next/link"
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
+import { usePathname } from "next/navigation"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
 
-interface Section {
+export interface SidebarItem {
+	type: "item"
 	title: string
-	items: DocMeta[]
+	href: string
+}
+
+export interface SidebarFolder {
+	type: "folder"
+	title: string
+	items: (SidebarItem | SidebarFolder)[]
+	defaultOpen?: boolean
+}
+
+export interface SidebarSection {
+	title: string
+	items: (SidebarItem | SidebarFolder | DocMeta)[]
 }
 
 interface Props {
 	title: string
 	logo?: ReactNode
-	navigation: Section[]
+	navigation: SidebarSection[]
 	docs: DocMeta[]
 	basePath?: string
 	github?: string
+}
+
+function Folder({
+	folder,
+	basePath,
+}: {
+	folder: SidebarFolder
+	basePath: string
+}) {
+	const pathname = usePathname()
+	const hasActiveChild = folder.items.some((item) => {
+		if (item.type === "folder") {
+			return item.items.some((child) => {
+				if (child.type === "item") {
+					return pathname === child.href
+				}
+				return false
+			})
+		}
+		if (item.type === "item") {
+			return pathname === item.href
+		}
+		return false
+	})
+
+	const [open, setOpen] = useState(folder.defaultOpen ?? hasActiveChild)
+
+	return (
+		<li>
+			<button
+				type="button"
+				onClick={() => setOpen(!open)}
+				className="w-full flex items-center justify-between px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
+			>
+				{folder.title}
+				<svg
+					className={`w-3.5 h-3.5 transition-transform ${open ? "" : "-rotate-90"}`}
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					aria-hidden="true"
+				>
+					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			{open && (
+				<ul className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
+					{folder.items.map((item, i) => {
+						if (item.type === "folder") {
+							return <Folder key={i} folder={item} basePath={basePath} />
+						}
+						return (
+							<li key={i}>
+								<NavLink href={item.href}>{item.title}</NavLink>
+							</li>
+						)
+					})}
+				</ul>
+			)}
+		</li>
+	)
 }
 
 export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", github }: Props) {
@@ -41,13 +116,25 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 							{section.title}
 						</h3>
 						<ul className="space-y-0.5">
-							{section.items.map((item) => (
-								<li key={item.slug}>
-									<NavLink href={item.slug ? `${basePath}/${item.slug}` : basePath}>
-										{item.title}
-									</NavLink>
-								</li>
-							))}
+							{section.items.map((item, i) => {
+								if (!("type" in item)) {
+									return (
+										<li key={item.slug || i}>
+											<NavLink href={item.slug ? `${basePath}/${item.slug}` : basePath}>
+												{item.title}
+											</NavLink>
+										</li>
+									)
+								}
+								if (item.type === "folder") {
+									return <Folder key={i} folder={item} basePath={basePath} />
+								}
+								return (
+									<li key={i}>
+										<NavLink href={item.href}>{item.title}</NavLink>
+									</li>
+								)
+							})}
 						</ul>
 					</div>
 				))}

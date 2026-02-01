@@ -1,0 +1,122 @@
+---
+title: sidebar
+description: navigation sidebar with collapsible folders
+order: 22
+---
+
+documentation sidebar with search, navigation sections, and collapsible folders.
+
+## usage
+
+```tsx
+import { Sidebar } from "fromsrc/client"
+
+<Sidebar
+  title="docs"
+  navigation={navigation}
+  docs={docs}
+  github="https://github.com/org/repo"
+/>
+```
+
+## navigation structure
+
+### flat items
+
+simple list of pages:
+
+```tsx
+const navigation = [
+  {
+    title: "getting started",
+    items: docs.filter(d => d.slug?.startsWith("getting-started"))
+  }
+]
+```
+
+### collapsible folders
+
+nested sections that can collapse:
+
+```tsx
+const navigation = [
+  {
+    title: "components",
+    items: [
+      {
+        type: "folder",
+        title: "layout",
+        items: [
+          { type: "item", title: "sidebar", href: "/docs/sidebar" },
+          { type: "item", title: "header", href: "/docs/header" },
+        ]
+      },
+      {
+        type: "folder",
+        title: "content",
+        defaultOpen: true,
+        items: [
+          { type: "item", title: "callout", href: "/docs/callout" },
+          { type: "item", title: "steps", href: "/docs/steps" },
+        ]
+      }
+    ]
+  }
+]
+```
+
+### mixed
+
+combine doc items with explicit items and folders:
+
+```tsx
+const navigation = [
+  {
+    title: "guides",
+    items: [
+      ...docs.filter(d => d.slug?.startsWith("guide")),
+      { type: "item", title: "external", href: "https://example.com" },
+      {
+        type: "folder",
+        title: "advanced",
+        items: [
+          { type: "item", title: "plugins", href: "/docs/plugins" },
+        ]
+      }
+    ]
+  }
+]
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | required | site title |
+| logo | ReactNode | - | site logo |
+| navigation | SidebarSection[] | required | nav structure |
+| docs | DocMeta[] | required | all docs for search |
+| basePath | string | "/docs" | base url path |
+| github | string | - | github repo link |
+
+## types
+
+```ts
+interface SidebarItem {
+  type: "item"
+  title: string
+  href: string
+}
+
+interface SidebarFolder {
+  type: "folder"
+  title: string
+  items: (SidebarItem | SidebarFolder)[]
+  defaultOpen?: boolean
+}
+
+interface SidebarSection {
+  title: string
+  items: (SidebarItem | SidebarFolder | DocMeta)[]
+}
+```
