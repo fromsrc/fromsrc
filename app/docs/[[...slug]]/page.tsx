@@ -38,7 +38,7 @@ export default async function DocPage({ params }: Props) {
 	const next = currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null
 
 	return (
-		<div className="flex min-h-screen w-full">
+		<div className="flex w-full">
 			<article className="flex-1 min-w-0 max-w-5xl py-12 px-8 lg:px-12">
 				<header className="mb-10">
 					<p className="text-xs text-muted mb-2">documentation</p>
