@@ -39,7 +39,7 @@ export default async function DocPage({ params }: Props) {
 
 	return (
 		<div className="flex min-h-screen w-full">
-			<article className="flex-1 min-w-0 max-w-3xl py-12 px-8 lg:px-12">
+			<article className="flex-1 min-w-0 max-w-[900px] py-12 px-8 lg:px-12">
 				<header className="mb-10">
 					<p className="text-xs text-muted mb-2">documentation</p>
 					<h1 className="text-2xl font-medium mb-3 text-fg">{doc.title}</h1>

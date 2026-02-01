@@ -34,7 +34,7 @@ export function Toc({ variant = "default", zigzag = false, multi = false }: TocP
 	}
 
 	return (
-		<aside className="w-52 shrink-0 hidden xl:block py-12">
+		<aside className="w-[268px] shrink-0 hidden xl:block py-12">
 			<div className="sticky top-12 pr-4">
 				<p className="text-xs text-muted mb-4">on this page</p>
 				{renderToc()}
