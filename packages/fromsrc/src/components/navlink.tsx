@@ -18,15 +18,12 @@ export function NavLink({ href, children, onClick }: Props) {
 		<Link
 			href={href}
 			onClick={onClick}
-			className={`flex items-center gap-2 px-2 py-1.5 text-xs rounded-md border transition-colors ${
+			className={`block px-2 py-1.5 text-xs rounded-md transition-colors ${
 				isActive
-					? "text-fg bg-surface border-line"
-					: "text-muted hover:text-fg hover:bg-surface/50 border-transparent"
+					? "text-fg bg-surface border-l-2 border-accent"
+					: "text-muted hover:text-fg hover:bg-surface/50"
 			}`}
 		>
-			{isActive && (
-				<span className="w-1 h-1 rounded-full bg-accent" />
-			)}
 			{children}
 		</Link>
 	)
