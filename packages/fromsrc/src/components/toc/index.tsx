@@ -24,7 +24,7 @@ export function Toc({
 	collapsible = true,
 	defaultOpen = false,
 }: TocProps) {
-	const { headings, active, activeRange } = useToc(variant !== "minimal" && multi)
+	const { headings, active, activeRange, progress } = useToc(variant !== "minimal" && multi)
 
 	if (headings.length === 0) return null
 
@@ -58,7 +58,15 @@ export function Toc({
 	return (
 		<aside className="w-52 shrink-0 hidden xl:block py-12">
 			<div className="sticky top-12 pr-4">
-				<p className="text-xs text-muted mb-4">on this page</p>
+				<div className="flex items-center gap-3 mb-4">
+					<p className="text-xs text-muted">on this page</p>
+					<div className="flex-1 h-0.5 bg-line rounded-full overflow-hidden">
+						<div
+							className="h-full bg-accent transition-[width] duration-150"
+							style={{ width: `${progress * 100}%` }}
+						/>
+					</div>
+				</div>
 				{renderToc()}
 			</div>
 		</aside>
