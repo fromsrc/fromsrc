@@ -1,0 +1,42 @@
+---
+title: typetable
+description: api property documentation
+order: 25
+---
+
+document api properties and types in a clean table format.
+
+## usage
+
+```tsx
+<TypeTable
+  types={[
+    { name: "title", type: "string", required: true, description: "page title" },
+    { name: "description", type: "string", description: "page description" },
+    { name: "order", type: "number", default: "0", description: "sort order" },
+  ]}
+/>
+```
+
+## features
+
+- shows property name, type, default, and description
+- indicates required properties
+- clean compact design
+- works in mdx
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| types | TypeInfo[] | required | array of type definitions |
+
+## typeinfo
+
+| field | type | description |
+|-------|------|-------------|
+| name | string | property name |
+| type | string | typescript type |
+| required | boolean | is required |
+| default | string | default value |
+| description | string | property description |

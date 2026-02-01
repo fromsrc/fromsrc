@@ -1,0 +1,28 @@
+---
+title: link
+description: links with external indicator
+order: 24
+---
+
+smart links that show an icon for external urls.
+
+## usage
+
+```mdx
+<Link href="/docs">internal link</Link>
+<Link href="https://github.com">external link</Link>
+```
+
+## features
+
+- auto-detects external urls
+- shows external icon for non-local links
+- opens external links in new tab
+- no icon for internal navigation
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| href | string | required | link destination |
+| children | ReactNode | required | link text |

@@ -1,0 +1,27 @@
+---
+title: github
+description: display github repo info
+order: 23
+---
+
+show github repository stars and forks.
+
+## usage
+
+```mdx
+<Github repo="fromsrc/fromsrc" />
+```
+
+## features
+
+- fetches live data from github api
+- displays star and fork counts
+- shows repo description
+- links to the repository
+- loading skeleton while fetching
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| repo | string | required | github repo path (owner/repo) |
