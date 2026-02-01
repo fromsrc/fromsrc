@@ -1,0 +1,61 @@
+---
+title: tabs
+description: tabbed content sections
+order: 4
+---
+
+organize content into switchable tabs.
+
+## usage
+
+```mdx
+<Tabs items={["npm", "bun", "pnpm"]}>
+  <Tab value="npm">npm install fromsrc</Tab>
+  <Tab value="bun">bun add fromsrc</Tab>
+  <Tab value="pnpm">pnpm add fromsrc</Tab>
+</Tabs>
+```
+
+<Tabs items={["npm", "bun", "pnpm"]}>
+  <Tab value="npm">
+    ```bash
+    npm install fromsrc
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bun add fromsrc
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add fromsrc
+    ```
+  </Tab>
+</Tabs>
+
+## default value
+
+set the initially active tab:
+
+```mdx
+<Tabs items={["js", "ts"]} defaultValue="ts">
+  <Tab value="js">javascript content</Tab>
+  <Tab value="ts">typescript content</Tab>
+</Tabs>
+```
+
+## props
+
+### tabs
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| items | string[] | - | tab labels |
+| defaultValue | string | first item | initial tab |
+
+### tab
+
+| prop | type | description |
+|------|------|-------------|
+| value | string | matches items array |

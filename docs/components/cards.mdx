@@ -1,0 +1,51 @@
+---
+title: cards
+description: grid of feature cards
+order: 6
+---
+
+display content in a responsive grid.
+
+## usage
+
+```mdx
+<Cards>
+  <Card title="fast" description="optimized builds" />
+  <Card title="flexible" description="swap any component" />
+</Cards>
+```
+
+<Cards>
+  <Card title="fast" description="optimized builds" />
+  <Card title="flexible" description="swap any component" />
+</Cards>
+
+## with links
+
+cards can link to other pages:
+
+```mdx
+<Cards>
+  <Card
+    title="installation"
+    description="get started"
+    href="/docs/installation"
+  />
+  <Card
+    title="components"
+    description="ui reference"
+    href="/docs/components"
+  />
+</Cards>
+```
+
+## props
+
+### card
+
+| prop | type | description |
+|------|------|-------------|
+| title | string | card heading |
+| description | string | optional subtext |
+| href | string | optional link |
+| icon | ReactNode | optional icon |

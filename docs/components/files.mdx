@@ -1,0 +1,61 @@
+---
+title: files
+description: file tree display
+order: 7
+---
+
+show project structure with folders and files.
+
+## usage
+
+```mdx
+<Files>
+  <Folder name="app" defaultOpen>
+    <File name="page.tsx" />
+    <File name="layout.tsx" />
+  </Folder>
+  <Folder name="docs">
+    <File name="index.mdx" />
+  </Folder>
+  <File name="package.json" />
+</Files>
+```
+
+<Files>
+  <Folder name="app" defaultOpen>
+    <File name="page.tsx" />
+    <File name="layout.tsx" />
+  </Folder>
+  <Folder name="docs">
+    <File name="index.mdx" />
+  </Folder>
+  <File name="package.json" />
+</Files>
+
+## nested folders
+
+folders can contain other folders:
+
+```mdx
+<Folder name="src" defaultOpen>
+  <Folder name="components" defaultOpen>
+    <File name="button.tsx" />
+  </Folder>
+</Folder>
+```
+
+## props
+
+### folder
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| name | string | - | folder name |
+| defaultOpen | boolean | false | start expanded |
+
+### file
+
+| prop | type | description |
+|------|------|-------------|
+| name | string | file name |
+| icon | ReactNode | custom icon |
