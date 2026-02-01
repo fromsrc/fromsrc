@@ -15,6 +15,7 @@ import { Badge } from "./badge"
 import { Banner } from "./banner"
 import { Zoom } from "./zoom"
 import { CodeGroup, CodeTab, CodeTabs } from "./codegroup"
+import { TypeTable } from "./typetable"
 
 interface Props {
 	source: string
@@ -155,6 +156,7 @@ const components = {
 	CodeGroup,
 	CodeTab,
 	CodeTabs,
+	TypeTable,
 }
 
 export function Content({ source }: Props) {
