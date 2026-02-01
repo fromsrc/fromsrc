@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { Content, Toc } from "fromsrc/client"
+import { Content, Toc, Breadcrumb } from "fromsrc/client"
 import { getDoc, getAllDocs } from "../_lib/content"
 
 interface Props {
@@ -41,7 +41,9 @@ export default async function DocPage({ params }: Props) {
 		<div className="flex w-full">
 			<article className="flex-1 min-w-0 max-w-5xl py-12 px-8 lg:px-12">
 				<header className="mb-10">
-					<p className="text-xs text-muted mb-2">documentation</p>
+					<div className="mb-3">
+						<Breadcrumb base="/docs" />
+					</div>
 					<h1 className="text-2xl font-medium mb-3 text-fg">{doc.title}</h1>
 					{doc.description && (
 						<p className="text-sm text-muted">{doc.description}</p>
