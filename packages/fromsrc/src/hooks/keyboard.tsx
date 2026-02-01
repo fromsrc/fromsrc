@@ -4,12 +4,39 @@ import { useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import type { DocMeta } from "../content"
 
+function sortDocs(docs: DocMeta[]): DocMeta[] {
+	const intro: DocMeta[] = []
+	const components: DocMeta[] = []
+	const api: DocMeta[] = []
+	const other: DocMeta[] = []
+
+	for (const doc of docs) {
+		if (doc.slug.startsWith("components/")) {
+			components.push(doc)
+		} else if (doc.slug.startsWith("api/")) {
+			api.push(doc)
+		} else if (!doc.slug || doc.slug.match(/^[^/]+$/)) {
+			intro.push(doc)
+		} else {
+			other.push(doc)
+		}
+	}
+
+	const sortByOrder = (a: DocMeta, b: DocMeta) => (a.order ?? 999) - (b.order ?? 999)
+	return [
+		...intro.sort(sortByOrder),
+		...components.sort(sortByOrder),
+		...api.sort(sortByOrder),
+		...other.sort(sortByOrder),
+	]
+}
+
 export function useKeyboardNav(docs: DocMeta[], basePath = "/docs") {
 	const pathname = usePathname()
 	const router = useRouter()
 
 	useEffect(() => {
-		const sorted = [...docs].sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+		const sorted = sortDocs(docs)
 		const paths = sorted.map((d) => (d.slug ? `${basePath}/${d.slug}` : basePath))
 		const current = paths.indexOf(pathname)
 
