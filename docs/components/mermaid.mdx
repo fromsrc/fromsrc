@@ -1,0 +1,62 @@
+---
+title: mermaid
+description: diagrams and flowcharts
+order: 20
+---
+
+render mermaid diagrams in your docs.
+
+## installation
+
+mermaid is a peer dependency:
+
+```bash
+bun add mermaid
+```
+
+## usage
+
+```mdx
+<Mermaid chart="graph TD; A-->B; B-->C;" />
+```
+
+## examples
+
+### flowchart
+
+```mdx
+<Mermaid chart={`
+graph TD
+    A[start] --> B{decision}
+    B -->|yes| C[action]
+    B -->|no| D[end]
+`} />
+```
+
+### sequence diagram
+
+```mdx
+<Mermaid chart={`
+sequenceDiagram
+    participant A as client
+    participant B as server
+    A->>B: request
+    B-->>A: response
+`} />
+```
+
+### entity relationship
+
+```mdx
+<Mermaid chart={`
+erDiagram
+    USER ||--o{ POST : writes
+    POST ||--|{ COMMENT : has
+`} />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| chart | string | required | mermaid diagram code |
