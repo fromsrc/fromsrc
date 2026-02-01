@@ -15,7 +15,7 @@ export function Foot() {
 							className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-full text-sm hover:bg-accent/90 transition-colors"
 						>
 							<Bolt />
-							getting started
+							introduction
 						</a>
 						<code className="text-muted">npx create-fromsrc</code>
 					</div>
