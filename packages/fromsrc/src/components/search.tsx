@@ -134,7 +134,7 @@ export function Search({ basePath = "/docs", docs }: Props) {
 				onClick={() => setOpen(false)}
 				onKeyDown={() => {}}
 			/>
-			<div className="relative max-w-lg mx-auto mt-[20vh]">
+			<div className="relative z-50 max-w-lg mx-auto mt-[20vh]">
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
 						<svg
