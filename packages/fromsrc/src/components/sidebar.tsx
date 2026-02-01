@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, type ReactNode } from "react"
+import { useState, useEffect, type ReactNode } from "react"
 import { usePathname } from "next/navigation"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
@@ -58,6 +58,10 @@ function Folder({
 	})
 
 	const [open, setOpen] = useState(folder.defaultOpen ?? hasActiveChild)
+
+	useEffect(() => {
+		if (hasActiveChild) setOpen(true)
+	}, [hasActiveChild])
 
 	return (
 		<li>
