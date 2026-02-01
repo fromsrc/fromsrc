@@ -10,51 +10,33 @@ the steps component creates numbered guides.
 
 ```mdx
 <Steps>
-<Step>
-
-### install fromsrc
-
-```bash
-bun add fromsrc
-```
-
-</Step>
-<Step>
-
-### create your first doc
-
-add an mdx file to your docs folder.
-
-</Step>
+  <Step>first step content</Step>
+  <Step>second step content</Step>
 </Steps>
 ```
 
 <Steps>
-<Step>
+  <Step>
 
 ### install fromsrc
 
-```bash
-bun add fromsrc
-```
+run the install command for your package manager.
 
-</Step>
-<Step>
+  </Step>
+  <Step>
 
 ### create your first doc
 
 add an mdx file to your docs folder.
 
-</Step>
-<Step>
+  </Step>
+  <Step>
 
 ### run the dev server
 
-```bash
-bun dev
-```
+start the development server to see your docs.
 
-</Step>
+  </Step>
 </Steps>
 
 ## styling
@@ -67,9 +49,4 @@ steps automatically:
 
 ## nested content
 
-steps can contain any mdx content:
-
-- code blocks
-- images
-- lists
-- other components
+steps can contain any mdx content including headings, lists, and other components.
