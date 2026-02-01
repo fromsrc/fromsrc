@@ -16,17 +16,14 @@ export default defineConfig({
   description: "documentation for my project",
 
   navigation: {
-    // auto-generate from file structure
     auto: true,
   },
 
   search: {
-    // enable client-side search
     enabled: true,
   },
 
   theme: {
-    // dark mode by default
     defaultTheme: "dark",
   },
 })
@@ -38,26 +35,75 @@ export default defineConfig({
 
 the site title shown in the header and metadata.
 
+```typescript
+{
+  title: "my docs"
+}
+```
+
 ### description
 
 default meta description for pages without one.
+
+```typescript
+{
+  description: "documentation for my project"
+}
+```
 
 ### navigation
 
 configure sidebar navigation:
 
-- `auto: true` - generate from file structure
-- `items: []` - manual navigation items
+<Accordion>
+<AccordionItem title="auto navigation">
+
+generate navigation from your file structure automatically.
+
+```typescript
+{
+  navigation: {
+    auto: true
+  }
+}
+```
+
+</AccordionItem>
+<AccordionItem title="manual navigation">
+
+define navigation items manually for full control.
+
+```typescript
+{
+  navigation: {
+    items: [
+      { title: "introduction", href: "/docs" },
+      { title: "installation", href: "/docs/installation" },
+    ]
+  }
+}
+```
+
+</AccordionItem>
+</Accordion>
 
 ### search
 
 configure search behavior:
 
-- `enabled: boolean` - enable/disable search
-- `placeholder: string` - search input placeholder
+| option | type | description |
+|--------|------|-------------|
+| enabled | boolean | enable/disable search |
+| placeholder | string | search input placeholder |
 
 ### theme
 
 configure theming:
 
-- `defaultTheme: "dark" | "light"` - default color scheme
+| option | type | description |
+|--------|------|-------------|
+| defaultTheme | "dark" \| "light" | default color scheme |
+
+<Callout type="tip">
+fromsrc uses dark mode by default.
+</Callout>
