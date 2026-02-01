@@ -65,6 +65,8 @@ create-fromsrc       cli scaffolding (npx create-fromsrc)
 - [x] theme toggle component
 - [x] fuzzy search with ranking
 - [x] mobile navigation
+- [x] link component (external link icon)
+- [x] badge component (status labels)
 
 ## next
 - [ ] llms.txt generation
