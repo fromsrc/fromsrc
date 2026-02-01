@@ -10,12 +10,33 @@ the fastest way to start is with create-fromsrc:
 
 <Create />
 
-this will:
+<Steps>
+<Step>
 
-1. create a new directory
-2. set up next.js with fromsrc
-3. add example documentation
-4. install dependencies
+### run the command
+
+this creates a new directory with everything configured.
+
+</Step>
+<Step>
+
+### enter the directory
+
+```bash
+cd my-docs
+```
+
+</Step>
+<Step>
+
+### start the dev server
+
+```bash
+bun dev
+```
+
+</Step>
+</Steps>
 
 ## manual installation
 
@@ -23,23 +44,39 @@ add fromsrc to an existing next.js project:
 
 <Install package="fromsrc" />
 
+<Callout type="info">
+fromsrc requires next.js 16 or later.
+</Callout>
+
 ## project structure
 
-```
-my-docs/
-├── app/
-│   └── docs/
-│       └── [[...slug]]/
-│           └── page.tsx
-├── docs/
-│   ├── index.mdx
-│   └── getting-started.mdx
-└── package.json
-```
+<Files>
+  <Folder name="app" defaultOpen>
+    <Folder name="docs">
+      <Folder name="[[...slug]]">
+        <File name="page.tsx" />
+      </Folder>
+      <File name="layout.tsx" />
+    </Folder>
+  </Folder>
+  <Folder name="docs" defaultOpen>
+    <File name="index.mdx" />
+    <File name="getting-started.mdx" />
+  </Folder>
+  <File name="package.json" />
+</Files>
 
 ## next steps
 
-- add mdx files to the `docs/` folder
-- customize the sidebar navigation
-- configure search
-- deploy to vercel
+<Cards>
+  <Card
+    title="configuration"
+    description="customize fromsrc behavior"
+    href="/docs/configuration"
+  />
+  <Card
+    title="components"
+    description="explore available components"
+    href="/docs/components/code"
+  />
+</Cards>

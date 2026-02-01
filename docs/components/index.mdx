@@ -1,0 +1,108 @@
+---
+title: components
+description: built-in mdx components
+order: 4
+---
+
+fromsrc includes a set of built-in components for documentation.
+
+## content
+
+<Cards>
+  <Card
+    title="code"
+    description="syntax highlighted code blocks"
+    href="/docs/components/code"
+  />
+  <Card
+    title="callout"
+    description="highlighted information boxes"
+    href="/docs/components/callout"
+  />
+  <Card
+    title="steps"
+    description="numbered step-by-step guides"
+    href="/docs/components/steps"
+  />
+  <Card
+    title="tabs"
+    description="tabbed content sections"
+    href="/docs/components/tabs"
+  />
+</Cards>
+
+## layout
+
+<Cards>
+  <Card
+    title="accordion"
+    description="collapsible content sections"
+    href="/docs/components/accordion"
+  />
+  <Card
+    title="cards"
+    description="grid of feature cards"
+    href="/docs/components/cards"
+  />
+  <Card
+    title="files"
+    description="file tree display"
+    href="/docs/components/files"
+  />
+</Cards>
+
+## navigation
+
+<Cards>
+  <Card
+    title="search"
+    description="fast client-side search"
+    href="/docs/components/search"
+  />
+  <Card
+    title="breadcrumb"
+    description="navigation breadcrumbs"
+    href="/docs/components/breadcrumb"
+  />
+  <Card
+    title="theme"
+    description="light and dark mode toggle"
+    href="/docs/components/theme"
+  />
+  <Card
+    title="badge"
+    description="status and label badges"
+    href="/docs/components/badge"
+  />
+</Cards>
+
+## installation
+
+all components are included in the fromsrc package.
+
+<Tabs items={["bun", "npm"]}>
+  <Tab value="bun">
+    ```bash
+    bun add fromsrc
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npm install fromsrc
+    ```
+  </Tab>
+</Tabs>
+
+## usage
+
+components are automatically available in your mdx files:
+
+```mdx
+<Callout type="info">
+  no imports needed.
+</Callout>
+```
+
+<Callout type="info">
+no imports needed.
+</Callout>

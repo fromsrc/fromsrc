@@ -1,0 +1,48 @@
+---
+title: accordion
+description: collapsible content sections
+order: 5
+---
+
+hide content behind expandable sections.
+
+## usage
+
+```mdx
+<Accordion>
+  <AccordionItem title="what is fromsrc?">
+    a documentation framework for developers.
+  </AccordionItem>
+  <AccordionItem title="is it free?">
+    yes, fromsrc is open source.
+  </AccordionItem>
+</Accordion>
+```
+
+<Accordion>
+  <AccordionItem title="what is fromsrc?">
+    a documentation framework for developers.
+  </AccordionItem>
+  <AccordionItem title="is it free?">
+    yes, fromsrc is open source.
+  </AccordionItem>
+</Accordion>
+
+## default open
+
+start with an item expanded:
+
+```mdx
+<AccordionItem title="expanded" defaultOpen>
+  visible by default
+</AccordionItem>
+```
+
+## props
+
+### accordionitem
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | - | header text |
+| defaultOpen | boolean | false | start expanded |

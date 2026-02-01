@@ -1,0 +1,36 @@
+---
+title: breadcrumb
+description: navigation breadcrumbs
+order: 8
+---
+
+breadcrumb shows the current page location.
+
+## usage
+
+```tsx
+import { Breadcrumb } from "fromsrc/client"
+
+<Breadcrumb />
+```
+
+## base path
+
+customize the base path:
+
+```tsx
+<Breadcrumb base="/documentation" />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| base | string | "/docs" | base path for links |
+
+## features
+
+- auto-generates from current url
+- converts slugs to readable labels
+- last item is not a link
+- accessible with aria-label

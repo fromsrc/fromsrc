@@ -6,28 +6,74 @@ order: 1
 
 fromsrc is a documentation framework built for performance and full control.
 
-## why fromsrc
-
-we built fromsrc around four principles:
-
-- **composable** - small pieces that combine freely
-- **editable** - change anything without fighting the framework
-- **customizable** - swap any component, style, or behavior
-- **optimized** - incremental builds, scales to thousands of files
-
 ## quick start
 
-```bash
-bunx create-fromsrc
-cd my-docs
-bun dev
-```
+<Tabs items={["bun", "npm", "pnpm"]}>
+  <Tab value="bun">
+    ```bash
+    bunx create-fromsrc
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npx create-fromsrc
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm create fromsrc
+    ```
+  </Tab>
+</Tabs>
+
+## why fromsrc
+
+<Cards>
+  <Card
+    title="composable"
+    description="small pieces that combine freely"
+    href="/docs/components"
+  />
+  <Card
+    title="editable"
+    description="change anything without fighting the framework"
+    href="/docs/configuration"
+  />
+  <Card
+    title="customizable"
+    description="swap any component, style, or behavior"
+    href="/docs/components"
+  />
+  <Card
+    title="optimized"
+    description="incremental builds, scales to thousands of files"
+  />
+</Cards>
 
 ## features
 
 - **mdx** - write docs with react components embedded
-- **search** - fast client-side search with ⌘K
+- **search** - fast client-side search with cmd+k
 - **dark mode** - built-in theme support
 - **responsive** - mobile-friendly layout
 - **llms.txt** - ai-ready content export
 - **composable** - every component is customizable
+
+## project structure
+
+<Files>
+  <Folder name="app" defaultOpen>
+    <Folder name="docs" defaultOpen>
+      <Folder name="[[...slug]]">
+        <File name="page.tsx" />
+      </Folder>
+      <File name="layout.tsx" />
+    </Folder>
+    <File name="page.tsx" />
+  </Folder>
+  <Folder name="docs" defaultOpen>
+    <File name="index.mdx" />
+    <File name="installation.mdx" />
+  </Folder>
+  <File name="package.json" />
+</Files>

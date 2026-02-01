@@ -1,0 +1,57 @@
+---
+title: codegroup
+description: tabbed code blocks for multiple languages
+order: 14
+---
+
+group code blocks with tabs for different languages or examples.
+
+## usage
+
+```mdx
+<CodeGroup defaultValue="bun">
+  <CodeTabs>
+    <CodeTab value="bun" label="bun" />
+    <CodeTab value="npm" label="npm" />
+    <CodeTab value="pnpm" label="pnpm" />
+  </CodeTabs>
+  <CodeTab value="bun" label="bun">
+    ```bash
+    bun add fromsrc
+    ```
+  </CodeTab>
+  <CodeTab value="npm" label="npm">
+    ```bash
+    npm install fromsrc
+    ```
+  </CodeTab>
+  <CodeTab value="pnpm" label="pnpm">
+    ```bash
+    pnpm add fromsrc
+    ```
+  </CodeTab>
+</CodeGroup>
+```
+
+## components
+
+### codegroup
+
+container for tabbed code blocks.
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| defaultValue | string | - | initially active tab |
+
+### codetabs
+
+container for tab buttons.
+
+### codetab
+
+individual tab button and content.
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| value | string | required | unique identifier |
+| label | string | required | tab label text |

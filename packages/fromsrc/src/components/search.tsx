@@ -1,12 +1,43 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import type { DocMeta } from "../content"
 
 interface Props {
 	basePath?: string
 	docs: DocMeta[]
+}
+
+function fuzzy(text: string, query: string): number {
+	if (!query) return 0
+	const lower = text.toLowerCase()
+	const q = query.toLowerCase()
+	let score = 0
+	let qi = 0
+	let consecutive = 0
+
+	for (let i = 0; i < lower.length && qi < q.length; i++) {
+		if (lower[i] === q[qi]) {
+			score += 1 + consecutive
+			consecutive++
+			qi++
+		} else {
+			consecutive = 0
+		}
+	}
+
+	if (qi < q.length) return 0
+	if (lower.startsWith(q)) score += 10
+	if (lower === q) score += 20
+
+	return score
+}
+
+function rank(doc: DocMeta, query: string): number {
+	const titleScore = fuzzy(doc.title, query) * 3
+	const descScore = doc.description ? fuzzy(doc.description, query) : 0
+	return titleScore + descScore
 }
 
 export function Search({ basePath = "/docs", docs }: Props) {
@@ -39,11 +70,20 @@ export function Search({ basePath = "/docs", docs }: Props) {
 		}
 	}, [open])
 
-	const filtered = docs.filter(
-		(r) =>
-			r.title.toLowerCase().includes(query.toLowerCase()) ||
-			r.description?.toLowerCase().includes(query.toLowerCase())
-	)
+	const filtered = useMemo(() => {
+		if (!query.trim()) return docs.slice(0, 8)
+
+		return docs
+			.map((doc) => ({ doc, score: rank(doc, query) }))
+			.filter((r) => r.score > 0)
+			.sort((a, b) => b.score - a.score)
+			.slice(0, 8)
+			.map((r) => r.doc)
+	}, [docs, query])
+
+	useEffect(() => {
+		setSelected(0)
+	}, [query])
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		if (e.key === "ArrowDown") {
@@ -120,7 +160,9 @@ export function Search({ basePath = "/docs", docs }: Props) {
 							placeholder="search documentation..."
 							className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none"
 						/>
-						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">esc</kbd>
+						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">
+							esc
+						</kbd>
 					</div>
 					<div className="max-h-80 overflow-y-auto">
 						{filtered.length === 0 ? (
@@ -128,7 +170,7 @@ export function Search({ basePath = "/docs", docs }: Props) {
 						) : (
 							<ul className="p-2">
 								{filtered.map((result, i) => (
-									<li key={result.slug}>
+									<li key={result.slug || "index"}>
 										<button
 											type="button"
 											onClick={() => {
@@ -143,9 +185,7 @@ export function Search({ basePath = "/docs", docs }: Props) {
 										>
 											<div className="text-sm">{result.title}</div>
 											{result.description && (
-												<div className="text-xs text-dim truncate">
-													{result.description}
-												</div>
+												<div className="text-xs text-dim truncate">{result.description}</div>
 											)}
 										</button>
 									</li>
