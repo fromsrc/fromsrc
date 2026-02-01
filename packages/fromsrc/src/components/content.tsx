@@ -16,6 +16,7 @@ import { Banner } from "./banner"
 import { Zoom } from "./zoom"
 import { CodeGroup, CodeTab, CodeTabs } from "./codegroup"
 import { TypeTable } from "./typetable"
+import { Github } from "./github"
 
 interface Props {
 	source: string
@@ -157,6 +158,7 @@ const components = {
 	CodeTab,
 	CodeTabs,
 	TypeTable,
+	Github,
 }
 
 export function Content({ source }: Props) {

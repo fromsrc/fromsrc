@@ -22,7 +22,7 @@ interface Props {
 
 export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", github }: Props) {
 	return (
-		<aside className="w-60 shrink-0 border-r border-line h-screen sticky top-0 overflow-y-auto bg-bg">
+		<aside className="w-60 shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg">
 			<div className="p-5">
 				<Link href="/" className="flex items-center gap-2.5 text-sm text-fg hover:text-accent transition-colors">
 					<div className="p-1.5 rounded-lg bg-surface border border-line">
@@ -34,7 +34,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 			<div className="px-4 mb-6">
 				<Search basePath={basePath} docs={docs} />
 			</div>
-			<nav className="px-4 pb-20">
+			<nav className="px-4 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 				{navigation.map((section) => (
 					<div key={section.title} className="mb-6">
 						<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider">
@@ -53,7 +53,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 				))}
 			</nav>
 			{github && (
-				<div className="absolute bottom-0 left-0 right-0 p-4 border-t border-line bg-bg">
+				<div className="p-4 border-t border-line bg-bg shrink-0">
 					<a
 						href={github}
 						target="_blank"
