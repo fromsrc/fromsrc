@@ -1,0 +1,40 @@
+---
+title: search
+description: fast client-side search
+order: 10
+---
+
+instant search with cmd+k support.
+
+## usage
+
+```tsx
+import { Search } from "fromsrc/client"
+import { getAllDocs } from "fromsrc"
+
+const docs = await getAllDocs()
+
+<Search docs={docs} />
+```
+
+## keyboard shortcuts
+
+- **cmd+k** - open search
+- **esc** - close search
+- **arrow keys** - navigate results
+- **enter** - select result
+
+## features
+
+- fuzzy matching
+- ranked results
+- title and description search
+- keyboard navigation
+- responsive modal
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| docs | DocMeta[] | - | docs to search |
+| basePath | string | "/docs" | base path for links |

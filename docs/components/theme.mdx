@@ -1,0 +1,35 @@
+---
+title: theme
+description: light and dark mode toggle
+order: 9
+---
+
+toggle between light and dark themes.
+
+## usage
+
+```tsx
+import { ThemeToggle } from "fromsrc/client"
+
+<ThemeToggle />
+```
+
+## default theme
+
+set the initial theme:
+
+```tsx
+<ThemeToggle defaultTheme="dark" />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| defaultTheme | "light" \| "dark" \| "system" | "dark" | initial theme |
+
+## features
+
+- persists to localstorage
+- toggles dark class on html element
+- system preference support
