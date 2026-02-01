@@ -130,6 +130,7 @@ export function CodeBlock({ children, lang, title }: CodeBlockProps) {
 			)}
 			<div
 				ref={codeRef}
+				className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
 				style={{
 					padding: "14px 16px",
 					overflow: "auto",
