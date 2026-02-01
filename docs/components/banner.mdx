@@ -1,0 +1,48 @@
+---
+title: banner
+description: dismissible announcement banners
+order: 12
+---
+
+sticky banners for announcements and promotions.
+
+## usage
+
+```mdx
+<Banner>new feature available</Banner>
+```
+
+<Banner>new feature available</Banner>
+
+## dismissible
+
+add an id to make the banner dismissible with localstorage persistence.
+
+```mdx
+<Banner id="v2">version 2.0 is now available</Banner>
+```
+
+## variants
+
+### default
+
+standard banner with subtle background.
+
+<Banner>documentation update available</Banner>
+
+### rainbow
+
+gradient banner for important announcements.
+
+```mdx
+<Banner variant="rainbow">we just launched</Banner>
+```
+
+<Banner variant="rainbow">we just launched</Banner>
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| id | string | - | enables dismiss with persistence |
+| variant | "default" \| "rainbow" | "default" | banner style |

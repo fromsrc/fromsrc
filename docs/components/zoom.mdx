@@ -1,0 +1,33 @@
+---
+title: zoom
+description: image lightbox with click to zoom
+order: 13
+---
+
+wrap images for click-to-zoom functionality.
+
+## usage
+
+```mdx
+<Zoom>
+  ![screenshot](/screenshot.png)
+</Zoom>
+```
+
+click the image to zoom, click again or press escape to close.
+
+## with next/image
+
+```mdx
+import Image from "next/image"
+
+<Zoom>
+  <Image src="/logo.png" width={200} height={100} alt="logo" />
+</Zoom>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| className | string | - | additional classes |
