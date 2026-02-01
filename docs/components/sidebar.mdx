@@ -88,6 +88,24 @@ const navigation = [
 ]
 ```
 
+## collapsible sidebar
+
+enable icon-only collapsed mode with the `collapsible` prop:
+
+```tsx
+<Sidebar
+  title="docs"
+  navigation={navigation}
+  docs={docs}
+  collapsible
+/>
+```
+
+when collapsed:
+- shows only the logo
+- navigation items show icons only
+- collapse state persists in localstorage
+
 ## props
 
 | prop | type | default | description |
@@ -98,6 +116,7 @@ const navigation = [
 | docs | DocMeta[] | required | all docs for search |
 | basePath | string | "/docs" | base url path |
 | github | string | - | github repo link |
+| collapsible | boolean | false | enable collapse toggle |
 
 ## types
 
@@ -106,6 +125,7 @@ interface SidebarItem {
   type: "item"
   title: string
   href: string
+  icon?: ReactNode
 }
 
 interface SidebarFolder {
@@ -113,6 +133,7 @@ interface SidebarFolder {
   title: string
   items: (SidebarItem | SidebarFolder)[]
   defaultOpen?: boolean
+  icon?: ReactNode
 }
 
 interface SidebarSection {
