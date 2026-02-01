@@ -1,0 +1,45 @@
+---
+title: installation
+description: get started with fromsrc
+order: 2
+---
+
+## create a new project
+
+the fastest way to start is with create-fromsrc:
+
+<Create />
+
+this will:
+
+1. create a new directory
+2. set up next.js with fromsrc
+3. add example documentation
+4. install dependencies
+
+## manual installation
+
+add fromsrc to an existing next.js project:
+
+<Install package="fromsrc" />
+
+## project structure
+
+```
+my-docs/
+├── app/
+│   └── docs/
+│       └── [[...slug]]/
+│           └── page.tsx
+├── docs/
+│   ├── index.mdx
+│   └── getting-started.mdx
+└── package.json
+```
+
+## next steps
+
+- add mdx files to the `docs/` folder
+- customize the sidebar navigation
+- configure search
+- deploy to vercel

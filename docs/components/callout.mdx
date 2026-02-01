@@ -1,0 +1,64 @@
+---
+title: callout
+description: highlighted information boxes
+order: 2
+---
+
+callouts draw attention to important information.
+
+## usage
+
+```mdx
+<Callout type="info">
+  this is an informational message.
+</Callout>
+```
+
+## types
+
+### info
+
+default callout for general information.
+
+```mdx
+<Callout type="info">
+  fromsrc supports mdx out of the box.
+</Callout>
+```
+
+### warning
+
+for cautionary messages.
+
+```mdx
+<Callout type="warning">
+  this action cannot be undone.
+</Callout>
+```
+
+### error
+
+for error states or breaking changes.
+
+```mdx
+<Callout type="error">
+  this api is deprecated in v2.
+</Callout>
+```
+
+### tip
+
+for helpful suggestions.
+
+```mdx
+<Callout type="tip">
+  use keyboard shortcuts for faster navigation.
+</Callout>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| type | "info" \| "warning" \| "error" \| "tip" | "info" | callout style |
+| title | string | - | optional title |
