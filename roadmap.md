@@ -67,12 +67,13 @@ create-fromsrc       cli scaffolding (npx create-fromsrc)
 - [x] mobile navigation
 - [x] link component (external link icon)
 - [x] badge component (status labels)
+- [x] llms.txt endpoint for ai tools
 
 ## next
-- [ ] llms.txt generation
 - [ ] benchmark builds at scale (1k, 3k, 5k files)
 - [ ] copy button improvements
 - [ ] highlight matching text in search results
+- [ ] per-page .md raw endpoints
 
 ## future
 - [ ] i18n support (in core, no extra deps)
