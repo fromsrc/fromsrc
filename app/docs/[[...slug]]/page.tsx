@@ -1,10 +1,38 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Content, Toc, Breadcrumb } from "fromsrc/client"
+import type { DocMeta } from "fromsrc"
 import { getDoc, getAllDocs } from "../_lib/content"
 
 interface Props {
 	params: Promise<{ slug?: string[] }>
+}
+
+function sortDocs(docs: DocMeta[]): DocMeta[] {
+	const intro: DocMeta[] = []
+	const components: DocMeta[] = []
+	const api: DocMeta[] = []
+	const other: DocMeta[] = []
+
+	for (const doc of docs) {
+		if (doc.slug.startsWith("components/")) {
+			components.push(doc)
+		} else if (doc.slug.startsWith("api/")) {
+			api.push(doc)
+		} else if (!doc.slug || doc.slug.match(/^[^/]+$/)) {
+			intro.push(doc)
+		} else {
+			other.push(doc)
+		}
+	}
+
+	const sortByOrder = (a: DocMeta, b: DocMeta) => (a.order ?? 999) - (b.order ?? 999)
+	return [
+		...intro.sort(sortByOrder),
+		...components.sort(sortByOrder),
+		...api.sort(sortByOrder),
+		...other.sort(sortByOrder),
+	]
 }
 
 export async function generateStaticParams() {
@@ -29,7 +57,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function DocPage({ params }: Props) {
 	const { slug = [] } = await params
 	const doc = await getDoc(slug)
-	const allDocs = await getAllDocs()
+	const allDocs = sortDocs(await getAllDocs())
 
 	if (!doc) notFound()
 
