@@ -1,0 +1,83 @@
+---
+title: toc
+description: table of contents navigation
+order: 18
+---
+
+table of contents with scroll spy and multiple variants.
+
+## usage
+
+the sidebar toc is used in the docs layout:
+
+```tsx
+import { Toc } from "fromsrc/client"
+
+<div className="flex">
+  <article>{children}</article>
+  <Toc />
+</div>
+```
+
+## variants
+
+### default
+
+full toc with range highlighting showing which section you're in.
+
+```tsx
+<Toc variant="default" />
+```
+
+### minimal
+
+simpler toc with scroll progress indicator.
+
+```tsx
+<Toc variant="minimal" />
+```
+
+### minimal with zigzag
+
+adds visual zigzag lines connecting headings.
+
+```tsx
+<Toc variant="minimal" zigzag />
+```
+
+### inline
+
+collapsible toc that goes inside the content area.
+
+```tsx
+<Toc variant="inline" />
+```
+
+inline toc with custom title:
+
+```tsx
+<Toc variant="inline" title="contents" />
+```
+
+always open inline toc:
+
+```tsx
+<Toc variant="inline" collapsible={false} />
+```
+
+inline toc open by default:
+
+```tsx
+<Toc variant="inline" defaultOpen />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| variant | "default" \| "minimal" \| "inline" | "default" | toc style |
+| zigzag | boolean | false | show zigzag lines (minimal only) |
+| multi | boolean | false | highlight multiple active headings |
+| title | string | "on this page" | header text (inline only) |
+| collapsible | boolean | true | can collapse (inline only) |
+| defaultOpen | boolean | false | start expanded (inline only) |
