@@ -1,0 +1,51 @@
+---
+title: video
+description: embed videos in your docs
+order: 21
+---
+
+embed local or hosted videos including youtube and vimeo.
+
+## usage
+
+```mdx
+<Video src="/demo.mp4" />
+```
+
+## youtube
+
+```mdx
+<Video src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+```
+
+## vimeo
+
+```mdx
+<Video src="https://vimeo.com/123456789" />
+```
+
+## local video
+
+```mdx
+<Video src="/videos/demo.mp4" poster="/videos/poster.jpg" />
+```
+
+## autoplay
+
+for autoplay, video will be muted by default (browser requirement).
+
+```mdx
+<Video src="/demo.mp4" autoplay loop />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| src | string | required | video url |
+| title | string | - | video title |
+| poster | string | - | poster image |
+| autoplay | boolean | false | autoplay video |
+| loop | boolean | false | loop video |
+| muted | boolean | false | mute audio |
+| controls | boolean | true | show controls |
