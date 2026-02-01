@@ -38,9 +38,11 @@ interface Props {
 }
 
 export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", github, collapsible }: Props) {
+	const [mounted, setMounted] = useState(false)
 	const [collapsed, setCollapsed] = useState(false)
 
 	useEffect(() => {
+		setMounted(true)
 		const saved = localStorage.getItem("sidebar-collapsed")
 		if (saved === "true") setCollapsed(true)
 	}, [])
@@ -52,7 +54,10 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 	}
 
 	return (
-		<aside className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200`}>
+		<aside
+			suppressHydrationWarning
+			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200`}
+		>
 			<div className={collapsed ? "p-3" : "p-5"}>
 				<Link href="/" className="flex items-center gap-2.5 text-sm text-fg hover:text-accent transition-colors">
 					<div className="p-1.5 rounded-lg bg-surface border border-line shrink-0">
