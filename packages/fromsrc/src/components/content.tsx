@@ -12,6 +12,9 @@ import { Cards, Card } from "./cards"
 import { Accordion, AccordionItem } from "./accordion"
 import { Files, File, Folder } from "./files"
 import { Badge } from "./badge"
+import { Banner } from "./banner"
+import { Zoom } from "./zoom"
+import { CodeGroup, CodeTab, CodeTabs } from "./codegroup"
 
 interface Props {
 	source: string
@@ -147,6 +150,11 @@ const components = {
 	File,
 	Folder,
 	Badge,
+	Banner,
+	Zoom,
+	CodeGroup,
+	CodeTab,
+	CodeTabs,
 }
 
 export function Content({ source }: Props) {
