@@ -3,7 +3,7 @@
 import { useState } from "react"
 import type { Heading } from "./hook"
 
-interface Props {
+export interface TocInlineProps {
 	headings: Heading[]
 	title?: string
 	collapsible?: boolean
@@ -15,7 +15,7 @@ export function TocInline({
 	title = "on this page",
 	collapsible = true,
 	defaultOpen = false,
-}: Props) {
+}: TocInlineProps) {
 	const [open, setOpen] = useState(defaultOpen)
 
 	if (headings.length === 0) return null

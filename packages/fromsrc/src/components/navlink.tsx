@@ -19,6 +19,7 @@ export function NavLink({ href, children, icon, onClick }: Props) {
 		<Link
 			href={href}
 			onClick={onClick}
+			prefetch
 			className={`flex items-center gap-2 px-2 py-1.5 text-xs rounded-md border-l-2 transition-colors ${
 				isActive
 					? "text-fg bg-surface border-accent"
