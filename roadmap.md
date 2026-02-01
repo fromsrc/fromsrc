@@ -49,16 +49,27 @@ create-fromsrc       cli scaffolding (npx create-fromsrc)
 - [x] sidebar component
 - [x] search component (basic client-side)
 - [x] content component (mdx rendering)
-- [x] codeblock component
+- [x] codeblock component with language icons
 - [x] install/create components
 - [x] docs app structure
 - [x] api routes for raw content
+- [x] callout component (info, warning, error, tip)
+- [x] steps/step components
+- [x] tabs/tab components
+- [x] cards/card components
+- [x] accordion/accordionitem components
+- [x] files/folder/file components
+- [x] biome config
+- [x] component documentation with live examples
+- [x] breadcrumb component
+- [x] theme toggle component
+- [x] fuzzy search with ranking
 
 ## next
-- [ ] improve search (fuzzy matching, ranking)
-- [ ] add more mdx components (tabs, accordion, cards)
 - [ ] llms.txt generation
 - [ ] benchmark builds at scale (1k, 3k, 5k files)
+- [ ] copy button improvements
+- [ ] mobile sidebar
 
 ## future
 - [ ] i18n support (in core, no extra deps)
