@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useCopy } from "../hooks/copy"
 
 const managers = ["npm", "pnpm", "yarn", "bun"] as const
 type Manager = (typeof managers)[number]
@@ -15,18 +16,12 @@ const commands: Record<Manager, string> = {
 const pkg = "fromsrc"
 
 function CopyButton({ text }: { text: string }) {
-	const [copied, setCopied] = useState(false)
-
-	const copy = async () => {
-		await navigator.clipboard.writeText(text)
-		setCopied(true)
-		setTimeout(() => setCopied(false), 1500)
-	}
+	const { copied, copy } = useCopy()
 
 	return (
 		<button
 			type="button"
-			onClick={copy}
+			onClick={() => copy(text)}
 			aria-label={copied ? "Copied" : "Copy code"}
 			style={{
 				display: "flex",
