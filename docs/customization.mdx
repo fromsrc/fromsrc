@@ -1,0 +1,81 @@
+---
+title: customization
+description: customize components and behavior
+order: 5
+---
+
+fromsrc is designed to be customized. you own the components.
+
+## component overrides
+
+import and wrap any component to add custom behavior:
+
+```tsx
+import { Callout as CalloutBase } from "fromsrc/client"
+
+export function Callout({ type, ...props }) {
+  return <CalloutBase type={type} className="my-custom-class" {...props} />
+}
+```
+
+## mdx components
+
+pass custom components to the content renderer:
+
+```tsx
+import { Content } from "fromsrc/client"
+
+const components = {
+  h1: (props) => <h1 className="custom-h1" {...props} />,
+  a: (props) => <a className="custom-link" {...props} />,
+  code: (props) => <code className="custom-code" {...props} />,
+}
+
+<Content source={mdx} components={components} />
+```
+
+## sidebar navigation
+
+build your own navigation structure:
+
+```tsx
+const navigation = [
+  {
+    title: "guides",
+    items: [
+      { type: "item", title: "intro", href: "/docs" },
+      {
+        type: "folder",
+        title: "advanced",
+        items: [
+          { type: "item", title: "plugins", href: "/docs/plugins" },
+        ],
+      },
+    ],
+  },
+]
+```
+
+## search
+
+customize search behavior by wrapping the component:
+
+```tsx
+import { Search } from "fromsrc/client"
+
+export function CustomSearch({ docs }) {
+  return <Search docs={docs} basePath="/documentation" />
+}
+```
+
+## full control
+
+since fromsrc exports primitives, you can:
+
+- use only the components you need
+- replace any component entirely
+- add your own components
+- modify styles via css variables
+- build custom layouts
+
+no framework lock-in. no hidden abstractions.

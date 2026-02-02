@@ -1,24 +1,90 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, type ReactNode } from "react"
 import Link from "next/link"
-import type { ReactNode } from "react"
+import { usePathname } from "next/navigation"
 import type { DocMeta } from "../content"
+import type { SidebarSection, SidebarFolder, SidebarItem } from "./sidebar"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
-
-interface Section {
-	title: string
-	items: DocMeta[]
-}
 
 interface Props {
 	title: string
 	logo?: ReactNode
-	navigation: Section[]
+	navigation: SidebarSection[]
 	docs: DocMeta[]
 	basePath?: string
 	github?: string
+}
+
+function MobileFolder({
+	folder,
+	basePath,
+	onNavigate,
+}: {
+	folder: SidebarFolder
+	basePath: string
+	onNavigate: () => void
+}) {
+	const pathname = usePathname()
+	const hasActiveChild = folder.items.some((item) => {
+		if (item.type === "folder") {
+			return item.items.some((child) => {
+				if (child.type === "item") {
+					return pathname === child.href
+				}
+				return false
+			})
+		}
+		if (item.type === "item") {
+			return pathname === item.href
+		}
+		return false
+	})
+
+	const [open, setOpen] = useState(folder.defaultOpen ?? false)
+
+	useEffect(() => {
+		if (hasActiveChild) setOpen(true)
+	}, [hasActiveChild])
+
+	return (
+		<li>
+			<button
+				type="button"
+				onClick={() => setOpen(!open)}
+				className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
+			>
+				{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
+				<span className="flex-1 text-left">{folder.title}</span>
+				<svg
+					className={`w-3.5 h-3.5 transition-transform ${open ? "" : "-rotate-90"}`}
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					aria-hidden="true"
+				>
+					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
+			{open && (
+				<ul className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
+					{folder.items.map((item, i) => {
+						if (item.type === "folder") {
+							return <MobileFolder key={i} folder={item} basePath={basePath} onNavigate={onNavigate} />
+						}
+						return (
+							<li key={i}>
+								<NavLink href={item.href} icon={item.icon} onClick={onNavigate}>
+									{item.title}
+								</NavLink>
+							</li>
+						)
+					})}
+				</ul>
+			)}
+		</li>
+	)
 }
 
 export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", github }: Props) {
@@ -74,23 +140,44 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 					<div className="p-4">
 						<Search basePath={basePath} docs={docs} />
 					</div>
-					<nav className="px-4 pb-20 overflow-y-auto max-h-[calc(100vh-8rem)]">
+					<nav className="px-4 pb-20 overflow-y-auto max-h-[calc(100vh-8rem)] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 						{navigation.map((section) => (
 							<div key={section.title} className="mb-6">
 								<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider">
 									{section.title}
 								</h3>
 								<ul className="space-y-0.5">
-									{section.items.map((item) => (
-										<li key={item.slug}>
-											<NavLink
-												href={item.slug ? `${basePath}/${item.slug}` : basePath}
-												onClick={() => setOpen(false)}
-											>
-												{item.title}
-											</NavLink>
-										</li>
-									))}
+									{section.items.map((item, i) => {
+										if (!("type" in item)) {
+											return (
+												<li key={item.slug || i}>
+													<NavLink
+														href={item.slug ? `${basePath}/${item.slug}` : basePath}
+														onClick={() => setOpen(false)}
+													>
+														{item.title}
+													</NavLink>
+												</li>
+											)
+										}
+										if (item.type === "folder") {
+											return (
+												<MobileFolder
+													key={i}
+													folder={item}
+													basePath={basePath}
+													onNavigate={() => setOpen(false)}
+												/>
+											)
+										}
+										return (
+											<li key={i}>
+												<NavLink href={item.href} icon={item.icon} onClick={() => setOpen(false)}>
+													{item.title}
+												</NavLink>
+											</li>
+										)
+									})}
 								</ul>
 							</div>
 						))}

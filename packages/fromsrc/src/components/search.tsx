@@ -128,13 +128,13 @@ export function Search({ basePath = "/docs", docs }: Props) {
 	}
 
 	return (
-		<div className="fixed inset-0 z-50">
+		<div className="fixed inset-0 z-[100]">
 			<div
-				className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
+				className="fixed inset-0 bg-bg/80 backdrop-blur-sm"
 				onClick={() => setOpen(false)}
 				onKeyDown={() => {}}
 			/>
-			<div className="relative z-50 max-w-lg mx-auto mt-[20vh]">
+			<div className="relative z-10 max-w-lg mx-auto mt-[20vh]">
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
 						<svg

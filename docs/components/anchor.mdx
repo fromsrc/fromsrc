@@ -1,0 +1,47 @@
+---
+title: anchor
+description: headings with anchor links
+order: 26
+---
+
+headings that show a copy link icon on hover.
+
+## usage
+
+```mdx
+<Anchor id="section-1">section title</Anchor>
+```
+
+or use the heading shortcuts:
+
+```mdx
+<H2 id="getting-started">getting started</H2>
+<H3 id="installation">installation</H3>
+```
+
+## features
+
+- hover to reveal link icon
+- click to copy anchor url
+- works with toc scroll spy
+- all heading levels (h1-h6)
+
+## components
+
+| component | element |
+|-----------|---------|
+| Anchor | custom level via `as` prop |
+| H1 | h1 |
+| H2 | h2 |
+| H3 | h3 |
+| H4 | h4 |
+| H5 | h5 |
+| H6 | h6 |
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| id | string | required | anchor id for linking |
+| children | ReactNode | required | heading text |
+| as | string | "h2" | html element (Anchor only) |

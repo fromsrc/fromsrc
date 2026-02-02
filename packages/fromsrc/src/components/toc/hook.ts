@@ -12,12 +12,14 @@ export interface TocState {
 	headings: Heading[]
 	active: string
 	activeRange: string[]
+	progress: number
 }
 
 export function useToc(multi = false): TocState {
 	const [headings, setHeadings] = useState<Heading[]>([])
 	const [active, setActive] = useState<string>("")
 	const [activeRange, setActiveRange] = useState<string[]>([])
+	const [progress, setProgress] = useState(0)
 
 	useEffect(() => {
 		function scan() {
@@ -92,9 +94,13 @@ export function useToc(multi = false): TocState {
 			return () => observer.disconnect()
 		}
 
-		let ticking = false
+			let ticking = false
 
 		function update() {
+			const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
+			const scrolled = scrollHeight > 0 ? Math.min(window.scrollY / scrollHeight, 1) : 0
+			setProgress(scrolled)
+
 			const atBottom =
 				window.innerHeight + Math.ceil(window.scrollY) >= document.documentElement.scrollHeight
 
@@ -137,5 +143,5 @@ export function useToc(multi = false): TocState {
 		return () => window.removeEventListener("scroll", onScroll)
 	}, [headings, multi])
 
-	return { headings, active, activeRange }
+	return { headings, active, activeRange, progress }
 }

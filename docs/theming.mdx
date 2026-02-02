@@ -1,0 +1,77 @@
+---
+title: theming
+description: customize colors and styles
+order: 4
+---
+
+fromsrc uses css variables for theming, making it easy to customize.
+
+## css variables
+
+add these to your global css:
+
+```css
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --line: #1c1c1c;
+  --fg: #fafafa;
+  --muted: #737373;
+  --dim: #525252;
+  --accent: #ef4444;
+}
+```
+
+## tailwind config
+
+map the variables in your tailwind config:
+
+```ts
+export default {
+  theme: {
+    extend: {
+      colors: {
+        bg: "var(--bg)",
+        surface: "var(--surface)",
+        line: "var(--line)",
+        fg: "var(--fg)",
+        muted: "var(--muted)",
+        dim: "var(--dim)",
+        accent: "var(--accent)",
+      },
+    },
+  },
+}
+```
+
+## color system
+
+| variable | purpose |
+|----------|---------|
+| bg | page background |
+| surface | elevated surfaces, cards |
+| line | borders, dividers |
+| fg | primary text |
+| muted | secondary text |
+| dim | tertiary text |
+| accent | interactive elements |
+
+## light mode
+
+add light mode colors with a class or media query:
+
+```css
+.light {
+  --bg: #ffffff;
+  --surface: #f5f5f5;
+  --line: #e5e5e5;
+  --fg: #0a0a0a;
+  --muted: #737373;
+  --dim: #a3a3a3;
+  --accent: #dc2626;
+}
+```
+
+## component styles
+
+all components use these semantic colors. change the variables to theme everything at once.

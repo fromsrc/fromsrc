@@ -17,6 +17,10 @@ import { Zoom } from "./zoom"
 import { CodeGroup, CodeTab, CodeTabs } from "./codegroup"
 import { TypeTable } from "./typetable"
 import { Github } from "./github"
+import { Tooltip } from "./tooltip"
+import { Video } from "./video"
+import { Mermaid } from "./mermaid"
+import { TocInline } from "./toc/inline"
 
 interface Props {
 	source: string
@@ -159,6 +163,10 @@ const components = {
 	CodeTabs,
 	TypeTable,
 	Github,
+	Tooltip,
+	Video,
+	Mermaid,
+	TocInline,
 }
 
 export function Content({ source }: Props) {
