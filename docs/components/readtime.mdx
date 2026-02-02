@@ -1,0 +1,42 @@
+---
+title: readtime
+description: estimated reading time
+order: 21
+---
+
+displays estimated reading time for content based on word count.
+
+## usage
+
+```tsx
+import { ReadTime } from "fromsrc"
+
+<ReadTime content={doc.content} />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| content | string | required | text content to calculate time from |
+| wpm | number | 200 | words per minute reading speed |
+| className | string | - | additional css classes |
+
+## example
+
+```tsx
+<ReadTime content={doc.content} wpm={250} />
+```
+
+renders as "3 min read"
+
+## utility function
+
+you can also use the utility function directly:
+
+```tsx
+import { calcReadTime } from "fromsrc"
+
+const minutes = calcReadTime(content)
+const minutes = calcReadTime(content, 250) // custom wpm
+```
