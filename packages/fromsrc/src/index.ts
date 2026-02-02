@@ -9,3 +9,5 @@ export {
 } from "./content"
 
 export { baseSchema, defineSchema, extendSchema, z, type InferSchema } from "./schema"
+
+export { ReadTime, calcReadTime } from "./components/readtime"
