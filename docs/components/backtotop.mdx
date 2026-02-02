@@ -1,0 +1,39 @@
+---
+title: backtotop
+description: scroll to top button
+order: 20
+---
+
+a floating button that appears when scrolling down, allowing users to quickly return to the top of the page.
+
+## usage
+
+```tsx
+import { BackToTop } from "fromsrc/client"
+
+<BackToTop />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| threshold | number | 400 | scroll distance before button appears |
+| className | string | - | additional css classes |
+
+## example
+
+the button appears after scrolling 400px:
+
+```tsx
+<BackToTop threshold={200} />
+```
+
+## styling
+
+the component uses these css variables:
+
+- `--bg-surface` - button background
+- `--border-line` - button border
+- `--bg-bg` - hover background
+- `--text-fg` - icon color
