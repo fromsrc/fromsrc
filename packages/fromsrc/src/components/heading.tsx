@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import type { ReactNode } from "react"
+import { useCopy } from "../hooks/copy"
 
 export interface AnchorProps {
 	level: 1 | 2 | 3 | 4 | 5 | 6
@@ -19,15 +20,8 @@ const sizes: Record<number, string> = {
 }
 
 export function Anchor({ level, id, children, className }: AnchorProps) {
-	const [copied, setCopied] = useState(false)
+	const { copied, copy } = useCopy()
 	const Tag = `h${level}` as const
-
-	function copy() {
-		const url = `${window.location.origin}${window.location.pathname}#${id}`
-		navigator.clipboard.writeText(url)
-		setCopied(true)
-		setTimeout(() => setCopied(false), 1500)
-	}
 
 	return (
 		<Tag id={id} className={`group relative scroll-mt-20 ${sizes[level]} ${className || ""}`}>
@@ -35,7 +29,8 @@ export function Anchor({ level, id, children, className }: AnchorProps) {
 				href={`#${id}`}
 				onClick={(e) => {
 					e.preventDefault()
-					copy()
+					const url = `${window.location.origin}${window.location.pathname}#${id}`
+					copy(url)
 					window.history.pushState(null, "", `#${id}`)
 				}}
 				className="absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
