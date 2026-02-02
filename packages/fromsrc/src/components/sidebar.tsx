@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect, type ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
@@ -38,24 +38,12 @@ interface Props {
 }
 
 export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", github, collapsible }: Props) {
-	const [mounted, setMounted] = useState(false)
 	const [collapsed, setCollapsed] = useState(false)
 
-	useEffect(() => {
-		setMounted(true)
-		const saved = localStorage.getItem("sidebar-collapsed")
-		if (saved === "true") setCollapsed(true)
-	}, [])
-
-	const toggle = () => {
-		const next = !collapsed
-		setCollapsed(next)
-		localStorage.setItem("sidebar-collapsed", String(next))
-	}
+	const toggle = () => setCollapsed(!collapsed)
 
 	return (
 		<aside
-			suppressHydrationWarning
 			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200`}
 		>
 			<div className={collapsed ? "p-3" : "p-5"}>
