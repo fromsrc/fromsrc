@@ -127,10 +127,11 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 			</header>
 			{open && (
 				<div className="lg:hidden fixed inset-0 z-50">
-					<div
-						className={`absolute inset-0 bg-bg/80 backdrop-blur-sm ${closing ? "animate-fadeout" : "animate-fadein"}`}
+					<button
+						type="button"
+						className={`absolute inset-0 bg-bg/80 backdrop-blur-sm cursor-default ${closing ? "animate-fadeout" : "animate-fadein"}`}
 						onClick={close}
-						onKeyDown={() => {}}
+						aria-label="close menu"
 					/>
 					<aside
 						className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[380px] bg-bg border-l border-line shadow-2xl flex flex-col ${closing ? "animate-slideout" : "animate-slidein"}`}
