@@ -2,6 +2,7 @@
 
 import type { JSX, ReactNode } from "react"
 import { useCallback, useEffect, useId, useRef, useState } from "react"
+import { useEscapeKey } from "../hooks/escapekey"
 
 /**
  * tooltip position state
@@ -48,14 +49,7 @@ export function Tooltip({ content, children, side = "top", delay = 200 }: Toolti
 		}
 	}, [])
 
-	useEffect(() => {
-		if (!show) return
-		const handleEscape = (e: KeyboardEvent) => {
-			if (e.key === "Escape") hide()
-		}
-		document.addEventListener("keydown", handleEscape)
-		return () => document.removeEventListener("keydown", handleEscape)
-	}, [show, hide])
+	useEscapeKey(hide, show)
 
 	const updatePosition = useCallback((): void => {
 		if (!triggerRef.current || !tooltipRef.current) return
