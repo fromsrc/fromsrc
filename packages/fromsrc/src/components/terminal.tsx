@@ -1,13 +1,19 @@
 "use client"
 
-import { type CSSProperties, type ReactNode, useEffect, useState } from "react"
+import { type CSSProperties, type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 
+/**
+ * props for the terminal container component
+ */
 export interface TerminalProps {
 	title?: string
 	children: ReactNode
 }
 
-export function Terminal({ title = "Terminal", children }: TerminalProps) {
+/**
+ * terminal window with macos-style title bar
+ */
+export function Terminal({ title = "Terminal", children }: TerminalProps): ReactNode {
 	return (
 		<div className="my-6 rounded-xl border border-line overflow-hidden">
 			<div className="flex items-center gap-2 px-4 py-2.5 bg-[#0a0a0a] border-b border-line">
@@ -23,12 +29,18 @@ export function Terminal({ title = "Terminal", children }: TerminalProps) {
 	)
 }
 
+/**
+ * props for terminal command line
+ */
 export interface LineProps {
 	prompt?: string
 	children: ReactNode
 }
 
-export function Line({ prompt = "$", children }: LineProps) {
+/**
+ * command line with prompt symbol
+ */
+export function Line({ prompt = "$", children }: LineProps): ReactNode {
 	return (
 		<div className="flex gap-2">
 			<span className="text-emerald-400 select-none shrink-0">{prompt}</span>
@@ -37,14 +49,23 @@ export function Line({ prompt = "$", children }: LineProps) {
 	)
 }
 
+/**
+ * props for terminal output
+ */
 export interface OutputProps {
 	children: ReactNode
 }
 
-export function Output({ children }: OutputProps) {
+/**
+ * command output text
+ */
+export function Output({ children }: OutputProps): ReactNode {
 	return <div className="text-zinc-500 pl-5">{children}</div>
 }
 
+/**
+ * props for typewriter animation
+ */
 export interface TypedProps {
 	text: string
 	speed?: number
@@ -54,29 +75,38 @@ const caretStyle: CSSProperties = {
 	animation: "caret 530ms steps(1) infinite",
 }
 
-export function Typed({ text, speed = 50 }: TypedProps) {
+/**
+ * typewriter text animation with blinking caret
+ */
+export function Typed({ text, speed = 50 }: TypedProps): ReactNode {
 	const [displayed, setDisplayed] = useState("")
 	const [done, setDone] = useState(false)
+	const indexRef = useRef(0)
 
-	useEffect(() => {
+	const reset = useCallback((): void => {
 		setDisplayed("")
 		setDone(false)
+		indexRef.current = 0
+	}, [])
+
+	const tick = useCallback((): void => {
+		if (indexRef.current < text.length) {
+			indexRef.current++
+			setDisplayed(text.slice(0, indexRef.current))
+		} else {
+			setDone(true)
+		}
 	}, [text])
 
 	useEffect(() => {
+		reset()
+	}, [text, reset])
+
+	useEffect(() => {
 		if (done) return
-		let i = 0
-		const interval = setInterval(() => {
-			if (i < text.length) {
-				setDisplayed(text.slice(0, i + 1))
-				i++
-			} else {
-				setDone(true)
-				clearInterval(interval)
-			}
-		}, speed)
-		return () => clearInterval(interval)
-	}, [text, speed, done])
+		const interval = setInterval(tick, speed)
+		return (): void => clearInterval(interval)
+	}, [text, speed, done, tick])
 
 	return (
 		<span>
