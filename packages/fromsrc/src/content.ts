@@ -23,18 +23,32 @@ export interface ContentConfig<T extends SchemaType = typeof baseSchema> {
 	schema?: T
 }
 
+const fileCache = new Map<string, string>()
+const metaCache = new Map<string, DocMeta[]>()
+
+async function readCached(filepath: string): Promise<string> {
+	const cached = fileCache.get(filepath)
+	if (cached) return cached
+	const content = await readFile(filepath, "utf-8")
+	fileCache.set(filepath, content)
+	return content
+}
+
 export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	const schema = config.schema ?? baseSchema
 
 	type Meta = z.infer<T> & { slug: string }
 	type Document = Meta & { content: string; data: z.infer<T> }
 
+	let docsCache: Meta[] | null = null
+	let navCache: { title: string; items: Meta[] }[] | null = null
+
 	async function getDoc(slug: string[]): Promise<Document | null> {
 		const path = slug.length === 0 ? "index" : slug.join("/")
 		const filepath = join(config.dir, `${path}.mdx`)
 
 		try {
-			const source = await readFile(filepath, "utf-8")
+			const source = await readCached(filepath)
 			const { data, content } = matter(source)
 			const parsed = schema.parse(data) as z.infer<T>
 
@@ -55,6 +69,8 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	}
 
 	async function getAllDocs(): Promise<Meta[]> {
+		if (docsCache) return docsCache
+
 		const docs: Meta[] = []
 
 		async function scan(dir: string, prefix = "") {
@@ -65,7 +81,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 					await scan(join(dir, entry.name), `${prefix}${entry.name}/`)
 				} else if (entry.name.endsWith(".mdx")) {
 					const filepath = join(dir, entry.name)
-					const source = await readFile(filepath, "utf-8")
+					const source = await readCached(filepath)
 					const { data } = matter(source)
 					const parsed = schema.parse(data) as z.infer<T>
 					const slug = `${prefix}${entry.name.replace(".mdx", "")}`
@@ -87,10 +103,13 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			return []
 		}
 
-		return docs.sort((a, b) => ((a.order as number) ?? 99) - ((b.order as number) ?? 99))
+		docsCache = docs.sort((a, b) => ((a.order as number) ?? 99) - ((b.order as number) ?? 99))
+		return docsCache
 	}
 
 	async function getNavigation() {
+		if (navCache) return navCache
+
 		const docs = await getAllDocs()
 
 		const sections: { title: string; items: Meta[] }[] = [
@@ -109,7 +128,8 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			}
 		}
 
-		return sections.filter((s) => s.items.length > 0)
+		navCache = sections.filter((s) => s.items.length > 0)
+		return navCache
 	}
 
 	return {
@@ -125,7 +145,7 @@ export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | nul
 	const filepath = join(docsDir, `${path}.mdx`)
 
 	try {
-		const source = await readFile(filepath, "utf-8")
+		const source = await readCached(filepath)
 		const { data, content } = matter(source)
 		const parsed = baseSchema.parse(data)
 
@@ -148,6 +168,10 @@ export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | nul
 }
 
 export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
+	const cacheKey = docsDir
+	const cached = metaCache.get(cacheKey)
+	if (cached) return cached
+
 	const docs: DocMeta[] = []
 
 	async function scan(dir: string, prefix = "") {
@@ -158,7 +182,7 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 				await scan(join(dir, entry.name), `${prefix}${entry.name}/`)
 			} else if (entry.name.endsWith(".mdx")) {
 				const filepath = join(dir, entry.name)
-				const source = await readFile(filepath, "utf-8")
+				const source = await readCached(filepath)
 				const { data } = matter(source)
 				const parsed = baseSchema.parse(data)
 				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
@@ -182,7 +206,9 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 		return []
 	}
 
-	return docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+	const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+	metaCache.set(cacheKey, sorted)
+	return sorted
 }
 
 export async function getNavigation(docsDir: string) {

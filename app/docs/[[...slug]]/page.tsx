@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { Content, Toc, Breadcrumb } from "fromsrc/client"
+import { Toc, Breadcrumb } from "fromsrc/client"
 import type { DocMeta } from "fromsrc"
 import { getDoc, getAllDocs } from "../_lib/content"
+import { MDX } from "../_components/mdx"
 
 interface Props {
 	params: Promise<{ slug?: string[] }>
@@ -78,7 +79,7 @@ export default async function DocPage({ params }: Props) {
 					)}
 				</header>
 				<div className="prose">
-					<Content source={doc.content} />
+					<MDX source={doc.content} />
 				</div>
 				<div className="mt-12 flex justify-end">
 					<a
