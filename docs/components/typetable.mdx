@@ -10,33 +10,49 @@ document api properties and types in a clean table format.
 
 ```tsx
 <TypeTable
-  types={[
-    { name: "title", type: "string", required: true, description: "page title" },
-    { name: "description", type: "string", description: "page description" },
-    { name: "order", type: "number", default: "0", description: "sort order" },
-  ]}
+  data={{
+    title: { type: "string", required: true, description: "page title" },
+    description: { type: "string", description: "page description" },
+    order: { type: "number", default: "0", description: "sort order" },
+  }}
 />
 ```
+
+## example
+
+<TypeTable
+  data={{
+    title: { type: "string", required: true, description: "page title" },
+    description: { type: "string", description: "page description" },
+    order: { type: "number", default: "0", description: "sort order" },
+  }}
+/>
+
+click a row to expand the description.
 
 ## features
 
 - shows property name, type, default, and description
-- indicates required properties
+- indicates required properties with `?` marker
+- expandable rows for descriptions
 - clean compact design
 - works in mdx
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| types | TypeInfo[] | required | array of type definitions |
+<TypeTable
+  data={{
+    data: { type: "Record<string, TypeInfo>", required: true, description: "map of prop names to type info" },
+  }}
+/>
 
 ## typeinfo
 
-| field | type | description |
-|-------|------|-------------|
-| name | string | property name |
-| type | string | typescript type |
-| required | boolean | is required |
-| default | string | default value |
-| description | string | property description |
+<TypeTable
+  data={{
+    type: { type: "string", required: true, description: "typescript type" },
+    required: { type: "boolean", description: "marks prop as required" },
+    default: { type: "string", description: "default value" },
+    description: { type: "ReactNode", description: "prop description" },
+  }}
+/>
