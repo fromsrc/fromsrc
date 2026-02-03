@@ -1,5 +1,8 @@
-import type { ReactNode } from "react"
+import { memo, type ReactNode, type JSX } from "react"
 
+/**
+ * Props for the Property component that displays a single API property.
+ */
 export interface PropertyProps {
 	name: string
 	type: string
@@ -9,66 +12,61 @@ export interface PropertyProps {
 	children?: ReactNode
 }
 
-export function Property({
+/**
+ * Props for the Properties component that wraps multiple Property items.
+ */
+export interface PropertiesProps {
+	children: ReactNode
+}
+
+export const Property = memo(function Property({
 	name,
 	type,
 	required,
 	default: defaultValue,
 	deprecated,
 	children,
-}: PropertyProps) {
+}: PropertyProps): JSX.Element {
 	return (
-		<div
-			role="listitem"
+		<article
+			aria-labelledby={`property-${name}`}
 			className={`py-4 border-b border-line last:border-0 ${deprecated ? "opacity-60" : ""}`}
 		>
-			<dl className="flex flex-wrap items-center gap-2 mb-2">
-				<dt className="sr-only">Name</dt>
-				<dd className={`text-sm font-mono ${deprecated ? "line-through" : "text-fg"}`}>{name}</dd>
-				<dt className="sr-only">Type</dt>
-				<dd className="text-xs px-1.5 py-0.5 rounded bg-surface text-muted font-mono">{type}</dd>
+			<header className="flex flex-wrap items-center gap-2 mb-2">
+				<h3
+					id={`property-${name}`}
+					className={`text-sm font-mono ${deprecated ? "line-through" : "text-fg"}`}
+				>
+					{name}
+				</h3>
+				<code className="text-xs px-1.5 py-0.5 rounded bg-surface text-muted font-mono">
+					{type}
+				</code>
 				{required && (
-					<>
-						<dt className="sr-only">Status</dt>
-						<dd className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 uppercase tracking-wider">
-							required
-						</dd>
-					</>
+					<span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 uppercase tracking-wider">
+						required
+					</span>
 				)}
 				{deprecated && (
-					<>
-						<dt className="sr-only">Status</dt>
-						<dd className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 uppercase tracking-wider">
-							deprecated
-						</dd>
-					</>
+					<span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 uppercase tracking-wider">
+						deprecated
+					</span>
 				)}
 				{defaultValue !== undefined && (
-					<>
-						<dt className="sr-only">Default</dt>
-						<dd className="text-xs text-muted">
-							default: <code className="font-mono">{defaultValue}</code>
-						</dd>
-					</>
+					<span className="text-xs text-muted">
+						default: <code className="font-mono">{defaultValue}</code>
+					</span>
 				)}
-			</dl>
-			{children && (
-				<div className="text-sm text-muted" role="note">
-					{children}
-				</div>
-			)}
-		</div>
+			</header>
+			{children && <p className="text-sm text-muted">{children}</p>}
+		</article>
 	)
-}
+})
 
-export interface PropertiesProps {
-	children: ReactNode
-}
-
-export function Properties({ children }: PropertiesProps) {
+export const Properties = memo(function Properties({ children }: PropertiesProps): JSX.Element {
 	return (
-		<div role="list" className="my-6 divide-y divide-line">
+		<section aria-label="Properties" className="my-6 divide-y divide-line">
 			{children}
-		</div>
+		</section>
 	)
-}
+})
