@@ -9,6 +9,7 @@ import {
 	useId,
 	useState,
 } from "react"
+import { getNextIndex } from "../hooks/arrownav"
 
 export type RadioSize = "sm" | "md" | "lg"
 
@@ -174,18 +175,16 @@ function RadioGroupBase({
 			e.currentTarget.querySelectorAll('[role="radio"]:not([disabled])'),
 		) as HTMLElement[]
 		const currentIndex = radios.findIndex((r) => r === document.activeElement)
-
-		let nextIndex = -1
-		if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-			e.preventDefault()
-			nextIndex = currentIndex < radios.length - 1 ? currentIndex + 1 : 0
-		} else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-			e.preventDefault()
-			nextIndex = currentIndex > 0 ? currentIndex - 1 : radios.length - 1
-		}
-
+		const nextIndex = getNextIndex(e.key, {
+			count: radios.length,
+			current: currentIndex >= 0 ? currentIndex : 0,
+			direction: "both",
+			wrap: true,
+		})
+		if (nextIndex === currentIndex) return
+		e.preventDefault()
 		const nextRadio = radios[nextIndex]
-		if (nextIndex !== -1 && nextRadio) {
+		if (nextRadio) {
 			nextRadio.focus()
 			const wrapper = nextRadio.closest("[data-radio-value]")
 			const radioValue = wrapper?.getAttribute("data-radio-value")
