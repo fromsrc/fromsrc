@@ -69,30 +69,28 @@ export default async function DocPage({ params }: Props) {
 	return (
 		<div className="flex w-full max-w-7xl mx-auto">
 			<article className="flex-1 min-w-0 py-12 px-8 lg:px-12">
-				<header className="mb-10">
-					<div className="mb-3">
+				<header className="mb-8 pb-6 border-b border-line">
+					<div className="mb-4">
 						<Breadcrumb base="/docs" />
 					</div>
-					<h1 className="text-2xl font-medium mb-3 text-fg">{doc.title}</h1>
+					<h1 className="text-2xl font-medium mb-2 text-fg">{doc.title}</h1>
 					{doc.description && (
-						<p className="text-sm text-muted">{doc.description}</p>
+						<p className="text-sm text-muted mb-4">{doc.description}</p>
 					)}
-				</header>
-				<div className="prose">
-					<MDX source={doc.content} />
-				</div>
-				<div className="mt-12 flex justify-end">
 					<a
 						href={`https://github.com/fromsrc/fromsrc/edit/main/docs/${doc.slug || "index"}.mdx`}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="text-xs text-muted hover:text-fg transition-colors flex items-center gap-1.5"
+						className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-fg transition-colors"
 					>
-						<svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+						<svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
 						</svg>
-						edit this page
+						edit
 					</a>
+				</header>
+				<div className="prose">
+					<MDX source={doc.content} />
 				</div>
 				<nav className="mt-8 pt-8 border-t border-line flex justify-between gap-4">
 					{prev ? (
