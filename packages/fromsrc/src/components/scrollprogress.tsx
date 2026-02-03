@@ -1,6 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
+import type { JSX } from "react"
 
 export interface ScrollProgressProps {
 	color?: string
@@ -8,18 +9,18 @@ export interface ScrollProgressProps {
 	label?: string
 }
 
-export function ScrollProgress({
+function ScrollProgressBase({
 	color = "var(--accent)",
 	height = 2,
 	label = "Page scroll progress",
-}: ScrollProgressProps) {
+}: ScrollProgressProps): JSX.Element {
 	const [progress, setProgress] = useState<number>(0)
 	const rafRef = useRef<number>(0)
 
-	const handleScroll = useCallback(() => {
+	const handleScroll = useCallback((): void => {
 		if (rafRef.current) return
 
-		rafRef.current = requestAnimationFrame(() => {
+		rafRef.current = requestAnimationFrame((): void => {
 			const scrollTop = document.documentElement.scrollTop
 			const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
 			const newProgress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0
@@ -28,10 +29,10 @@ export function ScrollProgress({
 		})
 	}, [])
 
-	useEffect(() => {
+	useEffect((): (() => void) => {
 		handleScroll()
 		window.addEventListener("scroll", handleScroll, { passive: true })
-		return () => {
+		return (): void => {
 			window.removeEventListener("scroll", handleScroll)
 			if (rafRef.current) cancelAnimationFrame(rafRef.current)
 		}
@@ -59,3 +60,5 @@ export function ScrollProgress({
 		</div>
 	)
 }
+
+export const ScrollProgress = memo(ScrollProgressBase)
