@@ -1,0 +1,61 @@
+---
+title: property
+description: document object properties
+order: 23
+---
+
+document api properties with types, defaults, and descriptions.
+
+## usage
+
+```mdx
+<Properties>
+  <Property name="title" type="string" required>
+    the page title displayed in the header
+  </Property>
+  <Property name="description" type="string">
+    optional description shown below title
+  </Property>
+  <Property name="order" type="number" default="0">
+    sort order in navigation
+  </Property>
+</Properties>
+```
+
+<Properties>
+  <Property name="title" type="string" required>
+    the page title displayed in the header
+  </Property>
+  <Property name="description" type="string">
+    optional description shown below title
+  </Property>
+  <Property name="order" type="number" default="0">
+    sort order in navigation
+  </Property>
+</Properties>
+
+## deprecated properties
+
+mark properties as deprecated:
+
+```mdx
+<Property name="oldProp" type="string" deprecated>
+  use newProp instead
+</Property>
+```
+
+<Properties>
+  <Property name="oldProp" type="string" deprecated>
+    use newProp instead
+  </Property>
+</Properties>
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| name | string | - | property name |
+| type | string | - | property type |
+| required | boolean | false | mark as required |
+| default | string | - | default value |
+| deprecated | boolean | false | mark as deprecated |

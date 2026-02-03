@@ -1,0 +1,81 @@
+---
+title: compare
+description: side by side comparisons
+order: 30
+---
+
+compare options or show before/after examples.
+
+## columns
+
+side by side comparison:
+
+```mdx
+<Compare>
+  <Column title="free" variant="default">
+    basic features included
+  </Column>
+  <Column title="pro" variant="good">
+    all features unlocked
+  </Column>
+</Compare>
+```
+
+<Compare>
+  <Column title="free" variant="default">
+    basic features included
+  </Column>
+  <Column title="pro" variant="good">
+    all features unlocked
+  </Column>
+</Compare>
+
+## good vs bad
+
+highlight recommended vs not recommended:
+
+```mdx
+<Compare>
+  <Column title="avoid" variant="bad">
+    overly complex solutions
+  </Column>
+  <Column title="prefer" variant="good">
+    simple and direct code
+  </Column>
+</Compare>
+```
+
+<Compare>
+  <Column title="avoid" variant="bad">
+    overly complex solutions
+  </Column>
+  <Column title="prefer" variant="good">
+    simple and direct code
+  </Column>
+</Compare>
+
+## before/after
+
+show transformations:
+
+```mdx
+<CompareRow
+  left="verbose configuration"
+  right="minimal setup"
+/>
+```
+
+<CompareRow
+  left="verbose configuration"
+  right="minimal setup"
+/>
+
+## props
+
+### column
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | - | column header |
+| variant | "default" \| "good" \| "bad" | "default" | style variant |
+| children | ReactNode | - | content |

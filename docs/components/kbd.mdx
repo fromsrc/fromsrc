@@ -1,0 +1,39 @@
+---
+title: kbd
+description: keyboard shortcut styling
+order: 20
+---
+
+display keyboard shortcuts with proper styling.
+
+## usage
+
+```mdx
+press <Kbd>⌘</Kbd> + <Kbd>K</Kbd> to search
+```
+
+renders as:
+
+press <Kbd>⌘</Kbd> + <Kbd>K</Kbd> to search
+
+## shortcut
+
+use the `Shortcut` component for multiple keys:
+
+```mdx
+<Shortcut keys={["⌘", "Shift", "P"]} />
+```
+
+<Shortcut keys={["⌘", "Shift", "P"]} />
+
+## common keys
+
+| key | display |
+|-----|---------|
+| ⌘ | command (mac) |
+| ⌃ | control |
+| ⇧ | shift |
+| ⌥ | option/alt |
+| ↵ | enter |
+| ⎋ | escape |
+| ← → ↑ ↓ | arrows |

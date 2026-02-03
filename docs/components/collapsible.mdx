@@ -1,0 +1,75 @@
+---
+title: collapsible
+description: expandable content sections
+order: 26
+---
+
+toggle content visibility with smooth animations.
+
+## collapsible
+
+controlled component with state:
+
+```mdx
+<Collapsible title="show more details">
+  hidden content that appears when expanded.
+  supports any content including code blocks and components.
+</Collapsible>
+```
+
+<Collapsible title="show more details">
+  hidden content that appears when expanded.
+  supports any content including code blocks and components.
+</Collapsible>
+
+## default open
+
+start expanded:
+
+```mdx
+<Collapsible title="expanded by default" defaultOpen>
+  this content is visible on page load
+</Collapsible>
+```
+
+<Collapsible title="expanded by default" defaultOpen>
+  this content is visible on page load
+</Collapsible>
+
+## details
+
+native html details element with styled appearance:
+
+```mdx
+<Details summary="click to expand">
+  lightweight alternative using native browser behavior
+</Details>
+```
+
+<Details summary="click to expand">
+  lightweight alternative using native browser behavior
+</Details>
+
+## when to use
+
+| component | use case |
+|-----------|----------|
+| Collapsible | controlled state, react integration |
+| Details | simple toggle, no javascript needed |
+
+## props
+
+### collapsible
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | - | header text |
+| defaultOpen | boolean | false | initial state |
+| children | ReactNode | - | content |
+
+### details
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| summary | string | - | header text |
+| children | ReactNode | - | content |

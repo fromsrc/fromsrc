@@ -1,0 +1,86 @@
+---
+title: linkcard
+description: link preview cards
+order: 35
+---
+
+styled link cards with optional icons.
+
+## linkcard
+
+internal link:
+
+```mdx
+<LinkCard
+  href="/docs/quickstart"
+  title="quickstart"
+  description="get started in minutes"
+/>
+```
+
+<LinkCard
+  href="/docs/quickstart"
+  title="quickstart"
+  description="get started in minutes"
+/>
+
+## external link
+
+shows external icon:
+
+```mdx
+<LinkCard
+  href="https://github.com"
+  title="github"
+  description="view source code"
+/>
+```
+
+<LinkCard
+  href="https://github.com"
+  title="github"
+  description="view source code"
+/>
+
+## with icon
+
+```mdx
+<LinkCard
+  href="/docs/components"
+  title="components"
+  description="browse all components"
+  icon="📦"
+/>
+```
+
+<LinkCard
+  href="/docs/components"
+  title="components"
+  description="browse all components"
+  icon="📦"
+/>
+
+## link grid
+
+```mdx
+<LinkCards>
+  <LinkCard href="/docs/install" title="install" />
+  <LinkCard href="/docs/config" title="config" />
+</LinkCards>
+```
+
+<LinkCards>
+  <LinkCard href="/docs/quickstart" title="quickstart" />
+  <LinkCard href="/docs/customization" title="customization" />
+</LinkCards>
+
+## props
+
+### linkcard
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| href | string | - | link url |
+| title | string | - | link title |
+| description | string | - | link description |
+| icon | ReactNode | - | optional icon |

@@ -1,0 +1,98 @@
+---
+title: feature
+description: feature highlights
+order: 31
+---
+
+highlight features with icons and descriptions.
+
+## feature
+
+inline feature with icon:
+
+```mdx
+<Feature icon="⚡" title="fast builds">
+  incremental compilation for instant feedback
+</Feature>
+```
+
+<Feature icon="⚡" title="fast builds">
+  incremental compilation for instant feedback
+</Feature>
+
+## features grid
+
+multiple features in a grid:
+
+```mdx
+<Features columns={2}>
+  <FeatureCard icon="🔍" title="search">
+    full-text search across all docs
+  </FeatureCard>
+  <FeatureCard icon="🎨" title="themes">
+    dark and light mode support
+  </FeatureCard>
+</Features>
+```
+
+<Features columns={2}>
+  <FeatureCard icon="🔍" title="search">
+    full-text search across all docs
+  </FeatureCard>
+  <FeatureCard icon="🎨" title="themes">
+    dark and light mode support
+  </FeatureCard>
+</Features>
+
+## three columns
+
+```mdx
+<Features columns={3}>
+  <FeatureCard title="simple">
+    minimal configuration
+  </FeatureCard>
+  <FeatureCard title="flexible">
+    fully customizable
+  </FeatureCard>
+  <FeatureCard title="fast">
+    optimized builds
+  </FeatureCard>
+</Features>
+```
+
+<Features columns={3}>
+  <FeatureCard title="simple">
+    minimal configuration
+  </FeatureCard>
+  <FeatureCard title="flexible">
+    fully customizable
+  </FeatureCard>
+  <FeatureCard title="fast">
+    optimized builds
+  </FeatureCard>
+</Features>
+
+## props
+
+### feature
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| icon | ReactNode | - | icon element |
+| title | string | - | feature name |
+| children | ReactNode | - | description |
+
+### features
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| columns | 2 \| 3 | 2 | grid columns |
+| children | ReactNode | - | feature cards |
+
+### featurecard
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| icon | ReactNode | - | icon element |
+| title | string | - | feature name |
+| children | ReactNode | - | description |
