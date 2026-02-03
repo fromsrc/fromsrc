@@ -1,45 +1,60 @@
 "use client"
 
-import { createContext, type ReactNode, useContext, useId, useState } from "react"
+import {
+	type JSX,
+	type ReactNode,
+	createContext,
+	memo,
+	useContext,
+	useId,
+	useState,
+} from "react"
 
 export type RadioSize = "sm" | "md" | "lg"
 
 /**
- * @param value - unique value for this radio option
- * @param label - accessible label text
- * @param disabled - whether the radio is disabled
- * @example <Radio value="a" label="Option A" />
+ * Props for individual radio button within a RadioGroup.
  */
 export interface RadioProps {
+	/** Unique value identifying this radio option */
 	value: string
+	/** Accessible label displayed next to the radio */
 	label?: ReactNode
+	/** Disables this specific radio button */
 	disabled?: boolean
+	/** Additional CSS classes for the radio button */
 	className?: string
 }
 
 /**
- * @param value - currently selected value
- * @param onChange - callback when selection changes
- * @param name - form field name
- * @param size - radio size
- * @param label - group label for accessibility
- * @param orientation - layout direction
- * @param disabled - disable all radios in group
- * @example <RadioGroup value={v} onChange={setV} label="Options"><Radio value="a" label="A" /></RadioGroup>
+ * Props for the RadioGroup container that manages radio state.
  */
 export interface RadioGroupProps {
+	/** Currently selected value (controlled mode) */
 	value?: string
+	/** Initial value (uncontrolled mode) */
 	defaultValue?: string
+	/** Callback fired when selection changes */
 	onChange?: (value: string) => void
+	/** Form field name attribute */
 	name?: string
+	/** Size variant for all radios in group */
 	size?: RadioSize
+	/** Accessible label for the radio group */
 	label?: string
+	/** Layout direction of radio options */
 	orientation?: "horizontal" | "vertical"
+	/** Disables all radios in the group */
 	disabled?: boolean
+	/** Radio components to render */
 	children: ReactNode
+	/** Additional CSS classes for the group container */
 	className?: string
 }
 
+/**
+ * Internal context value for radio state management.
+ */
 interface RadioContextValue {
 	name: string
 	value?: string
@@ -62,7 +77,12 @@ const dotSizes: Record<RadioSize, string> = {
 	lg: "h-2.5 w-2.5",
 }
 
-export function Radio({ value, label, disabled: localDisabled, className = "" }: RadioProps) {
+function RadioBase({
+	value,
+	label,
+	disabled: localDisabled,
+	className = "",
+}: RadioProps): JSX.Element {
 	const ctx = useContext(RadioContext)
 	if (!ctx) throw new Error("Radio must be used within RadioGroup")
 
@@ -70,11 +90,11 @@ export function Radio({ value, label, disabled: localDisabled, className = "" }:
 	const checked = ctx.value === value
 	const disabled = localDisabled || ctx.disabled
 
-	const handleClick = () => {
+	const handleClick = (): void => {
 		if (!disabled) ctx.onChange(value)
 	}
 
-	const handleKeyDown = (e: React.KeyboardEvent) => {
+	const handleKeyDown = (e: React.KeyboardEvent): void => {
 		if (e.key === " " || e.key === "Enter") {
 			e.preventDefault()
 			if (!disabled) ctx.onChange(value)
@@ -89,6 +109,7 @@ export function Radio({ value, label, disabled: localDisabled, className = "" }:
 				id={id}
 				aria-checked={checked}
 				aria-disabled={disabled}
+				aria-labelledby={label ? `${id}-label` : undefined}
 				disabled={disabled}
 				tabIndex={checked ? 0 : -1}
 				onClick={handleClick}
@@ -109,6 +130,7 @@ export function Radio({ value, label, disabled: localDisabled, className = "" }:
 			</button>
 			{label && (
 				<label
+					id={`${id}-label`}
 					htmlFor={id}
 					className={`${sizes[ctx.size].label} text-fg select-none ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
 					onClick={handleClick}
@@ -120,7 +142,9 @@ export function Radio({ value, label, disabled: localDisabled, className = "" }:
 	)
 }
 
-export function RadioGroup({
+export const Radio = memo(RadioBase)
+
+function RadioGroupBase({
 	value: controlledValue,
 	defaultValue,
 	onChange,
@@ -131,20 +155,21 @@ export function RadioGroup({
 	disabled = false,
 	children,
 	className = "",
-}: RadioGroupProps) {
+}: RadioGroupProps): JSX.Element {
 	const generatedName = useId()
+	const groupId = useId()
 	const groupName = name || generatedName
 	const [internalValue, setInternalValue] = useState(defaultValue)
 
 	const isControlled = controlledValue !== undefined
 	const value = isControlled ? controlledValue : internalValue
 
-	const handleChange = (newValue: string) => {
+	const handleChange = (newValue: string): void => {
 		if (!isControlled) setInternalValue(newValue)
 		onChange?.(newValue)
 	}
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
 		const radios = Array.from(
 			e.currentTarget.querySelectorAll('[role="radio"]:not([disabled])'),
 		) as HTMLElement[]
@@ -175,6 +200,8 @@ export function RadioGroup({
 			<div
 				role="radiogroup"
 				aria-label={label}
+				aria-describedby={label ? `${groupId}-desc` : undefined}
+				aria-orientation={orientation}
 				onKeyDown={handleKeyDown}
 				className={`flex ${orientation === "horizontal" ? "flex-row gap-4" : "flex-col gap-2"} ${className}`.trim()}
 			>
@@ -183,3 +210,5 @@ export function RadioGroup({
 		</RadioContext.Provider>
 	)
 }
+
+export const RadioGroup = memo(RadioGroupBase)
