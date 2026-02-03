@@ -12,9 +12,15 @@ export interface SearchAdapter {
 }
 
 function fuzzy(text: string, query: string): number {
-	if (!query) return 0
+	if (!query || !text) return 0
+	if (query.length > text.length) return 0
+
 	const lower = text.toLowerCase()
 	const q = query.toLowerCase()
+
+	if (lower === q) return q.length * 2 + 30
+	if (lower.startsWith(q)) return q.length * 2 + 10
+
 	let score = 0
 	let qi = 0
 	let consecutive = 0
@@ -29,51 +35,45 @@ function fuzzy(text: string, query: string): number {
 		}
 	}
 
-	if (qi < q.length) return 0
-	if (lower.startsWith(q)) score += 10
-	if (lower === q) score += 20
-
-	return score
+	return qi < q.length ? 0 : score
 }
 
 function searchContent(content: string, query: string): { score: number; snippet: string } | null {
-	const lower = content.toLowerCase()
-	const q = query.toLowerCase()
-	const idx = lower.indexOf(q)
+	if (!content || !query) return null
 
+	const idx = content.toLowerCase().indexOf(query.toLowerCase())
 	if (idx === -1) return null
 
 	const start = Math.max(0, idx - 40)
-	const end = Math.min(content.length, idx + q.length + 60)
-	let snippet = content.slice(start, end).trim()
+	const end = Math.min(content.length, idx + query.length + 60)
+	const prefix = start > 0 ? "..." : ""
+	const suffix = end < content.length ? "..." : ""
 
-	if (start > 0) snippet = "..." + snippet
-	if (end < content.length) snippet = snippet + "..."
-
-	return { score: 5, snippet }
+	return { score: 5, snippet: prefix + content.slice(start, end).trim() + suffix }
 }
 
 export const localSearch: SearchAdapter = {
 	search(query: string, docs: SearchDoc[]): SearchResult[] {
-		if (!query.trim()) {
+		const q = query.trim()
+		if (!q) {
 			return docs.slice(0, 8).map((doc) => ({ doc, score: 0 }))
 		}
 
-		return docs
-			.map((doc) => {
-				const titleScore = fuzzy(doc.title, query) * 3
-				const descScore = doc.description ? fuzzy(doc.description, query) : 0
-				const contentResult = doc.content ? searchContent(doc.content, query) : null
+		const results: SearchResult[] = []
 
-				return {
-					doc,
-					score: titleScore + descScore + (contentResult?.score ?? 0),
-					snippet: contentResult?.snippet,
-				}
-			})
-			.filter((r) => r.score > 0)
-			.sort((a, b) => b.score - a.score)
-			.slice(0, 8)
+		for (const doc of docs) {
+			const titleScore = fuzzy(doc.title, q) * 3
+			const descScore = doc.description ? fuzzy(doc.description, q) : 0
+			const contentResult = doc.content ? searchContent(doc.content, q) : null
+			const score = titleScore + descScore + (contentResult?.score ?? 0)
+
+			if (score > 0) {
+				results.push({ doc, score, snippet: contentResult?.snippet })
+			}
+		}
+
+		results.sort((a, b) => b.score - a.score)
+		return results.slice(0, 8)
 	},
 }
 

@@ -15,11 +15,9 @@ interface Props {
 	debounce?: number
 }
 
-function toSearchDocs(docs: (DocMeta | SearchDoc)[]): SearchDoc[] {
-	return docs.map((doc) => ({
-		...doc,
-		content: "content" in doc ? doc.content : "",
-	}))
+function toSearchDoc(doc: DocMeta | SearchDoc): SearchDoc {
+	if ("content" in doc) return doc
+	return { ...doc, content: "" }
 }
 
 export function Search({
@@ -36,7 +34,7 @@ export function Search({
 	const router = useRouter()
 	const prevQueryRef = useRef("")
 
-	const searchDocs = useMemo(() => toSearchDocs(docs), [docs])
+	const searchDocs = useMemo(() => docs.map(toSearchDoc), [docs])
 	const debouncedQuery = useDebounce(query, debounce)
 
 	useEffect(() => {
