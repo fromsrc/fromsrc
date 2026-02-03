@@ -11,6 +11,10 @@ export interface DocMeta {
 	order?: number
 }
 
+export interface SearchDoc extends DocMeta {
+	content: string
+}
+
 export interface Doc<T extends Record<string, unknown> = Record<string, unknown>> extends DocMeta {
 	content: string
 	data: T
@@ -265,4 +269,67 @@ export async function getNavigation(docsDir: string) {
 	}
 
 	return sections.filter((s) => s.items.length > 0)
+}
+
+const searchCache = new Map<string, SearchDoc[]>()
+
+export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
+	const cacheKey = docsDir
+	const cached = searchCache.get(cacheKey)
+	if (cached) return cached
+
+	const docs: SearchDoc[] = []
+
+	async function scan(dir: string, prefix = "") {
+		const entries = await readdir(dir, { withFileTypes: true })
+
+		for (const entry of entries) {
+			if (entry.isDirectory()) {
+				await scan(join(dir, entry.name), `${prefix}${entry.name}/`)
+			} else if (entry.name.endsWith(".mdx")) {
+				const filepath = join(dir, entry.name)
+				const source = await readCached(filepath)
+				const { data, content } = matter(source)
+				const parsed = baseSchema.parse(data)
+				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
+
+				docs.push({
+					slug: slug === "index" ? "" : slug,
+					title: parsed.title,
+					description: parsed.description,
+					order: parsed.order,
+					content: stripMdx(content),
+				})
+			}
+		}
+	}
+
+	try {
+		await scan(docsDir)
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			throw error
+		}
+		return []
+	}
+
+	const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+	searchCache.set(cacheKey, sorted)
+	return sorted
+}
+
+function stripMdx(content: string): string {
+	return content
+		.replace(/```[\s\S]*?```/g, "")
+		.replace(/`[^`]+`/g, "")
+		.replace(/import\s+.*?from\s+['"][^'"]+['"];?/g, "")
+		.replace(/export\s+.*?;/g, "")
+		.replace(/<[^>]+>/g, " ")
+		.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+		.replace(/#{1,6}\s+/g, "")
+		.replace(/\*\*([^*]+)\*\*/g, "$1")
+		.replace(/\*([^*]+)\*/g, "$1")
+		.replace(/\n+/g, " ")
+		.replace(/\s+/g, " ")
+		.trim()
 }
