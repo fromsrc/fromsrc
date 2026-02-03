@@ -1,20 +1,37 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
+import type { JSX } from "react"
 
+/**
+ * Props for the Github component
+ */
 export interface GithubProps {
+	/** Repository in owner/name format */
 	repo: string
 }
 
+/**
+ * Parsed repository data for display
+ */
 interface RepoData {
+	/** Star count */
 	stars: number
+	/** Fork count */
 	forks: number
+	/** Repository description */
 	description: string | null
 }
 
+/**
+ * GitHub API response shape
+ */
 interface GithubApiResponse {
+	/** Star count from API */
 	stargazers_count?: number
+	/** Fork count from API */
 	forks_count?: number
+	/** Repository description from API */
 	description?: string | null
 }
 
@@ -25,7 +42,7 @@ function format(n: number): string {
 	return n.toString()
 }
 
-export function Github({ repo }: GithubProps) {
+function GithubComponent({ repo }: GithubProps): JSX.Element {
 	const [data, setData] = useState<RepoData | null>(null)
 
 	useEffect(() => {
@@ -57,11 +74,13 @@ export function Github({ repo }: GithubProps) {
 		return (
 			<div
 				role="status"
-				aria-label="Loading repository"
+				aria-live="polite"
+				aria-busy="true"
+				aria-label={`Loading ${repo} repository`}
 				className="my-4 p-4 rounded-lg border border-line bg-surface/50 animate-pulse"
 			>
-				<div className="h-4 bg-surface rounded w-1/3 mb-2" />
-				<div className="h-3 bg-surface/50 rounded w-2/3" />
+				<div className="h-4 bg-surface rounded w-1/3 mb-2" aria-hidden="true" />
+				<div className="h-3 bg-surface/50 rounded w-2/3" aria-hidden="true" />
 			</div>
 		)
 	}
@@ -71,7 +90,7 @@ export function Github({ repo }: GithubProps) {
 			href={`https://github.com/${repo}`}
 			target="_blank"
 			rel="noopener noreferrer"
-			aria-label={`${repo} on GitHub`}
+			aria-label={`View ${repo} repository on GitHub with ${format(data.stars)} stars and ${format(data.forks)} forks`}
 			className="my-4 p-4 rounded-lg border border-line bg-surface/30 hover:bg-surface/50 transition-colors flex items-start gap-4 no-underline"
 		>
 			<svg
@@ -91,7 +110,7 @@ export function Github({ repo }: GithubProps) {
 				{data.description && (
 					<p className="text-xs text-muted mb-2 line-clamp-2">{data.description}</p>
 				)}
-				<div className="flex items-center gap-4 text-xs text-muted">
+				<div className="flex items-center gap-4 text-xs text-muted" aria-hidden="true">
 					<span className="flex items-center gap-1">
 						<svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
 							<path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" />
@@ -109,3 +128,5 @@ export function Github({ repo }: GithubProps) {
 		</a>
 	)
 }
+
+export const Github = memo(GithubComponent)
