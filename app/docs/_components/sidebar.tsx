@@ -83,7 +83,7 @@ export async function Sidebar() {
 	return (
 		<SidebarBase
 			title="fromsrc"
-			logo={<Logo className="size-5" />}
+			logo={<Logo className="size-[18px]" />}
 			navigation={navigation}
 			docs={docs}
 			basePath="/docs"
