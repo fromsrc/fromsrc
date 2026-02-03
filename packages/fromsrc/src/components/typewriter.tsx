@@ -1,61 +1,70 @@
 "use client"
 
-import type { ReactElement } from "react"
-import { useEffect, useState } from "react"
+import type { JSX } from "react"
+import { memo, useEffect, useState } from "react"
 
+/**
+ * Props for the Typewriter component
+ */
 export interface TypewriterProps {
+	/** Array of words to cycle through */
 	words: string[]
+	/** Typing speed in milliseconds per character */
 	speed?: number
+	/** Delay before deleting in milliseconds */
 	delay?: number
+	/** Whether to loop through words continuously */
 	loop?: boolean
 }
 
 const DELETE_SPEED_FACTOR = 0.5
 
-export function Typewriter({
+function TypewriterBase({
 	words,
 	speed = 100,
 	delay = 2000,
 	loop = true,
-}: TypewriterProps): ReactElement {
-	const [index, setIndex] = useState(0)
-	const [text, setText] = useState("")
-	const [deleting, setDeleting] = useState(false)
+}: TypewriterProps): JSX.Element {
+	const [index, setIndex] = useState<number>(0)
+	const [text, setText] = useState<string>("")
+	const [deleting, setDeleting] = useState<boolean>(false)
 
-	useEffect(() => {
+	useEffect((): void | (() => void) => {
 		const word = words[index]
 		if (!word) return
 
 		if (deleting) {
 			if (text === "") {
 				setDeleting(false)
-				setIndex((i) => (loop ? (i + 1) % words.length : Math.min(i + 1, words.length - 1)))
+				setIndex((i: number): number =>
+					loop ? (i + 1) % words.length : Math.min(i + 1, words.length - 1)
+				)
 				return
 			}
 
-			const timeout = setTimeout(() => {
-				setText((t) => t.slice(0, -1))
+			const timeout = setTimeout((): void => {
+				setText((t: string): string => t.slice(0, -1))
 			}, speed * DELETE_SPEED_FACTOR)
-			return () => clearTimeout(timeout)
+			return (): void => clearTimeout(timeout)
 		}
 
 		if (text === word) {
 			if (!loop && index === words.length - 1) return
 
-			const timeout = setTimeout(() => {
+			const timeout = setTimeout((): void => {
 				setDeleting(true)
 			}, delay)
-			return () => clearTimeout(timeout)
+			return (): void => clearTimeout(timeout)
 		}
 
-		const timeout = setTimeout(() => {
+		const timeout = setTimeout((): void => {
 			setText(word.slice(0, text.length + 1))
 		}, speed)
-		return () => clearTimeout(timeout)
+		return (): void => clearTimeout(timeout)
 	}, [words, index, text, deleting, speed, delay, loop])
 
 	return (
-		<span>
+		<span role="status" aria-label={`Typing: ${words.join(", ")}`}>
 			<span aria-live="polite" aria-atomic="true">
 				{text}
 			</span>
@@ -65,3 +74,5 @@ export function Typewriter({
 		</span>
 	)
 }
+
+export const Typewriter = memo(TypewriterBase)
