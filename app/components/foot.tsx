@@ -1,6 +1,11 @@
 import { Bolt, Logo } from "./logo"
 
-const links = {
+type Link = {
+	href: string | null
+	label: string
+}
+
+const links: Record<string, Link[]> = {
 	product: [
 		{ href: "#why", label: "why fromsrc" },
 		{ href: "#features", label: "features" },

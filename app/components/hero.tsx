@@ -4,7 +4,18 @@ import { useState } from "react"
 import { Copy } from "./copy"
 import { Bolt } from "./logo"
 
-const files = [
+type Line = {
+	num: number
+	content: React.ReactNode
+}
+
+type File = {
+	name: string
+	lines: Line[]
+	raw: string
+}
+
+const files: File[] = [
 	{
 		name: "docs/auth.mdx",
 		lines: [
@@ -195,12 +206,20 @@ export default defineConfig({
 	},
 ]
 
+const stats = [
+	{ value: "<20ms", label: "search" },
+	{ value: "3k+", label: "files ok" },
+	{ value: "0", label: "abstraction" },
+	{ value: "100%", label: "open source" },
+]
+
 export function Hero() {
 	const [active, setActive] = useState(0)
 	const [copied, setCopied] = useState(false)
-	const current = files[active]!
+	const current = files[active]
 
 	const copy = () => {
+		if (!current) return
 		navigator.clipboard.writeText(current.raw)
 		setCopied(true)
 		setTimeout(() => setCopied(false), 2000)
@@ -244,7 +263,9 @@ export function Hero() {
 									key={file.name}
 									type="button"
 									role="tab"
+									id={`tab-${i}`}
 									aria-selected={active === i}
+									aria-controls="code-panel"
 									onClick={() => setActive(i)}
 									className={`px-3 py-1.5 text-xs rounded-md transition-colors duration-200 ${
 										active === i ? "bg-line text-fg" : "text-muted hover:text-fg"
@@ -263,32 +284,29 @@ export function Hero() {
 							{copied ? "copied!" : "copy"}
 						</button>
 					</div>
-					<div className="p-6" role="tabpanel">
-						<div className="flex text-sm font-mono">
-							<div
-								className="pr-6 text-dim text-right select-none border-r border-line mr-6 leading-relaxed"
-								aria-hidden="true"
-							>
-								{current.lines.map((line) => (
-									<div key={line.num}>{line.num}</div>
-								))}
+					<div className="p-6" role="tabpanel" id="code-panel" aria-labelledby={`tab-${active}`}>
+						{current && (
+							<div className="flex text-sm font-mono">
+								<div
+									className="pr-6 text-dim text-right select-none border-r border-line mr-6 leading-relaxed"
+									aria-hidden="true"
+								>
+									{current.lines.map((line) => (
+										<div key={line.num}>{line.num}</div>
+									))}
+								</div>
+								<pre className="leading-relaxed">
+									{current.lines.map((line) => (
+										<div key={line.num}>{line.content}</div>
+									))}
+								</pre>
 							</div>
-							<pre className="leading-relaxed">
-								{current.lines.map((line) => (
-									<div key={line.num}>{line.content}</div>
-								))}
-							</pre>
-						</div>
+						)}
 					</div>
 				</div>
 
 				<div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
-					{[
-						{ value: "<20ms", label: "search" },
-						{ value: "3k+", label: "files ok" },
-						{ value: "0", label: "abstraction" },
-						{ value: "100%", label: "open source" },
-					].map((stat) => (
+					{stats.map((stat) => (
 						<div key={stat.label} className="py-4 border-l border-line pl-4">
 							<div className="text-2xl tabular-nums mb-1">{stat.value}</div>
 							<div className="text-muted text-xs">{stat.label}</div>
