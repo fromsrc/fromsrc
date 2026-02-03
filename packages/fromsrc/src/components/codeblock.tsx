@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useId, useRef } from "react"
+import { type ReactNode, memo, useCallback, useId, useRef } from "react"
 import { useCopy } from "../hooks/copy"
 
 const icons: Record<string, string> = {
@@ -41,7 +41,15 @@ const icons: Record<string, string> = {
 	kotlin: "M0 24L12 12L24 24H0zM0 0h24L12 12L0 24V0zm12 12L24 0H12L0 12h12z",
 }
 
-function LanguageIcon({ lang }: { lang: string }) {
+/**
+ * Props for the LanguageIcon component
+ */
+interface LanguageIconProps {
+	/** Programming language identifier */
+	lang: string
+}
+
+const LanguageIcon = memo(function LanguageIcon({ lang }: LanguageIconProps): ReactNode {
 	const path = icons[lang]
 	if (!path) return null
 
@@ -55,15 +63,27 @@ function LanguageIcon({ lang }: { lang: string }) {
 			<path d={path} />
 		</svg>
 	)
+})
+
+/**
+ * Props for the CopyButton component
+ */
+interface CopyButtonProps {
+	/** Ref to the element containing code to copy */
+	codeRef: React.RefObject<HTMLDivElement | null>
 }
 
-function CopyButton({ codeRef }: { codeRef: React.RefObject<HTMLDivElement | null> }) {
+const CopyButton = memo(function CopyButton({ codeRef }: CopyButtonProps): ReactNode {
 	const { copied, copy } = useCopy()
+
+	const handleClick = useCallback((): void => {
+		copy(codeRef.current?.textContent ?? "")
+	}, [copy, codeRef])
 
 	return (
 		<button
 			type="button"
-			onClick={() => copy(codeRef.current?.textContent ?? "")}
+			onClick={handleClick}
 			aria-label={copied ? "Copied" : "Copy code"}
 			aria-live="polite"
 			className="hover:text-neutral-50"
@@ -106,15 +126,25 @@ function CopyButton({ codeRef }: { codeRef: React.RefObject<HTMLDivElement | nul
 			)}
 		</button>
 	)
-}
+})
 
+/**
+ * Props for the CodeBlock component
+ */
 export interface CodeBlockProps {
+	/** Content to display in the code block */
 	children: ReactNode
+	/** Programming language for syntax highlighting icon */
 	lang?: string
+	/** Title displayed in the header */
 	title?: string
 }
 
-export function CodeBlock({ children, lang, title }: CodeBlockProps) {
+export const CodeBlock = memo(function CodeBlock({
+	children,
+	lang,
+	title,
+}: CodeBlockProps): ReactNode {
 	const codeRef = useRef<HTMLDivElement>(null)
 	const labelId = useId()
 	const label = title || lang
@@ -172,4 +202,4 @@ export function CodeBlock({ children, lang, title }: CodeBlockProps) {
 			)}
 		</figure>
 	)
-}
+})
