@@ -1,0 +1,56 @@
+---
+title: codeblock
+description: syntax highlighted code blocks with language icons
+order: 2
+---
+
+the codeblock component renders code with syntax highlighting, language icons, and a copy button.
+
+## usage
+
+```tsx
+import { CodeBlock } from "fromsrc/components"
+
+<CodeBlock lang="typescript">
+{`const greeting = "hello world"
+console.log(greeting)`}
+</CodeBlock>
+```
+
+## with title
+
+add a title to display in the header:
+
+```tsx
+<CodeBlock lang="typescript" title="app.ts">
+{`export function main() {
+  console.log("starting...")
+}`}
+</CodeBlock>
+```
+
+## language icons
+
+codeblock displays icons for supported languages:
+
+- typescript, javascript
+- python, rust, go
+- bash, shell
+- json, yaml
+- html, css
+- jsx, tsx
+- markdown
+
+aliases are supported: `ts` maps to `typescript`, `js` to `javascript`, `sh` to `bash`, `yml` to `yaml`.
+
+## copy button
+
+the copy button appears in the header when a title or language is set. without a label, it floats in the top-right corner. clicking copies the code content to clipboard.
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| children | ReactNode | required | code content to display |
+| lang | string | - | language for icon and label |
+| title | string | - | title shown in header |
