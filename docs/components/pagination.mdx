@@ -46,3 +46,12 @@ the component renders previous and next links for navigating between documentati
 |------|------|-------------|
 | href | string | page url |
 | title | string | page title |
+
+## styling
+
+the component uses theme tokens for consistent styling:
+- `border-line` for borders
+- `bg-surface/30` for background with hover state
+- `text-muted` and `text-fg` for text colors
+
+returns `null` when both prev and next are undefined.
