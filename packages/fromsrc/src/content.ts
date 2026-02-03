@@ -92,7 +92,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 		const docs: Meta[] = []
 
-		async function scan(dir: string, prefix = "") {
+		async function scan(dir: string, prefix = ""): Promise<void> {
 			const entries = await readdir(dir, { withFileTypes: true })
 
 			for (const entry of entries) {
@@ -126,7 +126,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 		return docsCache
 	}
 
-	async function getNavigation() {
+	async function getNavigation(): Promise<{ title: string; items: Meta[] }[]> {
 		if (navCache) return navCache
 
 		const docs = await getAllDocs()
@@ -161,7 +161,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 		const docs: (Meta & { content: string })[] = []
 
-		async function scan(dir: string, prefix = "") {
+		async function scan(dir: string, prefix = ""): Promise<void> {
 			const entries = await readdir(dir, { withFileTypes: true })
 
 			for (const entry of entries) {
@@ -270,7 +270,7 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 	const docs: DocMeta[] = []
 	const folderMetas = new Map<string, MetaFile | null>()
 
-	async function scan(dir: string, prefix = "") {
+	async function scan(dir: string, prefix = ""): Promise<void> {
 		const entries = await readdir(dir, { withFileTypes: true })
 		const meta = await loadMeta(dir)
 		folderMetas.set(prefix, meta)
@@ -317,7 +317,7 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 	return sorted
 }
 
-export async function getNavigation(docsDir: string) {
+export async function getNavigation(docsDir: string): Promise<{ title: string; items: DocMeta[] }[]> {
 	const docs = await getAllDocs(docsDir)
 
 	const sections: { title: string; items: DocMeta[] }[] = [
@@ -351,7 +351,7 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 
 	const docs: SearchDoc[] = []
 
-	async function scan(dir: string, prefix = "") {
+	async function scan(dir: string, prefix = ""): Promise<void> {
 		const entries = await readdir(dir, { withFileTypes: true })
 
 		for (const entry of entries) {
