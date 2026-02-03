@@ -2,8 +2,11 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { type KeyboardEvent, type ReactNode, useRef, useState } from "react"
+import { type KeyboardEvent, type ReactNode, useCallback, useRef, useState } from "react"
 
+/**
+ * Individual tab configuration for navigation
+ */
 export interface NavTab {
 	id: string
 	label: string
@@ -12,44 +15,53 @@ export interface NavTab {
 	match?: string[]
 }
 
+/**
+ * Props for the horizontal tab navigation component
+ */
 interface TabNavProps {
 	tabs: NavTab[]
 	label?: string
 }
 
-export function TabNav({ tabs, label = "Navigation" }: TabNavProps) {
+export function TabNav({ tabs, label = "Navigation" }: TabNavProps): ReactNode {
 	const pathname = usePathname()
 	const refs = useRef<(HTMLAnchorElement | null)[]>([])
 
-	const isActive = (tab: NavTab) => {
-		if (tab.match) {
-			return tab.match.some((pattern) => pathname.startsWith(pattern))
-		}
-		return pathname.startsWith(tab.href)
-	}
+	const isActive = useCallback(
+		(tab: NavTab): boolean => {
+			if (tab.match) {
+				return tab.match.some((pattern) => pathname.startsWith(pattern))
+			}
+			return pathname.startsWith(tab.href)
+		},
+		[pathname]
+	)
 
-	const handleKeyDown = (e: KeyboardEvent, index: number) => {
-		let next = index
-		if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-			e.preventDefault()
-			next = index < tabs.length - 1 ? index + 1 : 0
-		} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-			e.preventDefault()
-			next = index > 0 ? index - 1 : tabs.length - 1
-		} else if (e.key === "Home") {
-			e.preventDefault()
-			next = 0
-		} else if (e.key === "End") {
-			e.preventDefault()
-			next = tabs.length - 1
-		} else {
-			return
-		}
-		refs.current[next]?.focus()
-	}
+	const handleKeyDown = useCallback(
+		(e: KeyboardEvent, index: number): void => {
+			let next = index
+			if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+				e.preventDefault()
+				next = index < tabs.length - 1 ? index + 1 : 0
+			} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+				e.preventDefault()
+				next = index > 0 ? index - 1 : tabs.length - 1
+			} else if (e.key === "Home") {
+				e.preventDefault()
+				next = 0
+			} else if (e.key === "End") {
+				e.preventDefault()
+				next = tabs.length - 1
+			} else {
+				return
+			}
+			refs.current[next]?.focus()
+		},
+		[tabs.length]
+	)
 
 	return (
-		<nav aria-label={label} className="flex gap-1 p-1 bg-surface rounded-lg">
+		<nav aria-label={label} role="tablist" className="flex gap-1 p-1 bg-surface rounded-lg">
 			{tabs.map((tab, i) => {
 				const active = isActive(tab)
 				return (
@@ -59,6 +71,9 @@ export function TabNav({ tabs, label = "Navigation" }: TabNavProps) {
 							refs.current[i] = el
 						}}
 						href={tab.href}
+						role="tab"
+						tabIndex={active ? 0 : -1}
+						aria-selected={active}
 						aria-current={active ? "page" : undefined}
 						onKeyDown={(e) => handleKeyDown(e, i)}
 						className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
@@ -78,12 +93,15 @@ export function TabNav({ tabs, label = "Navigation" }: TabNavProps) {
 	)
 }
 
+/**
+ * Props for the dropdown tab navigation component
+ */
 interface TabNavDropdownProps {
 	tabs: NavTab[]
 	label?: string
 }
 
-export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownProps) {
+export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownProps): ReactNode {
 	const pathname = usePathname()
 	const [open, setOpen] = useState(false)
 	const [focused, setFocused] = useState(0)
@@ -92,75 +110,97 @@ export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownPro
 	const optionRefs = useRef<(HTMLAnchorElement | null)[]>([])
 	const listId = useRef(`tabnav-${Math.random().toString(36).slice(2, 9)}`).current
 
-	const isActive = (tab: NavTab) => {
-		if (tab.match) {
-			return tab.match.some((pattern) => pathname.startsWith(pattern))
-		}
-		return pathname.startsWith(tab.href)
-	}
+	const isActive = useCallback(
+		(tab: NavTab): boolean => {
+			if (tab.match) {
+				return tab.match.some((pattern) => pathname.startsWith(pattern))
+			}
+			return pathname.startsWith(tab.href)
+		},
+		[pathname]
+	)
 
 	const currentTab = tabs.find((tab) => isActive(tab)) || tabs[0]
 	const currentIndex = tabs.findIndex((tab) => isActive(tab))
 
-	const openMenu = (index: number) => {
+	const openMenu = useCallback((index: number): void => {
 		setOpen(true)
 		setFocused(index)
 		requestAnimationFrame(() => {
 			optionRefs.current[index]?.focus()
 		})
-	}
+	}, [])
 
-	const closeMenu = () => {
+	const closeMenu = useCallback((): void => {
 		setOpen(false)
 		buttonRef.current?.focus()
-	}
+	}, [])
 
-	const handleButtonKeyDown = (e: KeyboardEvent) => {
-		if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-			e.preventDefault()
+	const handleButtonKeyDown = useCallback(
+		(e: KeyboardEvent): void => {
+			if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+				e.preventDefault()
+				openMenu(currentIndex >= 0 ? currentIndex : 0)
+			}
+		},
+		[currentIndex, openMenu]
+	)
+
+	const handleOptionKeyDown = useCallback(
+		(e: KeyboardEvent, index: number): void => {
+			if (e.key === "Escape") {
+				e.preventDefault()
+				closeMenu()
+			} else if (e.key === "ArrowDown") {
+				e.preventDefault()
+				const next = index < tabs.length - 1 ? index + 1 : 0
+				setFocused(next)
+				optionRefs.current[next]?.focus()
+			} else if (e.key === "ArrowUp") {
+				e.preventDefault()
+				const next = index > 0 ? index - 1 : tabs.length - 1
+				setFocused(next)
+				optionRefs.current[next]?.focus()
+			} else if (e.key === "Home") {
+				e.preventDefault()
+				setFocused(0)
+				optionRefs.current[0]?.focus()
+			} else if (e.key === "End") {
+				e.preventDefault()
+				setFocused(tabs.length - 1)
+				optionRefs.current[tabs.length - 1]?.focus()
+			} else if (e.key === "Tab") {
+				setOpen(false)
+			}
+		},
+		[closeMenu, tabs.length]
+	)
+
+	const handleButtonClick = useCallback((): void => {
+		if (open) {
+			closeMenu()
+		} else {
 			openMenu(currentIndex >= 0 ? currentIndex : 0)
 		}
-	}
+	}, [open, closeMenu, openMenu, currentIndex])
 
-	const handleOptionKeyDown = (e: KeyboardEvent, index: number) => {
-		if (e.key === "Escape") {
-			e.preventDefault()
-			closeMenu()
-		} else if (e.key === "ArrowDown") {
-			e.preventDefault()
-			const next = index < tabs.length - 1 ? index + 1 : 0
-			setFocused(next)
-			optionRefs.current[next]?.focus()
-		} else if (e.key === "ArrowUp") {
-			e.preventDefault()
-			const next = index > 0 ? index - 1 : tabs.length - 1
-			setFocused(next)
-			optionRefs.current[next]?.focus()
-		} else if (e.key === "Home") {
-			e.preventDefault()
-			setFocused(0)
-			optionRefs.current[0]?.focus()
-		} else if (e.key === "End") {
-			e.preventDefault()
-			setFocused(tabs.length - 1)
-			optionRefs.current[tabs.length - 1]?.focus()
-		} else if (e.key === "Tab") {
-			setOpen(false)
-		}
-	}
+	const handleBlur = useCallback(
+		(e: React.FocusEvent): void => {
+			if (!containerRef.current?.contains(e.relatedTarget)) {
+				setOpen(false)
+			}
+		},
+		[]
+	)
 
 	return (
 		<nav aria-label={label} className="relative" ref={containerRef}>
 			<button
 				ref={buttonRef}
 				type="button"
-				onClick={() => (open ? closeMenu() : openMenu(currentIndex >= 0 ? currentIndex : 0))}
+				onClick={handleButtonClick}
 				onKeyDown={handleButtonKeyDown}
-				onBlur={(e) => {
-					if (!containerRef.current?.contains(e.relatedTarget)) {
-						setOpen(false)
-					}
-				}}
+				onBlur={handleBlur}
 				aria-expanded={open}
 				aria-haspopup="listbox"
 				aria-controls={listId}
@@ -200,14 +240,11 @@ export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownPro
 								}}
 								href={tab.href}
 								role="option"
+								tabIndex={-1}
 								aria-selected={active}
 								onClick={() => setOpen(false)}
 								onKeyDown={(e) => handleOptionKeyDown(e, i)}
-								onBlur={(e) => {
-									if (!containerRef.current?.contains(e.relatedTarget)) {
-										setOpen(false)
-									}
-								}}
+								onBlur={handleBlur}
 								className={`flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
 									active ? "bg-bg text-fg" : "text-muted hover:text-fg hover:bg-bg/50"
 								} ${i === focused ? "ring-1 ring-inset ring-accent" : ""}`}
