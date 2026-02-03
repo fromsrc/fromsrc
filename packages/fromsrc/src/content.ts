@@ -2,6 +2,7 @@ import { readdir, readFile } from "node:fs/promises"
 import { join } from "node:path"
 import matter from "gray-matter"
 import { z } from "zod"
+import { loadMeta, sortByMeta, type MetaFile } from "./meta"
 import { baseSchema } from "./schema"
 
 export interface DocMeta {
@@ -267,9 +268,12 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 	if (cached) return cached
 
 	const docs: DocMeta[] = []
+	const folderMetas = new Map<string, MetaFile | null>()
 
 	async function scan(dir: string, prefix = "") {
 		const entries = await readdir(dir, { withFileTypes: true })
+		const meta = await loadMeta(dir)
+		folderMetas.set(prefix, meta)
 
 		for (const entry of entries) {
 			if (entry.isDirectory()) {
@@ -300,7 +304,15 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 		return []
 	}
 
-	const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+	const rootMeta = folderMetas.get("")
+	let sorted: DocMeta[]
+
+	if (rootMeta?.pages) {
+		sorted = sortByMeta(docs, rootMeta.pages, "")
+	} else {
+		sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+	}
+
 	metaCache.set(cacheKey, sorted)
 	return sorted
 }

@@ -1,0 +1,17 @@
+{
+	"title": "Documentation",
+	"pages": [
+		"index",
+		"installation",
+		"configuration",
+		"quickstart",
+		"theming",
+		"ai",
+		"customization",
+		"writing",
+		"search",
+		"versioning",
+		"deploying",
+		"i18n"
+	]
+}

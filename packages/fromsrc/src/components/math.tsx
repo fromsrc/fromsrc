@@ -1,24 +1,36 @@
 "use client"
 
 import katex from "katex"
+import type { ReactNode } from "react"
 import { useMemo } from "react"
 
+function extractText(children: ReactNode): string {
+	if (typeof children === "string") return children
+	if (typeof children === "number") return String(children)
+	if (Array.isArray(children)) return children.map(extractText).join("")
+	if (children && typeof children === "object" && "props" in children) {
+		return extractText((children as { props: { children?: ReactNode } }).props.children)
+	}
+	return ""
+}
+
 interface MathProps {
-	children: string
+	children: ReactNode
 	display?: boolean
 }
 
 export function Math({ children, display = false }: MathProps) {
+	const text = extractText(children)
 	const html = useMemo(() => {
 		try {
-			return katex.renderToString(children, {
+			return katex.renderToString(text, {
 				displayMode: display,
 				throwOnError: false,
 			})
 		} catch {
-			return children
+			return text
 		}
-	}, [children, display])
+	}, [text, display])
 
 	if (display) {
 		return (
@@ -33,7 +45,7 @@ export function Math({ children, display = false }: MathProps) {
 }
 
 interface BlockMathProps {
-	children: string
+	children: ReactNode
 }
 
 export function BlockMath({ children }: BlockMathProps) {
@@ -41,7 +53,7 @@ export function BlockMath({ children }: BlockMathProps) {
 }
 
 interface InlineMathProps {
-	children: string
+	children: ReactNode
 }
 
 export function InlineMath({ children }: InlineMathProps) {

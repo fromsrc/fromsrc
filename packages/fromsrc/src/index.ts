@@ -10,6 +10,13 @@ export {
 	getNavigation,
 	getSearchDocs,
 } from "./content"
+export {
+	type MetaFile,
+	type PageTreeItem,
+	clearMetaCache,
+	loadMeta,
+	sortByMeta,
+} from "./meta"
 export { baseSchema, defineSchema, extendSchema, type InferSchema, z } from "./schema"
 export {
 	type SearchAdapter,
