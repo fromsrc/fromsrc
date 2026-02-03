@@ -1,11 +1,22 @@
 "use client"
 
-import { useId, useState } from "react"
+import { memo, useCallback, useId, useState } from "react"
 
+/**
+ * Props for displaying inline hover information with colored text
+ */
 export interface HoverInfoProps {
 	children: React.ReactNode
 	info: string
 	type?: "type" | "value" | "error"
+}
+
+/**
+ * Props for displaying a popup with custom trigger and content
+ */
+export interface TypePopupProps {
+	trigger: React.ReactNode
+	content: React.ReactNode
 }
 
 const colors: Record<NonNullable<HoverInfoProps["type"]>, string> = {
@@ -14,17 +25,20 @@ const colors: Record<NonNullable<HoverInfoProps["type"]>, string> = {
 	error: "text-red-400",
 }
 
-export function HoverInfo({ children, info, type = "type" }: HoverInfoProps) {
+function HoverInfoBase({ children, info, type = "type" }: HoverInfoProps): React.ReactElement {
 	const [show, setShow] = useState(false)
 	const id = useId()
+
+	const handleShow = useCallback((): void => setShow(true), [])
+	const handleHide = useCallback((): void => setShow(false), [])
 
 	return (
 		<span
 			className="relative inline cursor-help border-b border-dotted border-current"
-			onMouseEnter={() => setShow(true)}
-			onMouseLeave={() => setShow(false)}
-			onFocus={() => setShow(true)}
-			onBlur={() => setShow(false)}
+			onMouseEnter={handleShow}
+			onMouseLeave={handleHide}
+			onFocus={handleShow}
+			onBlur={handleHide}
 			tabIndex={0}
 			aria-describedby={show ? id : undefined}
 		>
@@ -42,22 +56,20 @@ export function HoverInfo({ children, info, type = "type" }: HoverInfoProps) {
 	)
 }
 
-export interface TypePopupProps {
-	trigger: React.ReactNode
-	content: React.ReactNode
-}
-
-export function TypePopup({ trigger, content }: TypePopupProps) {
+function TypePopupBase({ trigger, content }: TypePopupProps): React.ReactElement {
 	const [show, setShow] = useState(false)
 	const id = useId()
+
+	const handleShow = useCallback((): void => setShow(true), [])
+	const handleHide = useCallback((): void => setShow(false), [])
 
 	return (
 		<span
 			className="relative inline"
-			onMouseEnter={() => setShow(true)}
-			onMouseLeave={() => setShow(false)}
-			onFocus={() => setShow(true)}
-			onBlur={() => setShow(false)}
+			onMouseEnter={handleShow}
+			onMouseLeave={handleHide}
+			onFocus={handleShow}
+			onBlur={handleHide}
 		>
 			<span
 				className="cursor-help border-b border-dotted border-current"
@@ -78,3 +90,6 @@ export function TypePopup({ trigger, content }: TypePopupProps) {
 		</span>
 	)
 }
+
+export const HoverInfo = memo(HoverInfoBase)
+export const TypePopup = memo(TypePopupBase)
