@@ -9,7 +9,6 @@ import {
 	Palette,
 	Pen,
 	Rocket,
-	Scale,
 	Search,
 	Settings,
 	Sliders,
@@ -33,7 +32,6 @@ const icons: Record<string, React.ReactNode> = {
 	versioning: <Tags size={14} />,
 	deploying: <Cloud size={14} />,
 	i18n: <Globe size={14} />,
-	comparisons: <Scale size={14} />,
 }
 
 const sections: Record<string, string[]> = {
@@ -41,7 +39,6 @@ const sections: Record<string, string[]> = {
 	basics: ["configuration", "theming", "customization", "writing"],
 	features: ["search", "ai", "slugs", "versioning"],
 	production: ["deploying", "i18n"],
-	more: ["comparisons"],
 }
 
 export async function Sidebar() {

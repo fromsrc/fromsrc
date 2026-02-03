@@ -3,15 +3,14 @@
 	"pages": [
 		"index",
 		"installation",
-		"configuration",
 		"quickstart",
-		"comparisons",
+		"configuration",
 		"theming",
-		"ai",
 		"customization",
 		"writing",
-		"slugs",
 		"search",
+		"ai",
+		"slugs",
 		"versioning",
 		"deploying",
 		"i18n"
