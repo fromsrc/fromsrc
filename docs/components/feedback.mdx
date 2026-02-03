@@ -1,0 +1,36 @@
+---
+title: feedback
+description: collect user feedback on documentation pages
+order: 10
+---
+
+the feedback component lets users rate pages as helpful or not helpful.
+
+## usage
+
+```text
+<Feedback onFeedback={(helpful) => console.log(helpful)} />
+```
+
+<Feedback />
+
+## props
+
+| prop | type | description |
+|------|------|-------------|
+| onFeedback | `(helpful: boolean) => void` | callback when user submits feedback |
+
+## tracking feedback
+
+send feedback to your analytics or backend:
+
+```text
+<Feedback
+  onFeedback={async (helpful) => {
+    await fetch('/api/feedback', {
+      method: 'POST',
+      body: JSON.stringify({ page: '/docs/intro', helpful })
+    })
+  }}
+/>
+```
