@@ -8,8 +8,6 @@ table of contents with scroll spy, progress indicator, and multiple variants.
 
 ## usage
 
-the sidebar toc is used in the docs layout:
-
 ```tsx
 import { Toc } from "fromsrc/client"
 
@@ -19,27 +17,47 @@ import { Toc } from "fromsrc/client"
 </div>
 ```
 
+## scroll spy
+
+the toc automatically detects h2 and h3 headings within an `<article>` element. as you scroll, the current heading is highlighted.
+
+when multi mode is enabled, all visible headings are highlighted as a range.
+
+```tsx
+<Toc multi />
+```
+
 ## variants
 
 ### default
 
-full toc with range highlighting showing which section you're in.
+full toc with border-based highlighting showing which section is active.
 
 ```tsx
 <Toc variant="default" />
 ```
 
+with multi-heading range:
+
+```tsx
+<Toc variant="default" multi />
+```
+
+with zigzag lines connecting nested headings:
+
+```tsx
+<Toc variant="default" zigzag />
+```
+
 ### minimal
 
-simpler toc with scroll progress indicator.
+simpler toc with scroll progress indicator on a vertical track.
 
 ```tsx
 <Toc variant="minimal" />
 ```
 
-### minimal with zigzag
-
-adds visual zigzag lines connecting headings.
+with zigzag progress:
 
 ```tsx
 <Toc variant="minimal" zigzag />
@@ -53,22 +71,66 @@ collapsible toc that goes inside the content area.
 <Toc variant="inline" />
 ```
 
-inline toc with custom title:
+with custom title:
 
 ```tsx
 <Toc variant="inline" title="contents" />
 ```
 
-always open inline toc:
+always open:
 
 ```tsx
 <Toc variant="inline" collapsible={false} />
 ```
 
-inline toc open by default:
+open by default:
 
 ```tsx
 <Toc variant="inline" defaultOpen />
+```
+
+## useToc hook
+
+access toc state directly for custom implementations.
+
+```tsx
+import { useToc } from "fromsrc/client"
+
+function CustomToc() {
+  const { headings, active, activeRange } = useToc(true)
+
+  return (
+    <nav>
+      {headings.map((heading) => (
+        <a
+          key={heading.id}
+          href={`#${heading.id}`}
+          data-active={activeRange.includes(heading.id)}
+        >
+          {heading.text}
+        </a>
+      ))}
+    </nav>
+  )
+}
+```
+
+### return value
+
+| field | type | description |
+|-------|------|-------------|
+| headings | Heading[] | h2 and h3 elements with id, text, level |
+| active | string | id of the first active heading |
+| activeRange | string[] | ids of all visible headings (multi mode) |
+
+### heading type
+
+```tsx
+interface Heading {
+  id: string
+  text: string
+  level: number
+}
 ```
 
 ## props
@@ -76,7 +138,7 @@ inline toc open by default:
 | prop | type | default | description |
 |------|------|---------|-------------|
 | variant | "default" \| "minimal" \| "inline" | "default" | toc style |
-| zigzag | boolean | false | show zigzag lines (minimal only) |
+| zigzag | boolean | false | show zigzag lines connecting headings |
 | multi | boolean | false | highlight multiple active headings |
 | title | string | "on this page" | header text (inline only) |
 | collapsible | boolean | true | can collapse (inline only) |
