@@ -1,17 +1,31 @@
 import Image from "next/image"
-import type { ReactNode } from "react"
+import { memo, type JSX, type ReactNode } from "react"
 
+/**
+ * Props for the Screenshot component
+ */
 export interface ScreenshotProps {
+	/** Image source path or URL */
 	src: string
+	/** Alt text for accessibility */
 	alt: string
+	/** Optional caption displayed below the image */
 	caption?: string
+	/** Show browser chrome decoration */
 	browser?: boolean
+	/** Additional CSS classes */
 	className?: string
 }
 
-export function Screenshot({ src, alt, caption, browser = true, className = "" }: ScreenshotProps) {
+export const Screenshot = memo(function Screenshot({
+	src,
+	alt,
+	caption,
+	browser = true,
+	className = "",
+}: ScreenshotProps): JSX.Element {
 	return (
-		<figure className={`my-6 ${className}`}>
+		<figure className={`my-6 ${className}`} role="figure" aria-label={caption || alt}>
 			{browser ? (
 				<div className="rounded-lg border border-line overflow-hidden bg-surface">
 					<div
@@ -19,12 +33,12 @@ export function Screenshot({ src, alt, caption, browser = true, className = "" }
 						aria-hidden="true"
 					>
 						<div className="flex gap-1.5">
-							<span className="w-3 h-3 rounded-full bg-red-500/80" />
-							<span className="w-3 h-3 rounded-full bg-yellow-500/80" />
-							<span className="w-3 h-3 rounded-full bg-green-500/80" />
+							<span className="w-3 h-3 rounded-full bg-red-500/80" aria-hidden="true" />
+							<span className="w-3 h-3 rounded-full bg-yellow-500/80" aria-hidden="true" />
+							<span className="w-3 h-3 rounded-full bg-green-500/80" aria-hidden="true" />
 						</div>
 						<div className="flex-1 mx-8">
-							<div className="h-6 rounded bg-surface/80 border border-line" />
+							<div className="h-6 rounded bg-surface/80 border border-line" aria-hidden="true" />
 						</div>
 					</div>
 					<div className="relative w-full aspect-video">
@@ -41,23 +55,36 @@ export function Screenshot({ src, alt, caption, browser = true, className = "" }
 			)}
 		</figure>
 	)
-}
+})
 
+/**
+ * Props for the Frame component
+ */
 export interface FrameProps {
+	/** Content to display inside the frame */
 	children: ReactNode
+	/** Optional title displayed in the frame header */
 	title?: string
+	/** Additional CSS classes */
 	className?: string
 }
 
-export function Frame({ children, title, className = "" }: FrameProps) {
+export const Frame = memo(function Frame({
+	children,
+	title,
+	className = "",
+}: FrameProps): JSX.Element {
 	return (
-		<div className={`my-6 rounded-lg border border-line overflow-hidden ${className}`}>
+		<section
+			className={`my-6 rounded-lg border border-line overflow-hidden ${className}`}
+			aria-label={title || "content frame"}
+		>
 			{title && (
-				<div className="px-4 py-2 border-b border-line bg-surface/50">
+				<header className="px-4 py-2 border-b border-line bg-surface/50">
 					<span className="text-xs text-muted">{title}</span>
-				</div>
+				</header>
 			)}
 			<div className="p-4 bg-bg">{children}</div>
-		</div>
+		</section>
 	)
-}
+})
