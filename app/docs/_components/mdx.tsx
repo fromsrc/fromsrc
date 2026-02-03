@@ -52,6 +52,18 @@ import {
 	Change,
 	Collapsible,
 	Details,
+	Terminal,
+	Line,
+	Output,
+	Typed,
+	YouTube,
+	CodeSandbox,
+	StackBlitz,
+	Tweet,
+	Gist,
+	Quote,
+	Testimonials,
+	Testimonial,
 } from "fromsrc/client"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -211,6 +223,18 @@ const components = {
 	Change,
 	Collapsible,
 	Details,
+	Terminal,
+	Line,
+	Output,
+	Typed,
+	YouTube,
+	CodeSandbox,
+	StackBlitz,
+	Tweet,
+	Gist,
+	Quote,
+	Testimonials,
+	Testimonial,
 }
 
 interface Props {
