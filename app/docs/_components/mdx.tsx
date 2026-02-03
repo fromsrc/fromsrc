@@ -76,6 +76,13 @@ import {
 	Definition,
 	Glossary,
 	GlossaryItem,
+	Avatar,
+	AvatarGroup,
+	User,
+	LinkCard,
+	LinkCards,
+	Status,
+	StatusDot,
 } from "fromsrc/client"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -259,6 +266,13 @@ const components = {
 	Definition,
 	Glossary,
 	GlossaryItem,
+	Avatar,
+	AvatarGroup,
+	User,
+	LinkCard,
+	LinkCards,
+	Status,
+	StatusDot,
 }
 
 interface Props {
