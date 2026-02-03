@@ -1,9 +1,18 @@
 "use client"
 
+import { type JSX, memo } from "react"
+
+/**
+ * Props for the Progress component
+ */
 interface ProgressProps {
+	/** Current progress value */
 	value: number
+	/** Maximum value (default: 100) */
 	max?: number
+	/** Accessible label for the progress bar */
 	label?: string
+	/** Size variant */
 	size?: "sm" | "md" | "lg"
 }
 
@@ -13,7 +22,12 @@ const sizes: Record<"sm" | "md" | "lg", string> = {
 	lg: "h-3",
 }
 
-export function Progress({ value, max = 100, label, size = "md" }: ProgressProps) {
+export const Progress = memo(function Progress({
+	value,
+	max = 100,
+	label,
+	size = "md",
+}: ProgressProps): JSX.Element {
 	const percentage = Math.min(100, Math.max(0, (value / max) * 100))
 
 	return (
@@ -29,9 +43,9 @@ export function Progress({ value, max = 100, label, size = "md" }: ProgressProps
 			<div
 				className={`w-full ${sizes[size]} bg-surface rounded-full overflow-hidden`}
 				role="progressbar"
-				aria-valuenow={value}
+				aria-valuenow={percentage}
 				aria-valuemin={0}
-				aria-valuemax={max}
+				aria-valuemax={100}
 				aria-label={label}
 				aria-valuetext={`${Math.round(percentage)}%`}
 			>
@@ -42,15 +56,25 @@ export function Progress({ value, max = 100, label, size = "md" }: ProgressProps
 			</div>
 		</div>
 	)
-}
+})
 
+/**
+ * Props for the ProgressSteps component
+ */
 interface ProgressStepsProps {
+	/** Current step index (0-based) */
 	current: number
+	/** Total number of steps */
 	total: number
+	/** Optional labels for each step */
 	labels?: string[]
 }
 
-export function ProgressSteps({ current, total, labels }: ProgressStepsProps) {
+export const ProgressSteps = memo(function ProgressSteps({
+	current,
+	total,
+	labels,
+}: ProgressStepsProps): JSX.Element {
 	return (
 		<div className="my-6" role="group" aria-label="Progress steps">
 			<ol className="flex items-center justify-between list-none p-0 m-0">
@@ -85,6 +109,6 @@ export function ProgressSteps({ current, total, labels }: ProgressStepsProps) {
 			)}
 		</div>
 	)
-}
+})
 
 export type { ProgressProps, ProgressStepsProps }
