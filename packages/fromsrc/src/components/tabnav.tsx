@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { type ReactNode, useRef, useState } from "react"
+import { type KeyboardEvent, type ReactNode, useRef, useState } from "react"
 
 export interface NavTab {
 	id: string
@@ -14,10 +14,12 @@ export interface NavTab {
 
 interface TabNavProps {
 	tabs: NavTab[]
+	label?: string
 }
 
-export function TabNav({ tabs }: TabNavProps) {
+export function TabNav({ tabs, label = "Navigation" }: TabNavProps) {
 	const pathname = usePathname()
+	const refs = useRef<(HTMLAnchorElement | null)[]>([])
 
 	const isActive = (tab: NavTab) => {
 		if (tab.match) {
@@ -26,16 +28,39 @@ export function TabNav({ tabs }: TabNavProps) {
 		return pathname.startsWith(tab.href)
 	}
 
+	const handleKeyDown = (e: KeyboardEvent, index: number) => {
+		let next = index
+		if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+			e.preventDefault()
+			next = index < tabs.length - 1 ? index + 1 : 0
+		} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+			e.preventDefault()
+			next = index > 0 ? index - 1 : tabs.length - 1
+		} else if (e.key === "Home") {
+			e.preventDefault()
+			next = 0
+		} else if (e.key === "End") {
+			e.preventDefault()
+			next = tabs.length - 1
+		} else {
+			return
+		}
+		refs.current[next]?.focus()
+	}
+
 	return (
-		<div className="flex gap-1 p-1 bg-surface rounded-lg" role="tablist">
-			{tabs.map((tab) => {
+		<nav aria-label={label} className="flex gap-1 p-1 bg-surface rounded-lg">
+			{tabs.map((tab, i) => {
 				const active = isActive(tab)
 				return (
 					<Link
 						key={tab.id}
+						ref={(el) => {
+							refs.current[i] = el
+						}}
 						href={tab.href}
-						role="tab"
-						aria-selected={active}
+						aria-current={active ? "page" : undefined}
+						onKeyDown={(e) => handleKeyDown(e, i)}
 						className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
 							active ? "bg-bg text-fg shadow-sm" : "text-muted hover:text-fg hover:bg-bg/50"
 						}`}
@@ -49,19 +74,23 @@ export function TabNav({ tabs }: TabNavProps) {
 					</Link>
 				)
 			})}
-		</div>
+		</nav>
 	)
 }
 
 interface TabNavDropdownProps {
 	tabs: NavTab[]
+	label?: string
 }
 
-export function TabNavDropdown({ tabs }: TabNavDropdownProps) {
+export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownProps) {
 	const pathname = usePathname()
 	const [open, setOpen] = useState(false)
 	const [focused, setFocused] = useState(0)
 	const containerRef = useRef<HTMLDivElement>(null)
+	const buttonRef = useRef<HTMLButtonElement>(null)
+	const optionRefs = useRef<(HTMLAnchorElement | null)[]>([])
+	const listId = useRef(`tabnav-${Math.random().toString(36).slice(2, 9)}`).current
 
 	const isActive = (tab: NavTab) => {
 		if (tab.match) {
@@ -73,37 +102,60 @@ export function TabNavDropdown({ tabs }: TabNavDropdownProps) {
 	const currentTab = tabs.find((tab) => isActive(tab)) || tabs[0]
 	const currentIndex = tabs.findIndex((tab) => isActive(tab))
 
-	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (!open) {
-			if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
-				e.preventDefault()
-				setOpen(true)
-				setFocused(currentIndex >= 0 ? currentIndex : 0)
-			}
-			return
-		}
+	const openMenu = (index: number) => {
+		setOpen(true)
+		setFocused(index)
+		requestAnimationFrame(() => {
+			optionRefs.current[index]?.focus()
+		})
+	}
 
+	const closeMenu = () => {
+		setOpen(false)
+		buttonRef.current?.focus()
+	}
+
+	const handleButtonKeyDown = (e: KeyboardEvent) => {
+		if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+			e.preventDefault()
+			openMenu(currentIndex >= 0 ? currentIndex : 0)
+		}
+	}
+
+	const handleOptionKeyDown = (e: KeyboardEvent, index: number) => {
 		if (e.key === "Escape") {
 			e.preventDefault()
-			setOpen(false)
+			closeMenu()
 		} else if (e.key === "ArrowDown") {
 			e.preventDefault()
-			setFocused((f) => Math.min(f + 1, tabs.length - 1))
+			const next = index < tabs.length - 1 ? index + 1 : 0
+			setFocused(next)
+			optionRefs.current[next]?.focus()
 		} else if (e.key === "ArrowUp") {
 			e.preventDefault()
-			setFocused((f) => Math.max(f - 1, 0))
-		} else if (e.key === "Enter" || e.key === " ") {
+			const next = index > 0 ? index - 1 : tabs.length - 1
+			setFocused(next)
+			optionRefs.current[next]?.focus()
+		} else if (e.key === "Home") {
 			e.preventDefault()
+			setFocused(0)
+			optionRefs.current[0]?.focus()
+		} else if (e.key === "End") {
+			e.preventDefault()
+			setFocused(tabs.length - 1)
+			optionRefs.current[tabs.length - 1]?.focus()
+		} else if (e.key === "Tab") {
 			setOpen(false)
 		}
 	}
 
 	return (
-		<div className="relative" ref={containerRef}>
+		<nav aria-label={label} className="relative" ref={containerRef}>
 			<button
+				ref={buttonRef}
 				type="button"
-				onClick={() => setOpen(!open)}
-				onKeyDown={handleKeyDown}
+				onClick={() => (open ? closeMenu() : openMenu(currentIndex >= 0 ? currentIndex : 0))}
+				onKeyDown={handleButtonKeyDown}
 				onBlur={(e) => {
 					if (!containerRef.current?.contains(e.relatedTarget)) {
 						setOpen(false)
@@ -111,6 +163,7 @@ export function TabNavDropdown({ tabs }: TabNavDropdownProps) {
 				}}
 				aria-expanded={open}
 				aria-haspopup="listbox"
+				aria-controls={listId}
 				className="flex items-center gap-2 px-3 py-2 w-full rounded-lg bg-surface border border-line text-sm font-medium text-fg hover:bg-surface/80 transition-colors"
 			>
 				{currentTab?.icon && (
@@ -131,20 +184,30 @@ export function TabNavDropdown({ tabs }: TabNavDropdownProps) {
 			</button>
 			{open && (
 				<div
-					className="absolute left-0 right-0 top-full mt-1 bg-surface border border-line rounded-lg shadow-lg overflow-hidden z-50"
+					id={listId}
 					role="listbox"
+					aria-activedescendant={tabs[focused]?.id}
+					className="absolute left-0 right-0 top-full mt-1 bg-surface border border-line rounded-lg shadow-lg overflow-hidden z-50"
 				>
 					{tabs.map((tab, i) => {
 						const active = isActive(tab)
 						return (
 							<Link
 								key={tab.id}
+								id={tab.id}
+								ref={(el) => {
+									optionRefs.current[i] = el
+								}}
 								href={tab.href}
 								role="option"
 								aria-selected={active}
 								onClick={() => setOpen(false)}
-								onKeyDown={handleKeyDown}
-								onFocus={() => setFocused(i)}
+								onKeyDown={(e) => handleOptionKeyDown(e, i)}
+								onBlur={(e) => {
+									if (!containerRef.current?.contains(e.relatedTarget)) {
+										setOpen(false)
+									}
+								}}
 								className={`flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
 									active ? "bg-bg text-fg" : "text-muted hover:text-fg hover:bg-bg/50"
 								} ${i === focused ? "ring-1 ring-inset ring-accent" : ""}`}
@@ -160,7 +223,7 @@ export function TabNavDropdown({ tabs }: TabNavDropdownProps) {
 					})}
 				</div>
 			)}
-		</div>
+		</nav>
 	)
 }
 
