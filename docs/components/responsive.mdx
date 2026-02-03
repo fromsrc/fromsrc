@@ -62,15 +62,17 @@ flexible layouts:
 
 | prop | type | description |
 |------|------|-------------|
-| above | breakpoint | show above this size |
-| below | breakpoint | show below this size |
+| above | "sm" \| "md" \| "lg" \| "xl" | show above this size |
+| below | "sm" \| "md" \| "lg" \| "xl" | show below this size |
+| children | ReactNode | content to show |
 
 ### grid
 
 | prop | type | default | description |
 |------|------|---------|-------------|
-| cols | 1-4 | 2 | columns |
+| cols | 1 \| 2 \| 3 \| 4 | 2 | columns |
 | gap | "sm" \| "md" \| "lg" | "md" | spacing |
+| children | ReactNode | - | grid content |
 
 ### flex
 
@@ -81,3 +83,4 @@ flexible layouts:
 | justify | "start" \| "center" \| "end" \| "between" | "start" | justify-content |
 | gap | "sm" \| "md" \| "lg" | "md" | spacing |
 | wrap | boolean | false | flex-wrap |
+| children | ReactNode | - | flex content |
