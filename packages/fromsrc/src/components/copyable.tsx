@@ -1,16 +1,11 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { IconCheck, IconCopy } from "./icons"
 
-interface CopyableProps {
-	value: string
-	label?: string
-}
-
-export function Copyable({ value, label }: CopyableProps) {
+function usecopy(text: string) {
 	const [copied, setCopied] = useState(false)
-	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+	const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
 	useEffect(() => {
 		return () => {
@@ -18,16 +13,27 @@ export function Copyable({ value, label }: CopyableProps) {
 		}
 	}, [])
 
-	const copy = async () => {
+	const copy = useCallback(async () => {
 		try {
-			await navigator.clipboard.writeText(value)
+			await navigator.clipboard.writeText(text)
 			setCopied(true)
 			if (timeoutRef.current) clearTimeout(timeoutRef.current)
 			timeoutRef.current = setTimeout(() => setCopied(false), 2000)
 		} catch {
 			setCopied(false)
 		}
-	}
+	}, [text])
+
+	return { copied, copy }
+}
+
+interface CopyableProps {
+	value: string
+	label?: string
+}
+
+export function Copyable({ value, label }: CopyableProps) {
+	const { copied, copy } = usecopy(value)
 
 	return (
 		<div className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-line font-mono text-sm">
@@ -37,7 +43,7 @@ export function Copyable({ value, label }: CopyableProps) {
 				type="button"
 				onClick={copy}
 				className="text-muted hover:text-fg transition-colors"
-				aria-label={copied ? "copied" : "copy to clipboard"}
+				aria-label="copy to clipboard"
 			>
 				{copied ? (
 					<IconCheck size={14} className="text-emerald-400" />
@@ -45,6 +51,9 @@ export function Copyable({ value, label }: CopyableProps) {
 					<IconCopy size={14} />
 				)}
 			</button>
+			<span role="status" aria-live="polite" className="sr-only">
+				{copied ? "copied" : ""}
+			</span>
 		</div>
 	)
 }
@@ -54,25 +63,7 @@ interface CopyBlockProps {
 }
 
 export function CopyBlock({ children }: CopyBlockProps) {
-	const [copied, setCopied] = useState(false)
-	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-	useEffect(() => {
-		return () => {
-			if (timeoutRef.current) clearTimeout(timeoutRef.current)
-		}
-	}, [])
-
-	const copy = async () => {
-		try {
-			await navigator.clipboard.writeText(children)
-			setCopied(true)
-			if (timeoutRef.current) clearTimeout(timeoutRef.current)
-			timeoutRef.current = setTimeout(() => setCopied(false), 2000)
-		} catch {
-			setCopied(false)
-		}
-	}
+	const { copied, copy } = usecopy(children)
 
 	return (
 		<div className="my-4 flex items-center justify-between gap-4 px-4 py-3 rounded-xl bg-surface border border-line font-mono text-sm">
@@ -81,7 +72,7 @@ export function CopyBlock({ children }: CopyBlockProps) {
 				type="button"
 				onClick={copy}
 				className="shrink-0 text-muted hover:text-fg transition-colors"
-				aria-label={copied ? "copied" : "copy to clipboard"}
+				aria-label="copy to clipboard"
 			>
 				{copied ? (
 					<IconCheck size={16} className="text-emerald-400" />
@@ -89,6 +80,9 @@ export function CopyBlock({ children }: CopyBlockProps) {
 					<IconCopy size={16} />
 				)}
 			</button>
+			<span role="status" aria-live="polite" className="sr-only">
+				{copied ? "copied" : ""}
+			</span>
 		</div>
 	)
 }
