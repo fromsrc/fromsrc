@@ -1,9 +1,16 @@
 "use client"
 
+import type React from "react"
 import { type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
 import { Tooltip } from "./tooltip"
 
+/**
+ * Option item for the Select component.
+ * @property value - unique value for the option
+ * @property label - display text for the option
+ * @property disabled - whether the option is disabled
+ */
 export interface SelectOption {
 	value: string
 	label: string
@@ -11,16 +18,16 @@ export interface SelectOption {
 }
 
 /**
- * @param options - list of selectable options
- * @param value - controlled value
- * @param defaultValue - uncontrolled default value
- * @param onChange - callback when selection changes
- * @param placeholder - text shown when no option selected
- * @param disabled - disable the select
- * @param error - error message
- * @param label - accessible label
- * @param tooltip - help text shown on hover
- * @example <Select options={[{ value: "1", label: "One" }]} onChange={console.log} />
+ * Props for the Select component.
+ * @property options - list of selectable options
+ * @property value - controlled value
+ * @property defaultValue - uncontrolled default value
+ * @property onChange - callback when selection changes
+ * @property placeholder - text shown when no option selected
+ * @property disabled - disable the select
+ * @property error - error message
+ * @property label - accessible label
+ * @property tooltip - help text shown on hover
  */
 export interface SelectProps {
 	options: SelectOption[]
@@ -44,7 +51,7 @@ export function Select({
 	error,
 	label,
 	tooltip,
-}: SelectProps) {
+}: SelectProps): React.ReactElement {
 	const [internalValue, setInternalValue] = useState(defaultValue)
 	const [open, setOpen] = useState(false)
 	const [index, setIndex] = useState(-1)
