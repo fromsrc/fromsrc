@@ -1,7 +1,7 @@
 "use client"
 
 import { type KeyboardEvent, type ReactElement, useCallback, useId, useRef, useState } from "react"
-import { useCopy } from "../hooks/copy"
+import { CopyButton } from "./copybutton"
 
 const managers = ["npm", "pnpm", "yarn", "bun"] as const
 type Manager = (typeof managers)[number]
@@ -11,83 +11,6 @@ const commands: Record<Manager, string> = {
 	pnpm: "pnpm add",
 	yarn: "yarn add",
 	bun: "bun add",
-}
-
-/**
- * Props for the CopyButton component
- */
-interface CopyButtonProps {
-	/** The text to copy to clipboard */
-	text: string
-}
-
-function CopyButton({ text }: CopyButtonProps): ReactElement {
-	const { copied, copy } = useCopy()
-
-	const handleClick = useCallback((): void => {
-		copy(text)
-	}, [copy, text])
-
-	const handleMouseEnter = useCallback(
-		(e: React.MouseEvent<HTMLButtonElement>): void => {
-			if (!copied) e.currentTarget.style.color = "#fafafa"
-		},
-		[copied]
-	)
-
-	const handleMouseLeave = useCallback(
-		(e: React.MouseEvent<HTMLButtonElement>): void => {
-			if (!copied) e.currentTarget.style.color = "#737373"
-		},
-		[copied]
-	)
-
-	return (
-		<button
-			type="button"
-			onClick={handleClick}
-			aria-label={copied ? "Copied to clipboard" : "Copy install command"}
-			aria-live="polite"
-			style={{
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				padding: "6px",
-				color: copied ? "#22c55e" : "#737373",
-				background: "transparent",
-				border: "none",
-				cursor: "pointer",
-				transition: "color 0.15s",
-			}}
-			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}
-		>
-			{copied ? (
-				<svg
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					style={{ width: 14, height: 14 }}
-					aria-hidden="true"
-				>
-					<polyline points="20 6 9 17 4 12" />
-				</svg>
-			) : (
-				<svg
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					style={{ width: 14, height: 14 }}
-					aria-hidden="true"
-				>
-					<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-					<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2-2v1" />
-				</svg>
-			)}
-		</button>
-	)
 }
 
 /**
