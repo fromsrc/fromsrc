@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { type ReactNode, useRef, useState } from "react"
+import { type ReactNode, useEffect, useRef, useState } from "react"
 import type { DocMeta } from "../content"
 import { Folder } from "./folder"
 import { IconPanelLeft } from "./icons"
@@ -51,7 +51,16 @@ export function Sidebar({
 	const [hovered, setHovered] = useState(false)
 	const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-	const toggle = () => setCollapsed(!collapsed)
+	useEffect(() => {
+		const stored = localStorage.getItem("sidebar-collapsed")
+		if (stored === "true") setCollapsed(true)
+	}, [])
+
+	const toggle = () => {
+		const next = !collapsed
+		setCollapsed(next)
+		localStorage.setItem("sidebar-collapsed", String(next))
+	}
 	const showExpanded = !collapsed || hovered
 
 	const handleEnter = () => {
@@ -154,7 +163,7 @@ export function Sidebar({
 								const icon = "icon" in item ? item.icon : null
 								return (
 									<Link
-										key={i}
+										key={`${section.title}-${i}`}
 										href={href}
 										className="w-10 h-8 flex items-center justify-center my-0.5 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors [&>svg]:w-4 [&>svg]:h-4"
 										title={item.title}
