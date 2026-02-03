@@ -1,0 +1,162 @@
+---
+title: blog
+description: add a blog to your docs site
+order: 2
+---
+
+add a blog alongside your documentation using the same content system.
+
+## folder structure
+
+<Files>
+  <Folder name="docs" defaultOpen>
+    <File name="index.mdx" />
+    <File name="installation.mdx" />
+  </Folder>
+  <Folder name="blog" defaultOpen>
+    <File name="index.mdx" />
+    <File name="hello-world.mdx" />
+  </Folder>
+</Files>
+
+## extended schema
+
+add blog-specific fields to your frontmatter:
+
+```tsx
+import { defineContent, extendSchema, z } from "fromsrc"
+
+const blog = defineContent({
+  dir: "blog",
+  schema: extendSchema({
+    author: z.string(),
+    date: z.string(),
+    tags: z.array(z.string()).optional(),
+  }),
+})
+
+export const getBlogPost = blog.getDoc
+export const getAllPosts = blog.getAllDocs
+```
+
+## blog post frontmatter
+
+```yaml
+---
+title: hello world
+description: our first blog post
+author: team
+date: 2026-01-15
+tags:
+  - announcement
+  - release
+---
+```
+
+## blog index page
+
+create `app/blog/page.tsx`:
+
+```tsx
+import Link from "next/link"
+import { getAllPosts } from "@/lib/blog"
+
+export default async function BlogIndex() {
+  const posts = await getAllPosts()
+
+  return (
+    <div className="max-w-2xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-medium mb-8">blog</h1>
+      <div className="space-y-6">
+        {posts.map((post) => (
+          <Link
+            key={post.slug}
+            href={`/blog/${post.slug}`}
+            className="block group"
+          >
+            <h2 className="text-lg group-hover:text-accent">
+              {post.title}
+            </h2>
+            <p className="text-sm text-muted">
+              {post.date} · {post.author}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+## blog post page
+
+create `app/blog/[slug]/page.tsx`:
+
+```tsx
+import { notFound } from "next/navigation"
+import { getBlogPost, getAllPosts } from "@/lib/blog"
+import { MDX } from "@/components/mdx"
+
+interface Props {
+  params: Promise<{ slug: string }>
+}
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts()
+  return posts.map((post) => ({ slug: post.slug }))
+}
+
+export default async function BlogPost({ params }: Props) {
+  const { slug } = await params
+  const post = await getBlogPost([slug])
+
+  if (!post) notFound()
+
+  return (
+    <article className="max-w-2xl mx-auto py-12 px-4">
+      <header className="mb-8">
+        <h1 className="text-2xl font-medium mb-2">{post.title}</h1>
+        <p className="text-sm text-muted">
+          {post.data.date} · {post.data.author}
+        </p>
+      </header>
+      <div className="prose">
+        <MDX source={post.content} />
+      </div>
+    </article>
+  )
+}
+```
+
+## rss feed
+
+add an rss feed at `app/blog/feed.xml/route.ts`:
+
+```tsx
+import { getAllPosts } from "@/lib/blog"
+
+export async function GET() {
+  const posts = await getAllPosts()
+  const baseUrl = "https://example.com"
+
+  const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>my blog</title>
+    <link>${baseUrl}/blog</link>
+    <description>updates and announcements</description>
+    ${posts.map((post) => `
+    <item>
+      <title>${post.title}</title>
+      <link>${baseUrl}/blog/${post.slug}</link>
+      <description>${post.description || ""}</description>
+    </item>
+    `).join("")}
+  </channel>
+</rss>`
+
+  return new Response(rss, {
+    headers: { "Content-Type": "application/xml" },
+  })
+}
+```

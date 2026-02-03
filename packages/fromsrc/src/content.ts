@@ -46,14 +46,28 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	async function getDoc(slug: string[]): Promise<Document | null> {
 		const path = slug.length === 0 ? "index" : slug.join("/")
 		const filepath = join(config.dir, `${path}.mdx`)
+		const indexPath = join(config.dir, `${path}/index.mdx`)
+
+		let source: string
+		let actualPath = path
 
 		try {
-			const source = await readCached(filepath)
+			source = await readCached(filepath)
+		} catch {
+			try {
+				source = await readCached(indexPath)
+				actualPath = `${path}/index`
+			} catch {
+				return null
+			}
+		}
+
+		try {
 			const { data, content } = matter(source)
 			const parsed = schema.parse(data) as z.infer<T>
 
 			return {
-				slug: path,
+				slug: actualPath,
 				...parsed,
 				content,
 				data: parsed,
@@ -116,6 +130,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			{ title: "introduction", items: [] },
 			{ title: "components", items: [] },
 			{ title: "api", items: [] },
+			{ title: "examples", items: [] },
 		]
 
 		for (const doc of docs) {
@@ -123,6 +138,8 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 				sections[1].items.push(doc)
 			} else if (doc.slug.startsWith("api/")) {
 				sections[2].items.push(doc)
+			} else if (doc.slug.startsWith("examples/")) {
+				sections[3].items.push(doc)
 			} else {
 				sections[0].items.push(doc)
 			}
@@ -143,14 +160,28 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | null> {
 	const path = slug.length === 0 ? "index" : slug.join("/")
 	const filepath = join(docsDir, `${path}.mdx`)
+	const indexPath = join(docsDir, `${path}/index.mdx`)
+
+	let source: string
+	let actualPath = path
 
 	try {
-		const source = await readCached(filepath)
+		source = await readCached(filepath)
+	} catch {
+		try {
+			source = await readCached(indexPath)
+			actualPath = `${path}/index`
+		} catch {
+			return null
+		}
+	}
+
+	try {
 		const { data, content } = matter(source)
 		const parsed = baseSchema.parse(data)
 
 		return {
-			slug: path,
+			slug: actualPath,
 			title: parsed.title,
 			description: parsed.description,
 			order: parsed.order,
@@ -218,6 +249,7 @@ export async function getNavigation(docsDir: string) {
 		{ title: "introduction", items: [] },
 		{ title: "components", items: [] },
 		{ title: "api", items: [] },
+		{ title: "examples", items: [] },
 	]
 
 	for (const doc of docs) {
@@ -225,6 +257,8 @@ export async function getNavigation(docsDir: string) {
 			sections[1].items.push(doc)
 		} else if (doc.slug.startsWith("api/")) {
 			sections[2].items.push(doc)
+		} else if (doc.slug.startsWith("examples/")) {
+			sections[3].items.push(doc)
 		} else {
 			sections[0].items.push(doc)
 		}
