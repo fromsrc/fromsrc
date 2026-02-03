@@ -1,0 +1,104 @@
+---
+title: hooks
+description: react hooks for documentation features
+order: 2
+---
+
+custom hooks for common documentation patterns.
+
+## useCopy
+
+copy text to clipboard with feedback state.
+
+```tsx
+import { useCopy } from "fromsrc/client"
+
+function CopyButton({ text }: { text: string }) {
+  const { copied, copy } = useCopy()
+
+  return (
+    <button onClick={() => copy(text)}>
+      {copied ? "copied" : "copy"}
+    </button>
+  )
+}
+```
+
+<TypeTable
+  data={{
+    duration: { type: "number", default: "1500", description: "feedback duration in ms" },
+  }}
+/>
+
+### useCopy returns
+
+<TypeTable
+  data={{
+    copied: { type: "boolean", description: "true after copying, resets after duration" },
+    copy: { type: "(text: string) => Promise<void>", description: "copy text to clipboard" },
+  }}
+/>
+
+## useToc
+
+access table of contents state for custom toc implementations.
+
+```tsx
+import { useToc } from "fromsrc/client"
+
+function CustomToc() {
+  const { headings, active } = useToc()
+
+  return (
+    <ul>
+      {headings.map(h => (
+        <li key={h.id} data-active={h.id === active}>
+          <a href={`#${h.id}`}>{h.text}</a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### useToc returns
+
+<TypeTable
+  data={{
+    headings: { type: "Heading[]", description: "list of headings on the page" },
+    active: { type: "string", description: "id of currently active heading" },
+  }}
+/>
+
+### Heading type
+
+```typescript
+interface Heading {
+  id: string
+  text: string
+  level: number
+}
+```
+
+## useKeyboardNav
+
+enable keyboard navigation between documentation pages.
+
+```tsx
+import { useKeyboardNav } from "fromsrc/client"
+
+function KeyboardNav({ docs }: { docs: DocMeta[] }) {
+  useKeyboardNav(docs)
+  return null
+}
+```
+
+this hook enables:
+- **left arrow** - navigate to previous page
+- **right arrow** - navigate to next page
+
+<TypeTable
+  data={{
+    docs: { type: "DocMeta[]", required: true, description: "ordered list of docs for navigation" },
+  }}
+/>

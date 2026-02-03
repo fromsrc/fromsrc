@@ -46,22 +46,22 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 		<aside
 			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200`}
 		>
-			<div className={collapsed ? "p-3" : "p-5"}>
+			<div className={`${collapsed ? "p-3" : "p-5"} transition-all duration-200`}>
 				<Link href="/" className="flex items-center gap-2.5 text-sm text-fg hover:text-accent transition-colors">
 					<div className="p-1.5 rounded-lg bg-surface border border-line shrink-0">
 						{logo}
 					</div>
-					{!collapsed && title}
+					<span className={`${collapsed ? "opacity-0 w-0" : "opacity-100"} transition-opacity duration-200 overflow-hidden whitespace-nowrap`}>
+						{title}
+					</span>
 				</Link>
 			</div>
-			{!collapsed && (
-				<div className="px-4 mb-6">
-					<Search basePath={basePath} docs={docs} />
-				</div>
-			)}
-			{collapsed ? (
-				<nav className="px-2 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-					{navigation.flatMap((section) =>
+			<div className={`px-4 mb-6 ${collapsed ? "opacity-0 h-0 overflow-hidden" : "opacity-100"} transition-all duration-200`}>
+				<Search basePath={basePath} docs={docs} />
+			</div>
+			<nav className={`${collapsed ? "px-2" : "px-4"} flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] transition-all duration-200`}>
+				{collapsed ? (
+					navigation.flatMap((section) =>
 						section.items.map((item, i) => {
 							const href = !("type" in item)
 								? item.slug ? `${basePath}/${item.slug}` : basePath
@@ -79,11 +79,9 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 								</Link>
 							)
 						})
-					)}
-				</nav>
-			) : (
-				<nav className="px-4 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-					{navigation.map((section) => (
+					)
+				) : (
+					navigation.map((section) => (
 						<div key={section.title} className="mb-6">
 							<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider">
 								{section.title}
@@ -110,9 +108,9 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 								})}
 							</ul>
 						</div>
-					))}
-				</nav>
-			)}
+					))
+				)}
+			</nav>
 			<div className={`${collapsed ? "p-2" : "p-4"} border-t border-line bg-bg shrink-0 flex ${collapsed ? "flex-col gap-2" : "justify-between"} items-center`}>
 				{github && (
 					<a

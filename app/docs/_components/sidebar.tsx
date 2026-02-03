@@ -7,9 +7,12 @@ export async function Sidebar() {
 	const rawNavigation = await getNavigation()
 	const docs = await getAllDocs()
 
-	const navigation: SidebarSection[] = rawNavigation.map((section) => {
+	const navigation: SidebarSection[] = []
+	const referenceItems: (SidebarItem | SidebarFolder)[] = []
+
+	for (const section of rawNavigation) {
 		if (section.title === "components") {
-			const folder: SidebarFolder = {
+			referenceItems.push({
 				type: "folder",
 				title: "components",
 				defaultOpen: false,
@@ -18,18 +21,33 @@ export async function Sidebar() {
 					title: item.title,
 					href: `/docs/${item.slug}`,
 				})),
-			}
-			return { title: "reference", items: [folder] }
+			})
+		} else if (section.title === "api") {
+			referenceItems.push({
+				type: "folder",
+				title: "api",
+				defaultOpen: false,
+				items: section.items.map((item) => ({
+					type: "item" as const,
+					title: item.title,
+					href: `/docs/${item.slug}`,
+				})),
+			})
+		} else {
+			navigation.push({
+				title: section.title,
+				items: section.items.map((item) => ({
+					type: "item" as const,
+					title: item.title,
+					href: item.slug ? `/docs/${item.slug}` : "/docs",
+				})),
+			})
 		}
-		return {
-			title: section.title,
-			items: section.items.map((item) => ({
-				type: "item" as const,
-				title: item.title,
-				href: item.slug ? `/docs/${item.slug}` : "/docs",
-			})),
-		}
-	})
+	}
+
+	if (referenceItems.length > 0) {
+		navigation.push({ title: "reference", items: referenceItems })
+	}
 
 	return (
 		<SidebarBase

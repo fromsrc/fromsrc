@@ -1,0 +1,174 @@
+---
+title: quickstart
+description: build a docs site in 5 minutes
+order: 3
+---
+
+build a documentation site from scratch.
+
+## create the project
+
+<Create />
+
+## add your first page
+
+create a file at `docs/index.mdx`:
+
+```mdx
+---
+title: welcome
+description: my documentation
+---
+
+# welcome to my docs
+
+this is your first documentation page.
+
+## getting started
+
+add content using mdx - markdown with react components.
+```
+
+## add a second page
+
+create `docs/installation.mdx`:
+
+```mdx
+---
+title: installation
+description: how to install
+order: 2
+---
+
+## install the package
+
+<Install package="my-package" />
+
+## basic usage
+
+import and use the package:
+
+<CodeGroup>
+  <CodeTab title="npm">
+    ```bash
+    npm install my-package
+    ```
+  </CodeTab>
+  <CodeTab title="bun">
+    ```bash
+    bun add my-package
+    ```
+  </CodeTab>
+</CodeGroup>
+```
+
+## customize the sidebar
+
+the sidebar automatically generates from your docs folder. files are sorted by the `order` field in frontmatter:
+
+```yaml
+---
+title: page title
+order: 1
+---
+```
+
+lower numbers appear first.
+
+## add callouts
+
+highlight important information:
+
+```mdx
+<Callout type="info">
+  this is helpful information.
+</Callout>
+
+<Callout type="warning">
+  be careful with this.
+</Callout>
+
+<Callout type="error">
+  this is a critical error.
+</Callout>
+
+<Callout type="tip">
+  here's a pro tip.
+</Callout>
+```
+
+renders as:
+
+<Callout type="info">
+  this is helpful information.
+</Callout>
+
+<Callout type="warning">
+  be careful with this.
+</Callout>
+
+## add code blocks
+
+code blocks support syntax highlighting:
+
+````mdx
+```typescript
+function greet(name: string) {
+  return `hello, ${name}!`
+}
+```
+````
+
+renders as:
+
+```typescript
+function greet(name: string) {
+  return `hello, ${name}!`
+}
+```
+
+## organize with folders
+
+group related pages in folders:
+
+<Files>
+  <Folder name="docs" defaultOpen>
+    <File name="index.mdx" />
+    <File name="installation.mdx" />
+    <Folder name="components" defaultOpen>
+      <File name="button.mdx" />
+      <File name="input.mdx" />
+    </Folder>
+  </Folder>
+</Files>
+
+folders become collapsible sections in the sidebar.
+
+## deploy
+
+build for production:
+
+```bash
+bun run build
+```
+
+deploy the `.next` folder to any hosting platform:
+
+- vercel (recommended)
+- netlify
+- cloudflare pages
+- self-hosted
+
+## next steps
+
+<Cards>
+  <Card title="components" href="/docs/components">
+    explore all available components
+  </Card>
+  <Card title="theming" href="/docs/theming">
+    customize colors and styles
+  </Card>
+  <Card title="ai integration" href="/docs/ai">
+    add llms.txt and raw markdown
+  </Card>
+</Cards>

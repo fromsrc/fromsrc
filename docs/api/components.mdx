@@ -1,0 +1,402 @@
+---
+title: components api
+description: detailed props reference for all components
+order: 4
+---
+
+complete props reference for all exported components.
+
+## layout components
+
+### Sidebar
+
+navigation sidebar with sections and collapsible folders.
+
+<TypeTable
+  data={{
+    title: { type: "string", required: true, description: "sidebar title text" },
+    logo: { type: "ReactNode", description: "logo element next to title" },
+    navigation: { type: "SidebarSection[]", required: true, description: "navigation structure" },
+    docs: { type: "DocMeta[]", required: true, description: "all docs for search" },
+    basePath: { type: "string", default: '"/docs"', description: "base path for doc links" },
+    github: { type: "string", description: "github repo url" },
+    collapsible: { type: "boolean", description: "enable collapse to icon-only mode" },
+  }}
+/>
+
+### SidebarSection
+
+```typescript
+interface SidebarSection {
+  title: string
+  items: (SidebarItem | SidebarFolder | DocMeta)[]
+}
+```
+
+### SidebarItem
+
+```typescript
+interface SidebarItem {
+  type: "item"
+  title: string
+  href: string
+  icon?: ReactNode
+}
+```
+
+### SidebarFolder
+
+```typescript
+interface SidebarFolder {
+  type: "folder"
+  title: string
+  items: (SidebarItem | SidebarFolder)[]
+  defaultOpen?: boolean
+  icon?: ReactNode
+}
+```
+
+### MobileNav
+
+mobile navigation drawer. no props required.
+
+### Breadcrumb
+
+breadcrumb navigation based on current path.
+
+<TypeTable
+  data={{
+    base: { type: "string", default: '"/docs"', description: "base path to strip from breadcrumb" },
+  }}
+/>
+
+### Toc
+
+table of contents sidebar.
+
+<TypeTable
+  data={{
+    variant: { type: '"default" | "minimal"', default: '"default"', description: "visual style" },
+    zigzag: { type: "boolean", description: "alternating left-right layout" },
+  }}
+/>
+
+### TocInline
+
+inline table of contents for embedding in content.
+
+<TypeTable
+  data={{
+    title: { type: "string", default: '"on this page"', description: "section title" },
+  }}
+/>
+
+## content components
+
+### CodeBlock
+
+syntax highlighted code with copy button.
+
+<TypeTable
+  data={{
+    code: { type: "string", required: true, description: "code to display" },
+    language: { type: "string", description: "syntax highlighting language" },
+    filename: { type: "string", description: "filename to display" },
+    showLineNumbers: { type: "boolean", description: "show line numbers" },
+  }}
+/>
+
+### CodeGroup
+
+tabbed code blocks for multiple examples.
+
+<TypeTable
+  data={{
+    children: { type: "ReactNode", required: true, description: "CodeTab elements" },
+  }}
+/>
+
+### CodeTab
+
+individual tab in a code group.
+
+<TypeTable
+  data={{
+    title: { type: "string", required: true, description: "tab label" },
+    children: { type: "ReactNode", required: true, description: "code block content" },
+  }}
+/>
+
+### Callout
+
+highlighted message boxes.
+
+<TypeTable
+  data={{
+    type: { type: '"info" | "warning" | "error" | "tip"', default: '"info"', description: "callout style" },
+    title: { type: "string", description: "optional title" },
+    children: { type: "ReactNode", required: true, description: "callout content" },
+  }}
+/>
+
+### Steps
+
+numbered step list container.
+
+<TypeTable
+  data={{
+    children: { type: "ReactNode", required: true, description: "Step elements" },
+  }}
+/>
+
+### Step
+
+individual step in a steps list.
+
+<TypeTable
+  data={{
+    title: { type: "string", required: true, description: "step title" },
+    children: { type: "ReactNode", required: true, description: "step content" },
+  }}
+/>
+
+### Tabs
+
+tabbed content panels.
+
+<TypeTable
+  data={{
+    defaultValue: { type: "string", description: "initially active tab" },
+    children: { type: "ReactNode", required: true, description: "Tab elements" },
+  }}
+/>
+
+### Tab
+
+individual tab panel.
+
+<TypeTable
+  data={{
+    title: { type: "string", required: true, description: "tab label" },
+    children: { type: "ReactNode", required: true, description: "tab content" },
+  }}
+/>
+
+### Cards
+
+grid of linked cards.
+
+<TypeTable
+  data={{
+    children: { type: "ReactNode", required: true, description: "Card elements" },
+  }}
+/>
+
+### Card
+
+individual card in a cards grid.
+
+<TypeTable
+  data={{
+    title: { type: "string", required: true, description: "card title" },
+    href: { type: "string", required: true, description: "link destination" },
+    children: { type: "ReactNode", description: "card description" },
+    icon: { type: "ReactNode", description: "card icon" },
+  }}
+/>
+
+### Accordion
+
+collapsible content sections.
+
+<TypeTable
+  data={{
+    children: { type: "ReactNode", required: true, description: "AccordionItem elements" },
+  }}
+/>
+
+### AccordionItem
+
+individual accordion section.
+
+<TypeTable
+  data={{
+    title: { type: "string", required: true, description: "section title" },
+    children: { type: "ReactNode", required: true, description: "section content" },
+    defaultOpen: { type: "boolean", description: "initially expanded" },
+  }}
+/>
+
+### Files
+
+file tree display container.
+
+<TypeTable
+  data={{
+    children: { type: "ReactNode", required: true, description: "File and Folder elements" },
+  }}
+/>
+
+### File
+
+file in a file tree.
+
+<TypeTable
+  data={{
+    name: { type: "string", required: true, description: "file name" },
+  }}
+/>
+
+### Folder
+
+folder in a file tree.
+
+<TypeTable
+  data={{
+    name: { type: "string", required: true, description: "folder name" },
+    defaultOpen: { type: "boolean", description: "initially expanded" },
+    children: { type: "ReactNode", description: "nested files and folders" },
+  }}
+/>
+
+### TypeTable
+
+api property documentation table.
+
+<TypeTable
+  data={{
+    data: { type: "Record<string, TypeInfo>", required: true, description: "properties to document" },
+  }}
+/>
+
+### TypeInfo
+
+```typescript
+interface TypeInfo {
+  type: string
+  description?: string
+  default?: string
+  required?: boolean
+}
+```
+
+## utility components
+
+### Badge
+
+inline status badges.
+
+<TypeTable
+  data={{
+    variant: { type: '"default" | "success" | "warning" | "error"', default: '"default"', description: "badge style" },
+    children: { type: "ReactNode", required: true, description: "badge text" },
+  }}
+/>
+
+### Banner
+
+dismissible page banners.
+
+<TypeTable
+  data={{
+    variant: { type: '"default" | "rainbow"', default: '"default"', description: "banner style" },
+    id: { type: "string", description: "storage key for dismiss state" },
+    children: { type: "ReactNode", required: true, description: "banner content" },
+  }}
+/>
+
+### Link
+
+external link with indicator icon.
+
+<TypeTable
+  data={{
+    href: { type: "string", required: true, description: "link destination" },
+    children: { type: "ReactNode", required: true, description: "link text" },
+  }}
+/>
+
+### Zoom
+
+image lightbox for enlarging images.
+
+<TypeTable
+  data={{
+    children: { type: "ReactNode", required: true, description: "image element" },
+  }}
+/>
+
+### Tooltip
+
+hover hint tooltip.
+
+<TypeTable
+  data={{
+    content: { type: "ReactNode", required: true, description: "tooltip text" },
+    children: { type: "ReactNode", required: true, description: "trigger element" },
+  }}
+/>
+
+### Github
+
+github repository info display.
+
+<TypeTable
+  data={{
+    repo: { type: "string", required: true, description: "owner/repo format" },
+  }}
+/>
+
+### Video
+
+embedded video player.
+
+<TypeTable
+  data={{
+    src: { type: "string", required: true, description: "video url" },
+    title: { type: "string", description: "video title for accessibility" },
+  }}
+/>
+
+### Mermaid
+
+mermaid diagram renderer.
+
+<TypeTable
+  data={{
+    chart: { type: "string", required: true, description: "mermaid diagram code" },
+  }}
+/>
+
+### ThemeToggle
+
+light/dark mode toggle button.
+
+<TypeTable
+  data={{
+    defaultTheme: { type: '"light" | "dark" | "system"', default: '"system"', description: "initial theme" },
+  }}
+/>
+
+### BackToTop
+
+scroll to top button.
+
+<TypeTable
+  data={{
+    threshold: { type: "number", default: "300", description: "scroll position to show button" },
+  }}
+/>
+
+### Anchor
+
+heading with copy-link functionality.
+
+<TypeTable
+  data={{
+    id: { type: "string", required: true, description: "anchor id" },
+    children: { type: "ReactNode", required: true, description: "heading text" },
+  }}
+/>
+
+also exported as H1, H2, H3, H4, H5, H6 with appropriate heading levels.
