@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useId, useState } from "react"
+import { type ReactNode, useCallback, useId, useState } from "react"
 
 export interface AccordionProps {
 	children: ReactNode
@@ -27,12 +27,14 @@ export function AccordionItem({ title, children, defaultOpen = false }: Accordio
 	const buttonId = `${id}-button`
 	const panelId = `${id}-panel`
 
+	const toggle = useCallback(() => setOpen((prev) => !prev), [])
+
 	return (
 		<div>
 			<button
 				id={buttonId}
 				type="button"
-				onClick={() => setOpen(!open)}
+				onClick={toggle}
 				aria-expanded={open}
 				aria-controls={panelId}
 				className="flex w-full items-center justify-between py-4 text-left font-medium transition-colors hover:text-fg"

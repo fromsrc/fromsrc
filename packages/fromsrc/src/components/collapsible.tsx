@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useId, useState } from "react"
+import { type ReactNode, useCallback, useId, useState } from "react"
 import { IconChevronRight } from "./icons"
 
 export interface CollapsibleProps {
@@ -15,12 +15,14 @@ export function Collapsible({ title, defaultOpen = false, children }: Collapsibl
 	const buttonId = `${id}-button`
 	const contentId = `${id}-content`
 
+	const toggle = useCallback(() => setOpen((prev) => !prev), [])
+
 	return (
 		<div className="my-4 rounded-lg border border-line overflow-hidden">
 			<button
 				id={buttonId}
 				type="button"
-				onClick={() => setOpen(!open)}
+				onClick={toggle}
 				aria-expanded={open}
 				aria-controls={contentId}
 				className="flex items-center gap-2 w-full px-4 py-3 text-sm text-left text-fg hover:bg-surface/50 transition-colors"

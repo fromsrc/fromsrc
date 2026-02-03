@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { IconThumbsDown, IconThumbsUp } from "./icons"
 
 export interface FeedbackProps {
@@ -11,12 +11,15 @@ export function Feedback({ onFeedback }: FeedbackProps) {
 	const [submitted, setSubmitted] = useState(false)
 	const [selected, setSelected] = useState<boolean | null>(null)
 
-	async function handleClick(helpful: boolean) {
-		if (submitted) return
-		setSelected(helpful)
-		setSubmitted(true)
-		await onFeedback?.(helpful)
-	}
+	const handleClick = useCallback(
+		async (helpful: boolean) => {
+			if (submitted) return
+			setSelected(helpful)
+			setSubmitted(true)
+			await onFeedback?.(helpful)
+		},
+		[submitted, onFeedback],
+	)
 
 	if (submitted) {
 		return (

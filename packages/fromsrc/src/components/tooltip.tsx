@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
+import { memo, type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
 
 /**
  * @param content - tooltip text or element
@@ -45,7 +45,7 @@ export function Tooltip({ content, children, side = "top", delay = 200 }: Toolti
 		return () => document.removeEventListener("keydown", handleEscape)
 	}, [show, hide])
 
-	const updatePosition = () => {
+	const updatePosition = useCallback(() => {
 		if (!triggerRef.current || !tooltipRef.current) return
 
 		const trigger = triggerRef.current.getBoundingClientRect()
@@ -55,14 +55,14 @@ export function Tooltip({ content, children, side = "top", delay = 200 }: Toolti
 		const y = side === "top" ? trigger.top - tooltip.height - 8 : trigger.bottom + 8
 
 		setPosition({ x, y })
-	}
+	}, [side])
 
-	const handleEnter = () => {
+	const handleEnter = useCallback(() => {
 		timeoutRef.current = setTimeout(() => {
 			setShow(true)
 			requestAnimationFrame(updatePosition)
 		}, delay)
-	}
+	}, [delay, updatePosition])
 
 	return (
 		<>

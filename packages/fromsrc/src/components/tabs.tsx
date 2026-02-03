@@ -4,6 +4,7 @@ import {
 	createContext,
 	type KeyboardEvent,
 	type ReactNode,
+	useCallback,
 	useContext,
 	useId,
 	useRef,
@@ -35,32 +36,35 @@ export function Tabs({ items, defaultValue, children }: TabsProps) {
 	const id = useId()
 	const tabsRef = useRef<HTMLDivElement>(null)
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-		const currentIndex = items.indexOf(active)
-		let nextIndex = currentIndex
+	const handleKeyDown = useCallback(
+		(e: KeyboardEvent<HTMLDivElement>) => {
+			const currentIndex = items.indexOf(active)
+			let nextIndex = currentIndex
 
-		switch (e.key) {
-			case "ArrowLeft":
-				nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1
-				break
-			case "ArrowRight":
-				nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0
-				break
-			case "Home":
-				nextIndex = 0
-				break
-			case "End":
-				nextIndex = items.length - 1
-				break
-			default:
-				return
-		}
+			switch (e.key) {
+				case "ArrowLeft":
+					nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1
+					break
+				case "ArrowRight":
+					nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0
+					break
+				case "Home":
+					nextIndex = 0
+					break
+				case "End":
+					nextIndex = items.length - 1
+					break
+				default:
+					return
+			}
 
-		e.preventDefault()
-		setActive(items[nextIndex]!)
-		const tabs = tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
-		tabs?.[nextIndex]?.focus()
-	}
+			e.preventDefault()
+			setActive(items[nextIndex]!)
+			const tabs = tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
+			tabs?.[nextIndex]?.focus()
+		},
+		[active, items],
+	)
 
 	return (
 		<TabsContext.Provider value={{ active, setActive, id }}>

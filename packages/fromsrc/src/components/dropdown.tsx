@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useId, useRef, useState, type ReactNode } from "react"
+import { type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
 
 export interface DropdownItem {
@@ -36,7 +36,7 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 			}
 			return current
 		},
-		[selectableItems]
+		[selectableItems],
 	)
 
 	const close = useCallback(() => {
@@ -46,52 +46,55 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 
 	useClickOutside(ref, close, open)
 
-	function handleKeyDown(e: React.KeyboardEvent) {
-		if (!open) {
-			if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
-				setOpen(true)
-				setIndex(0)
-				e.preventDefault()
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent) => {
+			if (!open) {
+				if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+					setOpen(true)
+					setIndex(0)
+					e.preventDefault()
+				}
+				return
 			}
-			return
-		}
 
-		switch (e.key) {
-			case "Escape":
-				setOpen(false)
-				triggerRef.current?.focus()
-				e.preventDefault()
-				break
-			case "Tab":
-				setOpen(false)
-				break
-			case "ArrowDown":
-				setIndex((i) => findNextEnabled(i, 1))
-				e.preventDefault()
-				break
-			case "ArrowUp":
-				setIndex((i) => findNextEnabled(i, -1))
-				e.preventDefault()
-				break
-			case "Home":
-				setIndex(0)
-				e.preventDefault()
-				break
-			case "End":
-				setIndex(selectableItems.length - 1)
-				e.preventDefault()
-				break
-			case "Enter":
-			case " ":
-				if (index >= 0) {
-					selectableItems[index]?.onClick?.()
+			switch (e.key) {
+				case "Escape":
 					setOpen(false)
 					triggerRef.current?.focus()
-				}
-				e.preventDefault()
-				break
-		}
-	}
+					e.preventDefault()
+					break
+				case "Tab":
+					setOpen(false)
+					break
+				case "ArrowDown":
+					setIndex((i) => findNextEnabled(i, 1))
+					e.preventDefault()
+					break
+				case "ArrowUp":
+					setIndex((i) => findNextEnabled(i, -1))
+					e.preventDefault()
+					break
+				case "Home":
+					setIndex(0)
+					e.preventDefault()
+					break
+				case "End":
+					setIndex(selectableItems.length - 1)
+					e.preventDefault()
+					break
+				case "Enter":
+				case " ":
+					if (index >= 0) {
+						selectableItems[index]?.onClick?.()
+						setOpen(false)
+						triggerRef.current?.focus()
+					}
+					e.preventDefault()
+					break
+			}
+		},
+		[open, index, selectableItems, findNextEnabled],
+	)
 
 	const menuId = `${id}-menu`
 	const getItemId = (itemIndex: number) => `${id}-item-${itemIndex}`

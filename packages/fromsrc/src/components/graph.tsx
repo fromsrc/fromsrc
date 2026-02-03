@@ -119,70 +119,82 @@ export function Graph({
 		draw()
 	}, [draw])
 
-	function findNode(x: number, y: number): GraphNode | null {
-		for (const node of nodes) {
-			const pos = positions.get(node.id)
-			if (!pos) continue
+	const findNode = useCallback(
+		(x: number, y: number): GraphNode | null => {
+			for (const node of nodes) {
+				const pos = positions.get(node.id)
+				if (!pos) continue
 
-			const dx = x - pos.x
-			const dy = y - pos.y
-			if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) {
-				return node
+				const dx = x - pos.x
+				const dy = y - pos.y
+				if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) {
+					return node
+				}
 			}
-		}
-		return null
-	}
+			return null
+		},
+		[nodes, positions],
+	)
 
-	function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
-		if (!onNodeClick) return
+	const handleClick = useCallback(
+		(e: React.MouseEvent<HTMLCanvasElement>) => {
+			if (!onNodeClick) return
 
-		const rect = canvasRef.current?.getBoundingClientRect()
-		if (!rect) return
+			const rect = canvasRef.current?.getBoundingClientRect()
+			if (!rect) return
 
-		const x = e.clientX - rect.left
-		const y = e.clientY - rect.top
-		const node = findNode(x, y)
-		if (node) onNodeClick(node)
-	}
+			const x = e.clientX - rect.left
+			const y = e.clientY - rect.top
+			const node = findNode(x, y)
+			if (node) onNodeClick(node)
+		},
+		[onNodeClick, findNode],
+	)
 
-	function handleMove(e: React.MouseEvent<HTMLCanvasElement>) {
-		const rect = canvasRef.current?.getBoundingClientRect()
-		if (!rect) return
+	const handleMove = useCallback(
+		(e: React.MouseEvent<HTMLCanvasElement>) => {
+			const rect = canvasRef.current?.getBoundingClientRect()
+			if (!rect) return
 
-		const x = e.clientX - rect.left
-		const y = e.clientY - rect.top
-		const node = findNode(x, y)
-		setHovered(node?.id ?? null)
-	}
+			const x = e.clientX - rect.left
+			const y = e.clientY - rect.top
+			const node = findNode(x, y)
+			setHovered(node?.id ?? null)
+		},
+		[findNode],
+	)
 
-	function handleLeave() {
+	const handleLeave = useCallback(() => {
 		setHovered(null)
-	}
+	}, [])
 
-	function handleKeyDown(e: React.KeyboardEvent<HTMLCanvasElement>) {
-		if (nodes.length === 0) return
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent<HTMLCanvasElement>) => {
+			if (nodes.length === 0) return
 
-		if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-			e.preventDefault()
-			setFocused((prev) => (prev + 1) % nodes.length)
-		} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-			e.preventDefault()
-			setFocused((prev) => (prev - 1 + nodes.length) % nodes.length)
-		} else if ((e.key === "Enter" || e.key === " ") && focused >= 0 && onNodeClick) {
-			e.preventDefault()
-			onNodeClick(nodes[focused]!)
-		}
-	}
+			if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+				e.preventDefault()
+				setFocused((prev) => (prev + 1) % nodes.length)
+			} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+				e.preventDefault()
+				setFocused((prev) => (prev - 1 + nodes.length) % nodes.length)
+			} else if ((e.key === "Enter" || e.key === " ") && focused >= 0 && onNodeClick) {
+				e.preventDefault()
+				onNodeClick(nodes[focused]!)
+			}
+		},
+		[nodes, focused, onNodeClick],
+	)
 
-	function handleFocus() {
+	const handleFocus = useCallback(() => {
 		if (focused < 0 && nodes.length > 0) {
 			setFocused(0)
 		}
-	}
+	}, [focused, nodes.length])
 
-	function handleBlur() {
+	const handleBlur = useCallback(() => {
 		setFocused(-1)
-	}
+	}, [])
 
 	return (
 		<canvas

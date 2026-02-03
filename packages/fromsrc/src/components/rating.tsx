@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, type KeyboardEvent } from "react"
+import { type KeyboardEvent, useCallback, useRef, useState } from "react"
 import { IconStar } from "./icons"
 
 export interface RatingProps {
@@ -24,41 +24,44 @@ export function Rating({
 
 	const display = hover ?? value
 
-	function handleKeyDown(e: KeyboardEvent<HTMLButtonElement>, index: number) {
-		if (readonly) return
+	const handleKeyDown = useCallback(
+		(e: KeyboardEvent<HTMLButtonElement>, index: number) => {
+			if (readonly) return
 
-		let next = index
-		switch (e.key) {
-			case "ArrowRight":
-			case "ArrowDown":
-				e.preventDefault()
-				next = index < max - 1 ? index + 1 : 0
-				break
-			case "ArrowLeft":
-			case "ArrowUp":
-				e.preventDefault()
-				next = index > 0 ? index - 1 : max - 1
-				break
-			case "Home":
-				e.preventDefault()
-				next = 0
-				break
-			case "End":
-				e.preventDefault()
-				next = max - 1
-				break
-			case " ":
-			case "Enter":
-				e.preventDefault()
-				onChange?.(index + 1)
-				return
-			default:
-				return
-		}
+			let next = index
+			switch (e.key) {
+				case "ArrowRight":
+				case "ArrowDown":
+					e.preventDefault()
+					next = index < max - 1 ? index + 1 : 0
+					break
+				case "ArrowLeft":
+				case "ArrowUp":
+					e.preventDefault()
+					next = index > 0 ? index - 1 : max - 1
+					break
+				case "Home":
+					e.preventDefault()
+					next = 0
+					break
+				case "End":
+					e.preventDefault()
+					next = max - 1
+					break
+				case " ":
+				case "Enter":
+					e.preventDefault()
+					onChange?.(index + 1)
+					return
+				default:
+					return
+			}
 
-		setFocus(next)
-		refs.current[next]?.focus()
-	}
+			setFocus(next)
+			refs.current[next]?.focus()
+		},
+		[readonly, max, onChange],
+	)
 
 	return (
 		<div className="flex gap-0.5" role="radiogroup" aria-label={label}>

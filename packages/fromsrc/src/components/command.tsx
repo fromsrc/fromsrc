@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react"
+import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
 import { IconSearch } from "./icons"
 
 export interface CommandItem {
@@ -23,9 +23,7 @@ export function Command({ items, placeholder = "search...", onSelect }: CommandP
 	const listRef = useRef<HTMLDivElement>(null)
 	const id = useId()
 
-	const filtered = items.filter((item) =>
-		item.label.toLowerCase().includes(query.toLowerCase()),
-	)
+	const filtered = items.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()))
 
 	const listId = `${id}-list`
 	const getOptionId = (itemId: string) => `${id}-option-${itemId}`
@@ -41,39 +39,42 @@ export function Command({ items, placeholder = "search...", onSelect }: CommandP
 		}
 	}, [index, filtered.length])
 
-	function handleKeyDown(e: React.KeyboardEvent) {
-		switch (e.key) {
-			case "ArrowDown":
-				setIndex((i) => Math.min(i + 1, filtered.length - 1))
-				e.preventDefault()
-				break
-			case "ArrowUp":
-				setIndex((i) => Math.max(i - 1, 0))
-				e.preventDefault()
-				break
-			case "Home":
-				setIndex(0)
-				e.preventDefault()
-				break
-			case "End":
-				setIndex(Math.max(0, filtered.length - 1))
-				e.preventDefault()
-				break
-			case "Escape":
-				if (query) {
-					setQuery("")
-				}
-				e.preventDefault()
-				break
-			case "Enter":
-				if (filtered[index]) {
-					filtered[index].onSelect?.()
-					onSelect?.(filtered[index])
-				}
-				e.preventDefault()
-				break
-		}
-	}
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent) => {
+			switch (e.key) {
+				case "ArrowDown":
+					setIndex((i) => Math.min(i + 1, filtered.length - 1))
+					e.preventDefault()
+					break
+				case "ArrowUp":
+					setIndex((i) => Math.max(i - 1, 0))
+					e.preventDefault()
+					break
+				case "Home":
+					setIndex(0)
+					e.preventDefault()
+					break
+				case "End":
+					setIndex(Math.max(0, filtered.length - 1))
+					e.preventDefault()
+					break
+				case "Escape":
+					if (query) {
+						setQuery("")
+					}
+					e.preventDefault()
+					break
+				case "Enter":
+					if (filtered[index]) {
+						filtered[index].onSelect?.()
+						onSelect?.(filtered[index])
+					}
+					e.preventDefault()
+					break
+			}
+		},
+		[filtered, index, query, onSelect],
+	)
 
 	const activeOptionId = filtered[index] ? getOptionId(filtered[index].id) : undefined
 
