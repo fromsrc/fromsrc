@@ -1,0 +1,55 @@
+---
+title: spinner
+description: loading indicators
+order: 54
+---
+
+animated indicators for loading states.
+
+## spinner
+
+basic spinning indicator.
+
+```tsx
+import { Spinner } from "fromsrc/client"
+
+<Spinner />
+<Spinner size="sm" />
+<Spinner size="lg" />
+```
+
+### sizes
+
+<div className="flex items-center gap-4">
+  <Spinner size="sm" />
+  <Spinner size="md" />
+  <Spinner size="lg" />
+</div>
+
+## loading
+
+spinner with optional text.
+
+```tsx
+import { Loading } from "fromsrc/client"
+
+<Loading />
+<Loading text="loading..." />
+<Loading text="please wait" size="lg" />
+```
+
+<Loading text="loading data..." />
+
+## spinner props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| size | "sm" \| "md" \| "lg" | "md" | spinner size |
+| className | string | - | additional classes |
+
+## loading props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| text | string | - | optional loading text |
+| size | "sm" \| "md" \| "lg" | "md" | spinner size |

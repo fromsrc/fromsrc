@@ -1,0 +1,86 @@
+---
+title: popover
+description: floating content panel
+order: 53
+---
+
+floating panel that appears on click.
+
+## usage
+
+```tsx
+import { Popover } from "fromsrc/client"
+
+<Popover trigger={<button>click me</button>}>
+  <p>popover content here</p>
+</Popover>
+```
+
+## alignment
+
+### start
+
+default alignment to the left.
+
+```tsx
+<Popover align="start" trigger={<button>start</button>}>
+  aligned left
+</Popover>
+```
+
+### center
+
+centered below the trigger.
+
+```tsx
+<Popover align="center" trigger={<button>center</button>}>
+  centered content
+</Popover>
+```
+
+### end
+
+aligned to the right.
+
+```tsx
+<Popover align="end" trigger={<button>end</button>}>
+  aligned right
+</Popover>
+```
+
+## side
+
+### bottom
+
+default position below the trigger.
+
+```tsx
+<Popover side="bottom" trigger={<button>below</button>}>
+  appears below
+</Popover>
+```
+
+### top
+
+position above the trigger.
+
+```tsx
+<Popover side="top" trigger={<button>above</button>}>
+  appears above
+</Popover>
+```
+
+## features
+
+- closes on outside click
+- closes on `Escape` key
+- custom content support
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| trigger | ReactNode | required | element that opens the popover |
+| children | ReactNode | required | popover content |
+| align | "start" \| "center" \| "end" | "start" | horizontal alignment |
+| side | "top" \| "bottom" | "bottom" | vertical position |

@@ -1,0 +1,58 @@
+---
+title: alert
+description: contextual feedback messages
+order: 51
+---
+
+feedback messages with semantic styling.
+
+## usage
+
+```tsx
+import { Alert } from "fromsrc/client"
+
+<Alert>this is an info alert</Alert>
+<Alert type="success">operation completed</Alert>
+```
+
+<Alert>this is an info alert</Alert>
+
+## types
+
+### info
+
+default type for general information.
+
+<Alert type="info">new features are available</Alert>
+
+### success
+
+for positive outcomes.
+
+<Alert type="success">changes saved successfully</Alert>
+
+### warning
+
+for cautionary messages.
+
+<Alert type="warning">this action cannot be undone</Alert>
+
+### error
+
+for errors and failures.
+
+<Alert type="error">failed to load data</Alert>
+
+## with title
+
+add a title for more context.
+
+<Alert type="warning" title="deprecation notice">this api will be removed in v2.0</Alert>
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| children | ReactNode | required | alert content |
+| type | "info" \| "success" \| "warning" \| "error" | "info" | alert style |
+| title | string | - | optional title |

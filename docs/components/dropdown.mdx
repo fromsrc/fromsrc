@@ -1,0 +1,82 @@
+---
+title: dropdown
+description: action menu triggered by click
+order: 52
+---
+
+menu that opens on click with keyboard navigation.
+
+## usage
+
+```tsx
+import { Dropdown } from "fromsrc/client"
+
+<Dropdown
+  trigger={<button>open menu</button>}
+  items={[
+    { label: "edit", onClick: () => {} },
+    { label: "delete", onClick: () => {} },
+  ]}
+/>
+```
+
+## items
+
+each item can have a label, icon, click handler, and states.
+
+```tsx
+const items = [
+  { label: "copy", icon: <CopyIcon />, onClick: handleCopy },
+  { label: "share", onClick: handleShare },
+  "separator",
+  { label: "delete", danger: true, onClick: handleDelete },
+  { label: "archived", disabled: true },
+]
+```
+
+## alignment
+
+### start
+
+default alignment to the left.
+
+```tsx
+<Dropdown align="start" trigger={<button>menu</button>} items={items} />
+```
+
+### end
+
+align to the right.
+
+```tsx
+<Dropdown align="end" trigger={<button>menu</button>} items={items} />
+```
+
+## features
+
+- closes on outside click
+- closes on `Escape` key
+- keyboard navigation with arrow keys
+- `Enter` to select item
+- disabled items are not selectable
+- danger styling for destructive actions
+
+## props
+
+### Dropdown
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| trigger | ReactNode | required | element that opens the menu |
+| items | (DropdownItem \| "separator")[] | required | menu items |
+| align | "start" \| "end" | "start" | horizontal alignment |
+
+### DropdownItem
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| label | string | required | item text |
+| icon | ReactNode | - | optional icon |
+| onClick | () => void | - | click handler |
+| disabled | boolean | false | disable interaction |
+| danger | boolean | false | destructive action styling |

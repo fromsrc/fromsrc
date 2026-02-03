@@ -1,0 +1,76 @@
+---
+title: skeleton
+description: placeholder loading states
+order: 55
+---
+
+placeholder elements for content loading.
+
+## skeleton
+
+basic skeleton element.
+
+```tsx
+import { Skeleton } from "fromsrc/client"
+
+<Skeleton width="100%" height="1rem" />
+<Skeleton width={200} height={40} />
+```
+
+<Skeleton width="100%" height="1rem" />
+
+## skeleton text
+
+multi-line text placeholder.
+
+```tsx
+import { SkeletonText } from "fromsrc/client"
+
+<SkeletonText />
+<SkeletonText lines={5} />
+```
+
+<SkeletonText lines={3} />
+
+## skeleton card
+
+preset card layout.
+
+```tsx
+import { SkeletonCard } from "fromsrc/client"
+
+<SkeletonCard />
+```
+
+<SkeletonCard />
+
+## custom shapes
+
+use rounded for different shapes.
+
+```tsx
+<Skeleton width={48} height={48} rounded="full" />
+<Skeleton width="100%" height={100} rounded="lg" />
+<Skeleton width={200} height={20} rounded={false} />
+```
+
+<div className="flex gap-4">
+  <Skeleton width={48} height={48} rounded="full" />
+  <Skeleton width={48} height={48} rounded="lg" />
+  <Skeleton width={48} height={48} rounded={false} />
+</div>
+
+## skeleton props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| width | string \| number | - | element width |
+| height | string \| number | "1rem" | element height |
+| rounded | boolean \| string | "md" | border radius |
+| className | string | - | additional classes |
+
+## skeleton text props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| lines | number | 3 | number of lines |
