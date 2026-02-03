@@ -2,21 +2,24 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { memo, type JSX } from "react"
 
+/**
+ * Represents a single breadcrumb navigation item.
+ */
 export interface BreadcrumbItem {
 	href: string
 	label: string
 }
 
 /**
- * @param base - root path for breadcrumb generation
- * @example <Breadcrumb base="/docs" />
+ * Props for the Breadcrumb component.
  */
 export interface BreadcrumbProps {
 	base?: string
 }
 
-export function Breadcrumb({ base = "/docs" }: BreadcrumbProps) {
+function BreadcrumbBase({ base = "/docs" }: BreadcrumbProps): JSX.Element {
 	const pathname = usePathname()
 	const segments = pathname.replace(base, "").split("/").filter(Boolean)
 
@@ -64,3 +67,8 @@ export function Breadcrumb({ base = "/docs" }: BreadcrumbProps) {
 		</nav>
 	)
 }
+
+/**
+ * Renders a breadcrumb navigation based on the current pathname.
+ */
+export const Breadcrumb = memo(BreadcrumbBase)
