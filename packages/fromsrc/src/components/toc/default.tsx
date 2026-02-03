@@ -1,30 +1,37 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { type JSX, memo, useEffect, useRef, useState } from "react"
 import type { Heading } from "./hook"
 import { buildZigzagPath, getItemOffset, ZigzagLine } from "./zigzag"
 
+/**
+ * Props for the table of contents component
+ */
 interface Props {
+	/** Array of heading objects to display */
 	headings: Heading[]
+	/** Currently active heading id */
 	active: string
+	/** Array of heading ids in the active range */
 	activeRange: string[]
+	/** Enable zigzag line decoration */
 	zigzag?: boolean
 }
 
-export function TocDefault({ headings, active, activeRange, zigzag }: Props) {
+function TocDefaultBase({ headings, active, activeRange, zigzag }: Props): JSX.Element {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [svg, setSvg] = useState<{ path: string; width: number; height: number } | null>(null)
 	const [thumb, setThumb] = useState({ top: 0, height: 0 })
 
 	const range = activeRange.length > 0 ? activeRange : active ? [active] : []
-	const isActive = (id: string) => range.includes(id)
+	const isActive = (id: string): boolean => range.includes(id)
 
 	useEffect(() => {
 		if (!zigzag || !containerRef.current || headings.length === 0) return
 
 		const container = containerRef.current
 
-		function update() {
+		function update(): void {
 			const result = buildZigzagPath(headings, container)
 			if (result) setSvg(result)
 		}
@@ -62,9 +69,10 @@ export function TocDefault({ headings, active, activeRange, zigzag }: Props) {
 
 	if (zigzag) {
 		return (
-			<nav aria-label="table of contents" className="relative">
+			<nav aria-label="Table of contents" className="relative">
 				{svg && (
 					<div
+						aria-hidden="true"
 						className="absolute left-0 top-0 pointer-events-none z-10"
 						style={{
 							width: svg.width,
@@ -86,7 +94,7 @@ export function TocDefault({ headings, active, activeRange, zigzag }: Props) {
 						<a
 							key={heading.id}
 							href={`#${heading.id}`}
-							aria-current={isActive(heading.id) ? "true" : undefined}
+							aria-current={isActive(heading.id) ? "location" : undefined}
 							className={`relative py-1.5 text-sm transition-colors ${
 								isActive(heading.id) ? "text-fg" : "text-muted hover:text-fg"
 							}`}
@@ -106,13 +114,13 @@ export function TocDefault({ headings, active, activeRange, zigzag }: Props) {
 	}
 
 	return (
-		<nav aria-label="table of contents" className="border-l border-line">
-			<ul className="space-y-1">
+		<nav aria-label="Table of contents" className="border-l border-line">
+			<ul role="list" className="space-y-1">
 				{headings.map((heading) => (
 					<li key={heading.id}>
 						<a
 							href={`#${heading.id}`}
-							aria-current={isActive(heading.id) ? "true" : undefined}
+							aria-current={isActive(heading.id) ? "location" : undefined}
 							className={`block text-xs py-1 transition-colors border-l -ml-px ${
 								heading.level === 3 ? "pl-6" : "pl-4"
 							} ${
@@ -129,3 +137,5 @@ export function TocDefault({ headings, active, activeRange, zigzag }: Props) {
 		</nav>
 	)
 }
+
+export const TocDefault = memo(TocDefaultBase)
