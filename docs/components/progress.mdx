@@ -1,0 +1,72 @@
+---
+title: progress
+description: progress indicators
+order: 40
+---
+
+show completion or step progress.
+
+## progress bar
+
+```mdx
+<Progress value={75} label="completion" />
+```
+
+<Progress value={75} label="completion" />
+
+## sizes
+
+```mdx
+<Progress value={50} size="sm" />
+<Progress value={50} size="md" />
+<Progress value={50} size="lg" />
+```
+
+<Progress value={50} size="sm" />
+<Progress value={50} size="md" />
+<Progress value={50} size="lg" />
+
+## progress steps
+
+show multi-step progress:
+
+```mdx
+<ProgressSteps current={2} total={4} />
+```
+
+<ProgressSteps current={2} total={4} />
+
+## with labels
+
+```mdx
+<ProgressSteps
+  current={1}
+  total={3}
+  labels={["setup", "configure", "deploy"]}
+/>
+```
+
+<ProgressSteps
+  current={1}
+  total={3}
+  labels={["setup", "configure", "deploy"]}
+/>
+
+## props
+
+### progress
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| value | number | - | current value |
+| max | number | 100 | maximum value |
+| label | string | - | optional label |
+| size | "sm" \| "md" \| "lg" | "md" | bar height |
+
+### progresssteps
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| current | number | - | current step (0-indexed) |
+| total | number | - | total steps |
+| labels | string[] | - | step labels |
