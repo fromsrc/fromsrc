@@ -1,3 +1,4 @@
+import { readFileSync, writeFileSync } from "node:fs"
 import { defineConfig } from "tsup"
 
 export default defineConfig([
@@ -15,8 +16,10 @@ export default defineConfig([
 		treeshake: true,
 		splitting: false,
 		external: ["react", "next", "react/jsx-runtime", "mermaid", "katex"],
-		banner: {
-			js: '"use client";',
+		onSuccess: async () => {
+			const path = "dist/client.js"
+			const content = readFileSync(path, "utf-8")
+			writeFileSync(path, `"use client";\n${content}`)
 		},
 	},
 ])
