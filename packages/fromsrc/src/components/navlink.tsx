@@ -2,17 +2,31 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { type ReactNode, useEffect, useRef } from "react"
+import { type JSX, type ReactNode, memo, useEffect, useRef } from "react"
 
+/**
+ * Props for the NavLink component
+ */
 export interface NavLinkProps {
+	/** Target URL for the link */
 	href: string
+	/** Link content */
 	children: ReactNode
+	/** Optional icon displayed before the link text */
 	icon?: ReactNode
+	/** Optional click handler */
 	onClick?: () => void
+	/** Force external link behavior (auto-detected for http urls) */
 	external?: boolean
 }
 
-export function NavLink({ href, children, icon, onClick, external }: NavLinkProps) {
+function NavLinkComponent({
+	href,
+	children,
+	icon,
+	onClick,
+	external,
+}: NavLinkProps): JSX.Element {
 	const pathname = usePathname()
 	const isActive = pathname === href
 	const ref = useRef<HTMLAnchorElement>(null)
@@ -31,6 +45,7 @@ export function NavLink({ href, children, icon, onClick, external }: NavLinkProp
 				target="_blank"
 				rel="noopener noreferrer"
 				onClick={onClick}
+				aria-label={`${typeof children === "string" ? children : ""} (opens in new tab)`}
 				className="flex items-center gap-2 px-2 py-2 lg:py-1.5 min-h-[44px] lg:min-h-0 text-xs rounded-md border-l-2 text-muted hover:text-fg active:text-fg hover:bg-surface/50 border-transparent transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
 			>
 				{icon && (
@@ -44,7 +59,8 @@ export function NavLink({ href, children, icon, onClick, external }: NavLinkProp
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
-					aria-hidden="true"
+					role="img"
+					aria-label="External link"
 				>
 					<path
 						strokeLinecap="round"
@@ -79,3 +95,8 @@ export function NavLink({ href, children, icon, onClick, external }: NavLinkProp
 		</Link>
 	)
 }
+
+/**
+ * Navigation link with active state detection and scroll-into-view behavior
+ */
+export const NavLink = memo(NavLinkComponent)
