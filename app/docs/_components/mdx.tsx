@@ -83,6 +83,19 @@ import {
 	LinkCards,
 	Status,
 	StatusDot,
+	Pagination,
+	VersionSelect,
+	Divider,
+	Progress,
+	ProgressSteps,
+	Tag,
+	Tags,
+	CheckList,
+	CheckItem,
+	BulletList,
+	BulletItem,
+	NumberList,
+	NumberItem,
 } from "fromsrc/client"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -273,6 +286,19 @@ const components = {
 	LinkCards,
 	Status,
 	StatusDot,
+	Pagination,
+	VersionSelect,
+	Divider,
+	Progress,
+	ProgressSteps,
+	Tag,
+	Tags,
+	CheckList,
+	CheckItem,
+	BulletList,
+	BulletItem,
+	NumberList,
+	NumberItem,
 }
 
 interface Props {
