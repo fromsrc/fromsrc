@@ -2,7 +2,7 @@
 
 import { PanelLeft } from "lucide-react"
 import Link from "next/link"
-import { type ReactNode, useState } from "react"
+import { type ReactNode, useRef, useState } from "react"
 import type { DocMeta } from "../content"
 import { Folder } from "./folder"
 import { NavLink } from "./navlink"
@@ -49,15 +49,28 @@ export function Sidebar({
 }: Props) {
 	const [collapsed, setCollapsed] = useState(false)
 	const [hovered, setHovered] = useState(false)
+	const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
 	const toggle = () => setCollapsed(!collapsed)
 	const showExpanded = !collapsed || hovered
 
+	const handleEnter = () => {
+		if (leaveTimer.current) {
+			clearTimeout(leaveTimer.current)
+			leaveTimer.current = null
+		}
+		if (collapsed) setHovered(true)
+	}
+
+	const handleLeave = () => {
+		leaveTimer.current = setTimeout(() => setHovered(false), 150)
+	}
+
 	return (
 		<aside
-			onMouseEnter={() => collapsed && setHovered(true)}
-			onMouseLeave={() => setHovered(false)}
-			className={`${collapsed ? (hovered ? "w-60 shadow-xl z-50" : "w-16") : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width,box-shadow] duration-200 ease-out overflow-hidden`}
+			onMouseEnter={handleEnter}
+			onMouseLeave={handleLeave}
+			className={`${collapsed ? (hovered ? "w-60 shadow-lg z-50" : "w-16") : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width,box-shadow] duration-200 ease-out overflow-hidden`}
 		>
 			<div className="px-3 h-14 flex items-center">
 				{collapsible && (
