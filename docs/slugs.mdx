@@ -1,0 +1,89 @@
+---
+title: page slugs
+description: url structure and page tree organization
+order: 6
+---
+
+page slugs determine the url structure of your documentation.
+
+## file-based routing
+
+fromsrc uses file-based routing. the file path becomes the url:
+
+| file | url |
+|------|-----|
+| `docs/index.mdx` | `/docs` |
+| `docs/installation.mdx` | `/docs/installation` |
+| `docs/components/callout.mdx` | `/docs/components/callout` |
+| `docs/getting-started/index.mdx` | `/docs/getting-started` |
+
+## meta files
+
+use `_meta.json` files to control page ordering and titles in the sidebar.
+
+### example
+
+```text
+{
+  "title": "Getting Started",
+  "icon": "Rocket",
+  "pages": [
+    "index",
+    "installation",
+    "configuration",
+    "quickstart"
+  ]
+}
+```
+
+### fields
+
+| field | type | description |
+|-------|------|-------------|
+| title | `string` | display title for the folder |
+| icon | `string` | lucide icon name |
+| pages | `string[]` | ordered list of page slugs |
+
+## ordering
+
+without a meta file, pages are sorted by their `order` frontmatter field:
+
+```text
+---
+title: installation
+order: 2
+---
+```
+
+with a meta file, the `pages` array determines the order. pages not listed appear at the end alphabetically.
+
+## nested folders
+
+each folder can have its own `_meta.json`:
+
+```text
+docs/
+  _meta.json
+  index.mdx
+  getting-started/
+    _meta.json
+    index.mdx
+    installation.mdx
+  components/
+    _meta.json
+    callout.mdx
+    tabs.mdx
+```
+
+## folder pages
+
+folders with an `index.mdx` become clickable links:
+
+```text
+docs/
+  components/
+    index.mdx     # /docs/components
+    callout.mdx   # /docs/components/callout
+```
+
+without an index, the folder is just a grouping container in the sidebar.
