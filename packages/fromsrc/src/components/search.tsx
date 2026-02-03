@@ -1,5 +1,6 @@
 "use client"
 
+import type { JSX } from "react"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { DocMeta, SearchDoc } from "../content"
@@ -7,7 +8,15 @@ import { useDebounce } from "../hooks/debounce"
 import type { SearchAdapter, SearchResult } from "../search"
 import { localSearch } from "../search"
 
-interface Props {
+/**
+ * Props for the Search component.
+ * @property basePath - Base URL path for documentation links (default: "/docs")
+ * @property docs - Array of documents to search through
+ * @property hidden - When true, hides the search trigger button
+ * @property adapter - Search adapter implementation (default: localSearch)
+ * @property debounce - Debounce delay in milliseconds (default: 100)
+ */
+export interface SearchProps {
 	basePath?: string
 	docs: (DocMeta | SearchDoc)[]
 	hidden?: boolean
@@ -30,7 +39,7 @@ export function Search({
 	hidden,
 	adapter = localSearch,
 	debounce = 100,
-}: Props) {
+}: SearchProps): JSX.Element | null {
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState("")
 	const [selected, setSelected] = useState(0)
@@ -42,19 +51,20 @@ export function Search({
 	const searchDocs = useMemo(() => docs.map(toSearchDoc), [docs])
 	const debouncedQuery = useDebounce(query, debounce)
 
-	useEffect(() => {
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-				e.preventDefault()
-				setOpen(true)
-			}
-			if (e.key === "Escape") {
-				setOpen(false)
-			}
+	const handleGlobalKeyDown = useCallback((e: KeyboardEvent): void => {
+		if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+			e.preventDefault()
+			setOpen(true)
 		}
-		window.addEventListener("keydown", handleKeyDown)
-		return () => window.removeEventListener("keydown", handleKeyDown)
+		if (e.key === "Escape") {
+			setOpen(false)
+		}
 	}, [])
+
+	useEffect(() => {
+		window.addEventListener("keydown", handleGlobalKeyDown)
+		return () => window.removeEventListener("keydown", handleGlobalKeyDown)
+	}, [handleGlobalKeyDown])
 
 	useEffect(() => {
 		if (open) {
@@ -89,15 +99,15 @@ export function Search({
 	}, [safeSelected])
 
 	const navigate = useCallback(
-		(slug: string | undefined) => {
+		(slug: string | undefined): void => {
 			router.push(slug ? `${basePath}/${slug}` : basePath)
 			setOpen(false)
 		},
 		[router, basePath],
 	)
 
-	const handleKeyDown = useCallback(
-		(e: React.KeyboardEvent) => {
+	const handleInputKeyDown = useCallback(
+		(e: React.KeyboardEvent): void => {
 			if (results.length === 0) return
 			if (e.key === "ArrowDown") {
 				e.preventDefault()
@@ -112,12 +122,40 @@ export function Search({
 		[results, safeSelected, navigate],
 	)
 
+	const handleOpenClick = useCallback((): void => {
+		setOpen(true)
+	}, [])
+
+	const handleCloseClick = useCallback((): void => {
+		setOpen(false)
+	}, [])
+
+	const handleQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+		setQuery(e.target.value)
+	}, [])
+
+	const handleResultClick = useCallback(
+		(slug: string | undefined): void => {
+			navigate(slug)
+		},
+		[navigate],
+	)
+
+	const handleResultKeyDown = useCallback(
+		(e: React.KeyboardEvent, slug: string | undefined): void => {
+			if (e.key === "Enter") {
+				navigate(slug)
+			}
+		},
+		[navigate],
+	)
+
 	if (!open) {
 		if (hidden) return null
 		return (
 			<button
 				type="button"
-				onClick={() => setOpen(true)}
+				onClick={handleOpenClick}
 				className="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted bg-surface border border-line rounded-lg hover:border-dim transition-colors"
 			>
 				<svg
@@ -145,7 +183,7 @@ export function Search({
 			<button
 				type="button"
 				className="fixed inset-0 bg-bg/80 backdrop-blur-sm cursor-default"
-				onClick={() => setOpen(false)}
+				onClick={handleCloseClick}
 				aria-label="close search"
 			/>
 			<div className="relative z-10 max-w-lg mx-auto mt-[20vh]">
@@ -169,8 +207,8 @@ export function Search({
 							ref={inputRef}
 							type="text"
 							value={query}
-							onChange={(e) => setQuery(e.target.value)}
-							onKeyDown={handleKeyDown}
+							onChange={handleQueryChange}
+							onKeyDown={handleInputKeyDown}
 							placeholder="search documentation..."
 							className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none"
 							role="combobox"
@@ -195,8 +233,8 @@ export function Search({
 										id={getOptionId(i)}
 										role="option"
 										aria-selected={i === safeSelected}
-										onClick={() => navigate(result.doc.slug)}
-										onKeyDown={(e) => e.key === "Enter" && navigate(result.doc.slug)}
+										onClick={() => handleResultClick(result.doc.slug)}
+										onKeyDown={(e) => handleResultKeyDown(e, result.doc.slug)}
 										tabIndex={-1}
 										className={`w-full text-left px-3 py-2 rounded-lg transition-colors cursor-pointer ${
 											i === safeSelected
