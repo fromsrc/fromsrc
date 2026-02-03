@@ -3,14 +3,14 @@ import { KeyboardNav } from "./_components/keyboard"
 import { MobileNavigation } from "./_components/mobilenav"
 import { SearchModal } from "./_components/search"
 import { Sidebar } from "./_components/sidebar"
-import { getAllDocs } from "./_lib/content"
+import { getAllDocs, getSearchDocs } from "./_lib/content"
 
 export default async function DocsLayout({ children }: { children: ReactNode }) {
-	const docs = await getAllDocs()
+	const [docs, searchDocs] = await Promise.all([getAllDocs(), getSearchDocs()])
 	return (
 		<>
 			<MobileNavigation />
-			<SearchModal docs={docs} />
+			<SearchModal docs={searchDocs} />
 			<div className="flex min-h-screen bg-bg">
 				<KeyboardNav docs={docs} />
 				<div className="hidden lg:block">

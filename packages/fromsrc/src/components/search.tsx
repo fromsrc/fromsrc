@@ -2,12 +2,22 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
-import type { DocMeta } from "../content"
+import type { DocMeta, SearchDoc } from "../content"
+
+interface SearchResult {
+	doc: DocMeta | SearchDoc
+	score: number
+	snippet?: string
+}
 
 interface Props {
 	basePath?: string
-	docs: DocMeta[]
+	docs: (DocMeta | SearchDoc)[]
 	hidden?: boolean
+}
+
+function hasContent(doc: DocMeta | SearchDoc): doc is SearchDoc {
+	return "content" in doc && typeof doc.content === "string"
 }
 
 function fuzzy(text: string, query: string): number {
@@ -35,10 +45,39 @@ function fuzzy(text: string, query: string): number {
 	return score
 }
 
-function rank(doc: DocMeta, query: string): number {
+function searchContent(content: string, query: string): { score: number; snippet: string } | null {
+	const lower = content.toLowerCase()
+	const q = query.toLowerCase()
+	const idx = lower.indexOf(q)
+
+	if (idx === -1) return null
+
+	const start = Math.max(0, idx - 40)
+	const end = Math.min(content.length, idx + q.length + 60)
+	let snippet = content.slice(start, end).trim()
+
+	if (start > 0) snippet = "..." + snippet
+	if (end < content.length) snippet = snippet + "..."
+
+	return { score: 5, snippet }
+}
+
+function rank(doc: DocMeta | SearchDoc, query: string): SearchResult {
 	const titleScore = fuzzy(doc.title, query) * 3
 	const descScore = doc.description ? fuzzy(doc.description, query) : 0
-	return titleScore + descScore
+
+	let contentResult: { score: number; snippet: string } | null = null
+	if (hasContent(doc) && doc.content) {
+		contentResult = searchContent(doc.content, query)
+	}
+
+	const totalScore = titleScore + descScore + (contentResult?.score ?? 0)
+
+	return {
+		doc,
+		score: totalScore,
+		snippet: contentResult?.snippet,
+	}
 }
 
 export function Search({ basePath = "/docs", docs, hidden }: Props) {
@@ -71,32 +110,34 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 		}
 	}, [open])
 
-	const filtered = useMemo(() => {
-		if (!query.trim()) return docs.slice(0, 8)
+	const results = useMemo<SearchResult[]>(() => {
+		if (!query.trim()) {
+			return docs.slice(0, 8).map((doc) => ({ doc, score: 0 }))
+		}
 
 		return docs
-			.map((doc) => ({ doc, score: rank(doc, query) }))
+			.map((doc) => rank(doc, query))
 			.filter((r) => r.score > 0)
 			.sort((a, b) => b.score - a.score)
 			.slice(0, 8)
-			.map((r) => r.doc)
 	}, [docs, query])
 
 	useEffect(() => {
 		setSelected(0)
-	}, [filtered])
+	}, [results])
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		if (e.key === "ArrowDown") {
 			e.preventDefault()
-			setSelected((s) => Math.min(s + 1, filtered.length - 1))
+			setSelected((s) => Math.min(s + 1, results.length - 1))
 		}
 		if (e.key === "ArrowUp") {
 			e.preventDefault()
 			setSelected((s) => Math.max(s - 1, 0))
 		}
-		if (e.key === "Enter" && filtered[selected]) {
-			router.push(filtered[selected].slug ? `${basePath}/${filtered[selected].slug}` : basePath)
+		if (e.key === "Enter" && results[selected]) {
+			const r = results[selected]
+			router.push(r.doc.slug ? `${basePath}/${r.doc.slug}` : basePath)
 			setOpen(false)
 		}
 	}
@@ -163,9 +204,9 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 							placeholder="search documentation..."
 							className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none"
 							role="combobox"
-							aria-expanded={filtered.length > 0}
+							aria-expanded={results.length > 0}
 							aria-controls="search-results"
-							aria-activedescendant={filtered[selected] ? `result-${selected}` : undefined}
+							aria-activedescendant={results[selected] ? `result-${selected}` : undefined}
 							aria-autocomplete="list"
 						/>
 						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">
@@ -173,19 +214,21 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 						</kbd>
 					</div>
 					<div className="max-h-80 overflow-y-auto" id="search-results" role="listbox">
-						{filtered.length === 0 ? (
+						{results.length === 0 ? (
 							<div className="p-8 text-center text-muted text-sm">no results</div>
 						) : (
 							<ul className="p-2">
-								{filtered.map((result, i) => (
-									<li key={result.slug || "index"}>
+								{results.map((result, i) => (
+									<li key={result.doc.slug || "index"}>
 										<button
 											id={`result-${i}`}
 											type="button"
 											role="option"
 											aria-selected={i === selected}
 											onClick={() => {
-												router.push(result.slug ? `${basePath}/${result.slug}` : basePath)
+												router.push(
+													result.doc.slug ? `${basePath}/${result.doc.slug}` : basePath
+												)
 												setOpen(false)
 											}}
 											className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
@@ -194,9 +237,15 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 													: "text-muted hover:bg-bg/50"
 											}`}
 										>
-											<div className="text-sm">{result.title}</div>
-											{result.description && (
-												<div className="text-xs text-dim truncate">{result.description}</div>
+											<div className="text-sm">{result.doc.title}</div>
+											{result.snippet ? (
+												<div className="text-xs text-dim truncate">{result.snippet}</div>
+											) : (
+												result.doc.description && (
+													<div className="text-xs text-dim truncate">
+														{result.doc.description}
+													</div>
+												)
 											)}
 										</button>
 									</li>

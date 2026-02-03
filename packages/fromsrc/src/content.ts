@@ -153,12 +153,71 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 		return navCache
 	}
 
+	let searchCache: (Meta & { content: string })[] | null = null
+
+	async function getSearchDocs(): Promise<(Meta & { content: string })[]> {
+		if (searchCache) return searchCache
+
+		const docs: (Meta & { content: string })[] = []
+
+		async function scan(dir: string, prefix = "") {
+			const entries = await readdir(dir, { withFileTypes: true })
+
+			for (const entry of entries) {
+				if (entry.isDirectory()) {
+					await scan(join(dir, entry.name), `${prefix}${entry.name}/`)
+				} else if (entry.name.endsWith(".mdx")) {
+					const filepath = join(dir, entry.name)
+					const source = await readCached(filepath)
+					const { data, content } = matter(source)
+					const parsed = schema.parse(data) as z.infer<T>
+					const slug = `${prefix}${entry.name.replace(".mdx", "")}`
+
+					docs.push({
+						slug: slug === "index" ? "" : slug,
+						...parsed,
+						content: stripMdx(content),
+					})
+				}
+			}
+		}
+
+		try {
+			await scan(config.dir)
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				throw error
+			}
+			return []
+		}
+
+		searchCache = docs.sort((a, b) => ((a.order as number) ?? 99) - ((b.order as number) ?? 99))
+		return searchCache
+	}
+
 	return {
 		getDoc,
 		getAllDocs,
 		getNavigation,
+		getSearchDocs,
 		schema,
 	}
+}
+
+function stripMdx(content: string): string {
+	return content
+		.replace(/```[\s\S]*?```/g, "")
+		.replace(/`[^`]+`/g, "")
+		.replace(/import\s+.*?from\s+['"][^'"]+['"];?/g, "")
+		.replace(/export\s+.*?;/g, "")
+		.replace(/<[^>]+>/g, " ")
+		.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+		.replace(/#{1,6}\s+/g, "")
+		.replace(/\*\*([^*]+)\*\*/g, "$1")
+		.replace(/\*([^*]+)\*/g, "$1")
+		.replace(/\n+/g, " ")
+		.replace(/\s+/g, " ")
+		.trim()
 }
 
 export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | null> {
@@ -316,20 +375,4 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 	const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 	searchCache.set(cacheKey, sorted)
 	return sorted
-}
-
-function stripMdx(content: string): string {
-	return content
-		.replace(/```[\s\S]*?```/g, "")
-		.replace(/`[^`]+`/g, "")
-		.replace(/import\s+.*?from\s+['"][^'"]+['"];?/g, "")
-		.replace(/export\s+.*?;/g, "")
-		.replace(/<[^>]+>/g, " ")
-		.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-		.replace(/#{1,6}\s+/g, "")
-		.replace(/\*\*([^*]+)\*\*/g, "$1")
-		.replace(/\*([^*]+)\*/g, "$1")
-		.replace(/\n+/g, " ")
-		.replace(/\s+/g, " ")
-		.trim()
 }
