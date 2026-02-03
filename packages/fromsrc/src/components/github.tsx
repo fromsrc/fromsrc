@@ -9,7 +9,13 @@ export interface GithubProps {
 interface RepoData {
 	stars: number
 	forks: number
-	description: string
+	description: string | null
+}
+
+interface GithubApiResponse {
+	stargazers_count?: number
+	forks_count?: number
+	description?: string | null
 }
 
 function format(n: number): string {
@@ -28,12 +34,14 @@ export function Github({ repo }: GithubProps) {
 			try {
 				const res = await fetch(`https://api.github.com/repos/${repo}`)
 				if (!res.ok || !mounted) return
-				const json = await res.json()
+				const json: GithubApiResponse = await res.json()
 				if (!mounted) return
+				const stars = typeof json.stargazers_count === "number" ? json.stargazers_count : 0
+				const forks = typeof json.forks_count === "number" ? json.forks_count : 0
 				setData({
-					stars: json.stargazers_count,
-					forks: json.forks_count,
-					description: json.description,
+					stars,
+					forks,
+					description: json.description ?? null,
 				})
 			} catch {
 				return
@@ -47,7 +55,11 @@ export function Github({ repo }: GithubProps) {
 
 	if (!data) {
 		return (
-			<div className="my-4 p-4 rounded-lg border border-line bg-surface/50 animate-pulse">
+			<div
+				role="status"
+				aria-label="Loading repository"
+				className="my-4 p-4 rounded-lg border border-line bg-surface/50 animate-pulse"
+			>
 				<div className="h-4 bg-surface rounded w-1/3 mb-2" />
 				<div className="h-3 bg-surface/50 rounded w-2/3" />
 			</div>
@@ -59,6 +71,7 @@ export function Github({ repo }: GithubProps) {
 			href={`https://github.com/${repo}`}
 			target="_blank"
 			rel="noopener noreferrer"
+			aria-label={`${repo} on GitHub`}
 			className="my-4 p-4 rounded-lg border border-line bg-surface/30 hover:bg-surface/50 transition-colors flex items-start gap-4 no-underline"
 		>
 			<svg
