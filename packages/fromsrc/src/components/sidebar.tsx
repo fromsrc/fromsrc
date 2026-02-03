@@ -132,9 +132,9 @@ export function Sidebar({
 				</button>
 			</div>
 			<nav
-				className="px-3 flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+				className="px-3 pt-2 flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
 				style={{
-					maskImage: "linear-gradient(to bottom, transparent, white 12px, white calc(100% - 12px), transparent)",
+					maskImage: "linear-gradient(to bottom, white 0%, white calc(100% - 12px), transparent)",
 				}}
 			>
 				{!showExpanded ? (
