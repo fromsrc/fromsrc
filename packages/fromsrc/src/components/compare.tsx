@@ -2,27 +2,38 @@
 
 import type { ReactNode } from "react"
 
+export type CompareVariant = "default" | "good" | "bad"
+
 interface CompareProps {
 	children: ReactNode
+	label?: string
 }
 
-export function Compare({ children }: CompareProps) {
-	return <div className="my-6 grid gap-4 md:grid-cols-2">{children}</div>
+export function Compare({ children, label }: CompareProps) {
+	return (
+		<div
+			className="my-6 grid gap-3 md:gap-4 md:grid-cols-2"
+			role="group"
+			aria-label={label || "comparison"}
+		>
+			{children}
+		</div>
+	)
 }
 
 interface ColumnProps {
 	title: string
-	variant?: "default" | "good" | "bad"
+	variant?: CompareVariant
 	children: ReactNode
 }
 
-const variants = {
+const variants: Record<CompareVariant, string> = {
 	default: "border-line",
 	good: "border-emerald-500/30 bg-emerald-500/5",
 	bad: "border-red-500/30 bg-red-500/5",
 }
 
-const titleVariants = {
+const titleVariants: Record<CompareVariant, string> = {
 	default: "text-fg",
 	good: "text-emerald-400",
 	bad: "text-red-400",
@@ -30,29 +41,41 @@ const titleVariants = {
 
 export function Column({ title, variant = "default", children }: ColumnProps) {
 	return (
-		<div className={`rounded-xl border p-4 ${variants[variant]}`}>
-			<div className={`text-sm font-medium mb-3 ${titleVariants[variant]}`}>{title}</div>
+		<section className={`rounded-xl border p-3 md:p-4 ${variants[variant]}`} aria-label={title}>
+			<h4 className={`text-sm font-medium mb-2 md:mb-3 ${titleVariants[variant]}`}>{title}</h4>
 			<div className="text-sm text-muted space-y-2">{children}</div>
-		</div>
+		</section>
 	)
 }
 
 interface RowProps {
 	left: ReactNode
 	right: ReactNode
+	leftLabel?: string
+	rightLabel?: string
 }
 
-export function CompareRow({ left, right }: RowProps) {
+export function CompareRow({ left, right, leftLabel, rightLabel }: RowProps) {
 	return (
-		<div className="my-6 grid gap-4 md:grid-cols-2">
-			<div className="rounded-xl border border-red-500/30 bg-red-500/5 p-4">
-				<div className="text-xs text-red-400 mb-2 font-medium">before</div>
+		<div
+			className="my-6 grid gap-3 md:gap-4 md:grid-cols-2"
+			role="group"
+			aria-label="before and after comparison"
+		>
+			<section
+				className="rounded-xl border border-red-500/30 bg-red-500/5 p-3 md:p-4"
+				aria-label={leftLabel || "before"}
+			>
+				<h4 className="text-xs text-red-400 mb-2 font-medium">{leftLabel || "before"}</h4>
 				<div className="text-sm text-muted">{left}</div>
-			</div>
-			<div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-				<div className="text-xs text-emerald-400 mb-2 font-medium">after</div>
+			</section>
+			<section
+				className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3 md:p-4"
+				aria-label={rightLabel || "after"}
+			>
+				<h4 className="text-xs text-emerald-400 mb-2 font-medium">{rightLabel || "after"}</h4>
 				<div className="text-sm text-muted">{right}</div>
-			</div>
+			</section>
 		</div>
 	)
 }
