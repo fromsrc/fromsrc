@@ -1,49 +1,46 @@
 "use client"
 
-import type { ReactNode } from "react"
+import type { ComponentProps, ReactNode } from "react"
 
-interface DefinitionListProps {
-	children: ReactNode
+type DefinitionListProps = ComponentProps<"dl">
+
+export function DefinitionList({ className, ...props }: DefinitionListProps) {
+	return <dl className={className ?? "my-6 space-y-4"} {...props} />
 }
 
-export function DefinitionList({ children }: DefinitionListProps) {
-	return <dl className="my-6 space-y-4">{children}</dl>
+interface DefinitionProps extends ComponentProps<"div"> {
+	term: ReactNode
 }
 
-interface DefinitionProps {
-	term: string
-	children: ReactNode
-}
-
-export function Definition({ term, children }: DefinitionProps) {
+export function Definition({ term, children, className, ...props }: DefinitionProps) {
 	return (
-		<div className="border-b border-line pb-4 last:border-0 last:pb-0">
+		<div className={className ?? "border-b border-line pb-4 last:border-0 last:pb-0"} {...props}>
 			<dt className="text-sm font-medium text-fg">{term}</dt>
 			<dd className="mt-1 text-sm text-muted">{children}</dd>
 		</div>
 	)
 }
 
-interface GlossaryProps {
-	children: ReactNode
-}
+type GlossaryProps = ComponentProps<"div">
 
-export function Glossary({ children }: GlossaryProps) {
+export function Glossary({ className, children, ...props }: GlossaryProps) {
 	return (
-		<div className="my-6 rounded-xl border border-line overflow-hidden">
+		<div
+			className={className ?? "my-6 rounded-xl border border-line overflow-hidden"}
+			{...props}
+		>
 			<dl className="divide-y divide-line">{children}</dl>
 		</div>
 	)
 }
 
-interface GlossaryItemProps {
-	term: string
-	children: ReactNode
+interface GlossaryItemProps extends ComponentProps<"div"> {
+	term: ReactNode
 }
 
-export function GlossaryItem({ term, children }: GlossaryItemProps) {
+export function GlossaryItem({ term, children, className, ...props }: GlossaryItemProps) {
 	return (
-		<div className="p-4 flex flex-col gap-1">
+		<div className={className ?? "p-4 flex flex-col gap-1"} {...props}>
 			<dt className="text-sm font-medium text-fg">{term}</dt>
 			<dd className="text-sm text-muted">{children}</dd>
 		</div>
