@@ -30,6 +30,7 @@ export function Folder({ folder, basePath }: Props) {
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
 				className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
 			>
 				{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
