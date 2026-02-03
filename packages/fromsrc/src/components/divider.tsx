@@ -1,19 +1,23 @@
-"use client"
+import type { ComponentProps } from "react"
 
-interface DividerProps {
+type DividerProps = ComponentProps<"hr"> & {
 	label?: string
 }
 
-export function Divider({ label }: DividerProps) {
+export function Divider({ label, className, ...props }: DividerProps) {
 	if (label) {
 		return (
-			<div className="flex items-center gap-4 my-8">
-				<div className="flex-1 h-px bg-line" />
+			<div
+				role="separator"
+				aria-label={label}
+				className={className ?? "flex items-center gap-4 my-8"}
+			>
+				<div aria-hidden="true" className="flex-1 h-px bg-line" />
 				<span className="text-xs text-muted uppercase tracking-wider">{label}</span>
-				<div className="flex-1 h-px bg-line" />
+				<div aria-hidden="true" className="flex-1 h-px bg-line" />
 			</div>
 		)
 	}
 
-	return <hr className="border-line my-8" />
+	return <hr className={className ?? "border-line my-8"} {...props} />
 }
