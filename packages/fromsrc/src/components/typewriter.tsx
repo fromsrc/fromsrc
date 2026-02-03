@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactElement } from "react"
 import { useEffect, useState } from "react"
 
 export interface TypewriterProps {
@@ -9,13 +10,21 @@ export interface TypewriterProps {
 	loop?: boolean
 }
 
-export function Typewriter({ words, speed = 100, delay = 2000, loop = true }: TypewriterProps) {
+const DELETE_SPEED_FACTOR = 0.5
+
+export function Typewriter({
+	words,
+	speed = 100,
+	delay = 2000,
+	loop = true,
+}: TypewriterProps): ReactElement {
 	const [index, setIndex] = useState(0)
 	const [text, setText] = useState("")
 	const [deleting, setDeleting] = useState(false)
 
 	useEffect(() => {
 		const word = words[index]
+		if (!word) return
 
 		if (deleting) {
 			if (text === "") {
@@ -26,7 +35,7 @@ export function Typewriter({ words, speed = 100, delay = 2000, loop = true }: Ty
 
 			const timeout = setTimeout(() => {
 				setText((t) => t.slice(0, -1))
-			}, speed / 2)
+			}, speed * DELETE_SPEED_FACTOR)
 			return () => clearTimeout(timeout)
 		}
 
@@ -47,8 +56,12 @@ export function Typewriter({ words, speed = 100, delay = 2000, loop = true }: Ty
 
 	return (
 		<span>
-			{text}
-			<span className="animate-pulse">|</span>
+			<span aria-live="polite" aria-atomic="true">
+				{text}
+			</span>
+			<span aria-hidden="true" className="animate-pulse">
+				|
+			</span>
 		</span>
 	)
 }
