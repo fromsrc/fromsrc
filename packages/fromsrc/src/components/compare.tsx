@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import type { JSX, ReactNode } from "react"
 
 /**
@@ -20,7 +21,7 @@ export interface CompareProps {
 /**
  * container for side-by-side comparison columns
  */
-export function Compare({ children, label }: CompareProps): JSX.Element {
+export const Compare = memo(function Compare({ children, label }: CompareProps): JSX.Element {
 	return (
 		<div
 			className="my-6 grid gap-3 md:gap-4 md:grid-cols-2"
@@ -31,7 +32,7 @@ export function Compare({ children, label }: CompareProps): JSX.Element {
 			{children}
 		</div>
 	)
-}
+})
 
 /**
  * props for individual comparison column
@@ -60,7 +61,7 @@ const titleVariants: Record<CompareVariant, string> = {
 /**
  * individual column within a comparison container
  */
-export function Column({ title, variant = "default", children }: ColumnProps): JSX.Element {
+export const Column = memo(function Column({ title, variant = "default", children }: ColumnProps): JSX.Element {
 	const headingId = `column-${title.toLowerCase().replace(/\s+/g, "-")}`
 	return (
 		<section
@@ -76,7 +77,7 @@ export function Column({ title, variant = "default", children }: ColumnProps): J
 			<div className="text-sm text-muted space-y-2">{children}</div>
 		</section>
 	)
-}
+})
 
 /**
  * props for before/after comparison row
@@ -95,7 +96,7 @@ export interface CompareRowProps {
 /**
  * side-by-side before/after comparison row
  */
-export function CompareRow({ left, right, leftLabel, rightLabel }: CompareRowProps): JSX.Element {
+export const CompareRow = memo(function CompareRow({ left, right, leftLabel, rightLabel }: CompareRowProps): JSX.Element {
 	const leftId = "compare-row-left"
 	const rightId = "compare-row-right"
 	const resolvedLeftLabel = leftLabel || "before"
@@ -128,4 +129,4 @@ export function CompareRow({ left, right, leftLabel, rightLabel }: CompareRowPro
 			</section>
 		</div>
 	)
-}
+})
