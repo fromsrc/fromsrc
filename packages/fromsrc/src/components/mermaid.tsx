@@ -1,13 +1,21 @@
 "use client"
 
 import type { ReactElement } from "react"
-import { useEffect, useId, useState } from "react"
+import { memo, useEffect, useId, useState } from "react"
 
+/**
+ * Props for the Mermaid diagram component
+ */
 export interface MermaidProps {
+	/** Mermaid diagram definition string */
 	chart: string
+	/** Accessible label describing the diagram */
 	label?: string
 }
 
+/**
+ * Configuration options for mermaid initialization
+ */
 interface MermaidConfig {
 	startOnLoad: boolean
 	securityLevel: "strict" | "loose" | "antiscript" | "sandbox"
@@ -15,12 +23,15 @@ interface MermaidConfig {
 	theme: "default" | "forest" | "dark" | "neutral" | "base"
 }
 
+/**
+ * Mermaid library API interface
+ */
 interface MermaidAPI {
 	initialize: (config: MermaidConfig) => void
 	render: (id: string, code: string) => Promise<{ svg: string }>
 }
 
-export function Mermaid({ chart, label }: MermaidProps): ReactElement {
+function MermaidBase({ chart, label }: MermaidProps): ReactElement {
 	const id = useId()
 	const [svg, setSvg] = useState<string>("")
 	const [error, setError] = useState<boolean>(false)
@@ -70,6 +81,7 @@ export function Mermaid({ chart, label }: MermaidProps): ReactElement {
 		return (
 			<div
 				role="alert"
+				aria-live="assertive"
 				className="my-4 p-4 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm"
 			>
 				error
@@ -80,16 +92,18 @@ export function Mermaid({ chart, label }: MermaidProps): ReactElement {
 	if (!svg) {
 		return (
 			<div
-				aria-hidden
+				role="status"
+				aria-label="loading diagram"
+				aria-busy="true"
 				className="my-4 p-8 rounded-lg border border-line bg-surface/30 animate-pulse"
 			>
-				<div className="h-32 bg-surface/50 rounded" />
+				<div className="h-32 bg-surface/50 rounded" aria-hidden="true" />
 			</div>
 		)
 	}
 
 	return (
-		<div
+		<figure
 			role="img"
 			aria-label={label || "diagram"}
 			className="my-4 overflow-x-auto [&_svg]:mx-auto"
@@ -97,3 +111,5 @@ export function Mermaid({ chart, label }: MermaidProps): ReactElement {
 		/>
 	)
 }
+
+export const Mermaid = memo(MermaidBase)
