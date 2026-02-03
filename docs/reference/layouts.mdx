@@ -1,0 +1,167 @@
+---
+title: layouts
+description: documentation layout components
+order: 1
+---
+
+fromsrc provides layout components for building documentation structure.
+
+## docs layout
+
+wrap your docs pages in a layout that includes sidebar, search, and mobile navigation.
+
+```tsx title="app/docs/layout.tsx"
+import type { ReactNode } from "react"
+import { MobileNav, Search, Sidebar } from "fromsrc/client"
+import { getAllDocs, getNavigation } from "fromsrc"
+
+export default async function DocsLayout({ children }: { children: ReactNode }) {
+  const [docs, navigation] = await Promise.all([
+    getAllDocs("docs"),
+    getNavigation("docs"),
+  ])
+
+  return (
+    <>
+      <MobileNav
+        title="docs"
+        navigation={navigation}
+        docs={docs}
+      />
+      <Search docs={docs} />
+      <div className="flex min-h-screen">
+        <Sidebar
+          title="docs"
+          navigation={navigation}
+        />
+        <main className="flex-1 min-w-0">{children}</main>
+      </div>
+    </>
+  )
+}
+```
+
+## sidebar
+
+navigation sidebar with collapsible sections.
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | required | site title |
+| logo | ReactNode | - | logo element |
+| navigation | SidebarSection[] | required | navigation structure |
+| basePath | string | "/docs" | base path for links |
+| github | string | - | github repo url |
+| collapsible | boolean | false | enable collapse toggle |
+| defaultOpenLevel | number | 0 | auto-expand folders to depth |
+
+### navigation structure
+
+```tsx
+interface SidebarSection {
+  title: string
+  items: (SidebarItem | SidebarFolder | DocMeta)[]
+}
+
+interface SidebarItem {
+  type: "item"
+  title: string
+  href: string
+  icon?: ReactNode
+}
+
+interface SidebarFolder {
+  type: "folder"
+  title: string
+  items: (SidebarItem | SidebarFolder)[]
+  defaultOpen?: boolean
+  icon?: ReactNode
+  href?: string
+}
+```
+
+### example
+
+```tsx
+const navigation = [
+  {
+    title: "getting started",
+    items: [
+      { type: "item", title: "introduction", href: "/docs" },
+      { type: "item", title: "installation", href: "/docs/installation" },
+    ],
+  },
+  {
+    title: "components",
+    items: [
+      {
+        type: "folder",
+        title: "ui",
+        defaultOpen: true,
+        items: [
+          { type: "item", title: "button", href: "/docs/components/button" },
+          { type: "item", title: "card", href: "/docs/components/card" },
+        ],
+      },
+    ],
+  },
+]
+
+<Sidebar
+  title="my docs"
+  navigation={navigation}
+  collapsible
+  defaultOpenLevel={1}
+/>
+```
+
+## mobile navigation
+
+slide-out drawer for mobile devices.
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | required | site title |
+| logo | ReactNode | - | logo element |
+| navigation | SidebarSection[] | required | navigation structure |
+| docs | DocMeta[] | required | docs for search |
+| basePath | string | "/docs" | base path for links |
+| github | string | - | github repo url |
+
+### example
+
+```tsx
+<MobileNav
+  title="docs"
+  navigation={navigation}
+  docs={docs}
+  github="https://github.com/org/repo"
+/>
+```
+
+## root layout
+
+standard next.js root layout with fonts and metadata.
+
+```tsx title="app/layout.tsx"
+import type { Metadata } from "next"
+import type { ReactNode } from "react"
+import "./globals.css"
+
+export const metadata: Metadata = {
+  title: { default: "docs", template: "%s | docs" },
+  description: "documentation",
+}
+
+export default function Layout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
