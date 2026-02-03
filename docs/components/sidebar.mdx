@@ -106,6 +106,37 @@ when collapsed:
 - navigation items show icons only
 - collapse state persists in localstorage
 
+## auto-expand folders
+
+expand folders automatically to a certain depth:
+
+```tsx
+<Sidebar
+  navigation={navigation}
+  defaultOpenLevel={1}
+/>
+```
+
+folders at depth 1 or less will be expanded by default.
+
+## clickable folders
+
+folders can also be links:
+
+```tsx
+{
+  type: "folder",
+  title: "api",
+  href: "/docs/api",
+  items: [
+    { type: "item", title: "hooks", href: "/docs/api/hooks" },
+    { type: "item", title: "content", href: "/docs/api/content" },
+  ]
+}
+```
+
+clicking the folder title navigates to the href. the expand/collapse button is separate.
+
 ## props
 
 | prop | type | default | description |
@@ -113,10 +144,10 @@ when collapsed:
 | title | string | required | site title |
 | logo | ReactNode | - | site logo |
 | navigation | SidebarSection[] | required | nav structure |
-| docs | DocMeta[] | required | all docs for search |
 | basePath | string | "/docs" | base url path |
 | github | string | - | github repo link |
 | collapsible | boolean | false | enable collapse toggle |
+| defaultOpenLevel | number | 0 | auto-expand folders to depth |
 
 ## types
 
@@ -134,6 +165,7 @@ interface SidebarFolder {
   items: (SidebarItem | SidebarFolder)[]
   defaultOpen?: boolean
   icon?: ReactNode
+  href?: string
 }
 
 interface SidebarSection {
