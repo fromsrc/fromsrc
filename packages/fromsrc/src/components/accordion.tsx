@@ -1,14 +1,14 @@
 "use client"
 
-import { type ReactNode, useCallback, useId, useState } from "react"
+import { type ReactNode, memo, useCallback, useId, useState } from "react"
 
 export interface AccordionProps {
 	children: ReactNode
 }
 
-export function Accordion({ children }: AccordionProps) {
+export const Accordion = memo(function Accordion({ children }: AccordionProps) {
 	return <div className="my-6 divide-y divide-line border-y border-line">{children}</div>
-}
+})
 
 /**
  * @param title - accordion header text
@@ -21,7 +21,7 @@ export interface AccordionItemProps {
 	defaultOpen?: boolean
 }
 
-export function AccordionItem({ title, children, defaultOpen = false }: AccordionItemProps) {
+function AccordionItemInner({ title, children, defaultOpen = false }: AccordionItemProps) {
 	const [open, setOpen] = useState(defaultOpen)
 	const id = useId()
 	const buttonId = `${id}-button`
@@ -65,3 +65,5 @@ export function AccordionItem({ title, children, defaultOpen = false }: Accordio
 		</div>
 	)
 }
+
+export const AccordionItem = memo(AccordionItemInner)

@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useEffect, useState } from "react"
+import { type ReactNode, memo, useCallback, useEffect, useState } from "react"
 
 export type BannerVariant = "default" | "rainbow"
 
@@ -17,7 +17,7 @@ export interface BannerProps {
 	"aria-label"?: string
 }
 
-export function Banner({
+function BannerInner({
 	id,
 	variant = "default",
 	children,
@@ -36,14 +36,14 @@ export function Banner({
 		}
 	}, [id])
 
-	if (!mounted || !visible) return null
-
-	function dismiss() {
+	const dismiss = useCallback(() => {
 		if (id) {
 			localStorage.setItem(`banner-${id}`, "true")
 		}
 		setVisible(false)
-	}
+	}, [id])
+
+	if (!mounted || !visible) return null
 
 	const base = "sticky top-0 z-40 flex items-center justify-center gap-2 px-4 py-2 text-sm"
 	const styles: Record<BannerVariant, string> = {
@@ -77,3 +77,5 @@ export function Banner({
 		</div>
 	)
 }
+
+export const Banner = memo(BannerInner)
