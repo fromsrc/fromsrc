@@ -1,0 +1,81 @@
+---
+title: status
+description: status indicators
+order: 36
+---
+
+display status with colored indicators.
+
+## status badge
+
+```mdx
+<Status type="success">active</Status>
+<Status type="warning">pending</Status>
+<Status type="error">failed</Status>
+```
+
+<div className="flex gap-2 flex-wrap">
+  <Status type="success">active</Status>
+  <Status type="warning">pending</Status>
+  <Status type="error">failed</Status>
+</div>
+
+## all types
+
+```mdx
+<Status type="success">success</Status>
+<Status type="warning">warning</Status>
+<Status type="error">error</Status>
+<Status type="info">info</Status>
+<Status type="neutral">neutral</Status>
+```
+
+<div className="flex gap-2 flex-wrap">
+  <Status type="success">success</Status>
+  <Status type="warning">warning</Status>
+  <Status type="error">error</Status>
+  <Status type="info">info</Status>
+  <Status type="neutral">neutral</Status>
+</div>
+
+## status dot
+
+minimal indicator:
+
+```mdx
+<StatusDot type="success" />
+<StatusDot type="error" />
+```
+
+<div className="flex gap-4 items-center">
+  <StatusDot type="success" /> online
+  <StatusDot type="error" /> offline
+</div>
+
+## pulsing dot
+
+animated indicator:
+
+```mdx
+<StatusDot type="success" pulse />
+```
+
+<div className="flex gap-2 items-center">
+  <StatusDot type="success" pulse /> live
+</div>
+
+## props
+
+### status
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| type | "success" \| "warning" \| "error" \| "info" \| "neutral" | "neutral" | status type |
+| children | string | - | status text |
+
+### statusdot
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| type | "success" \| "warning" \| "error" \| "info" \| "neutral" | "neutral" | status type |
+| pulse | boolean | false | animate pulse |
