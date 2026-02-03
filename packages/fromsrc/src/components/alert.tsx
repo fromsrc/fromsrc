@@ -17,10 +17,10 @@ const icons = {
 }
 
 const styles = {
-	info: "border-blue-500/30 bg-blue-500/10 text-blue-200",
-	success: "border-green-500/30 bg-green-500/10 text-green-200",
-	warning: "border-yellow-500/30 bg-yellow-500/10 text-yellow-200",
-	error: "border-red-500/30 bg-red-500/10 text-red-200",
+	info: "border-line bg-surface text-muted [&_svg]:text-accent",
+	success: "border-emerald-500/20 bg-emerald-500/5 text-emerald-300 [&_svg]:text-emerald-400",
+	warning: "border-amber-500/20 bg-amber-500/5 text-amber-300 [&_svg]:text-amber-400",
+	error: "border-red-500/20 bg-red-500/5 text-red-300 [&_svg]:text-red-400",
 }
 
 export function Alert({ children, type = "info", title }: AlertProps) {
@@ -28,10 +28,10 @@ export function Alert({ children, type = "info", title }: AlertProps) {
 
 	return (
 		<div className={`flex gap-3 rounded-lg border p-4 ${styles[type]}`} role="alert">
-			<Icon className="size-5 shrink-0" aria-hidden />
+			<Icon className="size-5 shrink-0 mt-0.5" aria-hidden />
 			<div className="min-w-0">
-				{title && <div className="mb-1 font-semibold">{title}</div>}
-				<div className="text-sm opacity-90">{children}</div>
+				{title && <div className="mb-1 font-medium text-fg">{title}</div>}
+				<div className="text-sm">{children}</div>
 			</div>
 		</div>
 	)
