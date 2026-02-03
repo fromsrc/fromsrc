@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { DocMeta } from "../content"
-import { useEscapeKey } from "../hooks/escapekey"
+import { useFocusTrap } from "../hooks/focustrap"
 import { useScrollLock } from "../hooks/scrolllock"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
@@ -158,30 +158,7 @@ export function MobileNav({
 		}, 200)
 	}, [])
 
-	useEscapeKey(close, open)
-
-	useEffect(() => {
-		if (!open || !drawerRef.current) return
-		const drawer = drawerRef.current
-		const focusable = drawer.querySelectorAll<HTMLElement>(
-			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-		)
-		const first = focusable[0]
-		const last = focusable[focusable.length - 1]
-
-		const trap = (e: KeyboardEvent) => {
-			if (e.key !== "Tab") return
-			if (e.shiftKey && document.activeElement === first) {
-				e.preventDefault()
-				last?.focus()
-			} else if (!e.shiftKey && document.activeElement === last) {
-				e.preventDefault()
-				first?.focus()
-			}
-		}
-		drawer.addEventListener("keydown", trap)
-		return () => drawer.removeEventListener("keydown", trap)
-	}, [open])
+	useFocusTrap(drawerRef, { enabled: open, onEscape: close, restoreFocus: false })
 
 	return (
 		<>

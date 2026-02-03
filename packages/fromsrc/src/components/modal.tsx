@@ -2,11 +2,9 @@
 
 import type { JSX, ReactNode } from "react"
 import { useCallback, useEffect, useId, useRef, useState } from "react"
+import { useFocusTrap } from "../hooks/focustrap"
 import { useScrollLock } from "../hooks/scrolllock"
 import { IconX } from "./icons"
-
-const FOCUSABLE_SELECTOR =
-	'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
 /**
  * Props for the Modal component.
@@ -25,87 +23,28 @@ export interface ModalProps {
 export function Modal({ open, onClose, title, children }: ModalProps): JSX.Element | null {
 	const id = useId()
 	const dialogRef = useRef<HTMLDivElement>(null)
-	const previousFocus = useRef<HTMLElement | null>(null)
 	const [visible, setVisible] = useState(false)
 	const [animate, setAnimate] = useState(false)
 
 	const titleId = title ? `modal-title-${id}` : undefined
-
-	const getFocusableElements = useCallback((): HTMLElement[] => {
-		if (!dialogRef.current) return []
-		return Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
-	}, [])
-
-	const handleKeyDown = useCallback(
-		(e: KeyboardEvent): void => {
-			if (e.key === "Escape") {
-				onClose()
-				return
-			}
-
-			if (e.key !== "Tab") return
-
-			const focusable = getFocusableElements()
-			if (focusable.length === 0) return
-
-			const first = focusable[0]
-			const last = focusable[focusable.length - 1]
-
-			if (e.shiftKey && document.activeElement === first) {
-				e.preventDefault()
-				last?.focus()
-			} else if (!e.shiftKey && document.activeElement === last) {
-				e.preventDefault()
-				first?.focus()
-			}
-		},
-		[onClose, getFocusableElements],
-	)
 
 	const handleBackdropClick = useCallback((): void => {
 		onClose()
 	}, [onClose])
 
 	useScrollLock(open)
+	useFocusTrap(dialogRef, { enabled: visible, onEscape: onClose })
 
-	useEffect((): (() => void) => {
+	useEffect((): (() => void) | undefined => {
 		if (open) {
-			previousFocus.current = document.activeElement as HTMLElement
 			setVisible(true)
 			requestAnimationFrame((): void => setAnimate(true))
-			document.addEventListener("keydown", handleKeyDown)
 		} else {
 			setAnimate(false)
 			const timeout = setTimeout((): void => setVisible(false), 150)
 			return (): void => clearTimeout(timeout)
 		}
-
-		return (): void => {
-			document.removeEventListener("keydown", handleKeyDown)
-			previousFocus.current?.focus()
-		}
-	}, [open, handleKeyDown])
-
-	useEffect((): void => {
-		if (visible) {
-			const focusable = getFocusableElements()
-			focusable[0]?.focus()
-		}
-	}, [visible, getFocusableElements])
-
-	useEffect((): (() => void) | void => {
-		if (!visible) return
-
-		const handleFocusIn = (e: FocusEvent): void => {
-			if (!dialogRef.current?.contains(e.target as Node)) {
-				const focusable = getFocusableElements()
-				focusable[0]?.focus()
-			}
-		}
-
-		document.addEventListener("focusin", handleFocusIn)
-		return (): void => document.removeEventListener("focusin", handleFocusIn)
-	}, [visible, getFocusableElements])
+	}, [open])
 
 	if (!visible) return null
 
