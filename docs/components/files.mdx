@@ -37,12 +37,40 @@ show project structure with folders and files.
 folders can contain other folders:
 
 ```mdx
-<Folder name="src" defaultOpen>
-  <Folder name="components" defaultOpen>
-    <File name="button.tsx" />
+<Files>
+  <Folder name="src" defaultOpen>
+    <Folder name="components" defaultOpen>
+      <File name="button.tsx" />
+    </Folder>
   </Folder>
-</Folder>
+</Files>
 ```
+
+<Files>
+  <Folder name="src" defaultOpen>
+    <Folder name="components" defaultOpen>
+      <File name="button.tsx" />
+    </Folder>
+  </Folder>
+</Files>
+
+## with icons
+
+files can have custom icons:
+
+```mdx
+<Files>
+  <Folder name="config" defaultOpen>
+    <File name="settings.json" icon={<span>&#9881;</span>} />
+  </Folder>
+</Files>
+```
+
+<Files>
+  <Folder name="config" defaultOpen>
+    <File name="settings.json" icon={<span>&#9881;</span>} />
+  </Folder>
+</Files>
 
 ## props
 
