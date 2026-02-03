@@ -5,24 +5,32 @@ import { useEffect, useId, useState } from "react"
 
 export interface MermaidProps {
 	chart: string
+	label?: string
+}
+
+interface MermaidConfig {
+	startOnLoad: boolean
+	securityLevel: "strict" | "loose" | "antiscript" | "sandbox"
+	fontFamily: string
+	theme: "default" | "forest" | "dark" | "neutral" | "base"
 }
 
 interface MermaidAPI {
-	initialize: (config: {
-		startOnLoad: boolean
-		securityLevel: string
-		fontFamily: string
-		theme: string
-	}) => void
+	initialize: (config: MermaidConfig) => void
 	render: (id: string, code: string) => Promise<{ svg: string }>
 }
 
-export function Mermaid({ chart }: MermaidProps): ReactElement {
+export function Mermaid({ chart, label }: MermaidProps): ReactElement {
 	const id = useId()
 	const [svg, setSvg] = useState<string>("")
-	const [error, setError] = useState<string>("")
+	const [error, setError] = useState<boolean>(false)
 
 	useEffect(() => {
+		if (!chart.trim()) {
+			setError(true)
+			return
+		}
+
 		let mounted = true
 
 		async function render() {
@@ -43,11 +51,11 @@ export function Mermaid({ chart }: MermaidProps): ReactElement {
 
 				if (mounted) {
 					setSvg(rendered)
-					setError("")
+					setError(false)
 				}
-			} catch (e) {
+			} catch {
 				if (mounted) {
-					setError(e instanceof Error ? e.message : "failed to render")
+					setError(true)
 				}
 			}
 		}
@@ -60,15 +68,18 @@ export function Mermaid({ chart }: MermaidProps): ReactElement {
 
 	if (error) {
 		return (
-			<div className="my-4 p-4 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm">
-				{error}
+			<div
+				role="alert"
+				className="my-4 p-4 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm"
+			>
+				error
 			</div>
 		)
 	}
 
 	if (!svg) {
 		return (
-			<div className="my-4 p-8 rounded-lg border border-line bg-surface/30 animate-pulse">
+			<div aria-hidden className="my-4 p-8 rounded-lg border border-line bg-surface/30 animate-pulse">
 				<div className="h-32 bg-surface/50 rounded" />
 			</div>
 		)
@@ -76,6 +87,8 @@ export function Mermaid({ chart }: MermaidProps): ReactElement {
 
 	return (
 		<div
+			role="img"
+			aria-label={label || "diagram"}
 			className="my-4 overflow-x-auto [&_svg]:mx-auto"
 			dangerouslySetInnerHTML={{ __html: svg }}
 		/>
