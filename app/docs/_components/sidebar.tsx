@@ -11,6 +11,7 @@ import {
 	Rocket,
 	Search,
 	Settings,
+	Signpost,
 	Sliders,
 	Sparkles,
 	Tags,
@@ -26,6 +27,7 @@ const icons: Record<string, React.ReactNode> = {
 	theming: <Palette size={14} />,
 	customization: <Sliders size={14} />,
 	writing: <Pen size={14} />,
+	navigation: <Signpost size={14} />,
 	search: <Search size={14} />,
 	ai: <Sparkles size={14} />,
 	slugs: <Hash size={14} />,
@@ -36,7 +38,7 @@ const icons: Record<string, React.ReactNode> = {
 
 const sections: Record<string, string[]> = {
 	"getting started": ["", "installation", "quickstart"],
-	basics: ["configuration", "theming", "customization", "writing"],
+	basics: ["configuration", "theming", "customization", "writing", "navigation"],
 	features: ["search", "ai", "slugs", "versioning"],
 	production: ["deploying", "i18n"],
 }

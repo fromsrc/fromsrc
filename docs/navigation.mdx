@@ -1,0 +1,130 @@
+---
+title: navigation
+description: configure page tree and sidebar navigation
+---
+
+# navigation
+
+fromsrc uses a file-based navigation system. your docs folder structure determines the sidebar navigation.
+
+## folder structure
+
+```
+docs/
+├── index.mdx          # /docs
+├── installation.mdx   # /docs/installation
+├── quickstart.mdx     # /docs/quickstart
+├── components/
+│   ├── button.mdx     # /docs/components/button
+│   └── card.mdx       # /docs/components/card
+└── api/
+    └── hooks.mdx      # /docs/api/hooks
+```
+
+## meta files
+
+use `_meta.json` files to control page ordering and section titles.
+
+```json
+{
+  "title": "documentation",
+  "pages": [
+    "index",
+    "installation",
+    "quickstart",
+    "configuration"
+  ]
+}
+```
+
+pages are displayed in the order specified. pages not listed appear after the specified pages.
+
+## nested sections
+
+create `_meta.json` in subdirectories for nested navigation:
+
+```
+docs/
+├── _meta.json
+├── components/
+│   ├── _meta.json
+│   ├── button.mdx
+│   └── card.mdx
+```
+
+```json
+{
+  "title": "components",
+  "pages": ["button", "card"]
+}
+```
+
+## frontmatter ordering
+
+alternatively, use frontmatter `order` to sort pages:
+
+```mdx
+---
+title: installation
+order: 1
+---
+```
+
+lower numbers appear first. pages without `order` default to 99.
+
+## sidebar sections
+
+the sidebar groups pages into sections based on folder structure:
+
+- root-level pages go into "getting started"
+- `components/` pages go into "reference > components"
+- `api/` pages go into "reference > api"
+- `examples/` pages go into "reference > examples"
+
+## custom sections
+
+customize section grouping in your sidebar component:
+
+```tsx
+const sections = {
+  "getting started": ["", "installation", "quickstart"],
+  basics: ["configuration", "theming"],
+  features: ["search", "ai"],
+}
+```
+
+## icons
+
+add icons to sidebar items via the icons map:
+
+```tsx
+import { BookOpen, Download, Rocket } from "lucide-react"
+
+const icons = {
+  introduction: <BookOpen size={14} />,
+  installation: <Download size={14} />,
+  quickstart: <Rocket size={14} />,
+}
+```
+
+## collapsible folders
+
+folders can be collapsed in the sidebar. use `defaultOpen` to control initial state:
+
+```tsx
+{
+  type: "folder",
+  title: "components",
+  defaultOpen: false,
+  items: [...]
+}
+```
+
+use `defaultOpenLevel` on the Sidebar component to auto-expand folders to a certain depth:
+
+```tsx
+<Sidebar
+  navigation={navigation}
+  defaultOpenLevel={1}
+/>
+```
