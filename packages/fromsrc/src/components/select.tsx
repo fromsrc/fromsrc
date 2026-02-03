@@ -3,6 +3,7 @@
 import type React from "react"
 import { type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
+import { ErrorMessage } from "./errormessage"
 import { FormLabel } from "./formlabel"
 import { IconChevronDown } from "./icons"
 
@@ -215,11 +216,7 @@ export function Select({
 					</div>
 				)}
 			</div>
-			{error && (
-				<span id={errorId} className="text-xs text-red-400" role="alert">
-					{error}
-				</span>
-			)}
+			{error && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
 		</div>
 	)
 }

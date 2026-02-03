@@ -1,6 +1,7 @@
 "use client"
 
 import { type ReactNode, forwardRef, useId } from "react"
+import { ErrorMessage } from "./errormessage"
 import { FormLabel } from "./formlabel"
 
 export type InputVariant = "default" | "error"
@@ -58,11 +59,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 				className={`rounded-md border outline-none transition-colors ${variants[actualVariant]} ${sizes[size]} ${className}`.trim()}
 				{...props}
 			/>
-			{error && (
-				<span id={errorId} className="text-xs text-red-400" role="alert">
-					{error}
-				</span>
-			)}
+			{error && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
 			{hint && !error && (
 				<span id={hintId} className="text-xs text-muted">
 					{hint}

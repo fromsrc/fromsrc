@@ -9,6 +9,7 @@ import {
 	useId,
 	useRef,
 } from "react"
+import { ErrorMessage } from "./errormessage"
 import { Tooltip } from "./tooltip"
 
 /**
@@ -99,11 +100,7 @@ function CheckboxInner({
 					</span>
 				)}
 			</label>
-			{error && (
-				<span id={errorId} className="text-xs text-red-400" role="alert" aria-live="polite">
-					{error}
-				</span>
-			)}
+			{error && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
 		</div>
 	)
 }
