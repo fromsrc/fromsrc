@@ -1,12 +1,23 @@
 "use client"
 
+import type { ReactElement } from "react"
 import { useEffect, useId, useState } from "react"
 
 export interface MermaidProps {
 	chart: string
 }
 
-export function Mermaid({ chart }: MermaidProps) {
+interface MermaidAPI {
+	initialize: (config: {
+		startOnLoad: boolean
+		securityLevel: string
+		fontFamily: string
+		theme: string
+	}) => void
+	render: (id: string, code: string) => Promise<{ svg: string }>
+}
+
+export function Mermaid({ chart }: MermaidProps): ReactElement {
 	const id = useId()
 	const [svg, setSvg] = useState<string>("")
 	const [error, setError] = useState<string>("")
@@ -16,7 +27,8 @@ export function Mermaid({ chart }: MermaidProps) {
 
 		async function render() {
 			try {
-				const mermaid = (await import(/* webpackIgnore: true */ "mermaid" as any)).default as any
+				const module = await import("mermaid" as string)
+				const mermaid = module.default as MermaidAPI
 				mermaid.initialize({
 					startOnLoad: false,
 					securityLevel: "loose",

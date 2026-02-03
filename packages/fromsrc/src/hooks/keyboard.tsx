@@ -31,7 +31,7 @@ function sortDocs(docs: DocMeta[]): DocMeta[] {
 	]
 }
 
-export function useKeyboardNav(docs: DocMeta[], basePath = "/docs") {
+export function useKeyboardNav(docs: DocMeta[], basePath = "/docs"): void {
 	const pathname = usePathname()
 	const router = useRouter()
 
