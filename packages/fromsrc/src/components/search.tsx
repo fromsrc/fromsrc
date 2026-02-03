@@ -129,10 +129,11 @@ export function Search({ basePath = "/docs", docs }: Props) {
 
 	return (
 		<div className="fixed inset-0 z-[100]">
-			<div
-				className="fixed inset-0 bg-bg/80 backdrop-blur-sm"
+			<button
+				type="button"
+				className="fixed inset-0 bg-bg/80 backdrop-blur-sm cursor-default"
 				onClick={() => setOpen(false)}
-				onKeyDown={() => {}}
+				aria-label="close search"
 			/>
 			<div className="relative z-10 max-w-lg mx-auto mt-[20vh]">
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
