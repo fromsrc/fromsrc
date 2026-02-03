@@ -122,7 +122,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			return []
 		}
 
-		docsCache = docs.sort((a, b) => ((a.order as number) ?? 99) - ((b.order as number) ?? 99))
+		docsCache = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 		return docsCache
 	}
 
@@ -192,7 +192,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			return []
 		}
 
-		searchCache = docs.sort((a, b) => ((a.order as number) ?? 99) - ((b.order as number) ?? 99))
+		searchCache = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 		return searchCache
 	}
 

@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises"
-import { join, dirname } from "node:path"
+import { join } from "node:path"
 
 export interface MetaFile {
 	title?: string
@@ -17,6 +17,16 @@ export interface PageTreeItem {
 
 const metaCache = new Map<string, MetaFile | null>()
 
+function isMetaFile(data: unknown): data is MetaFile {
+	if (typeof data !== "object" || data === null) return false
+	const obj = data as Record<string, unknown>
+	if (obj.title !== undefined && typeof obj.title !== "string") return false
+	if (obj.icon !== undefined && typeof obj.icon !== "string") return false
+	if (obj.pages !== undefined && !Array.isArray(obj.pages)) return false
+	if (Array.isArray(obj.pages) && !obj.pages.every((p) => typeof p === "string")) return false
+	return true
+}
+
 export async function loadMeta(dir: string): Promise<MetaFile | null> {
 	const cached = metaCache.get(dir)
 	if (cached !== undefined) return cached
@@ -25,9 +35,13 @@ export async function loadMeta(dir: string): Promise<MetaFile | null> {
 
 	try {
 		const content = await readFile(filepath, "utf-8")
-		const meta = JSON.parse(content) as MetaFile
-		metaCache.set(dir, meta)
-		return meta
+		const data: unknown = JSON.parse(content)
+		if (!isMetaFile(data)) {
+			metaCache.set(dir, null)
+			return null
+		}
+		metaCache.set(dir, data)
+		return data
 	} catch {
 		metaCache.set(dir, null)
 		return null
