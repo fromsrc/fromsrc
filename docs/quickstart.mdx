@@ -6,13 +6,19 @@ order: 3
 
 build a documentation site from scratch.
 
-## create the project
+<Steps>
+<Step>
+
+### create project
 
 <Create />
 
-## add your first page
+</Step>
+<Step>
 
-create a file at `docs/index.mdx`:
+### create your first page
+
+create `docs/index.mdx`:
 
 ```mdx
 ---
@@ -20,32 +26,61 @@ title: welcome
 description: my documentation
 ---
 
-# welcome to my docs
+# welcome
 
-this is your first documentation page.
-
-## getting started
-
-add content using mdx - markdown with react components.
+this is your documentation home page.
 ```
 
-## add a second page
+</Step>
+<Step>
 
-create `docs/installation.mdx`:
+### start the dev server
 
-```yaml
+```bash
+bun dev
+```
+
+open [http://localhost:3000/docs](http://localhost:3000/docs) to see your site.
+
+</Step>
+</Steps>
+
+## add more pages
+
+create `docs/getting-started.mdx`:
+
+```mdx
 ---
-title: installation
-description: how to install
+title: getting started
+description: how to get started
 order: 2
 ---
+
+# getting started
+
+follow these steps to set up the project.
+
+## install dependencies
+
+<Install package="your-package" />
+
+## configure
+
+create a config file and add your settings.
 ```
 
-then add your content with components like `<Install />` and `<CodeGroup />`.
+your project structure:
+
+<Files>
+  <Folder name="docs" defaultOpen>
+    <File name="index.mdx" />
+    <File name="getting-started.mdx" />
+  </Folder>
+</Files>
 
 ## customize the sidebar
 
-the sidebar automatically generates from your docs folder. files are sorted by the `order` field in frontmatter:
+pages are sorted by the `order` field in frontmatter:
 
 ```yaml
 ---
@@ -54,43 +89,41 @@ order: 1
 ---
 ```
 
-lower numbers appear first.
+lower numbers appear first. organize with folders:
 
-## add callouts
+<Files>
+  <Folder name="docs" defaultOpen>
+    <File name="index.mdx" />
+    <Folder name="guides" defaultOpen>
+      <File name="index.mdx" />
+      <File name="setup.mdx" />
+    </Folder>
+    <Folder name="api" defaultOpen>
+      <File name="index.mdx" />
+      <File name="endpoints.mdx" />
+    </Folder>
+  </Folder>
+</Files>
 
-highlight important information:
+folders become collapsible sections in the sidebar.
+
+## add components
+
+use built-in components in your mdx files:
+
+### callouts
 
 ```mdx
 <Callout type="info">
-  this is helpful information.
-</Callout>
-
-<Callout type="warning">
-  be careful with this.
-</Callout>
-
-<Callout type="error">
-  this is a critical error.
-</Callout>
-
-<Callout type="tip">
-  here's a pro tip.
+  important information here.
 </Callout>
 ```
 
-renders as:
-
 <Callout type="info">
-  this is helpful information.
+  important information here.
 </Callout>
 
-<Callout type="warning">
-  be careful with this.
-</Callout>
-
-## add code blocks
-
-code blocks support syntax highlighting:
+### code blocks
 
 ````mdx
 ```typescript
@@ -100,30 +133,33 @@ function greet(name: string) {
 ```
 ````
 
-renders as:
-
 ```typescript
 function greet(name: string) {
   return `hello, ${name}!`
 }
 ```
 
-## organize with folders
+### cards
 
-group related pages in folders:
+```mdx
+<Cards>
+  <Card title="guides" href="/docs/guides">
+    learn how to use the project
+  </Card>
+  <Card title="api" href="/docs/api">
+    api reference documentation
+  </Card>
+</Cards>
+```
 
-<Files>
-  <Folder name="docs" defaultOpen>
-    <File name="index.mdx" />
-    <File name="installation.mdx" />
-    <Folder name="components" defaultOpen>
-      <File name="button.mdx" />
-      <File name="input.mdx" />
-    </Folder>
-  </Folder>
-</Files>
-
-folders become collapsible sections in the sidebar.
+<Cards>
+  <Card title="guides" href="/docs/guides">
+    learn how to use the project
+  </Card>
+  <Card title="api" href="/docs/api">
+    api reference documentation
+  </Card>
+</Cards>
 
 ## deploy
 
@@ -133,12 +169,11 @@ build for production:
 bun run build
 ```
 
-deploy the `.next` folder to any hosting platform:
+deploy to any hosting platform:
 
-- vercel (recommended)
+- vercel
 - netlify
 - cloudflare pages
-- self-hosted
 
 ## next steps
 
@@ -148,8 +183,5 @@ deploy the `.next` folder to any hosting platform:
   </Card>
   <Card title="theming" href="/docs/theming">
     customize colors and styles
-  </Card>
-  <Card title="ai integration" href="/docs/ai">
-    add llms.txt and raw markdown
   </Card>
 </Cards>
