@@ -1,0 +1,29 @@
+---
+title: openapi
+description: generate api docs from openapi specs
+order: 1
+---
+
+generate api reference documentation from openapi specifications.
+
+<Callout type="note">
+openapi integration is coming soon.
+</Callout>
+
+## planned features
+
+- automatic endpoint documentation from openapi/swagger specs
+- interactive api playground
+- request/response examples
+- authentication handling
+- schema type generation
+
+## workaround
+
+for now, use the [Endpoint](/docs/components/endpoint) component to manually document api endpoints:
+
+```tsx
+<Endpoint method="GET" path="/api/users/:id">
+  fetch a user by id
+</Endpoint>
+```
