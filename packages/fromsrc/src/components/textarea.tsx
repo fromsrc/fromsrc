@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, forwardRef, useCallback, useEffect, useId, useRef, useState } from "react"
+import { type ReactNode, forwardRef, memo, useCallback, useEffect, useId, useRef, useState } from "react"
 import { ErrorMessage } from "./errormessage"
 import { FormLabel } from "./formlabel"
 
@@ -41,7 +41,7 @@ const sizes: Record<TextareaSize, string> = {
 	lg: "px-4 py-3 text-base min-h-[100px]",
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
+export const Textarea = memo(forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
 	{
 		variant = "default",
 		size = "md",
@@ -138,4 +138,4 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
 			</div>
 		</div>
 	)
-})
+}))

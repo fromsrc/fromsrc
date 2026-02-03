@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import type { JSX, ReactNode } from "react"
+import { memo } from "react"
 
 /**
  * Container for Card components in a responsive grid layout.
@@ -11,9 +12,11 @@ export interface CardsProps {
 	children: ReactNode
 }
 
-export function Cards({ children }: CardsProps): JSX.Element {
+function CardsBase({ children }: CardsProps): JSX.Element {
 	return <div className="my-6 grid gap-4 sm:grid-cols-2">{children}</div>
 }
+
+export const Cards = memo(CardsBase)
 
 /**
  * A card component that renders as a link or static container.
@@ -34,7 +37,7 @@ export interface CardProps {
 	icon?: ReactNode
 }
 
-export function Card({ title, description, href, icon }: CardProps): JSX.Element {
+function CardBase({ title, description, href, icon }: CardProps): JSX.Element {
 	const content: JSX.Element = (
 		<>
 			{icon && <div className="mb-3 text-muted">{icon}</div>}
@@ -56,3 +59,5 @@ export function Card({ title, description, href, icon }: CardProps): JSX.Element
 
 	return <div className={className}>{content}</div>
 }
+
+export const Card = memo(CardBase)
