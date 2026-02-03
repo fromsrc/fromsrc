@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useState } from "react"
+import { type ReactNode, useId, useState } from "react"
 
 export interface AccordionProps {
 	children: ReactNode
@@ -18,13 +18,18 @@ export interface AccordionItemProps {
 
 export function AccordionItem({ title, children, defaultOpen = false }: AccordionItemProps) {
 	const [open, setOpen] = useState(defaultOpen)
+	const id = useId()
+	const buttonId = `${id}-button`
+	const panelId = `${id}-panel`
 
 	return (
 		<div>
 			<button
+				id={buttonId}
 				type="button"
 				onClick={() => setOpen(!open)}
 				aria-expanded={open}
+				aria-controls={panelId}
 				className="flex w-full items-center justify-between py-4 text-left font-medium transition-colors hover:text-fg"
 			>
 				{title}
@@ -32,12 +37,21 @@ export function AccordionItem({ title, children, defaultOpen = false }: Accordio
 					aria-hidden="true"
 					viewBox="0 0 16 16"
 					fill="currentColor"
-					className={`size-4 text-muted transition-transform ${open ? "rotate-180" : ""}`}
+					className={`size-4 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
 				>
 					<path d="M4.22 6.22a.75.75 0 011.06 0L8 8.94l2.72-2.72a.75.75 0 111.06 1.06l-3.25 3.25a.75.75 0 01-1.06 0L4.22 7.28a.75.75 0 010-1.06z" />
 				</svg>
 			</button>
-			{open && <div className="pb-4 text-sm text-muted">{children}</div>}
+			<div
+				id={panelId}
+				role="region"
+				aria-labelledby={buttonId}
+				className={`overflow-hidden transition-all duration-200 ${
+					open ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+				}`}
+			>
+				<div className="pb-4 text-sm text-muted">{children}</div>
+			</div>
 		</div>
 	)
 }
