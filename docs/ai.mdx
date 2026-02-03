@@ -1,0 +1,124 @@
+---
+title: ai integration
+description: make your docs accessible to ai tools
+order: 5
+---
+
+fromsrc provides built-in endpoints that make your documentation accessible to ai tools and llms.
+
+## llms.txt
+
+the `/llms.txt` endpoint returns all your documentation content in a single file optimized for ai consumption.
+
+```
+https://your-docs.com/llms.txt
+```
+
+this endpoint combines all pages into one text file with clear section markers.
+
+<Callout type="info">
+llms.txt is an emerging standard for making content accessible to ai systems.
+</Callout>
+
+## per-page endpoints
+
+access raw markdown for any page by appending `.md` to the url:
+
+```
+/docs/installation     → rendered page
+/docs/installation.md  → raw markdown
+```
+
+this lets ai tools fetch specific pages without parsing html.
+
+## use cases
+
+<Cards>
+  <Card
+    title="rag systems"
+    description="feed documentation into retrieval-augmented generation pipelines"
+  />
+  <Card
+    title="ai assistants"
+    description="let chatbots answer questions using your docs"
+  />
+  <Card
+    title="code generation"
+    description="provide context for ai coding tools"
+  />
+  <Card
+    title="training data"
+    description="use docs as training material for fine-tuning"
+  />
+</Cards>
+
+## implementation
+
+### route handler
+
+create `app/llms.txt/route.ts`:
+
+```typescript
+import { getAllDocs, getDoc } from "fromsrc"
+
+export async function GET() {
+  const docs = await getAllDocs("docs")
+  const sections: string[] = []
+
+  for (const meta of docs) {
+    const slug = meta.slug ? meta.slug.split("/") : []
+    const doc = await getDoc("docs", slug)
+    if (doc) {
+      sections.push(`# ${doc.title}\n\n${doc.content}`)
+    }
+  }
+
+  return new Response(sections.join("\n\n---\n\n"), {
+    headers: { "Content-Type": "text/plain" },
+  })
+}
+```
+
+### raw markdown endpoint
+
+use next.js proxy to serve `.md` files:
+
+```typescript
+// proxy.ts
+import { NextRequest, NextResponse } from "next/server"
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  if (pathname.endsWith(".md")) {
+    const slug = pathname.replace("/docs/", "").replace(".md", "")
+    return NextResponse.rewrite(new URL(`/api/raw/${slug}`, request.url))
+  }
+  return NextResponse.next()
+}
+```
+
+## best practices
+
+<Steps>
+<Step>
+
+### structure content clearly
+
+use descriptive headings and short paragraphs. ai tools parse structure to understand context.
+
+</Step>
+<Step>
+
+### include code examples
+
+practical examples help ai understand usage patterns and generate accurate code.
+
+</Step>
+<Step>
+
+### keep pages focused
+
+one topic per page makes retrieval more precise and reduces noise in ai responses.
+
+</Step>
+</Steps>
