@@ -34,7 +34,68 @@ const docs = await getAllDocs()
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| docs | DocMeta[] | - | docs to search |
-| basePath | string | "/docs" | base path for links |
+<TypeTable
+  data={{
+    docs: { type: "DocMeta[]", required: true, description: "array of docs to search" },
+    basePath: { type: "string", default: "/docs", description: "base path for result links" },
+  }}
+/>
+
+## how it works
+
+search runs entirely client-side using fuzzy matching. when the component mounts, it indexes all doc titles and descriptions.
+
+<Steps>
+<Step>
+
+### indexing
+
+docs are indexed on mount. each doc's title and description are tokenized for matching.
+
+</Step>
+<Step>
+
+### matching
+
+user input is matched against tokens using fuzzy matching with typo tolerance.
+
+</Step>
+<Step>
+
+### ranking
+
+results are ranked by relevance. title matches score higher than description matches.
+
+</Step>
+</Steps>
+
+## customization
+
+### placeholder text
+
+wrap the search component to customize the placeholder:
+
+```tsx
+<div className="[&_input]:placeholder:text-dim">
+  <Search docs={docs} />
+</div>
+```
+
+### styling
+
+search uses semantic color variables that adapt to your theme:
+
+- `--color-bg` - modal background
+- `--color-surface` - input background
+- `--color-line` - borders
+- `--color-fg` - text
+- `--color-muted` - secondary text
+
+## performance
+
+search is optimized for docs sites up to thousands of pages:
+
+- client-side execution (no server requests)
+- debounced input handling
+- virtual scrolling for large result sets
+- minimal bundle size

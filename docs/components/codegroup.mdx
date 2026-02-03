@@ -8,27 +8,18 @@ group code blocks with tabs for different languages or examples.
 
 ## usage
 
-```mdx
+```tsx
+// example structure
 <CodeGroup defaultValue="bun">
   <CodeTabs>
-    <CodeTab value="bun" label="bun" />
-    <CodeTab value="npm" label="npm" />
-    <CodeTab value="pnpm" label="pnpm" />
+    <CodeTab value="bun" label="bun"></CodeTab>
+    <CodeTab value="npm" label="npm"></CodeTab>
   </CodeTabs>
   <CodeTab value="bun" label="bun">
-    ```bash
-    bun add fromsrc
-    ```
+    {/* code block here */}
   </CodeTab>
   <CodeTab value="npm" label="npm">
-    ```bash
-    npm install fromsrc
-    ```
-  </CodeTab>
-  <CodeTab value="pnpm" label="pnpm">
-    ```bash
-    pnpm add fromsrc
-    ```
+    {/* code block here */}
   </CodeTab>
 </CodeGroup>
 ```

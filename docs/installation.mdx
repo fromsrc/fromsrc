@@ -66,6 +66,32 @@ fromsrc requires next.js 16 or later.
   <File name="package.json" />
 </Files>
 
+## troubleshooting
+
+<Accordion>
+  <AccordionItem title="cannot find module 'fromsrc'">
+    ensure fromsrc is installed and your next.js version is 16 or later:
+    ```bash
+    bun add fromsrc
+    ```
+  </AccordionItem>
+  <AccordionItem title="search not working">
+    search indexes content from your docs folder. ensure you have `.mdx` files with valid frontmatter:
+    ```yaml
+    ---
+    title: page title
+    description: page description
+    ---
+    ```
+  </AccordionItem>
+  <AccordionItem title="styles look wrong">
+    import the fromsrc styles in your root layout or globals.css. check that tailwind is configured correctly.
+  </AccordionItem>
+  <AccordionItem title="pages not found">
+    verify your catch-all route is at `app/docs/[[...slug]]/page.tsx` and imports from fromsrc correctly.
+  </AccordionItem>
+</Accordion>
+
 ## next steps
 
 <Cards>

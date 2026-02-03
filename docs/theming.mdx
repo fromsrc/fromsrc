@@ -72,6 +72,55 @@ add light mode colors with a class or media query:
 }
 ```
 
+## theme toggle
+
+use the `ThemeToggle` component for light/dark mode switching:
+
+```tsx
+import { ThemeToggle } from "fromsrc/client"
+
+<ThemeToggle />
+```
+
+the toggle persists the user's choice in localStorage.
+
+## system preference
+
+respect the user's system preference with a media query:
+
+```css
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #ffffff;
+    --surface: #f5f5f5;
+    --line: #e5e5e5;
+    --fg: #0a0a0a;
+    --muted: #737373;
+    --dim: #a3a3a3;
+  }
+}
+```
+
 ## component styles
 
 all components use these semantic colors. change the variables to theme everything at once.
+
+## custom themes
+
+create named themes by defining classes:
+
+```css
+.theme-blue {
+  --accent: #3b82f6;
+}
+
+.theme-green {
+  --accent: #22c55e;
+}
+
+.theme-purple {
+  --accent: #a855f7;
+}
+```
+
+then apply the class to your root element based on user preference.
