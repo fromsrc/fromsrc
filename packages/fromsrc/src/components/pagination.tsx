@@ -25,6 +25,8 @@ export function Pagination({ prev, next }: PaginationProps) {
 			{prev ? (
 				<Link
 					href={prev.href}
+					rel="prev"
+					aria-label={`Previous: ${prev.title}`}
 					className="flex items-center gap-2 px-4 py-3 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors group"
 				>
 					<IconChevronLeft
@@ -42,6 +44,8 @@ export function Pagination({ prev, next }: PaginationProps) {
 			{next ? (
 				<Link
 					href={next.href}
+					rel="next"
+					aria-label={`Next: ${next.title}`}
 					className="flex items-center gap-2 px-4 py-3 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors group"
 				>
 					<div className="text-right">
