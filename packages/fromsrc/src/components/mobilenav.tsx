@@ -1,8 +1,9 @@
 "use client"
 
+import type { JSX, ReactNode } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
@@ -17,15 +18,13 @@ export interface MobileNavProps {
 	github?: string
 }
 
-function MobileFolder({
-	folder,
-	basePath,
-	onNavigate,
-}: {
+interface MobileFolderProps {
 	folder: SidebarFolder
 	basePath: string
 	onNavigate: () => void
-}) {
+}
+
+function MobileFolder({ folder, basePath, onNavigate }: MobileFolderProps): JSX.Element {
 	const pathname = usePathname()
 	const isActive = folder.href && pathname === folder.href
 	const hasActiveChild = folder.items.some((item) => {
@@ -41,14 +40,19 @@ function MobileFolder({
 		if (hasActiveChild || isActive) setOpen(true)
 	}, [hasActiveChild, isActive])
 
+	const toggle = useCallback((): void => {
+		setOpen((prev) => !prev)
+	}, [])
+
 	return (
-		<li>
+		<li role="none">
 			<div className="flex items-center">
 				{folder.href ? (
 					<Link
 						href={folder.href}
 						onClick={onNavigate}
 						prefetch
+						aria-current={isActive ? "page" : undefined}
 						className={`flex-1 flex items-center gap-2 px-2 py-2.5 min-h-[44px] text-xs rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
 							isActive ? "text-fg bg-surface" : "text-muted hover:text-fg active:text-fg"
 						}`}
@@ -59,7 +63,7 @@ function MobileFolder({
 				) : (
 					<button
 						type="button"
-						onClick={() => setOpen(!open)}
+						onClick={toggle}
 						aria-expanded={open}
 						className="flex-1 flex items-center gap-2 px-2 py-2.5 min-h-[44px] text-xs text-muted hover:text-fg active:text-fg rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
 					>
@@ -69,7 +73,7 @@ function MobileFolder({
 				)}
 				<button
 					type="button"
-					onClick={() => setOpen(!open)}
+					onClick={toggle}
 					aria-expanded={open}
 					aria-label={open ? "collapse" : "expand"}
 					className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-muted hover:text-fg active:text-fg transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md"
@@ -86,7 +90,7 @@ function MobileFolder({
 				</button>
 			</div>
 			{open && (
-				<ul className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
+				<ul role="group" className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
 					{folder.items.map((item) => {
 						if (item.type === "folder") {
 							return (
@@ -99,7 +103,7 @@ function MobileFolder({
 							)
 						}
 						return (
-							<li key={item.href}>
+							<li key={item.href} role="none">
 								<NavLink href={item.href} icon={item.icon} onClick={onNavigate}>
 									{item.title}
 								</NavLink>
@@ -112,7 +116,14 @@ function MobileFolder({
 	)
 }
 
-export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", github }: MobileNavProps) {
+export function MobileNav({
+	title,
+	logo,
+	navigation,
+	docs,
+	basePath = "/docs",
+	github,
+}: MobileNavProps): JSX.Element {
 	const [open, setOpen] = useState(false)
 	const [closing, setClosing] = useState(false)
 	const pathname = usePathname()
@@ -136,7 +147,11 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 		}
 	}, [open])
 
-	const close = useCallback(() => {
+	const openMenu = useCallback((): void => {
+		setOpen(true)
+	}, [])
+
+	const close = useCallback((): void => {
 		setClosing(true)
 		setTimeout(() => {
 			setOpen(false)
@@ -190,7 +205,10 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 				<button
 					ref={openRef}
 					type="button"
-					onClick={() => setOpen(true)}
+					onClick={openMenu}
+					aria-expanded={open}
+					aria-haspopup="dialog"
+					aria-controls="mobile-nav-drawer"
 					className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-muted hover:text-fg active:text-fg transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md"
 					aria-label="open menu"
 				>
@@ -209,6 +227,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 						tabIndex={-1}
 					/>
 					<aside
+						id="mobile-nav-drawer"
 						ref={drawerRef}
 						role="dialog"
 						aria-modal="true"
@@ -232,13 +251,16 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 						<div className="p-4">
 							<Search basePath={basePath} docs={docs} />
 						</div>
-						<nav className="flex-1 px-4 pb-4 overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] [-webkit-overflow-scrolling:touch]">
+						<nav
+							aria-label="main navigation"
+							className="flex-1 px-4 pb-4 overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] [-webkit-overflow-scrolling:touch]"
+						>
 							{navigation.map((section) => (
-								<div key={section.title} className="mb-6">
+								<div key={section.title} className="mb-6" role="region" aria-label={section.title}>
 									<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider">
 										{section.title}
 									</h3>
-									<ul className="space-y-0.5">
+									<ul role="list" className="space-y-0.5">
 										{section.items.map((item, i) => {
 											if (!("type" in item)) {
 												return (
