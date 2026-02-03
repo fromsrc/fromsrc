@@ -93,6 +93,8 @@ export type { SidebarFolder, SidebarItem, SidebarSection } from "./components/si
 export { Sidebar } from "./components/sidebar"
 export type { SkeletonProps } from "./components/skeleton"
 export { Skeleton, SkeletonCard, SkeletonText } from "./components/skeleton"
+export type { LoadingProps, SpinnerProps } from "./components/spinner"
+export { Loading, Spinner } from "./components/spinner"
 export { Status, StatusDot } from "./components/status"
 export type { StepProps, StepsProps } from "./components/steps"
 export { Step, Steps } from "./components/steps"
