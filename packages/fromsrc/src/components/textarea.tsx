@@ -1,32 +1,24 @@
 "use client"
 
-import {
-	type ComponentPropsWithoutRef,
-	type ReactNode,
-	useCallback,
-	useEffect,
-	useId,
-	useRef,
-	useState,
-} from "react"
+import { type ReactNode, forwardRef, useCallback, useEffect, useId, useRef, useState } from "react"
 import { Tooltip } from "./tooltip"
 
 export type TextareaVariant = "default" | "error"
 export type TextareaSize = "sm" | "md" | "lg"
 
 /**
- * @param variant - visual style variant
- * @param size - textarea size
- * @param label - accessible label
- * @param error - error message
- * @param hint - helper text
- * @param autoresize - auto-resize based on content
- * @param maxLength - maximum character count
- * @param showCount - show character count
- * @param tooltip - help text shown on hover
- * @example <Textarea label="Message" placeholder="Type here..." />
+ * Props for the Textarea component.
+ * @property variant - visual style variant
+ * @property size - textarea size
+ * @property label - accessible label
+ * @property error - error message
+ * @property hint - helper text
+ * @property autoresize - auto-resize based on content
+ * @property maxLength - maximum character count
+ * @property showCount - show character count
+ * @property tooltip - help text shown on hover
  */
-export interface TextareaProps extends Omit<ComponentPropsWithoutRef<"textarea">, "size"> {
+export interface TextareaProps extends Omit<React.ComponentPropsWithRef<"textarea">, "size"> {
 	variant?: TextareaVariant
 	size?: TextareaSize
 	label?: ReactNode
@@ -48,23 +40,26 @@ const sizes: Record<TextareaSize, string> = {
 	lg: "px-4 py-3 text-base min-h-[100px]",
 }
 
-export function Textarea({
-	variant = "default",
-	size = "md",
-	label,
-	error,
-	hint,
-	autoresize = false,
-	showCount = false,
-	tooltip,
-	maxLength,
-	className = "",
-	id,
-	value,
-	defaultValue,
-	onChange,
-	...props
-}: TextareaProps) {
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
+	{
+		variant = "default",
+		size = "md",
+		label,
+		error,
+		hint,
+		autoresize = false,
+		showCount = false,
+		tooltip,
+		maxLength,
+		className = "",
+		id,
+		value,
+		defaultValue,
+		onChange,
+		...props
+	},
+	ref,
+): React.ReactElement {
 	const generatedId = useId()
 	const textareaId = id || generatedId
 	const errorId = error ? `${textareaId}-error` : undefined
@@ -74,14 +69,14 @@ export function Textarea({
 
 	const actualVariant = error ? "error" : variant
 
-	const textareaRef = useRef<HTMLTextAreaElement>(null)
+	const internalRef = useRef<HTMLTextAreaElement>(null)
 	const [charCount, setCharCount] = useState(() => {
 		const initial = value ?? defaultValue ?? ""
 		return typeof initial === "string" ? initial.length : 0
 	})
 
 	const resize = useCallback(() => {
-		const textarea = textareaRef.current
+		const textarea = internalRef.current
 		if (!textarea || !autoresize) return
 		textarea.style.height = "auto"
 		textarea.style.height = `${textarea.scrollHeight}px`
@@ -91,11 +86,23 @@ export function Textarea({
 		resize()
 	}, [resize, value])
 
-	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
 		setCharCount(e.target.value.length)
 		if (autoresize) resize()
 		onChange?.(e)
 	}
+
+	const setRefs = useCallback(
+		(node: HTMLTextAreaElement | null): void => {
+			internalRef.current = node
+			if (typeof ref === "function") {
+				ref(node)
+			} else if (ref) {
+				ref.current = node
+			}
+		},
+		[ref],
+	)
 
 	return (
 		<div className="flex flex-col gap-1.5">
@@ -122,7 +129,7 @@ export function Textarea({
 				</label>
 			)}
 			<textarea
-				ref={textareaRef}
+				ref={setRefs}
 				id={textareaId}
 				aria-invalid={actualVariant === "error" ? true : undefined}
 				aria-describedby={describedBy}
@@ -155,4 +162,4 @@ export function Textarea({
 			</div>
 		</div>
 	)
-}
+})
