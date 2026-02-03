@@ -65,3 +65,31 @@ document response codes:
 <Response status={404} description="not found">
   user does not exist
 </Response>
+
+## props
+
+### endpoint
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| method | string | required | http method (GET, POST, PUT, PATCH, DELETE) |
+| path | string | required | api path |
+| description | string | - | endpoint description |
+| children | ReactNode | - | parameter list |
+
+### param
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| name | string | required | parameter name |
+| type | string | required | parameter type |
+| required | boolean | false | marks as required |
+| description | string | - | parameter description |
+
+### response
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| status | number | required | http status code |
+| description | string | - | status description |
+| children | ReactNode | - | response details |
