@@ -27,7 +27,7 @@ export function NavLink({ href, children, icon, onClick }: Props) {
 			}`}
 		>
 			{icon && <span className="w-4 h-4 shrink-0">{icon}</span>}
-			{children}
+			<span className="truncate">{children}</span>
 		</Link>
 	)
 }

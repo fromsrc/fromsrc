@@ -45,7 +45,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 
 	return (
 		<aside
-			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200 ease-out`}
+			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200 ease-out overflow-hidden`}
 		>
 			<div className="px-3 h-14 flex items-center">
 				{collapsible && (
@@ -60,12 +60,10 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 				)}
 				{!collapsed && (
 					<Link href="/" className="flex items-center text-sm text-fg hover:text-accent transition-colors">
-						<div className="w-8 h-8 flex items-center justify-center shrink-0">
-							<div className="p-1 rounded-lg bg-surface border border-line">
-								{logo}
-							</div>
+						<div className="w-10 h-10 flex items-center justify-center shrink-0 text-muted">
+							{logo}
 						</div>
-						<span className="ml-1.5 whitespace-nowrap">{title}</span>
+						<span className="whitespace-nowrap">{title}</span>
 					</Link>
 				)}
 			</div>
@@ -112,7 +110,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 				) : (
 					navigation.map((section) => (
 						<div key={section.title} className="mb-6">
-							<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider">
+							<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider whitespace-nowrap">
 								{section.title}
 							</h3>
 							<ul className="space-y-0.5">
