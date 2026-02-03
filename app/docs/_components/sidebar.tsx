@@ -2,7 +2,7 @@ import type { SidebarFolder, SidebarItem, SidebarSection } from "fromsrc/client"
 import { Sidebar as SidebarBase } from "fromsrc/client"
 import { BookOpen, Download, Palette, Rocket, Settings, Sliders, Sparkles } from "lucide-react"
 import { Logo } from "@/app/components/logo"
-import { getAllDocs, getNavigation } from "../_lib/content"
+import { getNavigation } from "../_lib/content"
 
 const icons: Record<string, React.ReactNode> = {
 	introduction: <BookOpen size={14} />,
@@ -16,7 +16,6 @@ const icons: Record<string, React.ReactNode> = {
 
 export async function Sidebar() {
 	const rawNavigation = await getNavigation()
-	const docs = await getAllDocs()
 
 	const navigation: SidebarSection[] = []
 	const referenceItems: (SidebarItem | SidebarFolder)[] = []
@@ -77,7 +76,6 @@ export async function Sidebar() {
 			title="fromsrc"
 			logo={<Logo className="size-[18px]" />}
 			navigation={navigation}
-			docs={docs}
 			basePath="/docs"
 			github="https://github.com/fromsrc/fromsrc"
 			collapsible

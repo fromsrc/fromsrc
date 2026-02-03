@@ -84,7 +84,7 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 
 	useEffect(() => {
 		setSelected(0)
-	}, [query])
+	}, [filtered])
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		if (e.key === "ArrowDown") {
@@ -162,12 +162,17 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 							onKeyDown={handleKeyDown}
 							placeholder="search documentation..."
 							className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none"
+							role="combobox"
+							aria-expanded={filtered.length > 0}
+							aria-controls="search-results"
+							aria-activedescendant={filtered[selected] ? `result-${selected}` : undefined}
+							aria-autocomplete="list"
 						/>
 						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">
 							esc
 						</kbd>
 					</div>
-					<div className="max-h-80 overflow-y-auto">
+					<div className="max-h-80 overflow-y-auto" id="search-results" role="listbox">
 						{filtered.length === 0 ? (
 							<div className="p-8 text-center text-muted text-sm">no results</div>
 						) : (
@@ -175,7 +180,10 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 								{filtered.map((result, i) => (
 									<li key={result.slug || "index"}>
 										<button
+											id={`result-${i}`}
 											type="button"
+											role="option"
+											aria-selected={i === selected}
 											onClick={() => {
 												router.push(result.slug ? `${basePath}/${result.slug}` : basePath)
 												setOpen(false)
