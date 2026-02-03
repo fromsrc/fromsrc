@@ -26,7 +26,7 @@ interface CodeSandboxProps {
 
 export function CodeSandbox({ id, title = "CodeSandbox" }: CodeSandboxProps) {
 	return (
-		<div className="my-6 rounded-xl border border-line overflow-hidden h-[500px]">
+		<div className="my-6 rounded-xl border border-line overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
 			<iframe
 				src={`https://codesandbox.io/embed/${id}?fontsize=14&hidenavigation=1&theme=dark`}
 				title={title}
@@ -47,7 +47,7 @@ interface StackBlitzProps {
 export function StackBlitz({ id, file, title = "StackBlitz" }: StackBlitzProps) {
 	const fileParam = file ? `&file=${encodeURIComponent(file)}` : ""
 	return (
-		<div className="my-6 rounded-xl border border-line overflow-hidden h-[500px]">
+		<div className="my-6 rounded-xl border border-line overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
 			<iframe
 				src={`https://stackblitz.com/edit/${id}?embed=1&theme=dark${fileParam}`}
 				title={title}
@@ -74,16 +74,17 @@ export function Tweet({ id }: TweetProps) {
 interface GistProps {
 	id: string
 	file?: string
+	title?: string
 }
 
-export function Gist({ id, file }: GistProps) {
+export function Gist({ id, file, title = "GitHub Gist" }: GistProps) {
 	const fileParam = file ? `?file=${encodeURIComponent(file)}` : ""
 	return (
 		<div className="my-6 rounded-xl border border-line overflow-hidden">
 			<iframe
 				src={`https://gist.github.com/${id}.pibb${fileParam}`}
-				className="w-full min-h-[300px]"
-				title="GitHub Gist"
+				className="w-full min-h-[200px] sm:min-h-[250px] md:min-h-[300px]"
+				title={title}
 			/>
 		</div>
 	)
