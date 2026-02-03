@@ -11,3 +11,9 @@ export {
 	getSearchDocs,
 } from "./content"
 export { baseSchema, defineSchema, extendSchema, type InferSchema, z } from "./schema"
+export {
+	type SearchAdapter,
+	type SearchResult,
+	createSearchAdapter,
+	localSearch,
+} from "./search"

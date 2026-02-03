@@ -3,89 +3,31 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { DocMeta, SearchDoc } from "../content"
-
-interface SearchResult {
-	doc: DocMeta | SearchDoc
-	score: number
-	snippet?: string
-}
+import type { SearchAdapter, SearchResult } from "../search"
+import { localSearch } from "../search"
 
 interface Props {
 	basePath?: string
 	docs: (DocMeta | SearchDoc)[]
 	hidden?: boolean
+	adapter?: SearchAdapter
 }
 
-function hasContent(doc: DocMeta | SearchDoc): doc is SearchDoc {
-	return "content" in doc && typeof doc.content === "string"
+function toSearchDocs(docs: (DocMeta | SearchDoc)[]): SearchDoc[] {
+	return docs.map((doc) => ({
+		...doc,
+		content: "content" in doc ? doc.content : "",
+	}))
 }
 
-function fuzzy(text: string, query: string): number {
-	if (!query) return 0
-	const lower = text.toLowerCase()
-	const q = query.toLowerCase()
-	let score = 0
-	let qi = 0
-	let consecutive = 0
-
-	for (let i = 0; i < lower.length && qi < q.length; i++) {
-		if (lower[i] === q[qi]) {
-			score += 1 + consecutive
-			consecutive++
-			qi++
-		} else {
-			consecutive = 0
-		}
-	}
-
-	if (qi < q.length) return 0
-	if (lower.startsWith(q)) score += 10
-	if (lower === q) score += 20
-
-	return score
-}
-
-function searchContent(content: string, query: string): { score: number; snippet: string } | null {
-	const lower = content.toLowerCase()
-	const q = query.toLowerCase()
-	const idx = lower.indexOf(q)
-
-	if (idx === -1) return null
-
-	const start = Math.max(0, idx - 40)
-	const end = Math.min(content.length, idx + q.length + 60)
-	let snippet = content.slice(start, end).trim()
-
-	if (start > 0) snippet = "..." + snippet
-	if (end < content.length) snippet = snippet + "..."
-
-	return { score: 5, snippet }
-}
-
-function rank(doc: DocMeta | SearchDoc, query: string): SearchResult {
-	const titleScore = fuzzy(doc.title, query) * 3
-	const descScore = doc.description ? fuzzy(doc.description, query) : 0
-
-	let contentResult: { score: number; snippet: string } | null = null
-	if (hasContent(doc) && doc.content) {
-		contentResult = searchContent(doc.content, query)
-	}
-
-	const totalScore = titleScore + descScore + (contentResult?.score ?? 0)
-
-	return {
-		doc,
-		score: totalScore,
-		snippet: contentResult?.snippet,
-	}
-}
-
-export function Search({ basePath = "/docs", docs, hidden }: Props) {
+export function Search({ basePath = "/docs", docs, hidden, adapter = localSearch }: Props) {
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState("")
 	const [selected, setSelected] = useState(0)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const router = useRouter()
+
+	const searchDocs = useMemo(() => toSearchDocs(docs), [docs])
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -111,16 +53,8 @@ export function Search({ basePath = "/docs", docs, hidden }: Props) {
 	}, [open])
 
 	const results = useMemo<SearchResult[]>(() => {
-		if (!query.trim()) {
-			return docs.slice(0, 8).map((doc) => ({ doc, score: 0 }))
-		}
-
-		return docs
-			.map((doc) => rank(doc, query))
-			.filter((r) => r.score > 0)
-			.sort((a, b) => b.score - a.score)
-			.slice(0, 8)
-	}, [docs, query])
+		return adapter.search(query, searchDocs)
+	}, [adapter, searchDocs, query])
 
 	useEffect(() => {
 		setSelected(0)
