@@ -1,14 +1,19 @@
 "use client"
 
-import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
+import type { JSX, ReactNode } from "react"
+import { useCallback, useEffect, useId, useRef, useState } from "react"
 import { useScrollLock } from "../hooks/scrolllock"
 import { IconX } from "./icons"
 
+const FOCUSABLE_SELECTOR =
+	'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+
 /**
- * @param open - controls visibility
- * @param onClose - close handler
- * @param title - optional modal heading
- * @param children - modal content
+ * Props for the Modal component.
+ * @property open - Controls modal visibility
+ * @property onClose - Callback invoked when modal should close
+ * @property title - Optional heading displayed in modal header
+ * @property children - Content rendered inside the modal body
  */
 export interface ModalProps {
 	open: boolean
@@ -17,7 +22,7 @@ export interface ModalProps {
 	children: ReactNode
 }
 
-export function Modal({ open, onClose, title, children }: ModalProps) {
+export function Modal({ open, onClose, title, children }: ModalProps): JSX.Element | null {
 	const id = useId()
 	const dialogRef = useRef<HTMLDivElement>(null)
 	const previousFocus = useRef<HTMLElement | null>(null)
@@ -26,18 +31,23 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 
 	const titleId = title ? `modal-title-${id}` : undefined
 
+	const getFocusableElements = useCallback((): HTMLElement[] => {
+		if (!dialogRef.current) return []
+		return Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+	}, [])
+
 	const handleKeyDown = useCallback(
-		(e: KeyboardEvent) => {
+		(e: KeyboardEvent): void => {
 			if (e.key === "Escape") {
 				onClose()
 				return
 			}
 
-			if (e.key !== "Tab" || !dialogRef.current) return
+			if (e.key !== "Tab") return
 
-			const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-			)
+			const focusable = getFocusableElements()
+			if (focusable.length === 0) return
+
 			const first = focusable[0]
 			const last = focusable[focusable.length - 1]
 
@@ -49,37 +59,53 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 				first?.focus()
 			}
 		},
-		[onClose],
+		[onClose, getFocusableElements],
 	)
+
+	const handleBackdropClick = useCallback((): void => {
+		onClose()
+	}, [onClose])
 
 	useScrollLock(open)
 
-	useEffect(() => {
+	useEffect((): (() => void) => {
 		if (open) {
 			previousFocus.current = document.activeElement as HTMLElement
 			setVisible(true)
-			requestAnimationFrame(() => setAnimate(true))
+			requestAnimationFrame((): void => setAnimate(true))
 			document.addEventListener("keydown", handleKeyDown)
 		} else {
 			setAnimate(false)
-			const timeout = setTimeout(() => setVisible(false), 150)
-			return () => clearTimeout(timeout)
+			const timeout = setTimeout((): void => setVisible(false), 150)
+			return (): void => clearTimeout(timeout)
 		}
 
-		return () => {
+		return (): void => {
 			document.removeEventListener("keydown", handleKeyDown)
 			previousFocus.current?.focus()
 		}
 	}, [open, handleKeyDown])
 
-	useEffect(() => {
-		if (visible && dialogRef.current) {
-			const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-			)
+	useEffect((): void => {
+		if (visible) {
+			const focusable = getFocusableElements()
 			focusable[0]?.focus()
 		}
-	}, [visible])
+	}, [visible, getFocusableElements])
+
+	useEffect((): (() => void) | void => {
+		if (!visible) return
+
+		const handleFocusIn = (e: FocusEvent): void => {
+			if (!dialogRef.current?.contains(e.target as Node)) {
+				const focusable = getFocusableElements()
+				focusable[0]?.focus()
+			}
+		}
+
+		document.addEventListener("focusin", handleFocusIn)
+		return (): void => document.removeEventListener("focusin", handleFocusIn)
+	}, [visible, getFocusableElements])
 
 	if (!visible) return null
 
@@ -88,7 +114,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 			<button
 				type="button"
 				className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-150 ${animate ? "opacity-100" : "opacity-0"}`}
-				onClick={onClose}
+				onClick={handleBackdropClick}
 				aria-label="close modal"
 			/>
 			<div
@@ -108,7 +134,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 					)}
 					<button
 						type="button"
-						onClick={onClose}
+						onClick={handleBackdropClick}
 						className="rounded p-1 text-muted hover:bg-surface hover:text-fg"
 						aria-label="close"
 					>
