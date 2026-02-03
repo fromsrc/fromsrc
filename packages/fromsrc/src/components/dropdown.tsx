@@ -3,6 +3,9 @@
 import { type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
 
+/**
+ * Single item in a dropdown menu
+ */
 export interface DropdownItem {
 	label: string
 	icon?: ReactNode
@@ -11,21 +14,23 @@ export interface DropdownItem {
 	danger?: boolean
 }
 
+/**
+ * Props for the Dropdown component
+ */
 export interface DropdownProps {
 	trigger: ReactNode
 	items: (DropdownItem | "separator")[]
 	align?: "start" | "end"
 }
 
-export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
-	const [open, setOpen] = useState(false)
-	const [index, setIndex] = useState(-1)
+export function Dropdown({ trigger, items, align = "start" }: DropdownProps): ReactNode {
+	const [open, setOpen] = useState<boolean>(false)
+	const [index, setIndex] = useState<number>(-1)
 	const ref = useRef<HTMLDivElement>(null)
 	const triggerRef = useRef<HTMLDivElement>(null)
 	const id = useId()
 
 	const selectableItems = items.filter((i): i is DropdownItem => i !== "separator" && !i.disabled)
-	const allItems = items.filter((i): i is DropdownItem => i !== "separator")
 
 	const findNextEnabled = useCallback(
 		(current: number, direction: 1 | -1): number => {
@@ -39,7 +44,7 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 		[selectableItems],
 	)
 
-	const close = useCallback(() => {
+	const close = useCallback((): void => {
 		setOpen(false)
 		setIndex(-1)
 	}, [])
@@ -47,7 +52,7 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 	useClickOutside(ref, close, open)
 
 	const handleKeyDown = useCallback(
-		(e: React.KeyboardEvent) => {
+		(e: React.KeyboardEvent): void => {
 			if (!open) {
 				if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
 					setOpen(true)
@@ -59,12 +64,12 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 
 			switch (e.key) {
 				case "Escape":
-					setOpen(false)
+					close()
 					triggerRef.current?.focus()
 					e.preventDefault()
 					break
 				case "Tab":
-					setOpen(false)
+					close()
 					break
 				case "ArrowDown":
 					setIndex((i) => findNextEnabled(i, 1))
@@ -86,24 +91,42 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 				case " ":
 					if (index >= 0) {
 						selectableItems[index]?.onClick?.()
-						setOpen(false)
+						close()
 						triggerRef.current?.focus()
 					}
 					e.preventDefault()
 					break
 			}
 		},
-		[open, index, selectableItems, findNextEnabled],
+		[open, index, selectableItems, findNextEnabled, close],
 	)
 
 	const menuId = `${id}-menu`
-	const getItemId = (itemIndex: number) => `${id}-item-${itemIndex}`
+	const getItemId = useCallback((itemIndex: number): string => `${id}-item-${itemIndex}`, [id])
+
+	const handleTriggerClick = useCallback((): void => {
+		setOpen((prev) => !prev)
+	}, [])
+
+	const handleItemClick = useCallback(
+		(item: DropdownItem): void => {
+			if (item.disabled) return
+			item.onClick?.()
+			close()
+			triggerRef.current?.focus()
+		},
+		[close],
+	)
+
+	const handleItemHover = useCallback((item: DropdownItem, selectableIndex: number): void => {
+		if (!item.disabled) setIndex(selectableIndex)
+	}, [])
 
 	return (
 		<div ref={ref} className="relative inline-block">
 			<div
 				ref={triggerRef}
-				onClick={() => setOpen(!open)}
+				onClick={handleTriggerClick}
 				onKeyDown={handleKeyDown}
 				tabIndex={0}
 				role="button"
@@ -129,7 +152,6 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 						}
 
 						const selectableIndex = selectableItems.indexOf(item)
-						const itemIndex = allItems.indexOf(item)
 
 						return (
 							<button
@@ -140,13 +162,8 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 								tabIndex={-1}
 								disabled={item.disabled}
 								aria-disabled={item.disabled}
-								onClick={() => {
-									if (item.disabled) return
-									item.onClick?.()
-									setOpen(false)
-									triggerRef.current?.focus()
-								}}
-								onMouseEnter={() => !item.disabled && setIndex(selectableIndex)}
+								onClick={() => handleItemClick(item)}
+								onMouseEnter={() => handleItemHover(item, selectableIndex)}
 								className={`flex w-full items-center gap-2 rounded px-3 py-1.5 text-sm transition-colors ${
 									item.disabled
 										? "cursor-not-allowed text-muted/50"
