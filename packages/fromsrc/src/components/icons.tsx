@@ -1,10 +1,18 @@
+import { memo, type ReactElement } from "react"
+
+/**
+ * Props for icon components.
+ */
 export interface IconProps {
 	className?: string
 	size?: number
 	fill?: string
 }
 
-export function IconCheck({ className, size = 24 }: IconProps) {
+export const IconCheck = memo(function IconCheck({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -21,9 +29,9 @@ export function IconCheck({ className, size = 24 }: IconProps) {
 			<polyline points="20 6 9 17 4 12" />
 		</svg>
 	)
-}
+})
 
-export function IconX({ className, size = 24 }: IconProps) {
+export const IconX = memo(function IconX({ className, size = 24 }: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -41,9 +49,12 @@ export function IconX({ className, size = 24 }: IconProps) {
 			<line x1="6" y1="6" x2="18" y2="18" />
 		</svg>
 	)
-}
+})
 
-export function IconChevronRight({ className, size = 24 }: IconProps) {
+export const IconChevronRight = memo(function IconChevronRight({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -60,9 +71,12 @@ export function IconChevronRight({ className, size = 24 }: IconProps) {
 			<polyline points="9 18 15 12 9 6" />
 		</svg>
 	)
-}
+})
 
-export function IconChevronLeft({ className, size = 24 }: IconProps) {
+export const IconChevronLeft = memo(function IconChevronLeft({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -79,9 +93,12 @@ export function IconChevronLeft({ className, size = 24 }: IconProps) {
 			<polyline points="15 18 9 12 15 6" />
 		</svg>
 	)
-}
+})
 
-export function IconChevronDown({ className, size = 24 }: IconProps) {
+export const IconChevronDown = memo(function IconChevronDown({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -98,9 +115,12 @@ export function IconChevronDown({ className, size = 24 }: IconProps) {
 			<polyline points="6 9 12 15 18 9" />
 		</svg>
 	)
-}
+})
 
-export function IconInfo({ className, size = 24 }: IconProps) {
+export const IconInfo = memo(function IconInfo({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -119,9 +139,12 @@ export function IconInfo({ className, size = 24 }: IconProps) {
 			<line x1="12" y1="8" x2="12.01" y2="8" />
 		</svg>
 	)
-}
+})
 
-export function IconCheckCircle({ className, size = 24 }: IconProps) {
+export const IconCheckCircle = memo(function IconCheckCircle({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -139,9 +162,12 @@ export function IconCheckCircle({ className, size = 24 }: IconProps) {
 			<polyline points="22 4 12 14.01 9 11.01" />
 		</svg>
 	)
-}
+})
 
-export function IconAlertCircle({ className, size = 24 }: IconProps) {
+export const IconAlertCircle = memo(function IconAlertCircle({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -160,9 +186,12 @@ export function IconAlertCircle({ className, size = 24 }: IconProps) {
 			<line x1="12" y1="16" x2="12.01" y2="16" />
 		</svg>
 	)
-}
+})
 
-export function IconXCircle({ className, size = 24 }: IconProps) {
+export const IconXCircle = memo(function IconXCircle({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -181,9 +210,12 @@ export function IconXCircle({ className, size = 24 }: IconProps) {
 			<line x1="9" y1="9" x2="15" y2="15" />
 		</svg>
 	)
-}
+})
 
-export function IconThumbsUp({ className, size = 24 }: IconProps) {
+export const IconThumbsUp = memo(function IconThumbsUp({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -200,9 +232,12 @@ export function IconThumbsUp({ className, size = 24 }: IconProps) {
 			<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
 		</svg>
 	)
-}
+})
 
-export function IconThumbsDown({ className, size = 24 }: IconProps) {
+export const IconThumbsDown = memo(function IconThumbsDown({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -219,9 +254,13 @@ export function IconThumbsDown({ className, size = 24 }: IconProps) {
 			<path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
 		</svg>
 	)
-}
+})
 
-export function IconStar({ className, size = 24, fill = "none" }: IconProps) {
+export const IconStar = memo(function IconStar({
+	className,
+	size = 24,
+	fill = "none",
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -238,9 +277,12 @@ export function IconStar({ className, size = 24, fill = "none" }: IconProps) {
 			<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
 		</svg>
 	)
-}
+})
 
-export function IconPanelLeft({ className, size = 24 }: IconProps) {
+export const IconPanelLeft = memo(function IconPanelLeft({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -258,9 +300,12 @@ export function IconPanelLeft({ className, size = 24 }: IconProps) {
 			<line x1="9" y1="3" x2="9" y2="21" />
 		</svg>
 	)
-}
+})
 
-export function IconExternalLink({ className, size = 24 }: IconProps) {
+export const IconExternalLink = memo(function IconExternalLink({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -279,9 +324,12 @@ export function IconExternalLink({ className, size = 24 }: IconProps) {
 			<line x1="10" y1="14" x2="21" y2="3" />
 		</svg>
 	)
-}
+})
 
-export function IconLanguages({ className, size = 24 }: IconProps) {
+export const IconLanguages = memo(function IconLanguages({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -303,9 +351,12 @@ export function IconLanguages({ className, size = 24 }: IconProps) {
 			<path d="M14 18h6" />
 		</svg>
 	)
-}
+})
 
-export function IconSearch({ className, size = 24 }: IconProps) {
+export const IconSearch = memo(function IconSearch({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -323,9 +374,12 @@ export function IconSearch({ className, size = 24 }: IconProps) {
 			<line x1="21" y1="21" x2="16.65" y2="16.65" />
 		</svg>
 	)
-}
+})
 
-export function IconCopy({ className, size = 24 }: IconProps) {
+export const IconCopy = memo(function IconCopy({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -343,9 +397,12 @@ export function IconCopy({ className, size = 24 }: IconProps) {
 			<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
 		</svg>
 	)
-}
+})
 
-export function IconCircle({ className, size = 24 }: IconProps) {
+export const IconCircle = memo(function IconCircle({
+	className,
+	size = 24,
+}: IconProps): ReactElement {
 	return (
 		<svg
 			viewBox="0 0 24 24"
@@ -362,4 +419,4 @@ export function IconCircle({ className, size = 24 }: IconProps) {
 			<circle cx="12" cy="12" r="10" />
 		</svg>
 	)
-}
+})
