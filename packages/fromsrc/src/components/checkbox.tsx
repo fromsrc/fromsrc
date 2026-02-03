@@ -1,17 +1,28 @@
 "use client"
 
-import { type ComponentPropsWithoutRef, type ReactNode, useEffect, useId, useRef } from "react"
+import {
+	type ComponentPropsWithoutRef,
+	type JSX,
+	type ReactNode,
+	memo,
+	useEffect,
+	useId,
+	useRef,
+} from "react"
 import { Tooltip } from "./tooltip"
 
+/**
+ * Available checkbox sizes
+ */
 export type CheckboxSize = "sm" | "md" | "lg"
 
 /**
- * @param label - accessible label text
- * @param size - checkbox size
- * @param indeterminate - show indeterminate state
- * @param error - error message
- * @param tooltip - help text shown on hover
- * @example <Checkbox label="Accept terms" />
+ * Props for the Checkbox component
+ * @property label - Accessible label text displayed next to the checkbox
+ * @property size - Visual size of the checkbox (sm, md, lg)
+ * @property indeterminate - When true, displays the indeterminate state
+ * @property error - Error message displayed below the checkbox
+ * @property tooltip - Help text shown on hover via info icon
  */
 export interface CheckboxProps extends Omit<ComponentPropsWithoutRef<"input">, "type" | "size"> {
 	label?: ReactNode
@@ -27,7 +38,7 @@ const sizes: Record<CheckboxSize, { box: string; label: string }> = {
 	lg: { box: "h-5 w-5", label: "text-base" },
 }
 
-export function Checkbox({
+function CheckboxInner({
 	label,
 	size = "md",
 	indeterminate = false,
@@ -36,21 +47,22 @@ export function Checkbox({
 	className = "",
 	id,
 	disabled,
+	"aria-label": ariaLabel,
 	...props
-}: CheckboxProps) {
+}: CheckboxProps): JSX.Element {
 	const ref = useRef<HTMLInputElement>(null)
 	const generatedId = useId()
 	const checkboxId = id || generatedId
 	const errorId = error ? `${checkboxId}-error` : undefined
 
-	useEffect(() => {
+	useEffect((): void => {
 		if (ref.current) {
 			ref.current.indeterminate = indeterminate
 		}
 	}, [indeterminate])
 
 	return (
-		<div className="flex flex-col gap-1">
+		<div className="flex flex-col gap-1" role="group">
 			<label
 				htmlFor={checkboxId}
 				className={`inline-flex items-center gap-2 ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
@@ -62,6 +74,8 @@ export function Checkbox({
 					disabled={disabled}
 					aria-invalid={error ? true : undefined}
 					aria-describedby={errorId}
+					aria-label={!label ? ariaLabel : undefined}
+					aria-checked={indeterminate ? "mixed" : undefined}
 					className={`${sizes[size].box} cursor-pointer rounded border border-line bg-surface text-accent accent-accent focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-1 focus:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-50 ${className}`.trim()}
 					{...props}
 				/>
@@ -86,10 +100,12 @@ export function Checkbox({
 				)}
 			</label>
 			{error && (
-				<span id={errorId} className="text-xs text-red-400" role="alert">
+				<span id={errorId} className="text-xs text-red-400" role="alert" aria-live="polite">
 					{error}
 				</span>
 			)}
 		</div>
 	)
 }
+
+export const Checkbox = memo(CheckboxInner)
