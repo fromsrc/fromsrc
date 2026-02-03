@@ -1,13 +1,19 @@
 "use client"
 
-import { type KeyboardEvent, type ReactNode, useState } from "react"
+import { type KeyboardEvent, type ReactNode, useCallback, useState } from "react"
 
+/**
+ * Container for file tree display
+ */
 export interface FilesProps {
 	children: ReactNode
 	label?: string
 }
 
-export function Files({ children, label = "File tree" }: FilesProps) {
+/**
+ * Root component for file tree structure
+ */
+export function Files({ children, label = "File tree" }: FilesProps): ReactNode {
 	return (
 		<div
 			role="tree"
@@ -19,17 +25,24 @@ export function Files({ children, label = "File tree" }: FilesProps) {
 	)
 }
 
+/**
+ * Props for individual file item
+ */
 export interface FileProps {
 	name: string
 	icon?: ReactNode
 }
 
-export function File({ name, icon }: FileProps) {
+/**
+ * Leaf node representing a single file
+ */
+export function File({ name, icon }: FileProps): ReactNode {
 	return (
 		<div
 			role="treeitem"
 			aria-selected={false}
-			className="flex items-center gap-2 px-2 py-1 text-muted"
+			tabIndex={0}
+			className="flex items-center gap-2 px-2 py-1 text-muted rounded focus:outline-none focus:ring-1 focus:ring-fg/20"
 		>
 			{icon || (
 				<svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" className="size-4 shrink-0">
@@ -41,38 +54,82 @@ export function File({ name, icon }: FileProps) {
 	)
 }
 
+/**
+ * Props for folder item with expandable children
+ */
 export interface FolderProps {
 	name: string
 	children?: ReactNode
 	defaultOpen?: boolean
 }
 
-export function Folder({ name, children, defaultOpen = false }: FolderProps) {
+/**
+ * Expandable folder node containing child items
+ */
+export function Folder({ name, children, defaultOpen = false }: FolderProps): ReactNode {
 	const [open, setOpen] = useState(defaultOpen)
 
-	const toggle = () => setOpen((prev) => !prev)
+	const toggle = useCallback((): void => {
+		setOpen((prev) => !prev)
+	}, [])
 
-	const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-		switch (event.key) {
-			case "ArrowRight":
-				if (!open) {
-					setOpen(true)
+	const handleKeyDown = useCallback(
+		(event: KeyboardEvent<HTMLButtonElement>): void => {
+			switch (event.key) {
+				case "ArrowRight":
+					if (!open) {
+						setOpen(true)
+						event.preventDefault()
+					}
+					break
+				case "ArrowLeft":
+					if (open) {
+						setOpen(false)
+						event.preventDefault()
+					}
+					break
+				case "ArrowDown":
+					{
+						const next = event.currentTarget.closest("[role=treeitem]")?.nextElementSibling
+						const focusable = next?.querySelector("button, [tabindex='0']") as HTMLElement | null
+						focusable?.focus()
+						event.preventDefault()
+					}
+					break
+				case "ArrowUp":
+					{
+						const prev = event.currentTarget.closest("[role=treeitem]")?.previousElementSibling
+						const focusable = prev?.querySelector("button, [tabindex='0']") as HTMLElement | null
+						focusable?.focus()
+						event.preventDefault()
+					}
+					break
+				case "Enter":
+				case " ":
+					toggle()
 					event.preventDefault()
-				}
-				break
-			case "ArrowLeft":
-				if (open) {
-					setOpen(false)
-					event.preventDefault()
-				}
-				break
-			case "Enter":
-			case " ":
-				toggle()
-				event.preventDefault()
-				break
-		}
-	}
+					break
+				case "Home":
+					{
+						const tree = event.currentTarget.closest("[role=tree]")
+						const first = tree?.querySelector("button, [tabindex='0']") as HTMLElement | null
+						first?.focus()
+						event.preventDefault()
+					}
+					break
+				case "End":
+					{
+						const tree = event.currentTarget.closest("[role=tree]")
+						const all = tree?.querySelectorAll("button, [tabindex='0']")
+						const last = all?.[all.length - 1] as HTMLElement | null
+						last?.focus()
+						event.preventDefault()
+					}
+					break
+			}
+		},
+		[open, toggle]
+	)
 
 	return (
 		<div role="treeitem" aria-expanded={open}>
@@ -80,7 +137,7 @@ export function Folder({ name, children, defaultOpen = false }: FolderProps) {
 				type="button"
 				onClick={toggle}
 				onKeyDown={handleKeyDown}
-				className="flex w-full items-center gap-2 px-2 py-1 text-left text-fg hover:bg-fg/5 rounded"
+				className="flex w-full items-center gap-2 px-2 py-1 text-left text-fg hover:bg-fg/5 rounded focus:outline-none focus:ring-1 focus:ring-fg/20"
 			>
 				<svg
 					aria-hidden="true"
