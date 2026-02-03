@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, createContext, useContext, useId, useState } from "react"
+import { createContext, type ReactNode, useContext, useId, useState } from "react"
 
 export type RadioSize = "sm" | "md" | "lg"
 
@@ -104,10 +104,7 @@ export function Radio({ value, label, disabled: localDisabled, className = "" }:
 				`.trim()}
 			>
 				{checked && (
-					<span
-						aria-hidden="true"
-						className={`rounded-full bg-accent ${dotSizes[ctx.size]}`}
-					/>
+					<span aria-hidden="true" className={`rounded-full bg-accent ${dotSizes[ctx.size]}`} />
 				)}
 			</button>
 			{label && (
@@ -149,7 +146,7 @@ export function RadioGroup({
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
 		const radios = Array.from(
-			e.currentTarget.querySelectorAll('[role="radio"]:not([disabled])')
+			e.currentTarget.querySelectorAll('[role="radio"]:not([disabled])'),
 		) as HTMLElement[]
 		const currentIndex = radios.findIndex((r) => r === document.activeElement)
 
@@ -172,7 +169,9 @@ export function RadioGroup({
 	}
 
 	return (
-		<RadioContext.Provider value={{ name: groupName, value, size, disabled, onChange: handleChange }}>
+		<RadioContext.Provider
+			value={{ name: groupName, value, size, disabled, onChange: handleChange }}
+		>
 			<div
 				role="radiogroup"
 				aria-label={label}

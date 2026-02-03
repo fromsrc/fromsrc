@@ -51,10 +51,7 @@ export interface ZigzagPath {
 	height: number
 }
 
-export function buildZigzagPath(
-	headings: Heading[],
-	container: HTMLElement,
-): ZigzagPath | null {
+export function buildZigzagPath(headings: Heading[], container: HTMLElement): ZigzagPath | null {
 	if (container.clientHeight === 0) return null
 
 	let w = 0

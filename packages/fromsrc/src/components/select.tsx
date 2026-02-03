@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useId, useRef, useState, type ReactNode } from "react"
+import { type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
 import { Tooltip } from "./tooltip"
 
@@ -78,7 +78,7 @@ export function Select({
 			}
 			return current
 		},
-		[options]
+		[options],
 	)
 
 	function handleSelect(option: SelectOption) {
@@ -140,7 +140,8 @@ export function Select({
 		}
 	}
 
-	const activeOptionId = open && index >= 0 && options[index] ? getOptionId(options[index].value) : undefined
+	const activeOptionId =
+		open && index >= 0 && options[index] ? getOptionId(options[index].value) : undefined
 
 	return (
 		<div className="flex flex-col gap-1.5">
@@ -179,12 +180,12 @@ export function Select({
 					onClick={() => !disabled && setOpen(!open)}
 					onKeyDown={handleKeyDown}
 					className={`flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm outline-none transition-colors ${
-						error
-							? "border-red-500/50 bg-red-500/5"
-							: "border-line bg-surface focus:border-accent"
+						error ? "border-red-500/50 bg-red-500/5" : "border-line bg-surface focus:border-accent"
 					} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
 				>
-					<span className={selected ? "text-fg" : "text-muted"}>{selected?.label ?? placeholder}</span>
+					<span className={selected ? "text-fg" : "text-muted"}>
+						{selected?.label ?? placeholder}
+					</span>
 					<svg
 						aria-hidden="true"
 						className={`h-4 w-4 text-muted transition-transform ${open ? "rotate-180" : ""}`}

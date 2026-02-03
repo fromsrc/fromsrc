@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-interface PropertyProps {
+export interface PropertyProps {
 	name: string
 	type: string
 	required?: boolean
@@ -24,9 +24,7 @@ export function Property({
 		>
 			<dl className="flex flex-wrap items-center gap-2 mb-2">
 				<dt className="sr-only">Name</dt>
-				<dd className={`text-sm font-mono ${deprecated ? "line-through" : "text-fg"}`}>
-					{name}
-				</dd>
+				<dd className={`text-sm font-mono ${deprecated ? "line-through" : "text-fg"}`}>{name}</dd>
 				<dt className="sr-only">Type</dt>
 				<dd className="text-xs px-1.5 py-0.5 rounded bg-surface text-muted font-mono">{type}</dd>
 				{required && (
@@ -63,7 +61,7 @@ export function Property({
 	)
 }
 
-interface PropertiesProps {
+export interface PropertiesProps {
 	children: ReactNode
 }
 

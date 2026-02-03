@@ -67,7 +67,7 @@ function CopyButton({ text }: { text: string }) {
 	)
 }
 
-interface InstallProps {
+export interface InstallProps {
 	package: string
 }
 

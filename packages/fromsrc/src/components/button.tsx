@@ -38,7 +38,10 @@ const spinnerSizes: Record<ButtonSize, "sm" | "md" | "lg"> = {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-	({ variant = "default", size = "md", loading, disabled, children, className = "", ...props }, ref) => {
+	(
+		{ variant = "default", size = "md", loading, disabled, children, className = "", ...props },
+		ref,
+	) => {
 		const isDisabled = disabled || loading
 
 		return (
@@ -54,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{children}
 			</button>
 		)
-	}
+	},
 )
 
 Button.displayName = "Button"

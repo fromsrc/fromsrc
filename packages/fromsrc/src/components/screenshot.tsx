@@ -1,7 +1,7 @@
 import Image from "next/image"
 import type { ReactNode } from "react"
 
-interface Props {
+export interface ScreenshotProps {
 	src: string
 	alt: string
 	caption?: string
@@ -9,7 +9,7 @@ interface Props {
 	className?: string
 }
 
-export function Screenshot({ src, alt, caption, browser = true, className = "" }: Props) {
+export function Screenshot({ src, alt, caption, browser = true, className = "" }: ScreenshotProps) {
 	return (
 		<figure className={`my-6 ${className}`}>
 			{browser ? (
@@ -43,7 +43,7 @@ export function Screenshot({ src, alt, caption, browser = true, className = "" }
 	)
 }
 
-interface FrameProps {
+export interface FrameProps {
 	children: ReactNode
 	title?: string
 	className?: string

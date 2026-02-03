@@ -8,7 +8,7 @@ import { NavLink } from "./navlink"
 import { Search } from "./search"
 import type { SidebarFolder, SidebarSection } from "./sidebar"
 
-interface Props {
+export interface MobileNavProps {
 	title: string
 	logo?: ReactNode
 	navigation: SidebarSection[]
@@ -112,7 +112,7 @@ function MobileFolder({
 	)
 }
 
-export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", github }: Props) {
+export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", github }: MobileNavProps) {
 	const [open, setOpen] = useState(false)
 	const [closing, setClosing] = useState(false)
 	const pathname = usePathname()

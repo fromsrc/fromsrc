@@ -1,8 +1,8 @@
 "use client"
 
-type StatusType = "success" | "warning" | "error" | "info" | "neutral"
+export type StatusType = "success" | "warning" | "error" | "info" | "neutral"
 
-interface StatusProps {
+export interface StatusProps {
 	type?: StatusType
 	children: string
 }
@@ -36,7 +36,7 @@ export function Status({ type = "neutral", children }: StatusProps) {
 	)
 }
 
-interface StatusDotProps {
+export interface StatusDotProps {
 	type?: StatusType
 	label?: string
 	pulse?: boolean
@@ -44,11 +44,7 @@ interface StatusDotProps {
 
 export function StatusDot({ type = "neutral", label, pulse = false }: StatusDotProps) {
 	return (
-		<span
-			role="status"
-			aria-label={label ?? type}
-			className="relative inline-flex"
-		>
+		<span role="status" aria-label={label ?? type} className="relative inline-flex">
 			<span aria-hidden="true" className={`w-2 h-2 rounded-full ${dotStyles[type]}`} />
 			{pulse && (
 				<span

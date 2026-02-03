@@ -1,9 +1,11 @@
 "use client"
 
-import { TocDefault } from "./default"
+import { lazy, Suspense } from "react"
 import { useToc } from "./hook"
-import { TocInline } from "./inline"
-import { TocMinimal } from "./minimal"
+
+const TocDefault = lazy(() => import("./default").then((m) => ({ default: m.TocDefault })))
+const TocMinimal = lazy(() => import("./minimal").then((m) => ({ default: m.TocMinimal })))
+const TocInline = lazy(() => import("./inline").then((m) => ({ default: m.TocInline })))
 
 export type TocVariant = "default" | "minimal" | "inline"
 
@@ -30,12 +32,14 @@ export function Toc({
 
 	if (variant === "inline") {
 		return (
-			<TocInline
-				headings={headings}
-				title={title}
-				collapsible={collapsible}
-				defaultOpen={defaultOpen}
-			/>
+			<Suspense fallback={null}>
+				<TocInline
+					headings={headings}
+					title={title}
+					collapsible={collapsible}
+					defaultOpen={defaultOpen}
+				/>
+			</Suspense>
 		)
 	}
 
@@ -59,7 +63,7 @@ export function Toc({
 		<aside className="w-56 shrink-0 hidden xl:block py-12 pl-8">
 			<div className="sticky top-12">
 				<p className="text-xs text-muted mb-4">on this page</p>
-				{renderToc()}
+				<Suspense fallback={null}>{renderToc()}</Suspense>
 			</div>
 		</aside>
 	)

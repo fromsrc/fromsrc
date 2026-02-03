@@ -11,8 +11,7 @@ export function Skeleton({
 	rounded = "md",
 	className = "",
 }: SkeletonProps) {
-	const radiusClass =
-		rounded === true ? "rounded" : rounded === false ? "" : `rounded-${rounded}`
+	const radiusClass = rounded === true ? "rounded" : rounded === false ? "" : `rounded-${rounded}`
 
 	return (
 		<div
@@ -39,11 +38,7 @@ export function SkeletonText({ lines = 3, standalone = true }: SkeletonTextProps
 			{...(standalone && { role: "status", "aria-busy": true, "aria-label": "Loading" })}
 		>
 			{Array.from({ length: lines }, (_, i) => (
-				<Skeleton
-					key={i}
-					width={i === lines - 1 ? "75%" : "100%"}
-					height="0.875rem"
-				/>
+				<Skeleton key={i} width={i === lines - 1 ? "75%" : "100%"} height="0.875rem" />
 			))}
 		</div>
 	)

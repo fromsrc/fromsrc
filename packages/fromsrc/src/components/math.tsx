@@ -54,12 +54,7 @@ export function Math({ children, display = false }: MathProps) {
 	}
 
 	if (display) {
-		return (
-			<div
-				className="my-4 overflow-x-auto"
-				dangerouslySetInnerHTML={{ __html: html }}
-			/>
-		)
+		return <div className="my-4 overflow-x-auto" dangerouslySetInnerHTML={{ __html: html }} />
 	}
 
 	return <span dangerouslySetInnerHTML={{ __html: html }} />

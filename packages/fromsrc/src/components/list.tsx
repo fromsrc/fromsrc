@@ -15,7 +15,7 @@ export function CheckList({ children }: ListProps): JSX.Element {
 	)
 }
 
-interface CheckItemProps {
+export interface CheckItemProps {
 	checked?: boolean
 	children: ReactNode
 }
@@ -41,7 +41,7 @@ export function BulletList({ children }: ListProps): JSX.Element {
 	)
 }
 
-interface BulletItemProps {
+export interface BulletItemProps {
 	children: ReactNode
 }
 
@@ -54,7 +54,7 @@ export function BulletItem({ children }: BulletItemProps): JSX.Element {
 	)
 }
 
-interface NumberListProps {
+export interface NumberListProps {
 	start?: number
 	children: ReactNode
 }
@@ -67,7 +67,7 @@ export function NumberList({ start = 1, children }: NumberListProps): JSX.Elemen
 	)
 }
 
-interface NumberItemProps {
+export interface NumberItemProps {
 	number: number
 	children: ReactNode
 }

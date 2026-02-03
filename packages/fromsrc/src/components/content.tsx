@@ -22,7 +22,7 @@ import { TypeTable } from "./typetable"
 import { Video } from "./video"
 import { Zoom } from "./zoom"
 
-interface Props {
+export interface ContentProps {
 	source: string
 }
 
@@ -169,7 +169,7 @@ const components = {
 	TocInline,
 }
 
-export function Content({ source }: Props) {
+export function Content({ source }: ContentProps) {
 	const [Content, setContent] = useState<React.ComponentType<{
 		components: typeof components
 	}> | null>(null)

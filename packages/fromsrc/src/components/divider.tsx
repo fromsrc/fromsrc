@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react"
 
-type DividerProps = ComponentProps<"hr"> & {
+export type DividerProps = ComponentProps<"hr"> & {
 	label?: string
 }
 

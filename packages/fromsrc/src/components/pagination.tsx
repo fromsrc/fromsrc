@@ -29,10 +29,7 @@ export function Pagination({ prev, next }: PaginationProps) {
 					aria-label={`Previous: ${prev.title}`}
 					className="flex items-center gap-2 px-4 py-3 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors group"
 				>
-					<IconChevronLeft
-						size={16}
-						className="text-muted group-hover:text-fg transition-colors"
-					/>
+					<IconChevronLeft size={16} className="text-muted group-hover:text-fg transition-colors" />
 					<div className="text-left">
 						<div className="text-xs text-muted">previous</div>
 						<div className="text-sm font-medium text-fg">{prev.title}</div>

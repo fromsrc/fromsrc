@@ -1,6 +1,6 @@
 "use client"
 
-interface YouTubeProps {
+export interface YouTubeProps {
 	id: string
 	title?: string
 }
@@ -19,7 +19,7 @@ export function YouTube({ id, title = "YouTube video" }: YouTubeProps) {
 	)
 }
 
-interface CodeSandboxProps {
+export interface CodeSandboxProps {
 	id: string
 	title?: string
 }
@@ -38,7 +38,7 @@ export function CodeSandbox({ id, title = "CodeSandbox" }: CodeSandboxProps) {
 	)
 }
 
-interface StackBlitzProps {
+export interface StackBlitzProps {
 	id: string
 	file?: string
 	title?: string
@@ -57,7 +57,7 @@ export function StackBlitz({ id, file, title = "StackBlitz" }: StackBlitzProps) 
 	)
 }
 
-interface TweetProps {
+export interface TweetProps {
 	id: string
 }
 
@@ -71,7 +71,7 @@ export function Tweet({ id }: TweetProps) {
 	)
 }
 
-interface GistProps {
+export interface GistProps {
 	id: string
 	file?: string
 	title?: string

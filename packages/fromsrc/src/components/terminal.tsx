@@ -2,7 +2,7 @@
 
 import { type CSSProperties, type ReactNode, useEffect, useState } from "react"
 
-interface TerminalProps {
+export interface TerminalProps {
 	title?: string
 	children: ReactNode
 }
@@ -23,7 +23,7 @@ export function Terminal({ title = "Terminal", children }: TerminalProps) {
 	)
 }
 
-interface LineProps {
+export interface LineProps {
 	prompt?: string
 	children: ReactNode
 }
@@ -37,7 +37,7 @@ export function Line({ prompt = "$", children }: LineProps) {
 	)
 }
 
-interface OutputProps {
+export interface OutputProps {
 	children: ReactNode
 }
 
@@ -45,7 +45,7 @@ export function Output({ children }: OutputProps) {
 	return <div className="text-zinc-500 pl-5">{children}</div>
 }
 
-interface TypedProps {
+export interface TypedProps {
 	text: string
 	speed?: number
 }

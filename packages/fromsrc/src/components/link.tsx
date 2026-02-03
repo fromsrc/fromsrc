@@ -13,7 +13,7 @@ export interface LinkProps extends Omit<ComponentPropsWithoutRef<"a">, "href"> {
 }
 
 export function Link({ href, children, external, className, ...rest }: LinkProps) {
-	const hrefString = typeof href === "string" ? href : href.href ?? ""
+	const hrefString = typeof href === "string" ? href : (href.href ?? "")
 	const isExternal = external ?? hrefString.startsWith("http")
 
 	const baseClass =

@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react"
 
-interface Props {
+export interface BackToTopProps {
 	threshold?: number
 	className?: string
 }
 
-export function BackToTop({ threshold = 400, className }: Props) {
+export function BackToTop({ threshold = 400, className }: BackToTopProps) {
 	const [visible, setVisible] = useState(false)
 
 	useEffect(() => {

@@ -3,7 +3,7 @@
 import { useCopy } from "../hooks/copy"
 import { IconCheck, IconCopy } from "./icons"
 
-interface CopyableProps {
+export interface CopyableProps {
 	value: string
 	label?: string
 }
@@ -21,11 +21,7 @@ export function Copyable({ value, label }: CopyableProps) {
 				className="text-muted hover:text-fg transition-colors"
 				aria-label="copy to clipboard"
 			>
-				{copied ? (
-					<IconCheck size={14} className="text-emerald-400" />
-				) : (
-					<IconCopy size={14} />
-				)}
+				{copied ? <IconCheck size={14} className="text-emerald-400" /> : <IconCopy size={14} />}
 			</button>
 			<span role="status" aria-live="polite" className="sr-only">
 				{copied ? "copied" : ""}
@@ -34,7 +30,7 @@ export function Copyable({ value, label }: CopyableProps) {
 	)
 }
 
-interface CopyBlockProps {
+export interface CopyBlockProps {
 	children: string
 }
 
@@ -50,11 +46,7 @@ export function CopyBlock({ children }: CopyBlockProps) {
 				className="shrink-0 text-muted hover:text-fg transition-colors"
 				aria-label="copy to clipboard"
 			>
-				{copied ? (
-					<IconCheck size={16} className="text-emerald-400" />
-				) : (
-					<IconCopy size={16} />
-				)}
+				{copied ? <IconCheck size={16} className="text-emerald-400" /> : <IconCopy size={16} />}
 			</button>
 			<span role="status" aria-live="polite" className="sr-only">
 				{copied ? "copied" : ""}

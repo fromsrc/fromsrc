@@ -3,7 +3,7 @@
 import Image from "next/image"
 import type { ReactNode } from "react"
 
-interface AvatarProps {
+export interface AvatarProps {
 	src?: string
 	name: string
 	size?: "sm" | "md" | "lg"
@@ -44,7 +44,7 @@ export function Avatar({ src, name, size = "md" }: AvatarProps) {
 	)
 }
 
-interface AvatarGroupProps {
+export interface AvatarGroupProps {
 	children: ReactNode
 	label: string
 }
@@ -57,7 +57,7 @@ export function AvatarGroup({ children, label }: AvatarGroupProps) {
 	)
 }
 
-interface UserProps {
+export interface UserProps {
 	name: string
 	avatar?: string
 	role?: string

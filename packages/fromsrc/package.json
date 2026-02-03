@@ -3,6 +3,7 @@
 	"version": "0.0.0",
 	"description": "documentation framework for developers",
 	"type": "module",
+	"sideEffects": false,
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",

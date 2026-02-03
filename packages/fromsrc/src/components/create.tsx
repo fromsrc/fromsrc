@@ -67,7 +67,7 @@ function CopyButton({ text }: { text: string }) {
 	)
 }
 
-interface CreateProps {
+export interface CreateProps {
 	package?: string
 }
 

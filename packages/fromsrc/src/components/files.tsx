@@ -26,7 +26,11 @@ export interface FileProps {
 
 export function File({ name, icon }: FileProps) {
 	return (
-		<div role="treeitem" aria-selected={false} className="flex items-center gap-2 px-2 py-1 text-muted">
+		<div
+			role="treeitem"
+			aria-selected={false}
+			className="flex items-center gap-2 px-2 py-1 text-muted"
+		>
 			{icon || (
 				<svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" className="size-4 shrink-0">
 					<path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75z" />

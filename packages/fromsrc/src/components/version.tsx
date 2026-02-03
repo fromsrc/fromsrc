@@ -16,7 +16,12 @@ interface VersionSelectProps {
 	label?: string
 }
 
-export function VersionSelect({ versions, current, onChange, label = "Version" }: VersionSelectProps) {
+export function VersionSelect({
+	versions,
+	current,
+	onChange,
+	label = "Version",
+}: VersionSelectProps) {
 	const [open, setOpen] = useState(false)
 	const [focused, setFocused] = useState(-1)
 	const containerRef = useRef<HTMLDivElement>(null)
@@ -27,7 +32,10 @@ export function VersionSelect({ versions, current, onChange, label = "Version" }
 	const currentVersion = versions.find((v) => v.id === current)
 	const currentIndex = versions.findIndex((v) => v.id === current)
 
-	const getOptionId = useCallback((versionId: string) => `${instanceId}-option-${versionId}`, [instanceId])
+	const getOptionId = useCallback(
+		(versionId: string) => `${instanceId}-option-${versionId}`,
+		[instanceId],
+	)
 
 	const selectVersion = (version: Version) => {
 		if (version.href) {

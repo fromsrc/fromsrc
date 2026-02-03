@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react"
+import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from "react"
 import { IconAlertCircle, IconCheckCircle, IconInfo, IconX, IconXCircle } from "./icons"
 
 export interface Toast {
@@ -31,20 +31,17 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 		setToasts((t) => t.filter((x) => x.id !== id))
 	}, [])
 
-	const add = useCallback(
-		(toast: Omit<Toast, "id">) => {
-			const id = Math.random().toString(36).slice(2)
-			setToasts((t) => [...t, { ...toast, id }])
+	const add = useCallback((toast: Omit<Toast, "id">) => {
+		const id = Math.random().toString(36).slice(2)
+		setToasts((t) => [...t, { ...toast, id }])
 
-			const duration = toast.duration ?? 5000
-			const timer = setTimeout(() => {
-				timers.current.delete(id)
-				setToasts((t) => t.filter((x) => x.id !== id))
-			}, duration)
-			timers.current.set(id, timer)
-		},
-		[],
-	)
+		const duration = toast.duration ?? 5000
+		const timer = setTimeout(() => {
+			timers.current.delete(id)
+			setToasts((t) => t.filter((x) => x.id !== id))
+		}, duration)
+		timers.current.set(id, timer)
+	}, [])
 
 	return (
 		<ToastContext.Provider value={{ toasts, add, remove }}>

@@ -30,7 +30,7 @@ function calcTimeLeft(target: Date): TimeLeft | null {
 export function Countdown({ target, onComplete, format = "full" }: CountdownProps) {
 	const targetDate = useMemo(
 		() => (typeof target === "string" || typeof target === "number" ? new Date(target) : target),
-		[target]
+		[target],
 	)
 	const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(() => calcTimeLeft(targetDate))
 	const onCompleteRef = useRef(onComplete)

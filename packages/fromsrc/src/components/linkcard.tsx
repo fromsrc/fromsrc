@@ -3,7 +3,7 @@
 import type { ReactNode } from "react"
 import { IconExternalLink } from "./icons"
 
-interface LinkCardProps {
+export interface LinkCardProps {
 	href: string
 	title: string
 	description?: string
@@ -45,7 +45,7 @@ export function LinkCard({ href, title, description, icon }: LinkCardProps) {
 	)
 }
 
-interface LinkCardsProps {
+export interface LinkCardsProps {
 	children: ReactNode
 }
 

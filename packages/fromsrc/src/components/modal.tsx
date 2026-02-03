@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react"
+import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
 import { useScrollLock } from "../hooks/scrolllock"
 import { IconX } from "./icons"
 
@@ -36,7 +36,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 			if (e.key !== "Tab" || !dialogRef.current) return
 
 			const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
 			)
 			const first = focusable[0]
 			const last = focusable[focusable.length - 1]
@@ -49,7 +49,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 				first?.focus()
 			}
 		},
-		[onClose]
+		[onClose],
 	)
 
 	useScrollLock(open)
@@ -75,7 +75,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 	useEffect(() => {
 		if (visible && dialogRef.current) {
 			const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
 			)
 			focusable[0]?.focus()
 		}

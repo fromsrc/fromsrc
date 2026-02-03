@@ -81,7 +81,9 @@ export function Video({
 		const query = params.toString()
 
 		return (
-			<div className={`my-6 aspect-video rounded-xl border border-line overflow-hidden ${className}`}>
+			<div
+				className={`my-6 aspect-video rounded-xl border border-line overflow-hidden ${className}`}
+			>
 				<iframe
 					src={`https://www.youtube.com/embed/${id}${query ? `?${query}` : ""}`}
 					title={title ?? "youtube video"}
@@ -112,7 +114,9 @@ export function Video({
 		const query = params.toString()
 
 		return (
-			<div className={`my-6 aspect-video rounded-xl border border-line overflow-hidden ${className}`}>
+			<div
+				className={`my-6 aspect-video rounded-xl border border-line overflow-hidden ${className}`}
+			>
 				<iframe
 					src={`https://player.vimeo.com/video/${id}${query ? `?${query}` : ""}`}
 					title={title ?? "vimeo video"}

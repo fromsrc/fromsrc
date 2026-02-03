@@ -209,9 +209,7 @@ export function Search({
 											<div className="text-xs text-dim truncate">{result.snippet}</div>
 										) : (
 											result.doc.description && (
-												<div className="text-xs text-dim truncate">
-													{result.doc.description}
-												</div>
+												<div className="text-xs text-dim truncate">{result.doc.description}</div>
 											)
 										)}
 									</li>

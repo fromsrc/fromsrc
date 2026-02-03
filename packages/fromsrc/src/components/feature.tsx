@@ -34,9 +34,7 @@ export interface FeaturesProps {
 
 export function Features({ children, columns = 2 }: FeaturesProps) {
 	const gridClass = columns === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2"
-	return (
-		<section className={`grid gap-4 sm:gap-6 my-6 ${gridClass}`}>{children}</section>
-	)
+	return <section className={`grid gap-4 sm:gap-6 my-6 ${gridClass}`}>{children}</section>
 }
 
 export interface FeatureCardProps {

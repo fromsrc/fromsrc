@@ -20,9 +20,7 @@ const colors = {
 
 export function Code({ children, color = "default" }: CodeProps) {
 	return (
-		<code className={`rounded px-1.5 py-0.5 font-mono text-sm ${colors[color]}`}>
-			{children}
-		</code>
+		<code className={`rounded px-1.5 py-0.5 font-mono text-sm ${colors[color]}`}>{children}</code>
 	)
 }
 

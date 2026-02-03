@@ -77,7 +77,11 @@ export function Table<T extends Record<string, unknown>>({
 
 	return (
 		<div className={`my-6 overflow-x-auto rounded-lg border border-line ${className}`.trim()}>
-			<table className="w-full text-sm" role="grid" aria-describedby={caption ? `${id}-caption` : undefined}>
+			<table
+				className="w-full text-sm"
+				role="grid"
+				aria-describedby={caption ? `${id}-caption` : undefined}
+			>
 				{caption && (
 					<caption id={`${id}-caption`} className="sr-only">
 						{caption}
@@ -96,11 +100,20 @@ export function Table<T extends Record<string, unknown>>({
 									<button
 										type="button"
 										onClick={() => handleSort(col.key)}
-										aria-sort={sortKey === col.key && sortDir ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
+										aria-sort={
+											sortKey === col.key && sortDir
+												? sortDir === "asc"
+													? "ascending"
+													: "descending"
+												: "none"
+										}
 										className="inline-flex items-center gap-1.5 transition-colors hover:text-accent"
 									>
 										{col.header}
-										<SortIcon active={sortKey === col.key} direction={sortKey === col.key ? sortDir : null} />
+										<SortIcon
+											active={sortKey === col.key}
+											direction={sortKey === col.key ? sortDir : null}
+										/>
 									</button>
 								) : (
 									col.header

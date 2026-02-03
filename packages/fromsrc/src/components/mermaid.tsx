@@ -79,7 +79,10 @@ export function Mermaid({ chart, label }: MermaidProps): ReactElement {
 
 	if (!svg) {
 		return (
-			<div aria-hidden className="my-4 p-8 rounded-lg border border-line bg-surface/30 animate-pulse">
+			<div
+				aria-hidden
+				className="my-4 p-8 rounded-lg border border-line bg-surface/30 animate-pulse"
+			>
 				<div className="h-32 bg-surface/50 rounded" />
 			</div>
 		)

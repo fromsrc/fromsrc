@@ -3,7 +3,7 @@
 import Image from "next/image"
 import type { ReactNode } from "react"
 
-interface QuoteProps {
+export interface QuoteProps {
 	children: ReactNode
 	author?: string
 	role?: string
@@ -31,7 +31,7 @@ export function Quote({ children, author, role, avatar }: QuoteProps) {
 	)
 }
 
-interface TestimonialsProps {
+export interface TestimonialsProps {
 	children: ReactNode
 }
 
@@ -39,7 +39,7 @@ export function Testimonials({ children }: TestimonialsProps) {
 	return <div className="grid gap-4 md:grid-cols-2 my-6">{children}</div>
 }
 
-interface TestimonialProps {
+export interface TestimonialProps {
 	children: ReactNode
 	author: string
 	role?: string

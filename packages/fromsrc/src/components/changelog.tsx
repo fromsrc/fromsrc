@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-interface ReleaseProps {
+export interface ReleaseProps {
 	version: string
 	date?: string
 	datetime?: string
@@ -27,7 +27,7 @@ export function Release({ version, date, datetime, children }: ReleaseProps) {
 	)
 }
 
-type ChangeType = "added" | "changed" | "fixed" | "removed" | "deprecated" | "security"
+export type ChangeType = "added" | "changed" | "fixed" | "removed" | "deprecated" | "security"
 
 const typeStyles: Record<ChangeType, { bg: string; text: string; label: string }> = {
 	added: { bg: "bg-emerald-500/10", text: "text-emerald-400", label: "added" },
@@ -38,7 +38,7 @@ const typeStyles: Record<ChangeType, { bg: string; text: string; label: string }
 	security: { bg: "bg-purple-500/10", text: "text-purple-400", label: "security" },
 }
 
-interface ChangeProps {
+export interface ChangeProps {
 	type: ChangeType
 	children: ReactNode
 }
@@ -57,7 +57,7 @@ export function Change({ type, children }: ChangeProps) {
 	)
 }
 
-interface ChangelogProps {
+export interface ChangelogProps {
 	children: ReactNode
 }
 

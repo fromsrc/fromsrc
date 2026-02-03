@@ -25,10 +25,7 @@ type GlossaryProps = ComponentProps<"div">
 
 export function Glossary({ className, children, ...props }: GlossaryProps) {
 	return (
-		<div
-			className={className ?? "my-6 rounded-xl border border-line overflow-hidden"}
-			{...props}
-		>
+		<div className={className ?? "my-6 rounded-xl border border-line overflow-hidden"} {...props}>
 			<dl className="divide-y divide-line">{children}</dl>
 		</div>
 	)

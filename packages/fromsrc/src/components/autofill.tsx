@@ -38,9 +38,7 @@ export function Autofill({
 
 	const value = controlledValue ?? internalValue
 
-	const filtered = items.filter((item) =>
-		item.label.toLowerCase().includes(value.toLowerCase())
-	)
+	const filtered = items.filter((item) => item.label.toLowerCase().includes(value.toLowerCase()))
 
 	const listId = `${id}-list`
 	const getOptionId = (itemId: string) => `${id}-option-${itemId}`

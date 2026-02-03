@@ -100,7 +100,10 @@ export function Textarea({
 	return (
 		<div className="flex flex-col gap-1.5">
 			{label && (
-				<label htmlFor={textareaId} className="flex items-center gap-1.5 text-sm font-medium text-fg">
+				<label
+					htmlFor={textareaId}
+					className="flex items-center gap-1.5 text-sm font-medium text-fg"
+				>
 					{label}
 					{tooltip && (
 						<Tooltip content={tooltip}>

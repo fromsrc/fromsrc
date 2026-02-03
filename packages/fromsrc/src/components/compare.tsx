@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 
 export type CompareVariant = "default" | "good" | "bad"
 
-interface CompareProps {
+export interface CompareProps {
 	children: ReactNode
 	label?: string
 }
@@ -21,7 +21,7 @@ export function Compare({ children, label }: CompareProps) {
 	)
 }
 
-interface ColumnProps {
+export interface ColumnProps {
 	title: string
 	variant?: CompareVariant
 	children: ReactNode
@@ -48,14 +48,14 @@ export function Column({ title, variant = "default", children }: ColumnProps) {
 	)
 }
 
-interface RowProps {
+export interface CompareRowProps {
 	left: ReactNode
 	right: ReactNode
 	leftLabel?: string
 	rightLabel?: string
 }
 
-export function CompareRow({ left, right, leftLabel, rightLabel }: RowProps) {
+export function CompareRow({ left, right, leftLabel, rightLabel }: CompareRowProps) {
 	return (
 		<div
 			className="my-6 grid gap-3 md:gap-4 md:grid-cols-2"

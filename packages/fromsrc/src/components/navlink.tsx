@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { type ReactNode, useEffect, useRef } from "react"
 
-interface Props {
+export interface NavLinkProps {
 	href: string
 	children: ReactNode
 	icon?: ReactNode
@@ -12,7 +12,7 @@ interface Props {
 	external?: boolean
 }
 
-export function NavLink({ href, children, icon, onClick, external }: Props) {
+export function NavLink({ href, children, icon, onClick, external }: NavLinkProps) {
 	const pathname = usePathname()
 	const isActive = pathname === href
 	const ref = useRef<HTMLAnchorElement>(null)

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-interface NoteProps {
+export interface NoteProps {
 	children: ReactNode
 	className?: string
 	label?: string
@@ -37,7 +37,10 @@ export function Experimental({ children, className = "", label = "Experimental" 
 			aria-label={label}
 			className={`my-4 px-4 py-3 rounded-lg bg-purple-500/5 border border-purple-500/20 text-sm text-purple-200/80 ${className}`}
 		>
-			<span aria-hidden="true" className="text-[10px] uppercase tracking-wider text-purple-400 font-medium">
+			<span
+				aria-hidden="true"
+				className="text-[10px] uppercase tracking-wider text-purple-400 font-medium"
+			>
 				experimental
 			</span>
 			<div className="mt-1">{children}</div>

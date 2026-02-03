@@ -29,9 +29,7 @@ export function Shortcut({ keys }: ShortcutProps) {
 							+
 						</span>
 					)}
-					<kbd
-						className="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 text-xs font-mono bg-surface border border-line rounded shadow-sm text-muted"
-					>
+					<kbd className="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 text-xs font-mono bg-surface border border-line rounded shadow-sm text-muted">
 						{key}
 					</kbd>
 				</span>

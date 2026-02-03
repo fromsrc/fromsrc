@@ -16,9 +16,7 @@ const colors: Record<HighlightColor, string> = {
 }
 
 export function Highlight({ children, color = "yellow" }: HighlightProps) {
-	return (
-		<mark className={`rounded px-1 transition-colors ${colors[color]}`}>{children}</mark>
-	)
+	return <mark className={`rounded px-1 transition-colors ${colors[color]}`}>{children}</mark>
 }
 
 export type UnderlineStyle = "solid" | "wavy" | "dotted" | "dashed"
