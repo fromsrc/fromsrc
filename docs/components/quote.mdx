@@ -1,0 +1,85 @@
+---
+title: quote
+description: quotes and testimonials
+order: 29
+---
+
+display quotes and user testimonials.
+
+## quote
+
+featured quote with attribution:
+
+```mdx
+<Quote author="Jane Smith" role="CEO at Acme">
+  this framework changed how we build documentation
+</Quote>
+```
+
+<Quote author="Jane Smith" role="CEO at Acme">
+  this framework changed how we build documentation
+</Quote>
+
+## with avatar
+
+```mdx
+<Quote
+  author="John Doe"
+  role="Developer"
+  avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=john"
+>
+  incredibly easy to customize
+</Quote>
+```
+
+<Quote
+  author="John Doe"
+  role="Developer"
+  avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=john"
+>
+  incredibly easy to customize
+</Quote>
+
+## testimonials grid
+
+display multiple testimonials in a grid:
+
+```mdx
+<Testimonials>
+  <Testimonial author="Alice" role="Engineer">
+    fast builds, great dx
+  </Testimonial>
+  <Testimonial author="Bob" role="Designer">
+    beautiful default styles
+  </Testimonial>
+</Testimonials>
+```
+
+<Testimonials>
+  <Testimonial author="Alice" role="Engineer">
+    fast builds, great dx
+  </Testimonial>
+  <Testimonial author="Bob" role="Designer">
+    beautiful default styles
+  </Testimonial>
+</Testimonials>
+
+## props
+
+### quote
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| author | string | - | author name |
+| role | string | - | author role |
+| avatar | string | - | avatar url |
+| children | ReactNode | - | quote text |
+
+### testimonial
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| author | string | - | author name |
+| role | string | - | author role |
+| avatar | string | - | avatar url |
+| children | ReactNode | - | quote text |
