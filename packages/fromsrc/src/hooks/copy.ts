@@ -2,12 +2,17 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 
-interface CopyResult {
+export interface CopyResult {
 	copied: boolean
 	copy: (text: string) => Promise<void>
 }
 
-export function useCopy(duration = 1500): CopyResult {
+/**
+ * Hook for copying text to clipboard with automatic reset
+ * @param duration - Time in ms before copied state resets (default: 1500)
+ * @returns Object with copied state and copy function
+ */
+export function useCopy(duration: number = 1500): CopyResult {
 	const [copied, setCopied] = useState(false)
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 

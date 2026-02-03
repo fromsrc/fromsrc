@@ -7,7 +7,13 @@ export interface ScrollSpyOptions {
 	threshold?: number
 }
 
-export function useScrollSpy(ids: string[], options: ScrollSpyOptions = {}) {
+/**
+ * Hook for tracking which section is currently in view
+ * @param ids - Array of element IDs to observe
+ * @param options - Configuration for offset and threshold
+ * @returns The ID of the currently active section or null
+ */
+export function useScrollSpy(ids: string[], options: ScrollSpyOptions = {}): string | null {
 	const { offset = 100, threshold = 0.5 } = options
 	const [activeId, setActiveId] = useState<string | null>(null)
 
