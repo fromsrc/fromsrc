@@ -6,6 +6,7 @@ import {
 	Download,
 	Globe,
 	Hash,
+	Keyboard,
 	Palette,
 	Pen,
 	Rocket,
@@ -31,6 +32,7 @@ const icons: Record<string, React.ReactNode> = {
 	search: <Search size={14} />,
 	ai: <Sparkles size={14} />,
 	slugs: <Hash size={14} />,
+	keyboard: <Keyboard size={14} />,
 	versioning: <Tags size={14} />,
 	deploying: <Cloud size={14} />,
 	i18n: <Globe size={14} />,
@@ -39,7 +41,7 @@ const icons: Record<string, React.ReactNode> = {
 const sections: Record<string, string[]> = {
 	"getting started": ["", "installation", "quickstart"],
 	basics: ["configuration", "theming", "customization", "writing", "navigation"],
-	features: ["search", "ai", "slugs", "versioning"],
+	features: ["search", "ai", "slugs", "keyboard", "versioning"],
 	production: ["deploying", "i18n"],
 }
 

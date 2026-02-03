@@ -1,0 +1,66 @@
+---
+title: keyboard
+description: keyboard shortcuts for documentation navigation
+---
+
+import { Kbd, Shortcut } from "fromsrc/client"
+
+fromsrc includes built-in keyboard shortcuts for fast navigation.
+
+## search
+
+open the search dialog from anywhere:
+
+<Shortcut keys={["⌘", "K"]} /> on mac
+
+<Shortcut keys={["Ctrl", "K"]} /> on windows/linux
+
+## search results
+
+navigate through search results using arrow keys:
+
+| shortcut | action |
+|----------|--------|
+| <Kbd>↑</Kbd> | previous result |
+| <Kbd>↓</Kbd> | next result |
+| <Kbd>↵</Kbd> | go to selected |
+| <Kbd>⎋</Kbd> | close search |
+
+## page navigation
+
+navigate between pages using arrow keys:
+
+| shortcut | action |
+|----------|--------|
+| <Kbd>←</Kbd> | previous page |
+| <Kbd>→</Kbd> | next page |
+
+## styling shortcuts
+
+use the `Kbd` component for single keys:
+
+```mdx
+press <Kbd>⌘</Kbd> + <Kbd>K</Kbd> to search
+```
+
+press <Kbd>⌘</Kbd> + <Kbd>K</Kbd> to search
+
+use the `Shortcut` component for key combinations:
+
+```mdx
+<Shortcut keys={["⌘", "Shift", "P"]} />
+```
+
+<Shortcut keys={["⌘", "Shift", "P"]} />
+
+## common keys
+
+| key | display |
+|-----|---------|
+| ⌘ | command (mac) |
+| ⌃ | control |
+| ⇧ | shift |
+| ⌥ | option/alt |
+| ↵ | enter |
+| ⎋ | escape |
+| ← → ↑ ↓ | arrows |
