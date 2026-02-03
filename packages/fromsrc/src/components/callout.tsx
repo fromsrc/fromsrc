@@ -1,14 +1,18 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { type ReactNode, memo } from "react"
+import type { JSX } from "react"
 
+/**
+ * available callout variants
+ */
 export type CalloutType = "info" | "warning" | "error" | "tip"
 
 /**
- * @param type - callout style
- * @param title - optional heading
- * @param children - callout content
- * @example <Callout type="tip">use shortcuts</Callout>
+ * callout component props
+ * @property type - visual style variant
+ * @property title - optional heading text
+ * @property children - callout body content
  */
 export interface CalloutProps {
 	type?: CalloutType
@@ -16,7 +20,18 @@ export interface CalloutProps {
 	children: ReactNode
 }
 
-const config: Record<CalloutType, { icon: ReactNode; border: string; bg: string; text: string }> = {
+/**
+ * callout style configuration
+ */
+interface CalloutConfig {
+	icon: ReactNode
+	border: string
+	bg: string
+	text: string
+	label: string
+}
+
+const config: Record<CalloutType, CalloutConfig> = {
 	info: {
 		icon: (
 			<svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
@@ -30,6 +45,7 @@ const config: Record<CalloutType, { icon: ReactNode; border: string; bg: string;
 		border: "border-l-blue-500",
 		bg: "bg-blue-500/10",
 		text: "text-blue-400",
+		label: "Information",
 	},
 	warning: {
 		icon: (
@@ -44,6 +60,7 @@ const config: Record<CalloutType, { icon: ReactNode; border: string; bg: string;
 		border: "border-l-yellow-500",
 		bg: "bg-yellow-500/10",
 		text: "text-yellow-400",
+		label: "Warning",
 	},
 	error: {
 		icon: (
@@ -58,6 +75,7 @@ const config: Record<CalloutType, { icon: ReactNode; border: string; bg: string;
 		border: "border-l-red-500",
 		bg: "bg-red-500/10",
 		text: "text-red-400",
+		label: "Error",
 	},
 	tip: {
 		icon: (
@@ -68,14 +86,19 @@ const config: Record<CalloutType, { icon: ReactNode; border: string; bg: string;
 		border: "border-l-green-500",
 		bg: "bg-green-500/10",
 		text: "text-green-400",
+		label: "Tip",
 	},
 }
 
-export function Callout({ type = "info", title, children }: CalloutProps) {
-	const { icon, border, bg, text } = config[type]
+function CalloutComponent({ type = "info", title, children }: CalloutProps): JSX.Element {
+	const { icon, border, bg, text, label } = config[type]
 
 	return (
-		<aside role="note" className={`my-4 rounded border-l-4 ${border} ${bg} px-3 py-2`}>
+		<aside
+			role="note"
+			aria-label={label}
+			className={`my-4 rounded border-l-4 ${border} ${bg} px-3 py-2`}
+		>
 			{title && <p className={`mb-2 font-semibold ${text}`}>{title}</p>}
 			<div className={`flex items-center gap-2 ${text}`}>
 				<span className="size-4 shrink-0" aria-hidden="true">
@@ -86,3 +109,9 @@ export function Callout({ type = "info", title, children }: CalloutProps) {
 		</aside>
 	)
 }
+
+/**
+ * callout component for highlighting content
+ * @example <Callout type="tip">use shortcuts</Callout>
+ */
+export const Callout = memo(CalloutComponent)
