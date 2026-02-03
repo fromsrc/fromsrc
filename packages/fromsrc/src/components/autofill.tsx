@@ -1,14 +1,21 @@
 "use client"
 
+import type { ChangeEvent, JSX, KeyboardEvent } from "react"
 import { useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
 
+/**
+ * Represents a single suggestion item in the autofill dropdown.
+ */
 export interface AutofillItem {
 	id: string
 	label: string
 	value?: string
 }
 
+/**
+ * Props for the Autofill component.
+ */
 export interface AutofillProps {
 	items: AutofillItem[]
 	placeholder?: string
@@ -27,7 +34,7 @@ export function Autofill({
 	value: controlledValue,
 	onChange,
 	onSelect,
-}: AutofillProps) {
+}: AutofillProps): JSX.Element {
 	const [internalValue, setInternalValue] = useState("")
 	const [open, setOpen] = useState(false)
 	const [index, setIndex] = useState(0)
@@ -41,77 +48,90 @@ export function Autofill({
 	const filtered = items.filter((item) => item.label.toLowerCase().includes(value.toLowerCase()))
 
 	const listId = `${id}-list`
-	const getOptionId = (itemId: string) => `${id}-option-${itemId}`
+	const getOptionId = useCallback((itemId: string): string => `${id}-option-${itemId}`, [id])
 
-	const close = useCallback(() => {
+	const close = useCallback((): void => {
 		setOpen(false)
 		setIndex(0)
 	}, [])
 
 	useClickOutside(containerRef, close, open)
 
-	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-		const newValue = e.target.value
-		if (controlledValue === undefined) {
-			setInternalValue(newValue)
-		}
-		onChange?.(newValue)
-		setOpen(true)
-		setIndex(0)
-	}
-
-	function handleSelect(item: AutofillItem) {
-		const selectedValue = item.value ?? item.label
-		if (controlledValue === undefined) {
-			setInternalValue(selectedValue)
-		}
-		onChange?.(selectedValue)
-		onSelect?.(item)
-		setOpen(false)
-		inputRef.current?.focus()
-	}
-
-	function handleKeyDown(e: React.KeyboardEvent) {
-		if (!open && filtered.length > 0 && e.key !== "Escape") {
-			if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-				setOpen(true)
-				e.preventDefault()
-				return
+	const handleChange = useCallback(
+		(e: ChangeEvent<HTMLInputElement>): void => {
+			const newValue = e.target.value
+			if (controlledValue === undefined) {
+				setInternalValue(newValue)
 			}
-		}
+			onChange?.(newValue)
+			setOpen(true)
+			setIndex(0)
+		},
+		[controlledValue, onChange],
+	)
 
-		switch (e.key) {
-			case "ArrowDown":
-				setIndex((i) => Math.min(i + 1, filtered.length - 1))
-				e.preventDefault()
-				break
-			case "ArrowUp":
-				setIndex((i) => Math.max(i - 1, 0))
-				e.preventDefault()
-				break
-			case "Enter":
-				if (open && filtered[index]) {
-					handleSelect(filtered[index])
+	const handleSelect = useCallback(
+		(item: AutofillItem): void => {
+			const selectedValue = item.value ?? item.label
+			if (controlledValue === undefined) {
+				setInternalValue(selectedValue)
+			}
+			onChange?.(selectedValue)
+			onSelect?.(item)
+			setOpen(false)
+			inputRef.current?.focus()
+		},
+		[controlledValue, onChange, onSelect],
+	)
+
+	const handleKeyDown = useCallback(
+		(e: KeyboardEvent<HTMLInputElement>): void => {
+			if (!open && filtered.length > 0 && e.key !== "Escape") {
+				if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+					setOpen(true)
 					e.preventDefault()
+					return
 				}
-				break
-			case "Escape":
-				if (open) {
+			}
+
+			switch (e.key) {
+				case "ArrowDown":
+					setIndex((i) => Math.min(i + 1, filtered.length - 1))
+					e.preventDefault()
+					break
+				case "ArrowUp":
+					setIndex((i) => Math.max(i - 1, 0))
+					e.preventDefault()
+					break
+				case "Enter":
+					if (open && filtered[index]) {
+						handleSelect(filtered[index])
+						e.preventDefault()
+					}
+					break
+				case "Escape":
+					if (open) {
+						setOpen(false)
+						e.preventDefault()
+					}
+					break
+				case "Tab":
 					setOpen(false)
-					e.preventDefault()
-				}
-				break
-			case "Tab":
-				setOpen(false)
-				break
-		}
-	}
+					break
+			}
+		},
+		[open, filtered, index, handleSelect],
+	)
 
-	function handleFocus() {
+	const handleFocus = useCallback((): void => {
 		if (value && filtered.length > 0) {
 			setOpen(true)
 		}
-	}
+	}, [value, filtered.length])
+
+	const handleMouseEnter = useCallback((i: number): void => {
+		setIndex(i)
+	}, [])
 
 	const activeOptionId = open && filtered[index] ? getOptionId(filtered[index].id) : undefined
 
@@ -130,6 +150,11 @@ export function Autofill({
 				aria-controls={listId}
 				aria-activedescendant={activeOptionId}
 				aria-autocomplete="list"
+				aria-haspopup="listbox"
+				autoComplete="off"
+				autoCorrect="off"
+				autoCapitalize="off"
+				spellCheck={false}
 				className="w-full rounded-lg border border-line bg-bg px-3 py-2 text-sm outline-none placeholder:text-muted focus:border-muted"
 			/>
 			{open && filtered.length > 0 && (
@@ -149,7 +174,7 @@ export function Autofill({
 							aria-selected={i === index}
 							tabIndex={-1}
 							onClick={() => handleSelect(item)}
-							onMouseEnter={() => setIndex(i)}
+							onMouseEnter={() => handleMouseEnter(i)}
 							className={`flex w-full items-center rounded px-3 py-2 text-left text-sm transition-colors ${
 								i === index ? "bg-surface text-fg" : "text-muted hover:bg-surface hover:text-fg"
 							}`}
