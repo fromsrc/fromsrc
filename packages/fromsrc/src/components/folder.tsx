@@ -9,9 +9,11 @@ import type { SidebarFolder } from "./sidebar"
 interface Props {
 	folder: SidebarFolder
 	basePath: string
+	depth?: number
+	defaultOpenLevel?: number
 }
 
-export function Folder({ folder, basePath }: Props) {
+export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Props) {
 	const pathname = usePathname()
 	const isActive = folder.href && pathname === folder.href
 	const hasActiveChild = folder.items.some((item) => {
@@ -21,7 +23,8 @@ export function Folder({ folder, basePath }: Props) {
 		return item.type === "item" && pathname === item.href
 	})
 
-	const [open, setOpen] = useState(folder.defaultOpen ?? false)
+	const shouldAutoOpen = folder.defaultOpen ?? depth <= defaultOpenLevel
+	const [open, setOpen] = useState(shouldAutoOpen)
 
 	useEffect(() => {
 		if (hasActiveChild || isActive) setOpen(true)
@@ -74,7 +77,15 @@ export function Folder({ folder, basePath }: Props) {
 				<ul className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
 					{folder.items.map((item) => {
 						if (item.type === "folder") {
-							return <Folder key={item.title} folder={item} basePath={basePath} />
+							return (
+								<Folder
+									key={item.title}
+									folder={item}
+									basePath={basePath}
+									depth={depth + 1}
+									defaultOpenLevel={defaultOpenLevel}
+								/>
+							)
 						}
 						return (
 							<li key={item.href}>

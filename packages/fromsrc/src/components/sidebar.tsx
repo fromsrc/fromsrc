@@ -35,6 +35,7 @@ interface Props {
 	basePath?: string
 	github?: string
 	collapsible?: boolean
+	defaultOpenLevel?: number
 }
 
 export function Sidebar({
@@ -44,6 +45,7 @@ export function Sidebar({
 	basePath = "/docs",
 	github,
 	collapsible,
+	defaultOpenLevel = 0,
 }: Props) {
 	const [collapsed, setCollapsed] = useState(false)
 	const [hovered, setHovered] = useState(false)
@@ -166,7 +168,15 @@ export function Sidebar({
 										)
 									}
 									if (item.type === "folder") {
-										return <Folder key={i} folder={item} basePath={basePath} />
+										return (
+											<Folder
+												key={i}
+												folder={item}
+												basePath={basePath}
+												depth={1}
+												defaultOpenLevel={defaultOpenLevel}
+											/>
+										)
 									}
 									return (
 										<li key={i}>
