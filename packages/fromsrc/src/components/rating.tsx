@@ -1,6 +1,7 @@
 "use client"
 
 import { memo, type KeyboardEvent, type ReactElement, useCallback, useRef, useState } from "react"
+import { getNextIndex } from "../hooks/arrownav"
 import { IconStar } from "./icons"
 
 /**
@@ -60,35 +61,20 @@ function RatingBase({
 		(e: KeyboardEvent<HTMLButtonElement>, index: number): void => {
 			if (readonly) return
 
-			let next = index
-			switch (e.key) {
-				case "ArrowRight":
-				case "ArrowDown":
-					e.preventDefault()
-					next = index < max - 1 ? index + 1 : 0
-					break
-				case "ArrowLeft":
-				case "ArrowUp":
-					e.preventDefault()
-					next = index > 0 ? index - 1 : max - 1
-					break
-				case "Home":
-					e.preventDefault()
-					next = 0
-					break
-				case "End":
-					e.preventDefault()
-					next = max - 1
-					break
-				case " ":
-				case "Enter":
-					e.preventDefault()
-					onChange?.(index + 1)
-					return
-				default:
-					return
+			if (e.key === " " || e.key === "Enter") {
+				e.preventDefault()
+				onChange?.(index + 1)
+				return
 			}
 
+			const next = getNextIndex(e.key, {
+				count: max,
+				current: index,
+				direction: "both",
+				wrap: true,
+			})
+			if (next === index) return
+			e.preventDefault()
 			setFocus(next)
 			refs.current[next]?.focus()
 		},
