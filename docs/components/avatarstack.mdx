@@ -1,0 +1,70 @@
+---
+title: avatarstack
+description: stacked avatar group
+order: 35
+---
+
+display a group of overlapping avatars.
+
+## usage
+
+```tsx
+import { AvatarStack, Avatar } from "fromsrc/client"
+
+<AvatarStack>
+  <Avatar name="Alice" src="https://api.dicebear.com/7.x/avataaars/svg?seed=alice" />
+  <Avatar name="Bob" src="https://api.dicebear.com/7.x/avataaars/svg?seed=bob" />
+  <Avatar name="Carol" src="https://api.dicebear.com/7.x/avataaars/svg?seed=carol" />
+</AvatarStack>
+```
+
+## max visible
+
+limit visible avatars with overflow count:
+
+```tsx
+<AvatarStack max={3}>
+  <Avatar name="A" />
+  <Avatar name="B" />
+  <Avatar name="C" />
+  <Avatar name="D" />
+  <Avatar name="E" />
+</AvatarStack>
+```
+
+## sizes
+
+```tsx
+<AvatarStack size="sm">
+  <Avatar name="Small" />
+  <Avatar name="Stack" />
+</AvatarStack>
+
+<AvatarStack size="md">
+  <Avatar name="Medium" />
+  <Avatar name="Stack" />
+</AvatarStack>
+
+<AvatarStack size="lg">
+  <Avatar name="Large" />
+  <Avatar name="Stack" />
+</AvatarStack>
+```
+
+## with images
+
+```tsx
+<AvatarStack>
+  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=1" className="size-full rounded-full" />
+  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=2" className="size-full rounded-full" />
+  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=3" className="size-full rounded-full" />
+</AvatarStack>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| children | ReactNode | required | avatar elements |
+| max | number | 5 | max visible avatars |
+| size | "sm" \| "md" \| "lg" | "md" | avatar size |

@@ -1,0 +1,62 @@
+---
+title: countdown
+description: countdown timer component
+order: 16
+---
+
+display a countdown to a target date.
+
+## usage
+
+```tsx
+import { Countdown } from "fromsrc/client"
+
+<Countdown target={new Date("2026-12-31")} />
+```
+
+## target formats
+
+accepts multiple formats:
+
+```tsx
+<Countdown target={new Date("2026-12-31")} />
+
+<Countdown target="2026-12-31T00:00:00" />
+
+<Countdown target={1767225600000} />
+```
+
+## compact format
+
+single line display:
+
+```tsx
+<Countdown target={new Date("2026-12-31")} format="compact" />
+```
+
+## full format
+
+default format with labeled segments:
+
+```tsx
+<Countdown target={new Date("2026-12-31")} format="full" />
+```
+
+## completion callback
+
+run code when countdown reaches zero:
+
+```tsx
+<Countdown
+  target={new Date("2026-12-31")}
+  onComplete={() => console.log("happy new year!")}
+/>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| target | Date \| string \| number | required | target date |
+| format | "full" \| "compact" | "full" | display format |
+| onComplete | () => void | - | callback at zero |

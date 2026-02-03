@@ -1,0 +1,66 @@
+---
+title: typewriter
+description: animated typing effect
+order: 17
+---
+
+animated typewriter effect that cycles through words.
+
+## usage
+
+```tsx
+import { Typewriter } from "fromsrc/client"
+
+<Typewriter words={["developer", "designer", "creator"]} />
+```
+
+## speed
+
+adjust typing speed in milliseconds:
+
+```tsx
+<Typewriter words={["fast", "typing"]} speed={50} />
+
+<Typewriter words={["slow", "typing"]} speed={200} />
+```
+
+## delay
+
+time before deleting and typing next word:
+
+```tsx
+<Typewriter
+  words={["hello", "world"]}
+  delay={3000}
+/>
+```
+
+## loop
+
+disable looping to stop after last word:
+
+```tsx
+<Typewriter
+  words={["first", "second", "final"]}
+  loop={false}
+/>
+```
+
+## with text
+
+combine with static text:
+
+```tsx
+<p>
+  I am a <Typewriter words={["developer", "designer", "creator"]} />
+</p>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| words | string[] | required | words to cycle through |
+| speed | number | 100 | typing speed in ms |
+| delay | number | 2000 | pause before deleting |
+| loop | boolean | true | loop after last word |

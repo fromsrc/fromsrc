@@ -1,0 +1,66 @@
+---
+title: rating
+description: star rating component
+order: 18
+---
+
+interactive star rating input.
+
+## usage
+
+```tsx
+import { Rating } from "fromsrc/client"
+
+const [value, setValue] = useState(0)
+
+<Rating value={value} onChange={setValue} />
+```
+
+## readonly
+
+display only, no interaction:
+
+```tsx
+<Rating value={4} readonly />
+```
+
+## custom max
+
+change maximum stars:
+
+```tsx
+<Rating value={3} max={10} />
+```
+
+## controlled
+
+fully controlled with state:
+
+```tsx
+const [rating, setRating] = useState(3)
+
+<Rating
+  value={rating}
+  onChange={(v) => setRating(v)}
+/>
+```
+
+## form integration
+
+works with form libraries:
+
+```tsx
+<Rating
+  value={formState.rating}
+  onChange={(v) => setFormValue("rating", v)}
+/>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| value | number | 0 | current rating |
+| max | number | 5 | maximum stars |
+| onChange | (value: number) => void | - | change callback |
+| readonly | boolean | false | disable interaction |

@@ -1,0 +1,88 @@
+---
+title: command
+description: command palette for quick actions
+order: 15
+---
+
+searchable command palette with keyboard navigation.
+
+## usage
+
+```tsx
+import { Command } from "fromsrc/client"
+
+const items = [
+  { id: "home", label: "Go to Home" },
+  { id: "docs", label: "Open Docs" },
+  { id: "settings", label: "Settings" },
+]
+
+<Command items={items} onSelect={(item) => console.log(item.id)} />
+```
+
+## with icons
+
+```tsx
+import { Home, BookOpen, Settings } from "lucide-react"
+
+const items = [
+  { id: "home", label: "Go to Home", icon: <Home className="size-4" /> },
+  { id: "docs", label: "Open Docs", icon: <BookOpen className="size-4" /> },
+  { id: "settings", label: "Settings", icon: <Settings className="size-4" /> },
+]
+
+<Command items={items} />
+```
+
+## keyboard shortcuts
+
+- **arrow up/down** - navigate items
+- **enter** - select highlighted item
+- **type** - filter items
+
+## custom placeholder
+
+```tsx
+<Command
+  items={items}
+  placeholder="type a command..."
+/>
+```
+
+## item callbacks
+
+each item can have its own onSelect:
+
+```tsx
+const items = [
+  {
+    id: "copy",
+    label: "Copy to Clipboard",
+    onSelect: () => navigator.clipboard.writeText("copied!")
+  },
+  {
+    id: "share",
+    label: "Share",
+    onSelect: () => openShareDialog()
+  },
+]
+```
+
+## props
+
+### command
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| items | CommandItem[] | required | list of command items |
+| placeholder | string | "search..." | input placeholder |
+| onSelect | (item) => void | - | callback when item selected |
+
+### commanditem
+
+| prop | type | description |
+|------|------|-------------|
+| id | string | unique identifier |
+| label | string | display text |
+| icon | ReactNode | optional icon |
+| onSelect | () => void | optional item callback |
