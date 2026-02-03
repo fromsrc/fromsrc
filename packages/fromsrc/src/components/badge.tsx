@@ -10,6 +10,7 @@ export type BadgeVariant = "default" | "success" | "warning" | "error" | "info"
  */
 export interface BadgeProps extends ComponentPropsWithoutRef<"span"> {
 	variant?: BadgeVariant
+	"aria-label"?: string
 }
 
 const styles: Record<BadgeVariant, string> = {
