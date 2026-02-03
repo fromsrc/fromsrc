@@ -1,5 +1,8 @@
-import type { ReactNode } from "react"
+import { type ReactNode, memo, type JSX } from "react"
 
+/**
+ * Props for a single release entry in the changelog
+ */
 export interface ReleaseProps {
 	version: string
 	date?: string
@@ -7,7 +10,12 @@ export interface ReleaseProps {
 	children: ReactNode
 }
 
-export function Release({ version, date, datetime, children }: ReleaseProps) {
+export const Release = memo(function Release({
+	version,
+	date,
+	datetime,
+	children,
+}: ReleaseProps): JSX.Element {
 	return (
 		<article className="relative pl-6 pb-8 border-l border-line last:pb-0">
 			<div
@@ -25,11 +33,23 @@ export function Release({ version, date, datetime, children }: ReleaseProps) {
 			<ul className="space-y-2 list-none p-0 m-0">{children}</ul>
 		</article>
 	)
-}
+})
 
+/**
+ * Type of change in a changelog entry
+ */
 export type ChangeType = "added" | "changed" | "fixed" | "removed" | "deprecated" | "security"
 
-const typeStyles: Record<ChangeType, { bg: string; text: string; label: string }> = {
+/**
+ * Style configuration for each change type
+ */
+interface TypeStyle {
+	bg: string
+	text: string
+	label: string
+}
+
+const typeStyles: Record<ChangeType, TypeStyle> = {
 	added: { bg: "bg-emerald-500/10", text: "text-emerald-400", label: "added" },
 	changed: { bg: "bg-blue-500/10", text: "text-blue-400", label: "changed" },
 	fixed: { bg: "bg-amber-500/10", text: "text-amber-400", label: "fixed" },
@@ -38,12 +58,15 @@ const typeStyles: Record<ChangeType, { bg: string; text: string; label: string }
 	security: { bg: "bg-purple-500/10", text: "text-purple-400", label: "security" },
 }
 
+/**
+ * Props for a single change item within a release
+ */
 export interface ChangeProps {
 	type: ChangeType
 	children: ReactNode
 }
 
-export function Change({ type, children }: ChangeProps) {
+export const Change = memo(function Change({ type, children }: ChangeProps): JSX.Element {
 	const style = typeStyles[type]
 	return (
 		<li className="flex items-start gap-2 text-sm">
@@ -55,12 +78,15 @@ export function Change({ type, children }: ChangeProps) {
 			<span className="text-muted">{children}</span>
 		</li>
 	)
-}
+})
 
+/**
+ * Props for the changelog container component
+ */
 export interface ChangelogProps {
 	children: ReactNode
 }
 
-export function Changelog({ children }: ChangelogProps) {
+export const Changelog = memo(function Changelog({ children }: ChangelogProps): JSX.Element {
 	return <section className="my-8">{children}</section>
-}
+})
