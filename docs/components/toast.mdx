@@ -1,16 +1,16 @@
 ---
 title: toast
-description: notification toasts for user feedback
-order: 14
+description: temporary notification toasts
+order: 60
 ---
 
-the toast system provides temporary notifications.
+lightweight toast notifications for user feedback.
 
 ## setup
 
 wrap your app with the toast provider:
 
-```text
+```tsx
 import { ToastProvider } from "fromsrc/client"
 
 export default function Layout({ children }) {
@@ -24,9 +24,9 @@ export default function Layout({ children }) {
 
 ## usage
 
-use the `useToast` hook to show notifications:
+use the `useToast` hook to trigger notifications:
 
-```text
+```tsx
 import { useToast } from "fromsrc/client"
 
 function SaveButton() {
@@ -45,29 +45,68 @@ function SaveButton() {
 
 ## types
 
-| type | appearance |
-|------|------------|
-| info | blue, info icon |
-| success | green, check icon |
-| warning | yellow, alert icon |
-| error | red, x icon |
+### info
 
-## options
+```tsx
+add({ type: "info", message: "new version available" })
+```
 
-| option | type | default | description |
-|--------|------|---------|-------------|
-| message | `string` | required | notification text |
-| type | `string` | "info" | info, success, warning, error |
-| duration | `number` | 3000 | auto-dismiss time in ms |
+### success
+
+```tsx
+add({ type: "success", message: "file uploaded" })
+```
+
+### warning
+
+```tsx
+add({ type: "warning", message: "low storage" })
+```
+
+### error
+
+```tsx
+add({ type: "error", message: "connection failed" })
+```
+
+## custom duration
+
+toasts auto-dismiss after 3 seconds by default:
+
+```tsx
+add({
+  type: "info",
+  message: "processing...",
+  duration: 5000
+})
+```
 
 ## manual dismiss
 
-toasts auto-dismiss but can be manually closed:
+use `remove` to dismiss a toast early:
 
-```text
-const { add, remove } = useToast()
+```tsx
+const { toasts, remove } = useToast()
 
-const id = add({ message: "processing..." })
-// later...
-remove(id)
+toasts.map(toast => (
+  <button onClick={() => remove(toast.id)}>dismiss</button>
+))
 ```
+
+## props
+
+### toast
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| message | string | required | notification text |
+| type | "info" \| "success" \| "warning" \| "error" | required | toast style |
+| duration | number | 3000 | auto-dismiss time in ms |
+
+### useToast
+
+| property | type | description |
+|----------|------|-------------|
+| toasts | Toast[] | current active toasts |
+| add | (toast) => void | show a new toast |
+| remove | (id) => void | dismiss a toast |
