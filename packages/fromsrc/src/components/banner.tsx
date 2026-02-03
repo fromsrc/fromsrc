@@ -14,9 +14,15 @@ export interface BannerProps {
 	id?: string
 	variant?: BannerVariant
 	children: ReactNode
+	"aria-label"?: string
 }
 
-export function Banner({ id, variant = "default", children }: BannerProps) {
+export function Banner({
+	id,
+	variant = "default",
+	children,
+	"aria-label": ariaLabel,
+}: BannerProps) {
 	const [mounted, setMounted] = useState(false)
 	const [visible, setVisible] = useState(true)
 
@@ -46,12 +52,20 @@ export function Banner({ id, variant = "default", children }: BannerProps) {
 	}
 
 	return (
-		<div role="status" className={`${base} ${styles[variant]}`}>
+		<div
+			role="status"
+			aria-label={ariaLabel}
+			aria-live="polite"
+			className={`${base} ${styles[variant]}`}
+		>
 			<span className="text-center">{children}</span>
 			{id && (
 				<button
 					type="button"
 					onClick={dismiss}
+					onKeyDown={(e) => {
+						if (e.key === "Escape") dismiss()
+					}}
 					className="absolute right-4 rounded p-1 opacity-60 hover:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
 					aria-label="Dismiss banner"
 				>
