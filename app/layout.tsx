@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Instrument_Serif, JetBrains_Mono } from "next/font/google"
+import "katex/dist/katex.min.css"
 import "./globals.css"
 
 const mono = JetBrains_Mono({

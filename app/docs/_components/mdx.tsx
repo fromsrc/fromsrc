@@ -1,9 +1,11 @@
+import rehypeKatex from "rehype-katex"
 import rehypeShiki from "@shikijs/rehype"
 import {
 	transformerNotationDiff,
 	transformerNotationFocus,
 	transformerNotationHighlight,
 } from "@shikijs/transformers"
+import remarkMath from "remark-math"
 import {
 	Accordion,
 	AccordionItem,
@@ -55,6 +57,9 @@ import {
 	Install,
 	Kbd,
 	Line,
+	BlockMath,
+	InlineMath,
+	Math,
 	LinkCard,
 	LinkCards,
 	Mermaid,
@@ -163,6 +168,9 @@ const components = {
 	TocInline,
 	Kbd,
 	Shortcut,
+	Math,
+	BlockMath,
+	InlineMath,
 	Endpoint,
 	Param,
 	Response,
@@ -240,8 +248,9 @@ export async function MDX({ source }: Props) {
 			components={components}
 			options={{
 				mdxOptions: {
-					remarkPlugins: [remarkGfm],
+					remarkPlugins: [remarkGfm, remarkMath],
 					rehypePlugins: [
+						rehypeKatex,
 						[
 							rehypeShiki,
 							{

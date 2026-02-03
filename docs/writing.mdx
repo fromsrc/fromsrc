@@ -115,3 +115,45 @@ external links automatically get an icon:
 ```md
 check out [github](https://github.com)
 ```
+
+## math
+
+write math equations using latex syntax.
+
+### inline math
+
+use `$` delimiters for inline math:
+
+```md
+the quadratic formula is $x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$
+```
+
+the quadratic formula is $x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$
+
+### display math
+
+use `$$` delimiters for display (block) math:
+
+```md
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
+```
+
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
+
+### math components
+
+use components for explicit control:
+
+```tsx
+import { BlockMath, InlineMath } from "fromsrc/client"
+
+<InlineMath>E = mc^2</InlineMath>
+
+<BlockMath>
+  \sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
+</BlockMath>
+```

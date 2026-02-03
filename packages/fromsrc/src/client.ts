@@ -47,6 +47,7 @@ export {
 	NumberItem,
 	NumberList,
 } from "./components/list"
+export { BlockMath, InlineMath, Math } from "./components/math"
 export type { MermaidProps } from "./components/mermaid"
 export { Mermaid } from "./components/mermaid"
 export { MobileNav } from "./components/mobilenav"
