@@ -2,6 +2,7 @@
 
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import type { JSX, KeyboardEvent } from "react"
+import { getNextIndex } from "../hooks/arrownav"
 import { IconCheck, IconLanguages } from "./icons"
 
 /**
@@ -60,13 +61,18 @@ function LanguageSwitchBase({ current, locales, onChange }: LanguageSwitchProps)
 					setOpen(false)
 					break
 				case "ArrowDown":
-					setIndex((i) => Math.min(i + 1, locales.length - 1))
-					e.preventDefault()
-					break
 				case "ArrowUp":
-					setIndex((i) => Math.max(i - 1, 0))
+				case "Home":
+				case "End": {
+					const next = getNextIndex(e.key, {
+						count: locales.length,
+						current: index,
+						wrap: false,
+					})
+					if (next !== index) setIndex(next)
 					e.preventDefault()
 					break
+				}
 				case "Enter":
 					onChange?.(locales[index]!.code)
 					setOpen(false)
