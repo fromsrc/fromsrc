@@ -1,0 +1,77 @@
+---
+title: definition
+description: term and definition pairs
+order: 33
+---
+
+display definitions and glossary terms.
+
+## definition list
+
+simple term/definition pairs:
+
+```mdx
+<DefinitionList>
+  <Definition term="MDX">
+    markdown with jsx components
+  </Definition>
+  <Definition term="SSG">
+    static site generation
+  </Definition>
+</DefinitionList>
+```
+
+<DefinitionList>
+  <Definition term="MDX">
+    markdown with jsx components
+  </Definition>
+  <Definition term="SSG">
+    static site generation
+  </Definition>
+</DefinitionList>
+
+## glossary
+
+boxed glossary format:
+
+```mdx
+<Glossary>
+  <GlossaryItem term="API">
+    application programming interface
+  </GlossaryItem>
+  <GlossaryItem term="CLI">
+    command line interface
+  </GlossaryItem>
+  <GlossaryItem term="SDK">
+    software development kit
+  </GlossaryItem>
+</Glossary>
+```
+
+<Glossary>
+  <GlossaryItem term="API">
+    application programming interface
+  </GlossaryItem>
+  <GlossaryItem term="CLI">
+    command line interface
+  </GlossaryItem>
+  <GlossaryItem term="SDK">
+    software development kit
+  </GlossaryItem>
+</Glossary>
+
+## props
+
+### definition
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| term | string | - | term to define |
+| children | ReactNode | - | definition text |
+
+### glossaryitem
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| term | string | - | term to define |
+| children | ReactNode | - | definition text |
