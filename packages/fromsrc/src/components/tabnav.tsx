@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { type KeyboardEvent, type ReactNode, useCallback, useRef, useState } from "react"
+import { getNextIndex } from "../hooks/arrownav"
 import { IconChevronDown } from "./icons"
 
 /**
@@ -40,22 +41,14 @@ export function TabNav({ tabs, label = "Navigation" }: TabNavProps): ReactNode {
 
 	const handleKeyDown = useCallback(
 		(e: KeyboardEvent, index: number): void => {
-			let next = index
-			if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-				e.preventDefault()
-				next = index < tabs.length - 1 ? index + 1 : 0
-			} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-				e.preventDefault()
-				next = index > 0 ? index - 1 : tabs.length - 1
-			} else if (e.key === "Home") {
-				e.preventDefault()
-				next = 0
-			} else if (e.key === "End") {
-				e.preventDefault()
-				next = tabs.length - 1
-			} else {
-				return
-			}
+			const next = getNextIndex(e.key, {
+				count: tabs.length,
+				current: index,
+				direction: "both",
+				wrap: true,
+			})
+			if (next === index) return
+			e.preventDefault()
 			refs.current[next]?.focus()
 		},
 		[tabs.length]
@@ -152,27 +145,21 @@ export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownPro
 			if (e.key === "Escape") {
 				e.preventDefault()
 				closeMenu()
-			} else if (e.key === "ArrowDown") {
-				e.preventDefault()
-				const next = index < tabs.length - 1 ? index + 1 : 0
-				setFocused(next)
-				optionRefs.current[next]?.focus()
-			} else if (e.key === "ArrowUp") {
-				e.preventDefault()
-				const next = index > 0 ? index - 1 : tabs.length - 1
-				setFocused(next)
-				optionRefs.current[next]?.focus()
-			} else if (e.key === "Home") {
-				e.preventDefault()
-				setFocused(0)
-				optionRefs.current[0]?.focus()
-			} else if (e.key === "End") {
-				e.preventDefault()
-				setFocused(tabs.length - 1)
-				optionRefs.current[tabs.length - 1]?.focus()
-			} else if (e.key === "Tab") {
-				setOpen(false)
+				return
 			}
+			if (e.key === "Tab") {
+				setOpen(false)
+				return
+			}
+			const next = getNextIndex(e.key, {
+				count: tabs.length,
+				current: index,
+				wrap: true,
+			})
+			if (next === index) return
+			e.preventDefault()
+			setFocused(next)
+			optionRefs.current[next]?.focus()
 		},
 		[closeMenu, tabs.length]
 	)
