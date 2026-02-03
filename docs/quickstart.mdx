@@ -33,34 +33,15 @@ add content using mdx - markdown with react components.
 
 create `docs/installation.mdx`:
 
-```mdx
+```yaml
 ---
 title: installation
 description: how to install
 order: 2
 ---
-
-## install the package
-
-<Install package="my-package" />
-
-## basic usage
-
-import and use the package:
-
-<CodeGroup>
-  <CodeTab title="npm">
-    ```bash
-    npm install my-package
-    ```
-  </CodeTab>
-  <CodeTab title="bun">
-    ```bash
-    bun add my-package
-    ```
-  </CodeTab>
-</CodeGroup>
 ```
+
+then add your content with components like `<Install />` and `<CodeGroup />`.
 
 ## customize the sidebar
 
