@@ -54,6 +54,26 @@ export type { HighlightProps, UnderlineProps } from "./components/highlight"
 export { Highlight, Underline } from "./components/highlight"
 export type { HoverInfoProps, TypePopupProps } from "./components/hover"
 export { HoverInfo, TypePopup } from "./components/hover"
+export {
+	IconAlertCircle,
+	IconCheck,
+	IconCheckCircle,
+	IconChevronDown,
+	IconChevronLeft,
+	IconChevronRight,
+	IconCircle,
+	IconCopy,
+	IconExternalLink,
+	IconInfo,
+	IconLanguages,
+	IconPanelLeft,
+	IconSearch,
+	IconStar,
+	IconThumbsDown,
+	IconThumbsUp,
+	IconX,
+	IconXCircle,
+} from "./components/icons"
 export { Install } from "./components/install"
 export { Kbd, Shortcut } from "./components/kbd"
 export type { LanguageSwitchProps, Locale } from "./components/language"
@@ -87,13 +107,14 @@ export { Properties, Property } from "./components/property"
 export { Quote, Testimonial, Testimonials } from "./components/quote"
 export type { RatingProps } from "./components/rating"
 export { Rating } from "./components/rating"
+export { calcReadTime, ReadTime } from "./components/readtime"
 export type { FlexProps, GridProps, ShowProps } from "./components/responsive"
 export { Flex, Grid, Show } from "./components/responsive"
 export { Frame, Screenshot } from "./components/screenshot"
 export type { ScrollProgressProps } from "./components/scrollprogress"
 export { ScrollProgress } from "./components/scrollprogress"
 export { Search } from "./components/search"
-export type { SidebarItem, SidebarSection, SidebarFolder as SidebarFolderType } from "./components/sidebar"
+export type { SidebarFolder, SidebarItem, SidebarSection } from "./components/sidebar"
 export { Sidebar } from "./components/sidebar"
 export type { SkeletonProps } from "./components/skeleton"
 export { Skeleton, SkeletonCard, SkeletonText } from "./components/skeleton"
