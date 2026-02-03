@@ -1,8 +1,9 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { DocMeta, SearchDoc } from "../content"
+import { useDebounce } from "../hooks/debounce"
 import type { SearchAdapter, SearchResult } from "../search"
 import { localSearch } from "../search"
 
@@ -11,6 +12,7 @@ interface Props {
 	docs: (DocMeta | SearchDoc)[]
 	hidden?: boolean
 	adapter?: SearchAdapter
+	debounce?: number
 }
 
 function toSearchDocs(docs: (DocMeta | SearchDoc)[]): SearchDoc[] {
@@ -20,14 +22,22 @@ function toSearchDocs(docs: (DocMeta | SearchDoc)[]): SearchDoc[] {
 	}))
 }
 
-export function Search({ basePath = "/docs", docs, hidden, adapter = localSearch }: Props) {
+export function Search({
+	basePath = "/docs",
+	docs,
+	hidden,
+	adapter = localSearch,
+	debounce = 100,
+}: Props) {
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState("")
 	const [selected, setSelected] = useState(0)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const router = useRouter()
+	const prevQueryRef = useRef("")
 
 	const searchDocs = useMemo(() => toSearchDocs(docs), [docs])
+	const debouncedQuery = useDebounce(query, debounce)
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,28 +63,40 @@ export function Search({ basePath = "/docs", docs, hidden, adapter = localSearch
 	}, [open])
 
 	const results = useMemo<SearchResult[]>(() => {
-		return adapter.search(query, searchDocs)
-	}, [adapter, searchDocs, query])
+		return adapter.search(debouncedQuery, searchDocs)
+	}, [adapter, searchDocs, debouncedQuery])
 
 	useEffect(() => {
-		setSelected(0)
-	}, [results])
+		if (prevQueryRef.current !== debouncedQuery) {
+			setSelected(0)
+			prevQueryRef.current = debouncedQuery
+		}
+	}, [debouncedQuery])
 
-	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (e.key === "ArrowDown") {
-			e.preventDefault()
-			setSelected((s) => Math.min(s + 1, results.length - 1))
-		}
-		if (e.key === "ArrowUp") {
-			e.preventDefault()
-			setSelected((s) => Math.max(s - 1, 0))
-		}
-		if (e.key === "Enter" && results[selected]) {
-			const r = results[selected]
-			router.push(r.doc.slug ? `${basePath}/${r.doc.slug}` : basePath)
+	const navigate = useCallback(
+		(slug: string | undefined) => {
+			router.push(slug ? `${basePath}/${slug}` : basePath)
 			setOpen(false)
-		}
-	}
+		},
+		[router, basePath],
+	)
+
+	const handleKeyDown = useCallback(
+		(e: React.KeyboardEvent) => {
+			if (e.key === "ArrowDown") {
+				e.preventDefault()
+				setSelected((s) => Math.min(s + 1, results.length - 1))
+			}
+			if (e.key === "ArrowUp") {
+				e.preventDefault()
+				setSelected((s) => Math.max(s - 1, 0))
+			}
+			if (e.key === "Enter" && results[selected]) {
+				navigate(results[selected].doc.slug)
+			}
+		},
+		[results, selected, navigate],
+	)
 
 	if (!open) {
 		if (hidden) return null
@@ -159,12 +181,7 @@ export function Search({ basePath = "/docs", docs, hidden, adapter = localSearch
 											type="button"
 											role="option"
 											aria-selected={i === selected}
-											onClick={() => {
-												router.push(
-													result.doc.slug ? `${basePath}/${result.doc.slug}` : basePath
-												)
-												setOpen(false)
-											}}
+											onClick={() => navigate(result.doc.slug)}
 											className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
 												i === selected
 													? "bg-bg border border-line text-fg"

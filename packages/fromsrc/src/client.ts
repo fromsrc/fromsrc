@@ -131,6 +131,7 @@ export type { ZoomProps } from "./components/zoom"
 export { Zoom } from "./components/zoom"
 export { useAnchorScroll, type AnchorOptions } from "./hooks/anchor"
 export { useCopy } from "./hooks/copy"
+export { useDebounce } from "./hooks/debounce"
 export { useKeyboardNav } from "./hooks/keyboard"
 export {
 	useIsDesktop,
