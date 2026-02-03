@@ -14,7 +14,6 @@ import { Sidebar } from "fromsrc/client"
 <Sidebar
   title="docs"
   navigation={navigation}
-  docs={docs}
   github="https://github.com/org/repo"
 />
 ```
@@ -88,6 +87,33 @@ const navigation = [
 ]
 ```
 
+## icons
+
+add icons to items and folders:
+
+```tsx
+import { Book, Settings, Puzzle } from "lucide-react"
+
+const navigation = [
+  {
+    title: "guides",
+    items: [
+      { type: "item", title: "intro", href: "/docs/intro", icon: <Book size={16} /> },
+      {
+        type: "folder",
+        title: "config",
+        icon: <Settings size={16} />,
+        items: [
+          { type: "item", title: "plugins", href: "/docs/plugins", icon: <Puzzle size={16} /> },
+        ]
+      }
+    ]
+  }
+]
+```
+
+icons appear in the collapsed view and next to items in the expanded view.
+
 ## collapsible sidebar
 
 enable icon-only collapsed mode with the `collapsible` prop:
@@ -96,15 +122,14 @@ enable icon-only collapsed mode with the `collapsible` prop:
 <Sidebar
   title="docs"
   navigation={navigation}
-  docs={docs}
   collapsible
 />
 ```
 
 when collapsed:
-- shows only the logo
+- shows only the toggle button
 - navigation items show icons only
-- collapse state persists in localstorage
+- expands on hover
 
 ## auto-expand folders
 
