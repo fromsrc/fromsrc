@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { type ComponentPropsWithoutRef, type ReactNode, memo, useId } from "react"
-import { Tooltip } from "./tooltip"
+import { FormLabel } from "./formlabel"
 
 /**
  * Available sizes for the switch component.
@@ -51,8 +51,6 @@ function SwitchComponent({
 }: SwitchProps): React.ReactElement {
 	const generatedId = useId()
 	const switchId = id || generatedId
-	const labelId = `${switchId}-label`
-	const descriptionId = tooltip ? `${switchId}-desc` : undefined
 
 	const handleClick = (): void => {
 		onChange?.(!checked)
@@ -72,8 +70,6 @@ function SwitchComponent({
 				type="button"
 				role="switch"
 				aria-checked={checked}
-				aria-labelledby={label ? labelId : undefined}
-				aria-describedby={descriptionId}
 				aria-disabled={disabled}
 				disabled={disabled}
 				onClick={handleClick}
@@ -100,31 +96,9 @@ function SwitchComponent({
 				/>
 			</button>
 			{label && (
-				<label
-					id={labelId}
-					htmlFor={switchId}
-					className={`flex items-center gap-1.5 text-sm text-fg select-none ${disabled ? "opacity-50" : "cursor-pointer"}`}
-				>
-					{label}
-					{tooltip && (
-						<Tooltip content={tooltip}>
-							<span id={descriptionId} className="sr-only">
-								{typeof tooltip === "string" ? tooltip : "Additional information"}
-							</span>
-							<svg
-								aria-hidden="true"
-								className="h-3.5 w-3.5 text-muted"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								role="img"
-							>
-								<circle cx="12" cy="12" r="10" strokeWidth={2} />
-								<path strokeLinecap="round" strokeWidth={2} d="M12 16v-4m0-4h.01" />
-							</svg>
-						</Tooltip>
-					)}
-				</label>
+				<span className={disabled ? "opacity-50" : "cursor-pointer"}>
+					<FormLabel label={label} tooltip={tooltip} htmlFor={switchId} />
+				</span>
 			)}
 		</div>
 	)
