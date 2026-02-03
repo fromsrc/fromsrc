@@ -1,6 +1,7 @@
 "use client"
 
-import { type ComponentPropsWithoutRef, useId } from "react"
+import { type ComponentPropsWithoutRef, type ReactNode, useId } from "react"
+import { Tooltip } from "./tooltip"
 
 export type SwitchSize = "sm" | "md" | "lg"
 
@@ -10,6 +11,7 @@ export type SwitchSize = "sm" | "md" | "lg"
  * @param size - switch size
  * @param label - accessible label
  * @param disabled - whether the switch is disabled
+ * @param tooltip - help text shown on hover
  * @example <Switch label="Notifications" checked={on} onChange={setOn} />
  */
 export interface SwitchProps extends Omit<ComponentPropsWithoutRef<"button">, "onChange"> {
@@ -17,6 +19,7 @@ export interface SwitchProps extends Omit<ComponentPropsWithoutRef<"button">, "o
 	onChange?: (checked: boolean) => void
 	size?: SwitchSize
 	label?: string
+	tooltip?: ReactNode
 }
 
 const trackSizes: Record<SwitchSize, string> = {
@@ -36,6 +39,7 @@ export function Switch({
 	onChange,
 	size = "md",
 	label,
+	tooltip,
 	disabled = false,
 	className = "",
 	id,
@@ -79,9 +83,23 @@ export function Switch({
 				<label
 					id={`${switchId}-label`}
 					htmlFor={switchId}
-					className={`text-sm text-fg select-none ${disabled ? "opacity-50" : "cursor-pointer"}`}
+					className={`flex items-center gap-1.5 text-sm text-fg select-none ${disabled ? "opacity-50" : "cursor-pointer"}`}
 				>
 					{label}
+					{tooltip && (
+						<Tooltip content={tooltip}>
+							<svg
+								aria-hidden="true"
+								className="h-3.5 w-3.5 text-muted"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<circle cx="12" cy="12" r="10" strokeWidth={2} />
+								<path strokeLinecap="round" strokeWidth={2} d="M12 16v-4m0-4h.01" />
+							</svg>
+						</Tooltip>
+					)}
 				</label>
 			)}
 		</div>

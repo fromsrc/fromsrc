@@ -2,6 +2,7 @@
 
 import { useCallback, useId, useRef, useState, type ReactNode } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
+import { Tooltip } from "./tooltip"
 
 export interface SelectOption {
 	value: string
@@ -18,6 +19,7 @@ export interface SelectOption {
  * @param disabled - disable the select
  * @param error - error message
  * @param label - accessible label
+ * @param tooltip - help text shown on hover
  * @example <Select options={[{ value: "1", label: "One" }]} onChange={console.log} />
  */
 export interface SelectProps {
@@ -29,6 +31,7 @@ export interface SelectProps {
 	disabled?: boolean
 	error?: ReactNode
 	label?: ReactNode
+	tooltip?: ReactNode
 }
 
 export function Select({
@@ -40,6 +43,7 @@ export function Select({
 	disabled = false,
 	error,
 	label,
+	tooltip,
 }: SelectProps) {
 	const [internalValue, setInternalValue] = useState(defaultValue)
 	const [open, setOpen] = useState(false)
@@ -141,8 +145,22 @@ export function Select({
 	return (
 		<div className="flex flex-col gap-1.5">
 			{label && (
-				<label id={labelId} className="text-sm font-medium text-fg">
+				<label id={labelId} className="flex items-center gap-1.5 text-sm font-medium text-fg">
 					{label}
+					{tooltip && (
+						<Tooltip content={tooltip}>
+							<svg
+								aria-hidden="true"
+								className="h-3.5 w-3.5 text-muted"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<circle cx="12" cy="12" r="10" strokeWidth={2} />
+								<path strokeLinecap="round" strokeWidth={2} d="M12 16v-4m0-4h.01" />
+							</svg>
+						</Tooltip>
+					)}
 				</label>
 			)}
 			<div ref={containerRef} className="relative">

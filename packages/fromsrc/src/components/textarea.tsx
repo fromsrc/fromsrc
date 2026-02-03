@@ -9,6 +9,7 @@ import {
 	useRef,
 	useState,
 } from "react"
+import { Tooltip } from "./tooltip"
 
 export type TextareaVariant = "default" | "error"
 export type TextareaSize = "sm" | "md" | "lg"
@@ -22,6 +23,7 @@ export type TextareaSize = "sm" | "md" | "lg"
  * @param autoresize - auto-resize based on content
  * @param maxLength - maximum character count
  * @param showCount - show character count
+ * @param tooltip - help text shown on hover
  * @example <Textarea label="Message" placeholder="Type here..." />
  */
 export interface TextareaProps extends Omit<ComponentPropsWithoutRef<"textarea">, "size"> {
@@ -32,6 +34,7 @@ export interface TextareaProps extends Omit<ComponentPropsWithoutRef<"textarea">
 	hint?: ReactNode
 	autoresize?: boolean
 	showCount?: boolean
+	tooltip?: ReactNode
 }
 
 const variants: Record<TextareaVariant, string> = {
@@ -53,6 +56,7 @@ export function Textarea({
 	hint,
 	autoresize = false,
 	showCount = false,
+	tooltip,
 	maxLength,
 	className = "",
 	id,
@@ -96,8 +100,22 @@ export function Textarea({
 	return (
 		<div className="flex flex-col gap-1.5">
 			{label && (
-				<label htmlFor={textareaId} className="text-sm font-medium text-fg">
+				<label htmlFor={textareaId} className="flex items-center gap-1.5 text-sm font-medium text-fg">
 					{label}
+					{tooltip && (
+						<Tooltip content={tooltip}>
+							<svg
+								aria-hidden="true"
+								className="h-3.5 w-3.5 text-muted"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<circle cx="12" cy="12" r="10" strokeWidth={2} />
+								<path strokeLinecap="round" strokeWidth={2} d="M12 16v-4m0-4h.01" />
+							</svg>
+						</Tooltip>
+					)}
 				</label>
 			)}
 			<textarea

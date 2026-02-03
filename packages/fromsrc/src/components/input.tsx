@@ -1,6 +1,7 @@
 "use client"
 
 import { type ComponentPropsWithoutRef, type ReactNode, useId } from "react"
+import { Tooltip } from "./tooltip"
 
 export type InputVariant = "default" | "error"
 export type InputSize = "sm" | "md" | "lg"
@@ -11,6 +12,7 @@ export type InputSize = "sm" | "md" | "lg"
  * @param label - accessible label
  * @param error - error message
  * @param hint - helper text
+ * @param tooltip - help text shown on hover
  * @example <Input label="Email" placeholder="you@example.com" />
  */
 export interface InputProps extends Omit<ComponentPropsWithoutRef<"input">, "size"> {
@@ -19,6 +21,7 @@ export interface InputProps extends Omit<ComponentPropsWithoutRef<"input">, "siz
 	label?: ReactNode
 	error?: ReactNode
 	hint?: ReactNode
+	tooltip?: ReactNode
 }
 
 const variants: Record<InputVariant, string> = {
@@ -38,6 +41,7 @@ export function Input({
 	label,
 	error,
 	hint,
+	tooltip,
 	className = "",
 	id,
 	...props
@@ -53,8 +57,22 @@ export function Input({
 	return (
 		<div className="flex flex-col gap-1.5">
 			{label && (
-				<label htmlFor={inputId} className="text-sm font-medium text-fg">
+				<label htmlFor={inputId} className="flex items-center gap-1.5 text-sm font-medium text-fg">
 					{label}
+					{tooltip && (
+						<Tooltip content={tooltip}>
+							<svg
+								aria-hidden="true"
+								className="h-3.5 w-3.5 text-muted"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<circle cx="12" cy="12" r="10" strokeWidth={2} />
+								<path strokeLinecap="round" strokeWidth={2} d="M12 16v-4m0-4h.01" />
+							</svg>
+						</Tooltip>
+					)}
 				</label>
 			)}
 			<input
