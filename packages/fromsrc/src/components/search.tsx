@@ -20,6 +20,10 @@ function toSearchDoc(doc: DocMeta | SearchDoc): SearchDoc {
 	return { ...doc, content: "" }
 }
 
+function getOptionId(index: number): string {
+	return `search-option-${index}`
+}
+
 export function Search({
 	basePath = "/docs",
 	docs,
@@ -31,6 +35,7 @@ export function Search({
 	const [query, setQuery] = useState("")
 	const [selected, setSelected] = useState(0)
 	const inputRef = useRef<HTMLInputElement>(null)
+	const listRef = useRef<HTMLUListElement>(null)
 	const router = useRouter()
 	const prevQueryRef = useRef("")
 
@@ -64,12 +69,24 @@ export function Search({
 		return adapter.search(debouncedQuery, searchDocs)
 	}, [adapter, searchDocs, debouncedQuery])
 
+	const safeSelected = useMemo(() => {
+		if (results.length === 0) return -1
+		return Math.min(selected, results.length - 1)
+	}, [selected, results.length])
+
 	useEffect(() => {
 		if (prevQueryRef.current !== debouncedQuery) {
 			setSelected(0)
 			prevQueryRef.current = debouncedQuery
 		}
 	}, [debouncedQuery])
+
+	useEffect(() => {
+		if (safeSelected >= 0 && listRef.current) {
+			const option = listRef.current.querySelector(`#${getOptionId(safeSelected)}`)
+			option?.scrollIntoView({ block: "nearest" })
+		}
+	}, [safeSelected])
 
 	const navigate = useCallback(
 		(slug: string | undefined) => {
@@ -81,19 +98,18 @@ export function Search({
 
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent) => {
+			if (results.length === 0) return
 			if (e.key === "ArrowDown") {
 				e.preventDefault()
 				setSelected((s) => Math.min(s + 1, results.length - 1))
-			}
-			if (e.key === "ArrowUp") {
+			} else if (e.key === "ArrowUp") {
 				e.preventDefault()
 				setSelected((s) => Math.max(s - 1, 0))
-			}
-			if (e.key === "Enter" && results[selected]) {
-				navigate(results[selected].doc.slug)
+			} else if (e.key === "Enter" && safeSelected >= 0 && results[safeSelected]) {
+				navigate(results[safeSelected].doc.slug)
 			}
 		},
-		[results, selected, navigate],
+		[results, safeSelected, navigate],
 	)
 
 	if (!open) {
@@ -159,44 +175,45 @@ export function Search({
 							className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none"
 							role="combobox"
 							aria-expanded={results.length > 0}
-							aria-controls="search-results"
-							aria-activedescendant={results[selected] ? `result-${selected}` : undefined}
+							aria-haspopup="listbox"
+							aria-controls="search-listbox"
+							aria-activedescendant={safeSelected >= 0 ? getOptionId(safeSelected) : undefined}
 							aria-autocomplete="list"
 						/>
 						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">
 							esc
 						</kbd>
 					</div>
-					<div className="max-h-80 overflow-y-auto" id="search-results" role="listbox">
+					<div className="max-h-80 overflow-y-auto">
 						{results.length === 0 ? (
 							<div className="p-8 text-center text-muted text-sm">no results</div>
 						) : (
-							<ul className="p-2">
+							<ul ref={listRef} id="search-listbox" role="listbox" className="p-2">
 								{results.map((result, i) => (
-									<li key={result.doc.slug || "index"}>
-										<button
-											id={`result-${i}`}
-											type="button"
-											role="option"
-											aria-selected={i === selected}
-											onClick={() => navigate(result.doc.slug)}
-											className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-												i === selected
-													? "bg-bg border border-line text-fg"
-													: "text-muted hover:bg-bg/50"
-											}`}
-										>
-											<div className="text-sm">{result.doc.title}</div>
-											{result.snippet ? (
-												<div className="text-xs text-dim truncate">{result.snippet}</div>
-											) : (
-												result.doc.description && (
-													<div className="text-xs text-dim truncate">
-														{result.doc.description}
-													</div>
-												)
-											)}
-										</button>
+									<li
+										key={result.doc.slug || "index"}
+										id={getOptionId(i)}
+										role="option"
+										aria-selected={i === safeSelected}
+										onClick={() => navigate(result.doc.slug)}
+										onKeyDown={(e) => e.key === "Enter" && navigate(result.doc.slug)}
+										tabIndex={-1}
+										className={`w-full text-left px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+											i === safeSelected
+												? "bg-bg border border-line text-fg"
+												: "text-muted hover:bg-bg/50"
+										}`}
+									>
+										<div className="text-sm">{result.doc.title}</div>
+										{result.snippet ? (
+											<div className="text-xs text-dim truncate">{result.snippet}</div>
+										) : (
+											result.doc.description && (
+												<div className="text-xs text-dim truncate">
+													{result.doc.description}
+												</div>
+											)
+										)}
 									</li>
 								))}
 							</ul>
