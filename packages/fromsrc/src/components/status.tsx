@@ -26,9 +26,11 @@ const dotStyles: Record<StatusType, string> = {
 export function Status({ type = "neutral", children }: StatusProps) {
 	return (
 		<span
+			role="status"
+			aria-label={`${type}: ${children}`}
 			className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full border ${statusStyles[type]}`}
 		>
-			<span className={`w-1.5 h-1.5 rounded-full ${dotStyles[type]}`} />
+			<span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full ${dotStyles[type]}`} />
 			{children}
 		</span>
 	)
@@ -36,15 +38,21 @@ export function Status({ type = "neutral", children }: StatusProps) {
 
 interface StatusDotProps {
 	type?: StatusType
+	label?: string
 	pulse?: boolean
 }
 
-export function StatusDot({ type = "neutral", pulse = false }: StatusDotProps) {
+export function StatusDot({ type = "neutral", label, pulse = false }: StatusDotProps) {
 	return (
-		<span className="relative inline-flex">
-			<span className={`w-2 h-2 rounded-full ${dotStyles[type]}`} />
+		<span
+			role="status"
+			aria-label={label ?? type}
+			className="relative inline-flex"
+		>
+			<span aria-hidden="true" className={`w-2 h-2 rounded-full ${dotStyles[type]}`} />
 			{pulse && (
 				<span
+					aria-hidden="true"
 					className={`absolute inset-0 w-2 h-2 rounded-full animate-ping opacity-75 ${dotStyles[type]}`}
 				/>
 			)}
