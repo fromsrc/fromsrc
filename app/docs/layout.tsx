@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { Sidebar } from "./_components/sidebar"
 import { MobileNavigation } from "./_components/mobilenav"
 import { KeyboardNav } from "./_components/keyboard"
+import { SearchModal } from "./_components/search"
 import { getAllDocs } from "./_lib/content"
 
 export default async function DocsLayout({ children }: { children: ReactNode }) {
@@ -9,6 +10,7 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
 	return (
 		<>
 			<MobileNavigation />
+			<SearchModal docs={docs} />
 			<div className="flex min-h-screen bg-bg">
 				<KeyboardNav docs={docs} />
 				<div className="hidden lg:block">

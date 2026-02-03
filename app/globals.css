@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./docs/_components/prose.css";
 
 @theme {
 	--color-bg: #0c0c0c;
@@ -31,6 +32,29 @@
 	::selection {
 		background: var(--color-fg);
 		color: var(--color-bg);
+	}
+
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--color-dim);
+		border-radius: 4px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--color-muted);
+	}
+
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-dim) transparent;
 	}
 }
 
@@ -70,11 +94,15 @@
 	}
 
 	.animate-fadein {
-		animation: fadein 250ms ease;
+		animation: fadein 400ms ease;
 	}
 
 	.animate-fadeout {
 		animation: fadeout 200ms ease forwards;
+	}
+
+	.animate-slideup {
+		animation: slideup 500ms ease;
 	}
 
 	@keyframes slidein {
@@ -95,5 +123,10 @@
 	@keyframes fadeout {
 		from { opacity: 1; }
 		to { opacity: 0; }
+	}
+
+	@keyframes slideup {
+		from { opacity: 0; transform: translateY(20px); }
+		to { opacity: 1; transform: translateY(0); }
 	}
 }
