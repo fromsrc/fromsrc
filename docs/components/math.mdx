@@ -1,0 +1,96 @@
+---
+title: math
+description: latex math equations
+order: 63
+---
+
+render latex equations with katex.
+
+## inline math
+
+use `InlineMath` for equations within text.
+
+```mdx
+the equation <InlineMath>E = mc^2</InlineMath> is famous.
+```
+
+the equation <InlineMath>E = mc^2</InlineMath> is famous.
+
+## block math
+
+use `BlockMath` for standalone equations.
+
+```mdx
+<BlockMath>
+  \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+</BlockMath>
+```
+
+<BlockMath>\int_0^\infty e^{-x^2} dx = \frac{"\sqrt{\pi}"}{2}</BlockMath>
+
+## math component
+
+the base `Math` component with display mode option.
+
+```mdx
+<Math>x^2 + y^2 = r^2</Math>
+<Math display>x^2 + y^2 = r^2</Math>
+```
+
+inline: <Math>x^2 + y^2 = r^2</Math>
+
+display mode:
+<Math display>x^2 + y^2 = r^2</Math>
+
+## examples
+
+### fractions
+
+<InlineMath>\frac{a}{b}</InlineMath>
+
+### subscripts and superscripts
+
+<InlineMath>x_i^2</InlineMath>
+
+### greek letters
+
+<InlineMath>\alpha + \beta = \gamma</InlineMath>
+
+### matrices
+
+<BlockMath>\begin{"{pmatrix}"} a & b \\ c & d \end{"{pmatrix}"}</BlockMath>
+
+## props
+
+### math
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| children | ReactNode | required | latex expression |
+| display | boolean | false | block mode with centering |
+
+### blockmath
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| children | ReactNode | required | latex expression |
+
+### inlinemath
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| children | ReactNode | required | latex expression |
+
+## requirements
+
+requires katex as a peer dependency.
+
+```bash
+bun add katex
+```
+
+import katex css in your layout:
+
+```tsx
+import "katex/dist/katex.min.css"
+```

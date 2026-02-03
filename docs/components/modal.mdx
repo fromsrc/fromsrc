@@ -1,48 +1,66 @@
 ---
 title: modal
 description: dialog overlay for focused content
-order: 13
+order: 64
 ---
 
-the modal component displays content in a focused overlay.
+displays content in a focused overlay dialog.
 
 ## usage
 
-```text
-const [open, setOpen] = useState(false)
+```tsx
+import { Modal } from "fromsrc/client"
+import { useState } from "react"
 
-<button onClick={() => setOpen(true)}>open modal</button>
+function Example() {
+  const [open, setOpen] = useState(false)
 
-<Modal open={open} onClose={() => setOpen(false)} title="confirm">
-  <p>are you sure you want to continue?</p>
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>open modal</button>
+      <Modal open={open} onClose={() => setOpen(false)} title="confirm">
+        <p>are you sure you want to continue?</p>
+      </Modal>
+    </>
+  )
+}
+```
+
+## with title
+
+modal with a header showing title and close button.
+
+```tsx
+<Modal open={open} onClose={onClose} title="settings">
+  <p>modal content here</p>
+</Modal>
+```
+
+## without title
+
+omit the title for custom layouts.
+
+```tsx
+<Modal open={open} onClose={onClose}>
+  <div className="p-4">
+    custom header and content
+  </div>
 </Modal>
 ```
 
 ## props
 
-| prop | type | description |
-|------|------|-------------|
-| open | `boolean` | whether modal is visible |
-| onClose | `() => void` | callback when modal should close |
-| title | `string` | optional title in header |
-| children | `ReactNode` | modal content |
+| prop | type | default | description |
+|------|------|---------|-------------|
+| open | boolean | required | whether modal is visible |
+| onClose | () => void | required | callback when modal closes |
+| title | string | - | optional title in header |
+| children | ReactNode | required | modal content |
 
 ## features
 
-- closes on `Escape` key
+- closes on escape key
 - closes on backdrop click
 - prevents body scroll while open
-- focus trap inside modal
-- aria attributes for accessibility
-
-## without title
-
-for custom layouts, omit the title prop:
-
-```text
-<Modal open={open} onClose={onClose}>
-  <div className="p-4">
-    custom content here
-  </div>
-</Modal>
-```
+- blurred backdrop overlay
+- accessible with aria dialog role

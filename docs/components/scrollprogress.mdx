@@ -1,0 +1,55 @@
+---
+title: scrollprogress
+description: scroll position indicator
+order: 62
+---
+
+shows reading progress as a bar at the top of the page.
+
+## usage
+
+add to your layout to show scroll progress.
+
+```tsx
+import { ScrollProgress } from "fromsrc/client"
+
+export default function Layout({ children }) {
+  return (
+    <>
+      <ScrollProgress />
+      {children}
+    </>
+  )
+}
+```
+
+## custom color
+
+change the progress bar color.
+
+```tsx
+<ScrollProgress color="#22c55e" />
+<ScrollProgress color="var(--accent)" />
+```
+
+## custom height
+
+adjust the bar thickness.
+
+```tsx
+<ScrollProgress height={4} />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| color | string | "var(--accent)" | bar color |
+| height | number | 2 | bar height in pixels |
+
+## features
+
+- fixed position at top of viewport
+- smooth animation on scroll
+- accessible with aria progressbar role
+- passive scroll listener for performance
