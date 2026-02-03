@@ -6,7 +6,6 @@ import { type ReactNode, useState } from "react"
 import type { DocMeta } from "../content"
 import { Folder } from "./folder"
 import { NavLink } from "./navlink"
-import { Search } from "./search"
 
 export interface SidebarItem {
 	type: "item"

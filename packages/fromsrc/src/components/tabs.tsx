@@ -1,14 +1,6 @@
 "use client"
 
-import {
-	Children,
-	createContext,
-	isValidElement,
-	type ReactElement,
-	type ReactNode,
-	useContext,
-	useState,
-} from "react"
+import { createContext, type ReactNode, useContext, useState } from "react"
 
 interface TabsContextValue {
 	active: string
