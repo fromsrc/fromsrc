@@ -56,8 +56,24 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 					</span>
 				</Link>
 			</div>
-			<div className={`px-4 mb-6 ${collapsed ? "opacity-0 h-0 overflow-hidden" : "opacity-100"} transition-all duration-200`}>
-				<Search basePath={basePath} docs={docs} />
+			<div className={`${collapsed ? "px-2 mb-4" : "px-4 mb-6"} transition-all duration-200`}>
+				{collapsed ? (
+					<button
+						type="button"
+						onClick={() => {
+							const event = new KeyboardEvent("keydown", { key: "k", metaKey: true })
+							document.dispatchEvent(event)
+						}}
+						className="w-full flex items-center justify-center p-2 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors"
+						aria-label="search"
+					>
+						<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+						</svg>
+					</button>
+				) : (
+					<Search basePath={basePath} docs={docs} />
+				)}
 			</div>
 			<nav className={`${collapsed ? "px-2" : "px-4"} flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] transition-all duration-200`}>
 				{collapsed ? (
@@ -72,7 +88,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 								<Link
 									key={i}
 									href={href}
-									className="flex items-center justify-center p-2 my-0.5 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors"
+									className="flex items-center justify-center p-2 my-0.5 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors [&>svg]:w-4 [&>svg]:h-4"
 									title={item.title}
 								>
 									{icon || <span className="w-4 h-4 rounded bg-surface" />}
