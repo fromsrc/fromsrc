@@ -70,6 +70,7 @@ export function Sidebar({
 		<aside
 			onMouseEnter={handleEnter}
 			onMouseLeave={handleLeave}
+			aria-label="sidebar"
 			className={`${collapsed ? (hovered ? "w-60 shadow-lg z-50" : "w-16") : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width,box-shadow] duration-200 ease-out overflow-hidden`}
 		>
 			<div className="px-3 h-14 flex items-center">
@@ -132,6 +133,7 @@ export function Sidebar({
 				</button>
 			</div>
 			<nav
+				aria-label="documentation"
 				className="px-3 pt-2 flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
 				style={{
 					maskImage: "linear-gradient(to bottom, white 0%, white calc(100% - 12px), transparent)",
@@ -156,8 +158,11 @@ export function Sidebar({
 										href={href}
 										className="w-10 h-8 flex items-center justify-center my-0.5 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors [&>svg]:w-4 [&>svg]:h-4"
 										title={item.title}
+										aria-label={item.title}
 									>
-										{icon || <span className="w-4 h-4 rounded bg-surface" />}
+										<span aria-hidden="true">
+											{icon || <span className="w-4 h-4 rounded bg-surface" />}
+										</span>
 									</Link>
 								)
 							}),

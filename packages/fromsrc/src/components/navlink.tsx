@@ -33,7 +33,11 @@ export function NavLink({ href, children, icon, onClick, external }: Props) {
 				onClick={onClick}
 				className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-md border-l-2 text-muted hover:text-fg hover:bg-surface/50 border-transparent transition-colors"
 			>
-				{icon && <span className="w-4 h-4 shrink-0">{icon}</span>}
+				{icon && (
+					<span className="w-4 h-4 shrink-0" aria-hidden="true">
+						{icon}
+					</span>
+				)}
 				<span className="truncate">{children}</span>
 				<svg
 					className="w-3 h-3 shrink-0 opacity-50"
@@ -59,13 +63,18 @@ export function NavLink({ href, children, icon, onClick, external }: Props) {
 			href={href}
 			onClick={onClick}
 			prefetch
+			aria-current={isActive ? "page" : undefined}
 			className={`flex items-center gap-2 px-2 py-1.5 text-xs rounded-md border-l-2 transition-colors ${
 				isActive
 					? "text-fg bg-surface border-accent"
 					: "text-muted hover:text-fg hover:bg-surface/50 border-transparent"
 			}`}
 		>
-			{icon && <span className="w-4 h-4 shrink-0">{icon}</span>}
+			{icon && (
+				<span className="w-4 h-4 shrink-0" aria-hidden="true">
+					{icon}
+				</span>
+			)}
 			<span className="truncate">{children}</span>
 		</Link>
 	)

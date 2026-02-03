@@ -37,11 +37,16 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 					<Link
 						href={folder.href}
 						prefetch
+						aria-current={isActive ? "page" : undefined}
 						className={`flex-1 flex items-center gap-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
 							isActive ? "text-fg bg-surface" : "text-muted hover:text-fg"
 						}`}
 					>
-						{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
+						{folder.icon && (
+							<span className="w-4 h-4 shrink-0" aria-hidden="true">
+								{folder.icon}
+							</span>
+						)}
 						<span className="flex-1 text-left truncate">{folder.title}</span>
 					</Link>
 				) : (
@@ -51,7 +56,11 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 						aria-expanded={open}
 						className="flex-1 flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
 					>
-						{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
+						{folder.icon && (
+							<span className="w-4 h-4 shrink-0" aria-hidden="true">
+								{folder.icon}
+							</span>
+						)}
 						<span className="flex-1 text-left truncate">{folder.title}</span>
 					</button>
 				)}
