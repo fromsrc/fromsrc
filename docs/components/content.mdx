@@ -1,0 +1,75 @@
+---
+title: content
+description: renders mdx content with built-in components
+---
+
+renders mdx content client-side with syntax highlighting and all built-in components.
+
+## usage
+
+```tsx
+import { Content } from "fromsrc/components"
+
+export default function Page({ source }: { source: string }) {
+  return <Content source={source} />
+}
+```
+
+pass raw mdx content as a string. the component compiles and renders it client-side.
+
+## how it works
+
+content uses [@mdx-js/mdx](https://mdxjs.com) to compile mdx at runtime. it includes:
+
+- remark-gfm for github flavored markdown
+- shiki syntax highlighting with github-dark-default theme
+- line highlighting, diff, and focus transformers
+- all built-in fromsrc components
+
+## built-in components
+
+the following components are available in mdx content without imports:
+
+| component | description |
+|-----------|-------------|
+| Accordion | collapsible sections |
+| Badge | inline labels |
+| Banner | page-wide notices |
+| Callout | highlighted information boxes |
+| Card, Cards | feature highlights |
+| CodeGroup | tabbed code blocks |
+| Create | project scaffolding command |
+| File, Files, Folder | file tree display |
+| Github | github link button |
+| Install | package manager tabs |
+| Mermaid | diagrams |
+| Step, Steps | numbered instructions |
+| Tab, Tabs | tabbed content |
+| TocInline | inline table of contents |
+| Tooltip | hover information |
+| TypeTable | props documentation |
+| Video | video embeds |
+| Zoom | image lightbox |
+
+## prose styling
+
+content applies prose styling to standard markdown elements:
+
+- headings with anchor ids (h2, h3)
+- paragraphs with muted text
+- links with underline on hover
+- lists with bullet points
+- inline code with background
+- code blocks with syntax highlighting
+- blockquotes with left border
+- tables with hover states
+
+## loading state
+
+while compiling, content shows a skeleton placeholder with animated pulse.
+
+## props
+
+| prop | type | required | description |
+|------|------|----------|-------------|
+| source | string | yes | raw mdx content to render |
