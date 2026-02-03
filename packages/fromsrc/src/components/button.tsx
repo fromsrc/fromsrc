@@ -1,16 +1,19 @@
 "use client"
 
-import { type ComponentPropsWithoutRef, forwardRef } from "react"
+import { type ComponentPropsWithoutRef, type JSX, forwardRef, memo } from "react"
 import { Spinner } from "./spinner"
 
+/** Visual style variant for the button */
 export type ButtonVariant = "default" | "primary" | "ghost" | "danger"
+
+/** Size variant for the button */
 export type ButtonSize = "sm" | "md" | "lg"
 
 /**
- * @param variant - visual style variant
- * @param size - button size
- * @param loading - show loading spinner
- * @example <Button variant="primary" size="md">Submit</Button>
+ * Props for the Button component
+ * @property variant - Visual style variant (default, primary, ghost, danger)
+ * @property size - Button size (sm, md, lg)
+ * @property loading - When true, shows a loading spinner and disables interaction
  */
 export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
 	variant?: ButtonVariant
@@ -37,27 +40,34 @@ const spinnerSizes: Record<ButtonSize, "sm" | "md" | "lg"> = {
 	lg: "md",
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+const ButtonInner = forwardRef<HTMLButtonElement, ButtonProps>(
 	(
 		{ variant = "default", size = "md", loading, disabled, children, className = "", ...props },
 		ref,
-	) => {
+	): JSX.Element => {
 		const isDisabled = disabled || loading
 
 		return (
 			<button
 				ref={ref}
+				type={props.type ?? "button"}
 				disabled={isDisabled}
 				aria-disabled={isDisabled || undefined}
 				aria-busy={loading || undefined}
+				aria-live={loading ? "polite" : undefined}
 				className={`inline-flex items-center justify-center rounded-md border font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`.trim()}
 				{...props}
 			>
-				{loading && <Spinner size={spinnerSizes[size]} className="shrink-0" />}
+				{loading && (
+					<Spinner size={spinnerSizes[size]} className="shrink-0" aria-hidden="true" />
+				)}
 				{children}
 			</button>
 		)
 	},
 )
 
-Button.displayName = "Button"
+ButtonInner.displayName = "Button"
+
+/** Accessible button component with variants, sizes, and loading state */
+export const Button = memo(ButtonInner)
