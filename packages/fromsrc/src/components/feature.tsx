@@ -1,16 +1,23 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { type ReactNode, type JSX, memo } from "react"
 
+/**
+ * Props for the Feature component
+ */
 export interface FeatureProps {
 	icon?: ReactNode
 	title: string
 	children: ReactNode
 }
 
-export function Feature({ icon, title, children }: FeatureProps) {
+export const Feature = memo(function Feature({
+	icon,
+	title,
+	children,
+}: FeatureProps): JSX.Element {
 	return (
-		<article className="flex gap-3 sm:gap-4 my-4">
+		<article className="flex gap-3 sm:gap-4 my-4" role="article">
 			{icon && (
 				<div
 					aria-hidden="true"
@@ -25,27 +32,47 @@ export function Feature({ icon, title, children }: FeatureProps) {
 			</div>
 		</article>
 	)
-}
+})
 
+/**
+ * Props for the Features container component
+ */
 export interface FeaturesProps {
 	children: ReactNode
 	columns?: 2 | 3
 }
 
-export function Features({ children, columns = 2 }: FeaturesProps) {
+export const Features = memo(function Features({
+	children,
+	columns = 2,
+}: FeaturesProps): JSX.Element {
 	const gridClass = columns === 3 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2"
-	return <section className={`grid gap-4 sm:gap-6 my-6 ${gridClass}`}>{children}</section>
-}
+	return (
+		<section className={`grid gap-4 sm:gap-6 my-6 ${gridClass}`} aria-label="Features">
+			{children}
+		</section>
+	)
+})
 
+/**
+ * Props for the FeatureCard component
+ */
 export interface FeatureCardProps {
 	icon?: ReactNode
 	title: string
 	children: ReactNode
 }
 
-export function FeatureCard({ icon, title, children }: FeatureCardProps) {
+export const FeatureCard = memo(function FeatureCard({
+	icon,
+	title,
+	children,
+}: FeatureCardProps): JSX.Element {
 	return (
-		<article className="p-4 sm:p-5 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors">
+		<article
+			className="p-4 sm:p-5 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors"
+			role="article"
+		>
 			{icon && (
 				<div
 					aria-hidden="true"
@@ -55,7 +82,7 @@ export function FeatureCard({ icon, title, children }: FeatureCardProps) {
 				</div>
 			)}
 			<h3 className="text-sm font-medium text-fg mb-1">{title}</h3>
-			<p className="text-sm text-muted">{children}</p>
+			<p className="text-sm text-muted mt-1">{children}</p>
 		</article>
 	)
-}
+})
