@@ -1,8 +1,11 @@
 "use client"
 
-import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
+import { type ReactNode, type JSX, useCallback, useEffect, useId, useRef, useState } from "react"
 import { IconSearch } from "./icons"
 
+/**
+ * represents a single item in the command palette
+ */
 export interface CommandItem {
 	id: string
 	label: string
@@ -10,13 +13,16 @@ export interface CommandItem {
 	onSelect?: () => void
 }
 
+/**
+ * props for the command palette component
+ */
 export interface CommandProps {
 	items: CommandItem[]
 	placeholder?: string
 	onSelect?: (item: CommandItem) => void
 }
 
-export function Command({ items, placeholder = "search...", onSelect }: CommandProps) {
+export function Command({ items, placeholder = "search...", onSelect }: CommandProps): JSX.Element {
 	const [query, setQuery] = useState("")
 	const [index, setIndex] = useState(0)
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -26,7 +32,7 @@ export function Command({ items, placeholder = "search...", onSelect }: CommandP
 	const filtered = items.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()))
 
 	const listId = `${id}-list`
-	const getOptionId = (itemId: string) => `${id}-option-${itemId}`
+	const getOptionId = useCallback((itemId: string): string => `${id}-option-${itemId}`, [id])
 
 	useEffect(() => {
 		setIndex(0)
@@ -40,41 +46,68 @@ export function Command({ items, placeholder = "search...", onSelect }: CommandP
 	}, [index, filtered.length])
 
 	const handleKeyDown = useCallback(
-		(e: React.KeyboardEvent) => {
+		(e: React.KeyboardEvent): void => {
 			switch (e.key) {
 				case "ArrowDown":
-					setIndex((i) => Math.min(i + 1, filtered.length - 1))
 					e.preventDefault()
+					setIndex((i) => Math.min(i + 1, filtered.length - 1))
 					break
 				case "ArrowUp":
-					setIndex((i) => Math.max(i - 1, 0))
 					e.preventDefault()
+					setIndex((i) => Math.max(i - 1, 0))
 					break
 				case "Home":
-					setIndex(0)
 					e.preventDefault()
+					setIndex(0)
 					break
 				case "End":
-					setIndex(Math.max(0, filtered.length - 1))
 					e.preventDefault()
+					setIndex(Math.max(0, filtered.length - 1))
+					break
+				case "PageDown":
+					e.preventDefault()
+					setIndex((i) => Math.min(i + 5, filtered.length - 1))
+					break
+				case "PageUp":
+					e.preventDefault()
+					setIndex((i) => Math.max(i - 5, 0))
 					break
 				case "Escape":
+					e.preventDefault()
 					if (query) {
 						setQuery("")
+					} else {
+						inputRef.current?.blur()
 					}
-					e.preventDefault()
 					break
 				case "Enter":
+					e.preventDefault()
 					if (filtered[index]) {
 						filtered[index].onSelect?.()
 						onSelect?.(filtered[index])
 					}
-					e.preventDefault()
 					break
 			}
 		},
 		[filtered, index, query, onSelect],
 	)
+
+	const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+		setQuery(e.target.value)
+	}, [])
+
+	const handleItemClick = useCallback(
+		(item: CommandItem): void => {
+			item.onSelect?.()
+			onSelect?.(item)
+			inputRef.current?.focus()
+		},
+		[onSelect],
+	)
+
+	const handleMouseEnter = useCallback((i: number): void => {
+		setIndex(i)
+	}, [])
 
 	const activeOptionId = filtered[index] ? getOptionId(filtered[index].id) : undefined
 
@@ -86,7 +119,7 @@ export function Command({ items, placeholder = "search...", onSelect }: CommandP
 					ref={inputRef}
 					type="text"
 					value={query}
-					onChange={(e) => setQuery(e.target.value)}
+					onChange={handleChange}
 					onKeyDown={handleKeyDown}
 					placeholder={placeholder}
 					role="combobox"
@@ -118,12 +151,8 @@ export function Command({ items, placeholder = "search...", onSelect }: CommandP
 							aria-selected={i === index}
 							data-index={i}
 							tabIndex={-1}
-							onClick={() => {
-								item.onSelect?.()
-								onSelect?.(item)
-								inputRef.current?.focus()
-							}}
-							onMouseEnter={() => setIndex(i)}
+							onClick={() => handleItemClick(item)}
+							onMouseEnter={() => handleMouseEnter(i)}
 							className={`flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm transition-all duration-100 ${
 								i === index ? "bg-surface text-fg" : "text-muted hover:bg-surface hover:text-fg"
 							}`}
