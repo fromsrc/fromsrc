@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, type RefObject } from "react"
+import { type RefObject, useCallback } from "react"
+import { useEventListener } from "./eventlistener"
 
 /**
  * Triggers a callback when clicking outside the referenced element
@@ -13,16 +14,14 @@ export function useClickOutside<T extends HTMLElement>(
 	handler: () => void,
 	enabled = true
 ): void {
-	useEffect(() => {
-		if (!enabled) return
-
-		function handleClick(e: MouseEvent) {
+	const handleClick = useCallback(
+		(e: MouseEvent) => {
 			if (ref.current && !ref.current.contains(e.target as Node)) {
 				handler()
 			}
-		}
+		},
+		[ref, handler]
+	)
 
-		document.addEventListener("click", handleClick)
-		return () => document.removeEventListener("click", handleClick)
-	}, [ref, handler, enabled])
+	useEventListener(document, "click", handleClick, enabled)
 }

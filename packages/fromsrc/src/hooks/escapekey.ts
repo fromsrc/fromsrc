@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect } from "react"
+import { useCallback } from "react"
+import { useEventListener } from "./eventlistener"
 
 /**
  * Triggers a callback when the Escape key is pressed
@@ -8,17 +9,15 @@ import { useEffect } from "react"
  * @param enabled - Whether the listener is active (default: true)
  */
 export function useEscapeKey(handler: () => void, enabled = true): void {
-	useEffect(() => {
-		if (!enabled) return
-
-		function handleKey(e: KeyboardEvent) {
+	const handleKey = useCallback(
+		(e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				e.preventDefault()
 				handler()
 			}
-		}
+		},
+		[handler]
+	)
 
-		document.addEventListener("keydown", handleKey)
-		return () => document.removeEventListener("keydown", handleKey)
-	}, [handler, enabled])
+	useEventListener(document, "keydown", handleKey, enabled)
 }
