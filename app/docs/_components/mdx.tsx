@@ -119,6 +119,7 @@ import {
 	Terminal,
 	Testimonial,
 	Testimonials,
+	Textarea,
 	TocInline,
 	Tooltip,
 	Tweet,
@@ -294,6 +295,7 @@ const components = {
 	Autofill,
 	Radio,
 	RadioGroup,
+	Textarea,
 }
 
 interface Props {
