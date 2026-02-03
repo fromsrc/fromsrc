@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState, type ReactNode } from "react"
+import { PanelLeftClose, PanelLeft } from "lucide-react"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
@@ -44,58 +45,70 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 
 	return (
 		<aside
-			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200`}
+			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200 ease-out`}
 		>
-			<div className={`${collapsed ? "p-3" : "p-5"} transition-all duration-200`}>
-				<Link href="/" className="flex items-center gap-2.5 text-sm text-fg hover:text-accent transition-colors">
-					<div className="p-1.5 rounded-lg bg-surface border border-line shrink-0">
-						{logo}
-					</div>
-					<span className={`${collapsed ? "opacity-0 w-0" : "opacity-100"} transition-opacity duration-200 overflow-hidden whitespace-nowrap`}>
-						{title}
-					</span>
-				</Link>
-			</div>
-			<div className={`${collapsed ? "px-2 mb-4" : "px-4 mb-6"} transition-all duration-200`}>
-				{collapsed ? (
+			<div className="px-3 h-14 flex items-center">
+				{collapsible && (
 					<button
 						type="button"
-						onClick={() => {
-							const event = new KeyboardEvent("keydown", { key: "k", metaKey: true })
-							document.dispatchEvent(event)
-						}}
-						className="w-full flex items-center justify-center p-2 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors"
-						aria-label="search"
+						onClick={toggle}
+						className="w-10 h-10 flex items-center justify-center text-muted hover:text-fg transition-colors shrink-0"
+						aria-label={collapsed ? "expand sidebar" : "collapse sidebar"}
 					>
-						<svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-						</svg>
+						{collapsed ? <PanelLeft size={18} aria-hidden="true" /> : <PanelLeftClose size={18} aria-hidden="true" />}
 					</button>
-				) : (
-					<Search basePath={basePath} docs={docs} />
+				)}
+				{!collapsed && (
+					<Link href="/" className="flex items-center text-sm text-fg hover:text-accent transition-colors">
+						<div className="w-8 h-8 flex items-center justify-center shrink-0">
+							<div className="p-1 rounded-lg bg-surface border border-line">
+								{logo}
+							</div>
+						</div>
+						<span className="ml-1.5 whitespace-nowrap">{title}</span>
+					</Link>
 				)}
 			</div>
-			<nav className={`${collapsed ? "px-2" : "px-4"} flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] transition-all duration-200`}>
+			<div className="px-3 h-12 flex items-center">
+				<button
+					type="button"
+					onClick={() => {
+						const event = new KeyboardEvent("keydown", { key: "k", metaKey: true })
+						document.dispatchEvent(event)
+					}}
+					className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${collapsed ? "w-10 justify-center" : "w-full px-2.5 gap-2"}`}
+					aria-label="search"
+				>
+					<svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+					</svg>
+					<span className={`text-xs transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}>search...</span>
+					<kbd className={`ml-auto text-[10px] font-mono text-muted/60 transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}>⌘K</kbd>
+				</button>
+			</div>
+			<nav className="px-3 flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 				{collapsed ? (
-					navigation.flatMap((section) =>
-						section.items.map((item, i) => {
-							const href = !("type" in item)
-								? item.slug ? `${basePath}/${item.slug}` : basePath
-								: item.type === "item" ? item.href : null
-							if (!href) return null
-							const icon = "icon" in item ? item.icon : null
-							return (
-								<Link
-									key={i}
-									href={href}
-									className="flex items-center justify-center p-2 my-0.5 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors [&>svg]:w-4 [&>svg]:h-4"
-									title={item.title}
-								>
-									{icon || <span className="w-4 h-4 rounded bg-surface" />}
-								</Link>
-							)
-						})
-					)
+					<div className="flex flex-col items-center">
+						{navigation.flatMap((section) =>
+							section.items.map((item, i) => {
+								const href = !("type" in item)
+									? item.slug ? `${basePath}/${item.slug}` : basePath
+									: item.type === "item" ? item.href : null
+								if (!href) return null
+								const icon = "icon" in item ? item.icon : null
+								return (
+									<Link
+										key={i}
+										href={href}
+										className="w-10 h-8 flex items-center justify-center my-0.5 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors [&>svg]:w-4 [&>svg]:h-4"
+										title={item.title}
+									>
+										{icon || <span className="w-4 h-4 rounded bg-surface" />}
+									</Link>
+								)
+							})
+						)}
+					</div>
 				) : (
 					navigation.map((section) => (
 						<div key={section.title} className="mb-6">
@@ -127,44 +140,25 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 					))
 				)}
 			</nav>
-			<div className={`${collapsed ? "p-2" : "p-4"} border-t border-line bg-bg shrink-0 flex ${collapsed ? "flex-col gap-2" : "justify-between"} items-center`}>
-				{github && (
+			{github && (
+				<div className="px-3 h-12 border-t border-line bg-bg shrink-0 flex items-center">
 					<a
 						href={github}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="flex items-center gap-2 text-xs text-muted hover:text-fg transition-colors"
+						className="w-10 h-8 flex items-center justify-center text-muted hover:text-fg transition-colors"
 						title="github"
 					>
-						<svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+						<svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 							<path
 								fillRule="evenodd"
 								d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
 								clipRule="evenodd"
 							/>
 						</svg>
-						{!collapsed && "github"}
 					</a>
-				)}
-				{collapsible && (
-					<button
-						type="button"
-						onClick={toggle}
-						className="p-1.5 text-muted hover:text-fg transition-colors"
-						aria-label={collapsed ? "expand sidebar" : "collapse sidebar"}
-					>
-						<svg
-							className={`w-4 h-4 transition-transform ${collapsed ? "rotate-180" : ""}`}
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-							aria-hidden="true"
-						>
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-						</svg>
-					</button>
-				)}
-			</div>
+				</div>
+			)}
 		</aside>
 	)
 }
