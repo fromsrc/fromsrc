@@ -216,4 +216,5 @@ export {
 export { useScrollSpy, type ScrollSpyOptions } from "./hooks/scrollspy"
 export { useScrollLock } from "./hooks/scrolllock"
 export { useIsScrollTop } from "./hooks/scrolltop"
+export { usePagination, type PageLink, type PaginationResult } from "./hooks/pagination"
 export { useLocalStorage, useSessionStorage } from "./hooks/storage"
