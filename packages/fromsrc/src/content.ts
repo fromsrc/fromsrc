@@ -46,14 +46,28 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	async function getDoc(slug: string[]): Promise<Document | null> {
 		const path = slug.length === 0 ? "index" : slug.join("/")
 		const filepath = join(config.dir, `${path}.mdx`)
+		const indexPath = join(config.dir, `${path}/index.mdx`)
+
+		let source: string
+		let actualPath = path
 
 		try {
-			const source = await readCached(filepath)
+			source = await readCached(filepath)
+		} catch {
+			try {
+				source = await readCached(indexPath)
+				actualPath = `${path}/index`
+			} catch {
+				return null
+			}
+		}
+
+		try {
 			const { data, content } = matter(source)
 			const parsed = schema.parse(data) as z.infer<T>
 
 			return {
-				slug: path,
+				slug: actualPath,
 				...parsed,
 				content,
 				data: parsed,
@@ -146,14 +160,28 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | null> {
 	const path = slug.length === 0 ? "index" : slug.join("/")
 	const filepath = join(docsDir, `${path}.mdx`)
+	const indexPath = join(docsDir, `${path}/index.mdx`)
+
+	let source: string
+	let actualPath = path
 
 	try {
-		const source = await readCached(filepath)
+		source = await readCached(filepath)
+	} catch {
+		try {
+			source = await readCached(indexPath)
+			actualPath = `${path}/index`
+		} catch {
+			return null
+		}
+	}
+
+	try {
 		const { data, content } = matter(source)
 		const parsed = baseSchema.parse(data)
 
 		return {
-			slug: path,
+			slug: actualPath,
 			title: parsed.title,
 			description: parsed.description,
 			order: parsed.order,
