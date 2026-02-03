@@ -185,3 +185,76 @@ function Preferences() {
 />
 
 also available: `useSessionStorage` with same api.
+
+## useToast
+
+show toast notifications with configurable types and duration.
+
+```tsx
+import { ToastProvider, useToast } from "fromsrc/client"
+
+function App() {
+  return (
+    <ToastProvider>
+      <NotifyButton />
+    </ToastProvider>
+  )
+}
+
+function NotifyButton() {
+  const { add } = useToast()
+
+  return (
+    <button onClick={() => add({ message: "saved", type: "success" })}>
+      save
+    </button>
+  )
+}
+```
+
+### useToast returns
+
+<TypeTable
+  data={{
+    toasts: { type: "Toast[]", description: "list of active toasts" },
+    add: { type: "(toast: Omit<Toast, 'id'>) => void", description: "add a toast notification" },
+    remove: { type: "(id: string) => void", description: "dismiss a toast by id" },
+  }}
+/>
+
+### Toast type
+
+```typescript
+interface Toast {
+  id: string
+  message: string
+  type: "info" | "success" | "warning" | "error"
+  duration?: number
+}
+```
+
+## useDebounce
+
+debounce a value with configurable delay.
+
+```tsx
+import { useDebounce } from "fromsrc/client"
+
+function SearchInput() {
+  const [query, setQuery] = useState("")
+  const debounced = useDebounce(query, 300)
+
+  useEffect(() => {
+    if (debounced) search(debounced)
+  }, [debounced])
+
+  return <input value={query} onChange={(e) => setQuery(e.target.value)} />
+}
+```
+
+<TypeTable
+  data={{
+    value: { type: "T", required: true, description: "value to debounce" },
+    delay: { type: "number", required: true, description: "debounce delay in ms" },
+  }}
+/>
