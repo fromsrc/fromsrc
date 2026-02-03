@@ -1,0 +1,178 @@
+---
+title: changelog
+description: version history page
+order: 6
+---
+
+create a changelog page to document version history.
+
+## folder structure
+
+<Files>
+  <Folder name="app" defaultOpen>
+    <Folder name="changelog" defaultOpen>
+      <File name="page.tsx" />
+    </Folder>
+  </Folder>
+  <Folder name="content" defaultOpen>
+    <File name="changelog.mdx" />
+  </Folder>
+</Files>
+
+## changelog content
+
+create `content/changelog.mdx`:
+
+```mdx
+---
+title: changelog
+description: version history and release notes
+---
+
+<Changelog>
+  <Release version="2.1.0" date="2026-02-01">
+    <Change type="added">search indexing for code blocks</Change>
+    <Change type="added">keyboard shortcuts for navigation</Change>
+    <Change type="changed">improved mobile sidebar</Change>
+    <Change type="fixed">anchor link scroll offset</Change>
+  </Release>
+
+  <Release version="2.0.0" date="2026-01-15">
+    <Change type="added">dark mode support</Change>
+    <Change type="added">i18n support</Change>
+    <Change type="changed">new sidebar design</Change>
+    <Change type="removed">legacy search api</Change>
+    <Change type="security">updated dependencies</Change>
+  </Release>
+
+  <Release version="1.5.0" date="2026-01-01">
+    <Change type="added">table of contents component</Change>
+    <Change type="fixed">code block copy button</Change>
+    <Change type="deprecated">old navigation api</Change>
+  </Release>
+</Changelog>
+```
+
+## changelog page
+
+create `app/changelog/page.tsx`:
+
+```tsx
+import { MDX } from "@/components/mdx"
+import { readFileSync } from "fs"
+import { join } from "path"
+
+export const metadata = {
+  title: "changelog",
+  description: "version history and release notes",
+}
+
+export default function ChangelogPage() {
+  const content = readFileSync(
+    join(process.cwd(), "content/changelog.mdx"),
+    "utf-8"
+  )
+
+  return (
+    <div className="max-w-2xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-medium mb-2">changelog</h1>
+      <p className="text-muted mb-8">version history and release notes</p>
+      <MDX source={content} />
+    </div>
+  )
+}
+```
+
+## json-based changelog
+
+alternatively, manage releases as json:
+
+```tsx
+const releases = [
+  {
+    version: "2.1.0",
+    date: "2026-02-01",
+    changes: [
+      { type: "added", text: "search indexing" },
+      { type: "fixed", text: "scroll behavior" },
+    ],
+  },
+]
+
+export default function ChangelogPage() {
+  return (
+    <div className="max-w-2xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-medium mb-8">changelog</h1>
+      <Changelog>
+        {releases.map((release) => (
+          <Release key={release.version} version={release.version} date={release.date}>
+            {release.changes.map((change, i) => (
+              <Change key={i} type={change.type}>{change.text}</Change>
+            ))}
+          </Release>
+        ))}
+      </Changelog>
+    </div>
+  )
+}
+```
+
+## rss feed
+
+add an rss feed for changelog subscribers at `app/changelog/feed.xml/route.ts`:
+
+```tsx
+import { releases } from "@/lib/changelog"
+
+export async function GET() {
+  const baseUrl = "https://example.com"
+
+  const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>changelog</title>
+    <link>${baseUrl}/changelog</link>
+    <description>version history and release notes</description>
+    ${releases.map((release) => `
+    <item>
+      <title>v${release.version}</title>
+      <link>${baseUrl}/changelog#${release.version}</link>
+      <pubDate>${new Date(release.date).toUTCString()}</pubDate>
+      <description>${release.changes.map((c) => `${c.type}: ${c.text}`).join(", ")}</description>
+    </item>
+    `).join("")}
+  </channel>
+</rss>`
+
+  return new Response(rss, {
+    headers: { "Content-Type": "application/xml" },
+  })
+}
+```
+
+## navigation link
+
+add to your header or footer:
+
+```tsx
+<Link href="/changelog" className="text-muted hover:text-fg">
+  changelog
+</Link>
+```
+
+## version badge
+
+show current version in your docs:
+
+```tsx
+import { releases } from "@/lib/changelog"
+
+export function VersionBadge() {
+  const latest = releases[0]
+  return (
+    <Link href="/changelog" className="text-xs text-muted hover:text-fg">
+      v{latest.version}
+    </Link>
+  )
+}
+```

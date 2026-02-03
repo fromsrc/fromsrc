@@ -1,0 +1,202 @@
+---
+title: api documentation
+description: document rest apis
+order: 5
+---
+
+build api reference documentation with endpoints, parameters, and responses.
+
+## folder structure
+
+<Files>
+  <Folder name="docs" defaultOpen>
+    <Folder name="api" defaultOpen>
+      <File name="index.mdx" />
+      <File name="authentication.mdx" />
+      <Folder name="users" defaultOpen>
+        <File name="index.mdx" />
+        <File name="create.mdx" />
+        <File name="get.mdx" />
+        <File name="update.mdx" />
+        <File name="delete.mdx" />
+      </Folder>
+    </Folder>
+  </Folder>
+</Files>
+
+## content schema
+
+add api-specific frontmatter fields:
+
+```tsx
+import { defineContent, extendSchema, z } from "fromsrc"
+
+const api = defineContent({
+  dir: "docs/api",
+  schema: extendSchema({
+    method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]).optional(),
+    path: z.string().optional(),
+    auth: z.boolean().optional(),
+  }),
+})
+
+export const getApiDoc = api.getDoc
+export const getAllApiDocs = api.getAllDocs
+```
+
+## endpoint documentation
+
+document each endpoint with method, path, and parameters:
+
+```mdx
+---
+title: create user
+description: create a new user account
+method: POST
+path: /api/users
+auth: true
+---
+
+<Endpoint method="POST" path="/api/users" description="create a new user">
+  <Param name="name" type="string" required description="user's display name" />
+  <Param name="email" type="string" required description="unique email address" />
+  <Param name="password" type="string" required description="at least 8 characters" />
+  <Param name="role" type="string" description="user or admin" />
+</Endpoint>
+
+## request body
+
+{/* codeblock lang="json" */}
+{
+  "name": "john",
+  "email": "john@example.com",
+  "password": "secretpass",
+  "role": "user"
+}
+
+## responses
+
+<Response status={201} description="created">
+  returns the created user object
+</Response>
+
+<Response status={400} description="bad request">
+  invalid input data
+</Response>
+
+<Response status={409} description="conflict">
+  email already exists
+</Response>
+```
+
+## api index page
+
+create `app/api/page.tsx`:
+
+```tsx
+import Link from "next/link"
+import { getAllApiDocs } from "@/lib/api"
+
+export default async function ApiIndex() {
+  const docs = await getAllApiDocs()
+
+  const grouped = docs.reduce((acc, doc) => {
+    const section = doc.slug[0] || "overview"
+    if (!acc[section]) acc[section] = []
+    acc[section].push(doc)
+    return acc
+  }, {} as Record<string, typeof docs>)
+
+  return (
+    <div className="max-w-4xl mx-auto py-12 px-4">
+      <h1 className="text-2xl font-medium mb-2">api reference</h1>
+      <p className="text-muted mb-8">rest api documentation</p>
+
+      {Object.entries(grouped).map(([section, endpoints]) => (
+        <div key={section} className="mb-8">
+          <h2 className="text-lg font-medium mb-4 capitalize">{section}</h2>
+          <div className="space-y-2">
+            {endpoints.map((doc) => (
+              <Link
+                key={doc.slug.join("/")}
+                href={`/api/${doc.slug.join("/")}`}
+                className="flex items-center gap-3 p-3 rounded border border-line hover:bg-surface"
+              >
+                {doc.data.method && (
+                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-surface">
+                    {doc.data.method}
+                  </span>
+                )}
+                <span className="font-mono text-sm text-muted">
+                  {doc.data.path}
+                </span>
+                <span className="text-sm">{doc.title}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+## property documentation
+
+use the property component for request/response schemas:
+
+```mdx
+## user object
+
+<Properties>
+  <Property name="id" type="string" required>
+    unique identifier (uuid)
+  </Property>
+  <Property name="name" type="string" required>
+    user's display name
+  </Property>
+  <Property name="email" type="string" required>
+    unique email address
+  </Property>
+  <Property name="role" type="'user' | 'admin'" default="'user'">
+    user role
+  </Property>
+  <Property name="created" type="string" required>
+    iso 8601 timestamp
+  </Property>
+</Properties>
+```
+
+## authentication badge
+
+show authentication requirements:
+
+```tsx
+function AuthBadge({ required }: { required?: boolean }) {
+  if (!required) return null
+  return (
+    <Badge variant="outline" className="text-xs">
+      requires auth
+    </Badge>
+  )
+}
+```
+
+use in your api layout:
+
+```tsx
+export default async function ApiLayout({ params, children }) {
+  const { slug } = await params
+  const doc = await getApiDoc(slug)
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <h1>{doc.title}</h1>
+        <AuthBadge required={doc.data.auth} />
+      </div>
+      {children}
+    </div>
+  )
+}
+```
