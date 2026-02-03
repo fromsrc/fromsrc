@@ -54,6 +54,7 @@ export function Tooltip({ content, children, side = "top", delay = 200 }: Toolti
 				onMouseLeave={handleLeave}
 				onFocus={handleEnter}
 				onBlur={handleLeave}
+				tabIndex={0}
 				className="inline"
 			>
 				{children}

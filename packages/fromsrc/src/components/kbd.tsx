@@ -19,7 +19,7 @@ export function Shortcut({ keys }: { keys: string[] }) {
 	return (
 		<span className="inline-flex items-center gap-0.5">
 			{keys.map((key, i) => (
-				<span key={i} className="contents">
+				<span key={key} className="contents">
 					{i > 0 && <span className="text-muted/50 mx-0.5">+</span>}
 					<Kbd>{key}</Kbd>
 				</span>

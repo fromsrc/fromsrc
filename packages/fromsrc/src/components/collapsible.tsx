@@ -17,6 +17,7 @@ export function Collapsible({ title, defaultOpen = false, children }: Props) {
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
 				className="flex items-center gap-2 w-full px-4 py-3 text-sm text-left text-fg hover:bg-surface/50 transition-colors"
 			>
 				<ChevronRight

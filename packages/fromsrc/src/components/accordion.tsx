@@ -24,6 +24,7 @@ export function AccordionItem({ title, children, defaultOpen = false }: Accordio
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
 				className="flex w-full items-center justify-between py-4 text-left font-medium transition-colors hover:text-fg"
 			>
 				{title}

@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useCallback, useEffect, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 
 export interface ZoomProps {
 	children: ReactNode
@@ -9,8 +9,12 @@ export interface ZoomProps {
 
 export function Zoom({ children, className }: ZoomProps) {
 	const [open, setOpen] = useState(false)
+	const triggerRef = useRef<HTMLButtonElement>(null)
 
-	const close = useCallback(() => setOpen(false), [])
+	const close = useCallback(() => {
+		setOpen(false)
+		triggerRef.current?.focus()
+	}, [])
 
 	useEffect(() => {
 		if (!open) return
@@ -23,15 +27,25 @@ export function Zoom({ children, className }: ZoomProps) {
 
 	return (
 		<>
-			<span
+			<button
+				ref={triggerRef}
+				type="button"
 				onClick={() => setOpen(true)}
-				className={`cursor-zoom-in inline-block ${className || ""}`}
+				className={`cursor-zoom-in inline-block bg-transparent border-none p-0 ${className || ""}`}
+				aria-expanded={open}
+				aria-label="zoom image"
 			>
 				{children}
-			</span>
+			</button>
 			{open && (
 				<div
+					role="dialog"
+					aria-modal="true"
+					aria-label="zoomed image"
 					onClick={close}
+					onKeyDown={(e) => {
+						if (e.key === "Enter" || e.key === " ") close()
+					}}
 					className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 cursor-zoom-out p-8"
 				>
 					<div className="max-w-full max-h-full [&>img]:max-w-full [&>img]:max-h-[80vh] [&>img]:object-contain">

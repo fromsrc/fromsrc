@@ -46,6 +46,7 @@ export function Folder({ name, children, defaultOpen = false }: FolderProps) {
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
 				className="flex w-full items-center gap-2 px-2 py-1 text-left text-fg hover:bg-fg/5 rounded"
 			>
 				<svg

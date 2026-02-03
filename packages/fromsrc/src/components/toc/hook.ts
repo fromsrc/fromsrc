@@ -98,7 +98,7 @@ export function useToc(multi = false): TocState {
 			const atBottom =
 				window.innerHeight + Math.ceil(window.scrollY) >= document.documentElement.scrollHeight
 
-			if (atBottom) {
+			if (atBottom && headings.length > 0) {
 				setActive(headings[headings.length - 1].id)
 				return
 			}

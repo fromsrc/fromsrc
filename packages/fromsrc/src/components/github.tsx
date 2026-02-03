@@ -23,11 +23,13 @@ export function Github({ repo }: GithubProps) {
 	const [data, setData] = useState<RepoData | null>(null)
 
 	useEffect(() => {
+		let mounted = true
 		async function load() {
 			try {
 				const res = await fetch(`https://api.github.com/repos/${repo}`)
-				if (!res.ok) return
+				if (!res.ok || !mounted) return
 				const json = await res.json()
+				if (!mounted) return
 				setData({
 					stars: json.stargazers_count,
 					forks: json.forks_count,
@@ -38,6 +40,9 @@ export function Github({ repo }: GithubProps) {
 			}
 		}
 		load()
+		return () => {
+			mounted = false
+		}
 	}, [repo])
 
 	if (!data) {

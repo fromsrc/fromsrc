@@ -1,7 +1,7 @@
 "use client"
 
 import { Check, Copy } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface CopyableProps {
 	value: string
@@ -10,11 +10,23 @@ interface CopyableProps {
 
 export function Copyable({ value, label }: CopyableProps) {
 	const [copied, setCopied] = useState(false)
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+	useEffect(() => {
+		return () => {
+			if (timeoutRef.current) clearTimeout(timeoutRef.current)
+		}
+	}, [])
 
 	const copy = async () => {
-		await navigator.clipboard.writeText(value)
-		setCopied(true)
-		setTimeout(() => setCopied(false), 2000)
+		try {
+			await navigator.clipboard.writeText(value)
+			setCopied(true)
+			if (timeoutRef.current) clearTimeout(timeoutRef.current)
+			timeoutRef.current = setTimeout(() => setCopied(false), 2000)
+		} catch {
+			setCopied(false)
+		}
 	}
 
 	return (
@@ -43,11 +55,23 @@ interface CopyBlockProps {
 
 export function CopyBlock({ children }: CopyBlockProps) {
 	const [copied, setCopied] = useState(false)
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+	useEffect(() => {
+		return () => {
+			if (timeoutRef.current) clearTimeout(timeoutRef.current)
+		}
+	}, [])
 
 	const copy = async () => {
-		await navigator.clipboard.writeText(children)
-		setCopied(true)
-		setTimeout(() => setCopied(false), 2000)
+		try {
+			await navigator.clipboard.writeText(children)
+			setCopied(true)
+			if (timeoutRef.current) clearTimeout(timeoutRef.current)
+			timeoutRef.current = setTimeout(() => setCopied(false), 2000)
+		} catch {
+			setCopied(false)
+		}
 	}
 
 	return (

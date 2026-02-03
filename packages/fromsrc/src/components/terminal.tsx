@@ -55,6 +55,11 @@ export function Typed({ text, speed = 50 }: TypedProps) {
 	const [done, setDone] = useState(false)
 
 	useEffect(() => {
+		setDisplayed("")
+		setDone(false)
+	}, [text])
+
+	useEffect(() => {
 		if (done) return
 		let i = 0
 		const interval = setInterval(() => {

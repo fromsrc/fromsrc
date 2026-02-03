@@ -46,12 +46,12 @@ export function Folder({ folder, basePath }: Props) {
 			</button>
 			{open && (
 				<ul className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
-					{folder.items.map((item, i) => {
+					{folder.items.map((item) => {
 						if (item.type === "folder") {
-							return <Folder key={i} folder={item} basePath={basePath} />
+							return <Folder key={item.title} folder={item} basePath={basePath} />
 						}
 						return (
-							<li key={i}>
+							<li key={item.href}>
 								<NavLink href={item.href} icon={item.icon}>
 									{item.title}
 								</NavLink>

@@ -1,3 +1,4 @@
+import Image from "next/image"
 import type { ReactNode } from "react"
 
 interface Props {
@@ -23,10 +24,14 @@ export function Screenshot({ src, alt, caption, browser = true, className = "" }
 							<div className="h-6 rounded bg-surface/80 border border-line" />
 						</div>
 					</div>
-					<img src={src} alt={alt} className="w-full" />
+					<div className="relative w-full aspect-video">
+						<Image src={src} alt={alt} fill className="object-cover object-top" />
+					</div>
 				</div>
 			) : (
-				<img src={src} alt={alt} className="w-full rounded-lg border border-line" />
+				<div className="relative w-full aspect-video rounded-lg border border-line overflow-hidden">
+					<Image src={src} alt={alt} fill className="object-cover object-top" />
+				</div>
 			)}
 			{caption && (
 				<figcaption className="mt-2 text-center text-sm text-muted">{caption}</figcaption>

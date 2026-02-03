@@ -32,7 +32,6 @@ interface Props {
 	title: string
 	logo?: ReactNode
 	navigation: SidebarSection[]
-	docs: DocMeta[]
 	basePath?: string
 	github?: string
 	collapsible?: boolean
@@ -42,7 +41,6 @@ export function Sidebar({
 	title,
 	logo,
 	navigation,
-	docs,
 	basePath = "/docs",
 	github,
 	collapsible,
@@ -180,8 +178,8 @@ export function Sidebar({
 						href={github}
 						target="_blank"
 						rel="noopener noreferrer"
+						aria-label="view on github"
 						className="w-10 h-8 flex items-center justify-center text-muted hover:text-fg transition-colors"
-						title="github"
 					>
 						<svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 							<path

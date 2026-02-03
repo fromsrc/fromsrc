@@ -45,6 +45,7 @@ function MobileFolder({
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
 				className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
 			>
 				{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
@@ -61,14 +62,19 @@ function MobileFolder({
 			</button>
 			{open && (
 				<ul className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
-					{folder.items.map((item, i) => {
+					{folder.items.map((item) => {
 						if (item.type === "folder") {
 							return (
-								<MobileFolder key={i} folder={item} basePath={basePath} onNavigate={onNavigate} />
+								<MobileFolder
+									key={item.title}
+									folder={item}
+									basePath={basePath}
+									onNavigate={onNavigate}
+								/>
 							)
 						}
 						return (
-							<li key={i}>
+							<li key={item.href}>
 								<NavLink href={item.href} icon={item.icon} onClick={onNavigate}>
 									{item.title}
 								</NavLink>
@@ -87,7 +93,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 	const pathname = usePathname()
 
 	useEffect(() => {
-		if (open) setOpen(false)
+		setOpen(false)
 	}, [pathname])
 
 	useEffect(() => {
@@ -202,6 +208,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 									href={github}
 									target="_blank"
 									rel="noopener noreferrer"
+									aria-label="view on github"
 									className="flex items-center gap-2 text-xs text-muted hover:text-fg transition-colors"
 								>
 									<svg

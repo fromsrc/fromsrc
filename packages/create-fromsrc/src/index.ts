@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process"
-import { cpSync, existsSync, mkdirSync } from "node:fs"
+import { cpSync, existsSync, mkdirSync, unlinkSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -33,7 +33,7 @@ export async function create(options: CreateOptions) {
 	if (existsSync(gitignorePath)) {
 		const newPath = join(target, ".gitignore")
 		cpSync(gitignorePath, newPath)
-		execSync(`rm ${gitignorePath}`)
+		unlinkSync(gitignorePath)
 	}
 
 	if (install) {
