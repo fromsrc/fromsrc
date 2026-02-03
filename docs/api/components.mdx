@@ -199,7 +199,7 @@ individual card in a cards grid.
 <TypeTable
   data={{
     title: { type: "string", required: true, description: "card title" },
-    href: { type: "string", required: true, description: "link destination" },
+    href: { type: "string", description: "link destination" },
     children: { type: "ReactNode", description: "card description" },
     icon: { type: "ReactNode", description: "card icon" },
   }}
@@ -288,7 +288,7 @@ inline status badges.
 
 <TypeTable
   data={{
-    variant: { type: '"default" | "success" | "warning" | "error"', default: '"default"', description: "badge style" },
+    variant: { type: '"default" | "success" | "warning" | "error" | "info"', default: '"default"', description: "badge style" },
     children: { type: "ReactNode", required: true, description: "badge text" },
   }}
 />
