@@ -1,5 +1,8 @@
-import type { ReactNode } from "react"
+import { type ReactNode, type JSX, memo } from "react"
 
+/**
+ * HTTP methods supported by the endpoint component
+ */
 export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 
 const methodColors: Record<Method, string> = {
@@ -10,61 +13,111 @@ const methodColors: Record<Method, string> = {
 	DELETE: "bg-red-500/10 text-red-400 border-red-500/20",
 }
 
+/**
+ * Props for the Endpoint component
+ */
 export interface EndpointProps {
+	/** HTTP method for the endpoint */
 	method: Method
+	/** URL path for the endpoint */
 	path: string
+	/** Description of what the endpoint does */
 	description?: string
+	/** Child content such as parameters and responses */
 	children?: ReactNode
 }
 
-export function Endpoint({ method, path, description, children }: EndpointProps) {
+function EndpointBase({ method, path, description, children }: EndpointProps): JSX.Element {
 	return (
 		<article
 			className="my-6 rounded-lg border border-line overflow-hidden"
-			aria-label={`${method} ${path}`}
+			aria-labelledby={`endpoint-${method}-${path.replace(/\//g, "-")}`}
 		>
 			<header className="flex items-center gap-3 px-4 py-3 bg-surface/50 border-b border-line">
 				<span
 					className={`px-2 py-0.5 text-xs font-mono font-medium rounded border ${methodColors[method]}`}
+					role="text"
+					aria-label={`${method} method`}
 				>
 					{method}
 				</span>
-				<code className="text-sm font-mono text-fg">{path}</code>
+				<code
+					id={`endpoint-${method}-${path.replace(/\//g, "-")}`}
+					className="text-sm font-mono text-fg"
+				>
+					{path}
+				</code>
 			</header>
 			{description && (
 				<p className="px-4 py-3 text-sm text-muted border-b border-line">{description}</p>
 			)}
-			{children && <section className="p-4">{children}</section>}
+			{children && (
+				<section className="p-4" aria-label="Endpoint details">
+					{children}
+				</section>
+			)}
 		</article>
 	)
 }
 
+export const Endpoint = memo(EndpointBase)
+
+/**
+ * Props for the Param component
+ */
 export interface ParamProps {
+	/** Parameter name */
 	name: string
+	/** Parameter type */
 	type: string
+	/** Whether the parameter is required */
 	required?: boolean
+	/** Description of the parameter */
 	description?: string
+	/** Additional content */
 	children?: ReactNode
 }
 
-export function Param({ name, type, required, description, children }: ParamProps) {
+function ParamBase({ name, type, required, description, children }: ParamProps): JSX.Element {
+	const paramId = `param-${name}`
 	return (
-		<div className="py-3 border-b border-line last:border-0" role="listitem">
+		<div
+			className="py-3 border-b border-line last:border-0"
+			role="listitem"
+			aria-labelledby={paramId}
+		>
 			<div className="flex items-center gap-2 mb-1">
-				<code className="text-sm font-mono text-fg">{name}</code>
-				<span className="text-xs text-muted">{type}</span>
+				<code id={paramId} className="text-sm font-mono text-fg">
+					{name}
+				</code>
+				<span className="text-xs text-muted" aria-label={`type ${type}`}>
+					{type}
+				</span>
 				{required && (
-					<span className="text-[10px] text-red-400 uppercase tracking-wider" aria-label="required">
+					<span
+						className="text-[10px] text-red-400 uppercase tracking-wider"
+						role="status"
+						aria-label="required parameter"
+					>
 						required
 					</span>
 				)}
 			</div>
-			{description && <p className="text-sm text-muted">{description}</p>}
+			{description && (
+				<p className="text-sm text-muted" id={`${paramId}-desc`}>
+					{description}
+				</p>
+			)}
 			{children}
 		</div>
 	)
 }
 
+export const Param = memo(ParamBase)
+
+/**
+ * Valid HTTP status codes
+ */
 type HttpStatus =
 	| 100
 	| 101
@@ -129,21 +182,28 @@ type HttpStatus =
 	| 510
 	| 511
 
+/**
+ * Props for the Response component
+ */
 export interface ResponseProps {
+	/** HTTP status code */
 	status: HttpStatus
+	/** Description of the response */
 	description?: string
+	/** Response body content */
 	children?: ReactNode
 }
 
-export function Response({ status, description, children }: ResponseProps) {
+function ResponseBase({ status, description, children }: ResponseProps): JSX.Element {
 	const isSuccess = status >= 200 && status < 300
 	const isError = status >= 400
 	const statusLabel = isSuccess ? "success" : isError ? "error" : "redirect"
 
 	return (
-		<section className="my-4" aria-label={`Response ${status}`}>
+		<section className="my-4" aria-labelledby={`response-${status}`}>
 			<div className="flex items-center gap-2 mb-2">
 				<span
+					id={`response-${status}`}
 					className={`px-1.5 py-0.5 text-xs font-mono rounded ${
 						isSuccess
 							? "bg-emerald-500/10 text-emerald-400"
@@ -162,3 +222,5 @@ export function Response({ status, description, children }: ResponseProps) {
 		</section>
 	)
 }
+
+export const Response = memo(ResponseBase)
