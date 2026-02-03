@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 export interface CountdownProps {
 	target: Date | string | number
@@ -28,8 +28,13 @@ function calcTimeLeft(target: Date): TimeLeft | null {
 }
 
 export function Countdown({ target, onComplete, format = "full" }: CountdownProps) {
-	const targetDate = typeof target === "string" || typeof target === "number" ? new Date(target) : target
-	const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
+	const targetDate = useMemo(
+		() => (typeof target === "string" || typeof target === "number" ? new Date(target) : target),
+		[target]
+	)
+	const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(() => calcTimeLeft(targetDate))
+	const onCompleteRef = useRef(onComplete)
+	onCompleteRef.current = onComplete
 
 	useEffect(() => {
 		setTimeLeft(calcTimeLeft(targetDate))
@@ -39,20 +44,33 @@ export function Countdown({ target, onComplete, format = "full" }: CountdownProp
 			setTimeLeft(remaining)
 			if (!remaining) {
 				clearInterval(timer)
-				onComplete?.()
+				onCompleteRef.current?.()
 			}
 		}, 1000)
 
 		return () => clearInterval(timer)
-	}, [targetDate, onComplete])
+	}, [targetDate])
+
+	const formatTime = (t: TimeLeft): string => {
+		const parts: string[] = []
+		if (t.days > 0) parts.push(`${t.days} day${t.days !== 1 ? "s" : ""}`)
+		parts.push(`${t.hours} hour${t.hours !== 1 ? "s" : ""}`)
+		parts.push(`${t.minutes} minute${t.minutes !== 1 ? "s" : ""}`)
+		parts.push(`${t.seconds} second${t.seconds !== 1 ? "s" : ""}`)
+		return parts.join(", ")
+	}
 
 	if (!timeLeft) {
-		return <span className="font-mono text-muted">00:00:00</span>
+		return (
+			<span className="font-mono text-muted" role="timer" aria-live="polite">
+				00:00:00
+			</span>
+		)
 	}
 
 	if (format === "compact") {
 		return (
-			<span className="font-mono">
+			<span className="font-mono" role="timer" aria-live="polite" aria-label={formatTime(timeLeft)}>
 				{String(timeLeft.hours + timeLeft.days * 24).padStart(2, "0")}:
 				{String(timeLeft.minutes).padStart(2, "0")}:{String(timeLeft.seconds).padStart(2, "0")}
 			</span>
@@ -60,7 +78,7 @@ export function Countdown({ target, onComplete, format = "full" }: CountdownProp
 	}
 
 	return (
-		<div className="flex gap-4">
+		<div className="flex gap-4" role="timer" aria-live="polite" aria-label={formatTime(timeLeft)}>
 			{timeLeft.days > 0 && (
 				<div className="text-center">
 					<div className="text-2xl font-bold">{timeLeft.days}</div>
