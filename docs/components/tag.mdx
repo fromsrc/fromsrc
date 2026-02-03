@@ -1,0 +1,56 @@
+---
+title: tag
+description: content labels
+order: 41
+---
+
+label and categorize content.
+
+## tag
+
+```mdx
+<Tag>default</Tag>
+```
+
+<Tag>default</Tag>
+
+## variants
+
+```mdx
+<Tag variant="default">default</Tag>
+<Tag variant="primary">primary</Tag>
+<Tag variant="success">success</Tag>
+<Tag variant="warning">warning</Tag>
+<Tag variant="danger">danger</Tag>
+```
+
+<div className="flex gap-2 flex-wrap">
+  <Tag variant="default">default</Tag>
+  <Tag variant="primary">primary</Tag>
+  <Tag variant="success">success</Tag>
+  <Tag variant="warning">warning</Tag>
+  <Tag variant="danger">danger</Tag>
+</div>
+
+## tags group
+
+```mdx
+<Tags>
+  <Tag>react</Tag>
+  <Tag>typescript</Tag>
+  <Tag>tailwind</Tag>
+</Tags>
+```
+
+<Tags>
+  <Tag>react</Tag>
+  <Tag>typescript</Tag>
+  <Tag>tailwind</Tag>
+</Tags>
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| variant | "default" \| "primary" \| "success" \| "warning" \| "danger" | "default" | tag style |
+| children | ReactNode | - | tag content |

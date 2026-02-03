@@ -1,0 +1,48 @@
+---
+title: pagination
+description: page navigation links
+order: 37
+---
+
+previous/next navigation between pages.
+
+## usage
+
+```tsx
+<Pagination
+  prev={{ href: "/docs/intro", title: "introduction" }}
+  next={{ href: "/docs/config", title: "configuration" }}
+/>
+```
+
+the component renders previous and next links for navigating between documentation pages.
+
+## only next
+
+```tsx
+<Pagination
+  next={{ href: "/docs/quickstart", title: "quickstart" }}
+/>
+```
+
+## only previous
+
+```tsx
+<Pagination
+  prev={{ href: "/docs/installation", title: "installation" }}
+/>
+```
+
+## props
+
+| prop | type | description |
+|------|------|-------------|
+| prev | object | previous page link |
+| next | object | next page link |
+
+### link object
+
+| prop | type | description |
+|------|------|-------------|
+| href | string | page url |
+| title | string | page title |

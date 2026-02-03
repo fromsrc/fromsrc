@@ -1,0 +1,59 @@
+---
+title: version
+description: version selector dropdown
+order: 38
+---
+
+dropdown for selecting documentation versions.
+
+## usage
+
+```tsx
+const versions = [
+  { id: "v2", label: "v2.0" },
+  { id: "v1", label: "v1.0" },
+]
+
+<VersionSelect versions={versions} current="v2" />
+```
+
+## with navigation
+
+link to different docs versions:
+
+```tsx
+const versions = [
+  { id: "v2", label: "v2.0", href: "/v2/docs" },
+  { id: "v1", label: "v1.0", href: "/v1/docs" },
+]
+
+<VersionSelect versions={versions} current="v2" />
+```
+
+## with callback
+
+handle version changes programmatically:
+
+```tsx
+<VersionSelect
+  versions={versions}
+  current={currentVersion}
+  onChange={(version) => setVersion(version)}
+/>
+```
+
+## props
+
+| prop | type | description |
+|------|------|-------------|
+| versions | Version[] | available versions |
+| current | string | current version id |
+| onChange | function | callback when version changes |
+
+### version object
+
+| prop | type | description |
+|------|------|-------------|
+| id | string | version identifier |
+| label | string | display label |
+| href | string | optional navigation url |
