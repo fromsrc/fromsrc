@@ -1,8 +1,19 @@
 "use client"
 
-import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from "react"
+import {
+	type JSX,
+	type ReactNode,
+	createContext,
+	useCallback,
+	useContext,
+	useRef,
+	useState,
+} from "react"
 import { IconAlertCircle, IconCheckCircle, IconInfo, IconX, IconXCircle } from "./icons"
 
+/**
+ * Represents a single toast notification.
+ */
 export interface Toast {
 	id: string
 	message: string
@@ -10,6 +21,9 @@ export interface Toast {
 	duration?: number
 }
 
+/**
+ * Context value for managing toasts.
+ */
 interface ToastContextValue {
 	toasts: Toast[]
 	add: (toast: Omit<Toast, "id">) => void
@@ -18,7 +32,10 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null)
 
-export function ToastProvider({ children }: { children: ReactNode }) {
+/**
+ * Provider component for toast notifications.
+ */
+export function ToastProvider({ children }: { children: ReactNode }): JSX.Element {
 	const [toasts, setToasts] = useState<Toast[]>([])
 	const timers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
 
@@ -51,7 +68,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 	)
 }
 
-export function useToast() {
+/**
+ * Hook to access toast context.
+ */
+export function useToast(): ToastContextValue {
 	const ctx = useContext(ToastContext)
 	if (!ctx) throw new Error("useToast must be used within ToastProvider")
 	return ctx
@@ -71,8 +91,15 @@ const styles: Record<Toast["type"], string> = {
 	error: "border-red-500/30 bg-red-500/10",
 }
 
-function ToastContainer() {
+function ToastContainer(): JSX.Element | null {
 	const { toasts, remove } = useToast()
+
+	const handleDismiss = useCallback(
+		(id: string) => (): void => {
+			remove(id)
+		},
+		[remove]
+	)
 
 	if (toasts.length === 0) return null
 
@@ -81,6 +108,8 @@ function ToastContainer() {
 			role="region"
 			aria-label="notifications"
 			aria-live="polite"
+			aria-atomic="false"
+			aria-relevant="additions removals"
 			className="fixed bottom-4 right-4 z-50 flex flex-col gap-2"
 		>
 			{toasts.map((toast) => {
@@ -91,16 +120,17 @@ function ToastContainer() {
 						className={`flex items-center gap-3 rounded-lg border px-4 py-3 shadow-lg ${styles[toast.type]}`}
 						role="alert"
 						aria-live={toast.type === "error" ? "assertive" : "polite"}
+						aria-atomic="true"
 					>
-						<Icon size={20} className="shrink-0" />
+						<Icon size={20} className="shrink-0" aria-hidden="true" />
 						<span className="text-sm">{toast.message}</span>
 						<button
 							type="button"
-							onClick={() => remove(toast.id)}
+							onClick={handleDismiss(toast.id)}
 							className="ml-2 rounded p-1 hover:bg-white/10"
-							aria-label="dismiss"
+							aria-label="dismiss notification"
 						>
-							<IconX size={16} />
+							<IconX size={16} aria-hidden="true" />
 						</button>
 					</div>
 				)
