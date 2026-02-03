@@ -5,6 +5,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { DocMeta } from "../content"
+import { useEscapeKey } from "../hooks/escapekey"
+import { useScrollLock } from "../hooks/scrolllock"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
 import type { SidebarFolder, SidebarSection } from "./sidebar"
@@ -135,15 +137,11 @@ export function MobileNav({
 		setOpen(false)
 	}, [pathname])
 
+	useScrollLock(open)
+
 	useEffect(() => {
 		if (open) {
-			document.body.style.overflow = "hidden"
 			closeRef.current?.focus()
-		} else {
-			document.body.style.overflow = ""
-		}
-		return () => {
-			document.body.style.overflow = ""
 		}
 	}, [open])
 
@@ -160,14 +158,7 @@ export function MobileNav({
 		}, 200)
 	}, [])
 
-	useEffect(() => {
-		if (!open) return
-		const onKey = (e: KeyboardEvent) => {
-			if (e.key === "Escape") close()
-		}
-		window.addEventListener("keydown", onKey)
-		return () => window.removeEventListener("keydown", onKey)
-	}, [open, close])
+	useEscapeKey(close, open)
 
 	useEffect(() => {
 		if (!open || !drawerRef.current) return

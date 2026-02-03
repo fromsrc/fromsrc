@@ -4,6 +4,7 @@ import type React from "react"
 import { type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
 import { FormLabel } from "./formlabel"
+import { IconChevronDown } from "./icons"
 
 /**
  * Option item for the Select component.
@@ -175,15 +176,10 @@ export function Select({
 					<span className={selected ? "text-fg" : "text-muted"}>
 						{selected?.label ?? placeholder}
 					</span>
-					<svg
-						aria-hidden="true"
-						className={`h-4 w-4 text-muted transition-transform ${open ? "rotate-180" : ""}`}
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-					</svg>
+					<IconChevronDown
+						size={16}
+						className={`text-muted transition-transform ${open ? "rotate-180" : ""}`}
+					/>
 				</button>
 				{open && (
 					<div

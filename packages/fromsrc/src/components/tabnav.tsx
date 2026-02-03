@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { type KeyboardEvent, type ReactNode, useCallback, useRef, useState } from "react"
+import { IconChevronDown } from "./icons"
 
 /**
  * Individual tab configuration for navigation
@@ -212,15 +213,10 @@ export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownPro
 					</span>
 				)}
 				{currentTab?.label}
-				<svg
-					className={`w-4 h-4 ml-auto text-muted transition-transform ${open ? "rotate-180" : ""}`}
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-					aria-hidden="true"
-				>
-					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-				</svg>
+				<IconChevronDown
+					size={16}
+					className={`ml-auto text-muted transition-transform ${open ? "rotate-180" : ""}`}
+				/>
 			</button>
 			{open && (
 				<div
