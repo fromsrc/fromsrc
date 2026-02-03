@@ -1,27 +1,37 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
+import type { JSX } from "react"
 
+/**
+ * Props for the BackToTop component.
+ */
 export interface BackToTopProps {
+	/**
+	 * Scroll threshold in pixels before the button appears.
+	 */
 	threshold?: number
+	/**
+	 * Additional CSS classes to apply to the button.
+	 */
 	className?: string
 }
 
-export function BackToTop({ threshold = 400, className }: BackToTopProps) {
-	const [visible, setVisible] = useState(false)
+function BackToTopBase({ threshold = 400, className }: BackToTopProps): JSX.Element | null {
+	const [visible, setVisible] = useState<boolean>(false)
 
-	useEffect(() => {
-		function check() {
+	useEffect((): (() => void) => {
+		function check(): void {
 			setVisible(window.scrollY > threshold)
 		}
 		check()
 		window.addEventListener("scroll", check, { passive: true })
-		return () => window.removeEventListener("scroll", check)
+		return (): void => window.removeEventListener("scroll", check)
 	}, [threshold])
 
-	function scrollToTop() {
+	const scrollToTop = useCallback((): void => {
 		window.scrollTo({ top: 0, behavior: "smooth" })
-	}
+	}, [])
 
 	if (!visible) return null
 
@@ -44,3 +54,5 @@ export function BackToTop({ threshold = 400, className }: BackToTopProps) {
 		</button>
 	)
 }
+
+export const BackToTop = memo(BackToTopBase)
