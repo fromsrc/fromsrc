@@ -1,15 +1,22 @@
 "use client"
 
-import { type ReactNode, useCallback, useId, useState } from "react"
+import type { JSX, ReactNode } from "react"
+import { useCallback, useId, useState } from "react"
 import { IconChevronRight } from "./icons"
 
+/**
+ * Props for the Collapsible component.
+ */
 export interface CollapsibleProps {
+	/** The title displayed in the collapsible header. */
 	title: string
+	/** Whether the collapsible is initially open. */
 	defaultOpen?: boolean
+	/** The content to display when expanded. */
 	children: ReactNode
 }
 
-export function Collapsible({ title, defaultOpen = false, children }: CollapsibleProps) {
+export function Collapsible({ title, defaultOpen = false, children }: CollapsibleProps): JSX.Element {
 	const [open, setOpen] = useState(defaultOpen)
 	const id = useId()
 	const buttonId = `${id}-button`
@@ -47,12 +54,17 @@ export function Collapsible({ title, defaultOpen = false, children }: Collapsibl
 	)
 }
 
+/**
+ * Props for the Details component.
+ */
 export interface DetailsProps {
+	/** The summary text displayed in the details header. */
 	summary: string
+	/** The content to display when expanded. */
 	children: ReactNode
 }
 
-export function Details({ summary, children }: DetailsProps) {
+export function Details({ summary, children }: DetailsProps): JSX.Element {
 	return (
 		<details className="my-4 group">
 			<summary className="flex items-center gap-2 cursor-pointer text-sm text-fg list-none [&::-webkit-details-marker]:hidden">
