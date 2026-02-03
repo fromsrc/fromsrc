@@ -23,8 +23,7 @@ function useStorage<T>(
 				setValue(JSON.parse(stored) as T)
 			}
 		} catch {
-			// ignore
-		}
+					}
 	}, [getStorage, key])
 
 	const setStoredValue: StorageSetter<T> = useCallback(
@@ -34,8 +33,7 @@ function useStorage<T>(
 				try {
 					getStorage().setItem(key, JSON.stringify(resolved))
 				} catch {
-					// ignore
-				}
+									}
 				return resolved
 			})
 		},
