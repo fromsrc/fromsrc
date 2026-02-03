@@ -1,30 +1,12 @@
 ---
-title: introduction
+title: fromsrc
 description: documentation framework for developers
 order: 1
 ---
 
-fromsrc is a documentation framework built for performance and full control.
+build docs you actually own.
 
-## quick start
-
-<Tabs items={["bun", "npm", "pnpm"]}>
-  <Tab value="bun">
-    ```bash
-    bunx create-fromsrc
-    ```
-  </Tab>
-  <Tab value="npm">
-    ```bash
-    npx create-fromsrc
-    ```
-  </Tab>
-  <Tab value="pnpm">
-    ```bash
-    pnpm create fromsrc
-    ```
-  </Tab>
-</Tabs>
+<Create />
 
 ## why fromsrc
 
@@ -37,31 +19,80 @@ fromsrc is a documentation framework built for performance and full control.
   <Card
     title="editable"
     description="change anything without fighting the framework"
-    href="/docs/configuration"
+    href="/docs/customization"
   />
   <Card
     title="customizable"
     description="swap any component, style, or behavior"
-    href="/docs/components"
+    href="/docs/theming"
   />
   <Card
     title="optimized"
     description="incremental builds, scales to thousands of files"
+    href="/docs/configuration"
   />
 </Cards>
 
-## features
+## highlights
 
-- **mdx** - write docs with react components embedded
-- **search** - fast fuzzy search with cmd+k and keyboard hints
-- **keyboard nav** - arrow keys navigate between pages
-- **collapsible sidebar** - icon-only mode for more space
-- **dark mode** - built-in theme support
-- **responsive** - mobile-friendly layout
-- **llms.txt** - ai-ready content export
-- **composable** - every component is customizable
+<Features columns={3}>
+  <FeatureCard title="mdx">
+    react components embedded in markdown
+  </FeatureCard>
+  <FeatureCard title="search">
+    fast fuzzy search with keyboard shortcuts
+  </FeatureCard>
+  <FeatureCard title="ai-native">
+    llms.txt and mcp support built-in
+  </FeatureCard>
+  <FeatureCard title="dark mode">
+    automatic theme detection
+  </FeatureCard>
+  <FeatureCard title="keyboard nav">
+    arrow keys navigate between pages
+  </FeatureCard>
+  <FeatureCard title="responsive">
+    mobile-friendly layout
+  </FeatureCard>
+</Features>
 
-## project structure
+## get started
+
+<Steps>
+  <Step>
+
+### install
+
+<Install package="fromsrc" />
+
+  </Step>
+  <Step>
+
+### create your first doc
+
+add an mdx file to your docs folder.
+
+```mdx title="docs/index.mdx"
+---
+title: welcome
+---
+
+your documentation starts here.
+```
+
+  </Step>
+  <Step>
+
+### run dev server
+
+```bash
+bun dev
+```
+
+  </Step>
+</Steps>
+
+## structure
 
 <Files>
   <Folder name="app" defaultOpen>
@@ -75,7 +106,7 @@ fromsrc is a documentation framework built for performance and full control.
   </Folder>
   <Folder name="docs" defaultOpen>
     <File name="index.mdx" />
-    <File name="installation.mdx" />
+    <File name="getting-started.mdx" />
   </Folder>
   <File name="package.json" />
 </Files>
