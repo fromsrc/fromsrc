@@ -1,10 +1,20 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
+import type { JSX } from "react"
 
+/**
+ * Theme preference value
+ */
 export type Theme = "light" | "dark" | "system"
 
+/**
+ * Props for the ThemeToggle component
+ */
 export interface ThemeToggleProps {
+	/**
+	 * Initial theme when no preference is stored
+	 */
 	defaultTheme?: Theme
 }
 
@@ -15,7 +25,7 @@ function resolves(theme: Theme): "light" | "dark" {
 	return theme
 }
 
-export function ThemeToggle({ defaultTheme = "dark" }: ThemeToggleProps) {
+function ThemeToggleBase({ defaultTheme = "dark" }: ThemeToggleProps): JSX.Element {
 	const [theme, setTheme] = useState<Theme | null>(null)
 	const [resolved, setResolved] = useState<"light" | "dark" | null>(null)
 
@@ -29,7 +39,7 @@ export function ThemeToggle({ defaultTheme = "dark" }: ThemeToggleProps) {
 	useEffect(() => {
 		if (!theme) return
 
-		const apply = () => {
+		const apply = (): void => {
 			const r = resolves(theme)
 			setResolved(r)
 			document.documentElement.classList.toggle("dark", r === "dark")
@@ -45,9 +55,9 @@ export function ThemeToggle({ defaultTheme = "dark" }: ThemeToggleProps) {
 		}
 	}, [theme])
 
-	const toggle = () => {
+	const toggle = useCallback((): void => {
 		setTheme((t) => (t === "dark" ? "light" : "dark"))
-	}
+	}, [])
 
 	if (!resolved) {
 		return (
@@ -81,3 +91,5 @@ export function ThemeToggle({ defaultTheme = "dark" }: ThemeToggleProps) {
 		</button>
 	)
 }
+
+export const ThemeToggle = memo(ThemeToggleBase)
