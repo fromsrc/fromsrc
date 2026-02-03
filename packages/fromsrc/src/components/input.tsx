@@ -1,21 +1,21 @@
 "use client"
 
-import { type ComponentPropsWithoutRef, type ReactNode, useId } from "react"
+import { type ReactNode, forwardRef, useId } from "react"
 import { Tooltip } from "./tooltip"
 
 export type InputVariant = "default" | "error"
 export type InputSize = "sm" | "md" | "lg"
 
 /**
- * @param variant - visual style variant
- * @param size - input size
- * @param label - accessible label
- * @param error - error message
- * @param hint - helper text
- * @param tooltip - help text shown on hover
- * @example <Input label="Email" placeholder="you@example.com" />
+ * Props for the Input component.
+ * @property variant - visual style variant
+ * @property size - input size
+ * @property label - accessible label
+ * @property error - error message
+ * @property hint - helper text
+ * @property tooltip - help text shown on hover
  */
-export interface InputProps extends Omit<ComponentPropsWithoutRef<"input">, "size"> {
+export interface InputProps extends Omit<React.ComponentPropsWithRef<"input">, "size"> {
 	variant?: InputVariant
 	size?: InputSize
 	label?: ReactNode
@@ -35,17 +35,10 @@ const sizes: Record<InputSize, string> = {
 	lg: "h-12 px-4 text-base",
 }
 
-export function Input({
-	variant = "default",
-	size = "md",
-	label,
-	error,
-	hint,
-	tooltip,
-	className = "",
-	id,
-	...props
-}: InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+	{ variant = "default", size = "md", label, error, hint, tooltip, className = "", id, ...props },
+	ref,
+): React.ReactElement {
 	const generatedId = useId()
 	const inputId = id || generatedId
 	const errorId = error ? `${inputId}-error` : undefined
@@ -76,6 +69,7 @@ export function Input({
 				</label>
 			)}
 			<input
+				ref={ref}
 				id={inputId}
 				aria-invalid={actualVariant === "error" ? true : undefined}
 				aria-describedby={describedBy}
@@ -94,4 +88,4 @@ export function Input({
 			)}
 		</div>
 	)
-}
+})
