@@ -1,0 +1,116 @@
+---
+title: versioning
+description: manage multiple documentation versions
+order: 8
+---
+
+document multiple versions of your project.
+
+## strategies
+
+### branch-based (recommended)
+
+separate git branches per major version:
+
+```
+main        → docs.site.com (latest)
+v2          → v2.docs.site.com
+v1          → v1.docs.site.com
+```
+
+benefits:
+- no content duplication
+- independent builds per version
+- clean git history
+
+### directory-based
+
+version folders in single branch:
+
+```
+docs/
+  v3/          → current
+  v2/          → previous
+  v1/          → legacy
+```
+
+benefits:
+- single deployment
+- easy diffing between versions
+
+## version selector
+
+add a version dropdown to your docs:
+
+```tsx
+import { Version } from "fromsrc/client"
+
+<Version
+  current="v3"
+  versions={[
+    { label: "v3 (latest)", href: "/" },
+    { label: "v2", href: "https://v2.docs.site.com" },
+    { label: "v1", href: "https://v1.docs.site.com" },
+  ]}
+/>
+```
+
+## routing
+
+### subdomains
+
+```
+v2.docs.example.com → version 2
+v1.docs.example.com → version 1
+docs.example.com    → latest
+```
+
+### subpaths
+
+```
+docs.example.com/v2/ → version 2
+docs.example.com/v1/ → version 1
+docs.example.com/    → latest
+```
+
+## seo
+
+### canonical urls
+
+always set canonical to the latest version:
+
+```tsx
+export const metadata = {
+  alternates: {
+    canonical: "https://docs.example.com/guide"
+  }
+}
+```
+
+### sitemap priorities
+
+```xml
+<url>
+  <loc>https://docs.example.com/guide</loc>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://v2.docs.example.com/guide</loc>
+  <priority>0.5</priority>
+</url>
+```
+
+## deprecation notices
+
+show banners on old versions:
+
+```tsx
+import { Banner } from "fromsrc/client"
+
+{version !== "latest" && (
+  <Banner variant="warning">
+    you're viewing docs for {version}.
+    <a href="/">switch to latest</a>
+  </Banner>
+)}
+```

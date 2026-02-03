@@ -1,0 +1,117 @@
+---
+title: writing
+description: markdown and mdx authoring guide
+order: 5
+---
+
+write documentation using markdown and mdx.
+
+## markdown
+
+standard markdown syntax is fully supported:
+
+```md
+# heading 1
+## heading 2
+### heading 3
+
+**bold** and *italic* text
+
+- unordered
+- list
+
+1. ordered
+2. list
+
+[link](https://example.com)
+
+![image](/image.png)
+
+> blockquote
+
+`inline code`
+```
+
+## mdx
+
+import and use react components directly in markdown:
+
+```mdx
+import { Callout } from "fromsrc/client"
+
+# my page
+
+some content here.
+
+<Callout type="info">
+  this is a callout component.
+</Callout>
+```
+
+## code blocks
+
+syntax highlighting with language detection:
+
+````md
+```typescript
+const hello = "world"
+```
+````
+
+add a title to code blocks:
+
+````md
+```typescript title="app.ts"
+const app = new App()
+```
+````
+
+## frontmatter
+
+every mdx file needs frontmatter:
+
+```yaml
+---
+title: page title
+description: page description
+order: 1
+---
+```
+
+### fields
+
+| field | type | required | description |
+|-------|------|----------|-------------|
+| title | string | yes | page title |
+| description | string | no | seo description |
+| order | number | no | sort order in sidebar |
+
+## file structure
+
+organize docs by topic:
+
+```
+docs/
+  index.mdx           # introduction
+  quickstart.mdx      # getting started
+  components/
+    callout.mdx
+    tabs.mdx
+  guides/
+    theming.mdx
+    deploying.mdx
+```
+
+## links
+
+link to other pages using relative paths:
+
+```md
+see the [installation guide](/docs/installation)
+```
+
+external links automatically get an icon:
+
+```md
+check out [github](https://github.com)
+```

@@ -1,0 +1,119 @@
+---
+title: search
+description: configure search for your documentation
+order: 7
+---
+
+fromsrc includes built-in client-side search. for larger sites, use a search adapter.
+
+## built-in search
+
+the default search works out of the box with no configuration:
+
+```tsx
+import { Search } from "fromsrc/client"
+
+<Search docs={docs} basePath="/docs" />
+```
+
+### features
+
+- fuzzy matching
+- instant results
+- keyboard navigation
+- recent searches
+
+## search adapters
+
+for larger documentation sites, use a hosted search service.
+
+### orama (recommended)
+
+fast, open-source search with vector support:
+
+```bash
+bun add @fromsrc/orama
+```
+
+```tsx
+import { OramaSearch } from "@fromsrc/orama"
+
+<OramaSearch
+  endpoint="https://cloud.orama.run/v1/indexes/..."
+  apiKey="your-api-key"
+/>
+```
+
+### algolia
+
+industry-standard hosted search:
+
+```bash
+bun add @fromsrc/algolia
+```
+
+```tsx
+import { AlgoliaSearch } from "@fromsrc/algolia"
+
+<AlgoliaSearch
+  appId="your-app-id"
+  apiKey="your-search-key"
+  indexName="docs"
+/>
+```
+
+### custom adapter
+
+build your own search adapter:
+
+```tsx
+import { SearchBase } from "fromsrc/client"
+
+function CustomSearch({ onSearch }) {
+  return (
+    <SearchBase
+      onSearch={async (query) => {
+        const results = await yourSearchApi(query)
+        return results.map(r => ({
+          title: r.title,
+          href: r.url,
+          content: r.excerpt
+        }))
+      }}
+    />
+  )
+}
+```
+
+## indexing
+
+### build-time indexing
+
+generate a search index at build time:
+
+```ts
+// scripts/index.ts
+import { indexDocs } from "fromsrc"
+import { docs } from "../app/docs/_lib/content"
+
+const index = indexDocs(docs)
+await Bun.write("public/search-index.json", JSON.stringify(index))
+```
+
+### runtime indexing
+
+index documents on the fly:
+
+```tsx
+const docs = await getDocs()
+const searchIndex = createSearchIndex(docs)
+```
+
+## keyboard shortcuts
+
+| shortcut | action |
+|----------|--------|
+| `⌘K` / `Ctrl+K` | open search |
+| `↑` / `↓` | navigate results |
+| `Enter` | go to result |
+| `Escape` | close search |

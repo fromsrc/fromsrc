@@ -1,0 +1,149 @@
+---
+title: deploying
+description: deploy your documentation site
+order: 9
+---
+
+deploy fromsrc documentation to any platform.
+
+## vercel
+
+zero-config deployment:
+
+```bash
+vercel
+```
+
+or connect your github repo at vercel.com/new.
+
+### environment variables
+
+set in vercel dashboard or `.env`:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://docs.example.com
+```
+
+## netlify
+
+```bash
+netlify deploy --prod
+```
+
+### netlify.toml
+
+```toml
+[build]
+  command = "bun run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+```
+
+## cloudflare pages
+
+```bash
+npx wrangler pages deploy .next
+```
+
+### wrangler.toml
+
+```toml
+name = "docs"
+compatibility_date = "2026-01-01"
+```
+
+## static export
+
+generate static html for any host:
+
+```ts
+// next.config.ts
+export default {
+  output: "export"
+}
+```
+
+```bash
+bun run build
+```
+
+deploy the `out/` folder to any static host:
+
+- github pages
+- s3 + cloudfront
+- nginx
+- apache
+
+## docker
+
+### dockerfile
+
+```dockerfile
+FROM oven/bun:1 AS builder
+WORKDIR /app
+COPY . .
+RUN bun install
+RUN bun run build
+
+FROM oven/bun:1
+WORKDIR /app
+COPY --from=builder /app/.next .next
+COPY --from=builder /app/public public
+COPY --from=builder /app/node_modules node_modules
+COPY --from=builder /app/package.json .
+EXPOSE 3000
+CMD ["bun", "run", "start"]
+```
+
+### docker compose
+
+```yaml
+services:
+  docs:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+```
+
+## self-hosting
+
+### standalone build
+
+```ts
+// next.config.ts
+export default {
+  output: "standalone"
+}
+```
+
+outputs minimal files needed to run:
+
+```bash
+node .next/standalone/server.js
+```
+
+### pm2
+
+```bash
+pm2 start .next/standalone/server.js --name docs
+```
+
+## custom domain
+
+### dns configuration
+
+```
+docs.example.com  CNAME  your-host.com
+```
+
+### ssl
+
+most platforms handle ssl automatically. for self-hosted:
+
+```bash
+certbot --nginx -d docs.example.com
+```
