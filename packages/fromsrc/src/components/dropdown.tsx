@@ -1,6 +1,7 @@
 "use client"
 
 import { type ReactNode, useCallback, useId, useRef, useState } from "react"
+import { getNextIndex } from "../hooks/arrownav"
 import { useClickOutside } from "../hooks/clickoutside"
 
 /**
@@ -32,18 +33,6 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps): Re
 
 	const selectableItems = items.filter((i): i is DropdownItem => i !== "separator" && !i.disabled)
 
-	const findNextEnabled = useCallback(
-		(current: number, direction: 1 | -1): number => {
-			let next = current + direction
-			while (next >= 0 && next < selectableItems.length) {
-				if (!selectableItems[next]!.disabled) return next
-				next += direction
-			}
-			return current
-		},
-		[selectableItems],
-	)
-
 	const close = useCallback((): void => {
 		setOpen(false)
 		setIndex(-1)
@@ -72,21 +61,18 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps): Re
 					close()
 					break
 				case "ArrowDown":
-					setIndex((i) => findNextEnabled(i, 1))
-					e.preventDefault()
-					break
 				case "ArrowUp":
-					setIndex((i) => findNextEnabled(i, -1))
-					e.preventDefault()
-					break
 				case "Home":
-					setIndex(0)
+				case "End": {
+					const next = getNextIndex(e.key, {
+						count: selectableItems.length,
+						current: index,
+						wrap: false,
+					})
+					if (next !== index) setIndex(next)
 					e.preventDefault()
 					break
-				case "End":
-					setIndex(selectableItems.length - 1)
-					e.preventDefault()
-					break
+				}
 				case "Enter":
 				case " ":
 					if (index >= 0) {
@@ -98,7 +84,7 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps): Re
 					break
 			}
 		},
-		[open, index, selectableItems, findNextEnabled, close],
+		[open, index, selectableItems, close],
 	)
 
 	const menuId = `${id}-menu`

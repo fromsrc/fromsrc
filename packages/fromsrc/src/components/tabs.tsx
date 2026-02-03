@@ -13,6 +13,7 @@ import {
 	useRef,
 	useState,
 } from "react"
+import { getNextIndex } from "../hooks/arrownav"
 
 interface TabsContextValue {
 	active: string
@@ -51,25 +52,13 @@ export function Tabs({ items, defaultValue, children }: TabsProps): JSX.Element 
 	const handleKeyDown = useCallback(
 		(e: KeyboardEvent<HTMLDivElement>): void => {
 			const currentIndex = items.indexOf(active)
-			let nextIndex: number = currentIndex
-
-			switch (e.key) {
-				case "ArrowLeft":
-					nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1
-					break
-				case "ArrowRight":
-					nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0
-					break
-				case "Home":
-					nextIndex = 0
-					break
-				case "End":
-					nextIndex = items.length - 1
-					break
-				default:
-					return
-			}
-
+			const nextIndex = getNextIndex(e.key, {
+				count: items.length,
+				current: currentIndex,
+				direction: "horizontal",
+				wrap: true,
+			})
+			if (nextIndex === currentIndex) return
 			e.preventDefault()
 			const nextItem = items[nextIndex]
 			if (nextItem !== undefined) {

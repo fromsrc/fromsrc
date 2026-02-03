@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { type ReactNode, useCallback, useId, useRef, useState } from "react"
+import { getNextIndex } from "../hooks/arrownav"
 import { useClickOutside } from "../hooks/clickoutside"
 import { ErrorMessage } from "./errormessage"
 import { FormLabel } from "./formlabel"
@@ -64,7 +65,6 @@ export function Select({
 
 	const value = controlledValue ?? internalValue
 	const selected = options.find((o) => o.value === value)
-	const enabledOptions = options.filter((o) => !o.disabled)
 
 	const listId = `${id}-list`
 	const labelId = label ? `${id}-label` : undefined
@@ -78,17 +78,7 @@ export function Select({
 
 	useClickOutside(containerRef, close, open)
 
-	const findNextEnabled = useCallback(
-		(current: number, direction: 1 | -1): number => {
-			let next = current + direction
-			while (next >= 0 && next < options.length) {
-				if (!options[next]!.disabled) return next
-				next += direction
-			}
-			return current
-		},
-		[options],
-	)
+	const isDisabled = useCallback((i: number) => options[i]?.disabled ?? false, [options])
 
 	function handleSelect(option: SelectOption) {
 		if (option.disabled) return
@@ -108,7 +98,13 @@ export function Select({
 			if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown" || e.key === "ArrowUp") {
 				setOpen(true)
 				const currentIndex = options.findIndex((o) => o.value === value && !o.disabled)
-				setIndex(currentIndex >= 0 ? currentIndex : findNextEnabled(-1, 1))
+				const firstEnabled = getNextIndex("Home", {
+					count: options.length,
+					current: -1,
+					wrap: false,
+					isDisabled,
+				})
+				setIndex(currentIndex >= 0 ? currentIndex : firstEnabled)
 				e.preventDefault()
 			}
 			return
@@ -124,21 +120,19 @@ export function Select({
 				close()
 				break
 			case "ArrowDown":
-				setIndex((i) => findNextEnabled(i, 1))
-				e.preventDefault()
-				break
 			case "ArrowUp":
-				setIndex((i) => findNextEnabled(i, -1))
-				e.preventDefault()
-				break
 			case "Home":
-				setIndex(findNextEnabled(-1, 1))
+			case "End": {
+				const next = getNextIndex(e.key, {
+					count: options.length,
+					current: index,
+					wrap: false,
+					isDisabled,
+				})
+				if (next !== index) setIndex(next)
 				e.preventDefault()
 				break
-			case "End":
-				setIndex(findNextEnabled(options.length, -1))
-				e.preventDefault()
-				break
+			}
 			case "Enter":
 			case " ":
 				if (index >= 0 && options[index] && !options[index].disabled) {
