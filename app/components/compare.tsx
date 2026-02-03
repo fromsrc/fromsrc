@@ -5,7 +5,7 @@ const principles = [
 	{ id: "1.4", title: "optimized", desc: "incremental builds only. scales to thousands of files." },
 ]
 
-const features = [
+const benefits = [
 	"direct component access in mdx",
 	"incremental builds only",
 	"llms.txt + mcp built-in",
@@ -16,9 +16,9 @@ const features = [
 
 export function Compare() {
 	return (
-		<section id="why" className="py-20 border-t border-line">
+		<section id="why" className="py-24 border-t border-line">
 			<div className="mx-auto max-w-5xl px-6">
-				<div className="grid lg:grid-cols-[200px,1fr] gap-12 mb-16">
+				<header className="grid lg:grid-cols-[200px,1fr] gap-12 mb-16">
 					<div>
 						<span className="text-dim text-xs">01</span>
 						<h2 className="text-xl mt-1">why fromsrc</h2>
@@ -27,34 +27,34 @@ export function Compare() {
 						Documentation should be as flexible as the code it describes.
 						We built fromsrc around four principles.
 					</p>
-				</div>
+				</header>
 
-				<div className="grid lg:grid-cols-2 gap-12">
+				<div className="grid lg:grid-cols-2 gap-8">
 					<div className="rounded-2xl bg-surface border border-line p-6">
 						<div className="text-xs text-muted uppercase tracking-widest mb-6">principles</div>
-						<div className="space-y-0">
+						<ul>
 							{principles.map((p) => (
-								<div key={p.id} className="flex items-start gap-4 py-4 border-b border-line last:border-0">
+								<li key={p.id} className="flex items-start gap-4 py-4 border-b border-line last:border-0">
 									<span className="text-dim text-xs tabular-nums w-6">{p.id}</span>
 									<div className="flex-1">
 										<span className="text-fg">{p.title}</span>
 										<p className="text-muted text-xs mt-1">{p.desc}</p>
 									</div>
-								</div>
+								</li>
 							))}
-						</div>
+						</ul>
 					</div>
 
 					<div className="rounded-2xl border border-line p-6 bg-linear-to-br from-surface to-bg">
 						<div className="text-xs text-accent uppercase tracking-widest mb-6">what you get</div>
-						<div className="space-y-0">
-							{features.map((f) => (
-								<div key={f} className="flex items-center gap-4 py-4 border-b border-line last:border-0">
-									<span className="text-accent">+</span>
-									<span className="text-fg">{f}</span>
-								</div>
+						<ul>
+							{benefits.map((b) => (
+								<li key={b} className="flex items-center gap-4 py-4 border-b border-line last:border-0">
+									<span className="text-accent" aria-hidden="true">+</span>
+									<span className="text-fg">{b}</span>
+								</li>
 							))}
-						</div>
+						</ul>
 					</div>
 				</div>
 			</div>

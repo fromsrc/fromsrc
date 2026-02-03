@@ -7,37 +7,37 @@ const endpoints = [
 
 export function Native() {
 	return (
-		<section id="ai" className="py-20 border-t border-line">
+		<section id="ai" className="py-24 border-t border-line">
 			<div className="mx-auto max-w-5xl px-6">
-				<div className="grid lg:grid-cols-[200px,1fr] gap-12 mb-16">
+				<header className="grid lg:grid-cols-[200px,1fr] gap-12 mb-16">
 					<div>
 						<span className="text-dim text-xs">03</span>
 						<h2 className="text-xl mt-1">ai-native</h2>
 					</div>
 					<p className="text-muted max-w-xl">
-						Every docs page has raw content endpoints. Feed pages to AI tools, 
+						Every docs page has raw content endpoints. Feed pages to AI tools,
 						get docs for RAG, or connect via MCP.
 					</p>
-				</div>
+				</header>
 
 				<div className="grid lg:grid-cols-2 gap-6">
-					<div className="space-y-3">
+					<ul className="space-y-3">
 						{endpoints.map((e) => (
-							<div 
-								key={e.path} 
-								className="flex items-center justify-between rounded-xl bg-surface border border-line px-5 py-4 hover:border-dim transition-colors"
+							<li
+								key={e.path}
+								className="flex items-center justify-between rounded-xl bg-surface border border-line px-5 py-4 hover:border-dim transition-colors duration-200"
 							>
 								<code className="text-accent text-sm">{e.path}</code>
 								<span className="text-muted text-xs">{e.desc}</span>
-							</div>
+							</li>
 						))}
-					</div>
-					
+					</ul>
+
 					<div className="rounded-2xl bg-surface border border-line p-5 text-sm flex flex-col justify-between">
 						<div className="space-y-4">
 							<div className="flex gap-3">
-								<span className="text-muted">$</span>
-								<span>curl fromsrc.com/docs/auth/llms.txt</span>
+								<span className="text-muted" aria-hidden="true">$</span>
+								<code>curl fromsrc.com/docs/auth/llms.txt</code>
 							</div>
 							<div className="pl-6 text-muted border-l border-line">
 								<p className="text-dim"># Authentication</p>

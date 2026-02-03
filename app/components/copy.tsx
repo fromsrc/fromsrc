@@ -18,16 +18,18 @@ export function Copy({ text, className = "" }: { text: string; className?: strin
 			onClick={copy}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
+			aria-label={copied ? "copied" : `copy ${text}`}
 			className={`group relative cursor-pointer ${className}`}
 		>
 			{text}
 			<span
-				className={`absolute -right-5 top-1/2 -translate-y-1/2 transition-opacity duration-300 ${
+				className={`absolute -right-5 top-1/2 -translate-y-1/2 transition-opacity duration-200 ${
 					hovered || copied ? "opacity-100" : "opacity-0"
 				}`}
+				aria-hidden="true"
 			>
 				<svg
-					className={`size-3 transition-colors duration-300 ${copied ? "text-accent" : "text-fg"}`}
+					className={`size-3 transition-colors duration-200 ${copied ? "text-accent" : "text-fg"}`}
 					viewBox="0 0 24 24"
 					fill="currentColor"
 					aria-hidden="true"

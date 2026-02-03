@@ -33,9 +33,9 @@ const features = [
 
 export function Features() {
 	return (
-		<section id="features" className="py-20 border-t border-line">
+		<section id="features" className="py-24 border-t border-line">
 			<div className="mx-auto max-w-5xl px-6">
-				<div className="grid lg:grid-cols-[200px,1fr] gap-12 mb-16">
+				<header className="grid lg:grid-cols-[200px,1fr] gap-12 mb-16">
 					<div>
 						<span className="text-dim text-xs">02</span>
 						<h2 className="text-xl mt-1">features</h2>
@@ -43,20 +43,22 @@ export function Features() {
 					<p className="text-muted max-w-xl">
 						Built from developer pain points. No swizzling, no magic, no vendor lock-in.
 					</p>
-				</div>
+				</header>
 
-				<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+				<ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
 					{features.map((f) => (
-						<div 
-							key={f.id} 
-							className="group rounded-2xl bg-surface border border-line p-6 hover:border-dim transition-colors"
+						<li
+							key={f.id}
+							className="group rounded-2xl bg-surface border border-line p-6 hover:border-dim transition-colors duration-200"
 						>
 							<span className="text-dim text-xs">{f.id}</span>
-							<h3 className="text-fg mt-3 mb-2 group-hover:text-accent transition-colors">{f.title}</h3>
+							<h3 className="text-fg mt-3 mb-2 group-hover:text-accent transition-colors duration-200">
+								{f.title}
+							</h3>
 							<p className="text-muted text-xs leading-relaxed">{f.desc}</p>
-						</div>
+						</li>
 					))}
-				</div>
+				</ul>
 			</div>
 		</section>
 	)
