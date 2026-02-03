@@ -1,9 +1,16 @@
 "use client"
 
-import { type ReactNode, useId, useMemo, useState } from "react"
+import { type ReactNode, useCallback, useId, useMemo, useState } from "react"
 
+/**
+ * Sort direction for table columns
+ */
 export type SortDirection = "asc" | "desc" | null
 
+/**
+ * Column definition for the table
+ * @template T - Row data type
+ */
 export interface TableColumn<T> {
 	key: keyof T & string
 	header: string
@@ -14,14 +21,8 @@ export interface TableColumn<T> {
 }
 
 /**
- * @param data - array of row objects
- * @param columns - column definitions
- * @param defaultSort - initial sort column key
- * @param defaultDirection - initial sort direction
- * @param striped - alternating row colors
- * @param hoverable - row hover effect
- * @param compact - reduced padding
- * @param caption - accessible table description
+ * Props for the Table component
+ * @template T - Row data type extending Record<string, unknown>
  */
 export interface TableProps<T extends Record<string, unknown>> {
 	data: T[]
@@ -45,12 +46,12 @@ export function Table<T extends Record<string, unknown>>({
 	compact = false,
 	caption,
 	className = "",
-}: TableProps<T>) {
+}: TableProps<T>): ReactNode {
 	const [sortKey, setSortKey] = useState<(keyof T & string) | null>(defaultSort ?? null)
 	const [sortDir, setSortDir] = useState<SortDirection>(defaultSort ? defaultDirection : null)
 	const id = useId()
 
-	const sorted = useMemo(() => {
+	const sorted = useMemo((): T[] => {
 		if (!sortKey || !sortDir) return data
 		return [...data].sort((a, b) => {
 			const va = a[sortKey]
@@ -63,24 +64,43 @@ export function Table<T extends Record<string, unknown>>({
 		})
 	}, [data, sortKey, sortDir])
 
-	const handleSort = (key: keyof T & string) => {
-		if (sortKey === key) {
-			setSortDir(sortDir === "asc" ? "desc" : sortDir === "desc" ? null : "asc")
-			if (sortDir === "desc") setSortKey(null)
-		} else {
-			setSortKey(key)
-			setSortDir("asc")
-		}
-	}
+	const handleSort = useCallback(
+		(key: keyof T & string): void => {
+			if (sortKey === key) {
+				setSortDir(sortDir === "asc" ? "desc" : sortDir === "desc" ? null : "asc")
+				if (sortDir === "desc") setSortKey(null)
+			} else {
+				setSortKey(key)
+				setSortDir("asc")
+			}
+		},
+		[sortKey, sortDir]
+	)
 
 	const padding = compact ? "px-3 py-2" : "px-4 py-3"
 
+	const getSortLabel = useCallback(
+		(col: TableColumn<T>): string => {
+			if (sortKey === col.key) {
+				if (sortDir === "asc") return `${col.header}, sorted ascending`
+				if (sortDir === "desc") return `${col.header}, sorted descending`
+			}
+			return `${col.header}, sortable`
+		},
+		[sortKey, sortDir]
+	)
+
 	return (
-		<div className={`my-6 overflow-x-auto rounded-lg border border-line ${className}`.trim()}>
+		<div
+			className={`my-6 overflow-x-auto rounded-lg border border-line ${className}`.trim()}
+			role="region"
+			aria-label={caption || "Data table"}
+			tabIndex={0}
+		>
 			<table
 				className="w-full text-sm"
-				role="grid"
-				aria-describedby={caption ? `${id}-caption` : undefined}
+				aria-rowcount={data.length + 1}
+				aria-colcount={columns.length}
 			>
 				{caption && (
 					<caption id={`${id}-caption`} className="sr-only">
@@ -89,25 +109,27 @@ export function Table<T extends Record<string, unknown>>({
 				)}
 				<thead className="bg-surface">
 					<tr>
-						{columns.map((col) => (
+						{columns.map((col, colIndex) => (
 							<th
 								key={col.key}
 								scope="col"
+								aria-colindex={colIndex + 1}
 								style={col.width ? { width: col.width } : undefined}
 								className={`text-left ${padding} font-medium text-fg ${col.hideOnMobile ? "hidden sm:table-cell" : ""}`}
+								aria-sort={
+									col.sortable && sortKey === col.key && sortDir
+										? sortDir === "asc"
+											? "ascending"
+											: "descending"
+										: undefined
+								}
 							>
 								{col.sortable ? (
 									<button
 										type="button"
 										onClick={() => handleSort(col.key)}
-										aria-sort={
-											sortKey === col.key && sortDir
-												? sortDir === "asc"
-													? "ascending"
-													: "descending"
-												: "none"
-										}
-										className="inline-flex items-center gap-1.5 transition-colors hover:text-accent"
+										aria-label={getSortLabel(col)}
+										className="inline-flex items-center gap-1.5 transition-colors hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded"
 									>
 										{col.header}
 										<SortIcon
@@ -126,11 +148,13 @@ export function Table<T extends Record<string, unknown>>({
 					{sorted.map((row, i) => (
 						<tr
 							key={i}
+							aria-rowindex={i + 2}
 							className={`border-t border-line/50 ${striped && i % 2 === 1 ? "bg-surface/30" : ""} ${hoverable ? "hover:bg-surface/50" : ""}`}
 						>
-							{columns.map((col) => (
+							{columns.map((col, colIndex) => (
 								<td
 									key={col.key}
+									aria-colindex={colIndex + 1}
 									className={`${padding} text-muted ${col.hideOnMobile ? "hidden sm:table-cell" : ""}`}
 								>
 									{col.render ? col.render(row[col.key], row) : String(row[col.key] ?? "")}
@@ -144,7 +168,15 @@ export function Table<T extends Record<string, unknown>>({
 	)
 }
 
-function SortIcon({ active, direction }: { active: boolean; direction: SortDirection }) {
+/**
+ * Sort indicator icon props
+ */
+interface SortIconProps {
+	active: boolean
+	direction: SortDirection
+}
+
+function SortIcon({ active, direction }: SortIconProps): ReactNode {
 	return (
 		<svg
 			aria-hidden="true"
