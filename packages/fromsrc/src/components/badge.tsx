@@ -1,11 +1,10 @@
 "use client"
 
-import type { ReactNode } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 
 export type BadgeVariant = "default" | "success" | "warning" | "error" | "info"
 
-export interface BadgeProps {
-	children: ReactNode
+export interface BadgeProps extends ComponentPropsWithoutRef<"span"> {
 	variant?: BadgeVariant
 }
 
@@ -17,10 +16,12 @@ const styles: Record<BadgeVariant, string> = {
 	info: "bg-blue-500/10 text-blue-400 border-blue-500/30",
 }
 
-export function Badge({ children, variant = "default" }: BadgeProps) {
+export function Badge({ children, variant = "default", className = "", ...props }: BadgeProps) {
 	return (
 		<span
-			className={`inline-flex items-center px-2 py-0.5 text-[10px] font-medium rounded-full border ${styles[variant]}`}
+			role="status"
+			className={`inline-flex items-center px-2 py-0.5 text-[10px] font-medium rounded-full border ${styles[variant]} ${className}`.trim()}
+			{...props}
 		>
 			{children}
 		</span>
