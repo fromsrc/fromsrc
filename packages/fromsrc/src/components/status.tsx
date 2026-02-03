@@ -1,9 +1,16 @@
 "use client"
 
+import { memo, type JSX } from "react"
+
 export type StatusType = "success" | "warning" | "error" | "info" | "neutral"
 
+/**
+ * Props for the Status component.
+ */
 export interface StatusProps {
+	/** Visual style variant */
 	type?: StatusType
+	/** Status text content */
 	children: string
 }
 
@@ -23,28 +30,47 @@ const dotStyles: Record<StatusType, string> = {
 	neutral: "bg-zinc-400",
 }
 
-export function Status({ type = "neutral", children }: StatusProps) {
+export const Status = memo(function Status({
+	type = "neutral",
+	children,
+}: StatusProps): JSX.Element {
 	return (
 		<span
 			role="status"
-			aria-label={`${type}: ${children}`}
+			aria-label={`Status ${type}: ${children}`}
+			aria-live="polite"
 			className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full border ${statusStyles[type]}`}
 		>
 			<span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full ${dotStyles[type]}`} />
 			{children}
 		</span>
 	)
-}
+})
 
+/**
+ * Props for the StatusDot component.
+ */
 export interface StatusDotProps {
+	/** Visual style variant */
 	type?: StatusType
+	/** Accessible label for screen readers */
 	label?: string
+	/** Enable pulse animation */
 	pulse?: boolean
 }
 
-export function StatusDot({ type = "neutral", label, pulse = false }: StatusDotProps) {
+export const StatusDot = memo(function StatusDot({
+	type = "neutral",
+	label,
+	pulse = false,
+}: StatusDotProps): JSX.Element {
 	return (
-		<span role="status" aria-label={label ?? type} className="relative inline-flex">
+		<span
+			role="status"
+			aria-label={label ?? `Status: ${type}`}
+			aria-live="polite"
+			className="relative inline-flex"
+		>
 			<span aria-hidden="true" className={`w-2 h-2 rounded-full ${dotStyles[type]}`} />
 			{pulse && (
 				<span
@@ -54,4 +80,4 @@ export function StatusDot({ type = "neutral", label, pulse = false }: StatusDotP
 			)}
 		</span>
 	)
-}
+})
