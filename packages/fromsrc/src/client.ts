@@ -215,4 +215,5 @@ export {
 } from "./hooks/media"
 export { useScrollSpy, type ScrollSpyOptions } from "./hooks/scrollspy"
 export { useScrollLock } from "./hooks/scrolllock"
+export { useIsScrollTop } from "./hooks/scrolltop"
 export { useLocalStorage, useSessionStorage } from "./hooks/storage"
