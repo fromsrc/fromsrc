@@ -30,29 +30,32 @@ export function AccordionItem({ title, children, defaultOpen = false }: Accordio
 	const toggle = useCallback(() => setOpen((prev) => !prev), [])
 
 	return (
-		<div>
-			<button
-				id={buttonId}
-				type="button"
-				onClick={toggle}
-				aria-expanded={open}
-				aria-controls={panelId}
-				className="flex w-full items-center justify-between py-4 text-left font-medium transition-colors hover:text-fg"
-			>
-				{title}
-				<svg
-					aria-hidden="true"
-					viewBox="0 0 16 16"
-					fill="currentColor"
-					className={`size-4 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+		<div role="group">
+			<h3>
+				<button
+					id={buttonId}
+					type="button"
+					onClick={toggle}
+					aria-expanded={open}
+					aria-controls={panelId}
+					className="flex w-full items-center justify-between py-4 text-left font-medium transition-colors hover:text-fg"
 				>
-					<path d="M4.22 6.22a.75.75 0 011.06 0L8 8.94l2.72-2.72a.75.75 0 111.06 1.06l-3.25 3.25a.75.75 0 01-1.06 0L4.22 7.28a.75.75 0 010-1.06z" />
-				</svg>
-			</button>
+					{title}
+					<svg
+						aria-hidden="true"
+						viewBox="0 0 16 16"
+						fill="currentColor"
+						className={`size-4 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+					>
+						<path d="M4.22 6.22a.75.75 0 011.06 0L8 8.94l2.72-2.72a.75.75 0 111.06 1.06l-3.25 3.25a.75.75 0 01-1.06 0L4.22 7.28a.75.75 0 010-1.06z" />
+					</svg>
+				</button>
+			</h3>
 			<div
 				id={panelId}
 				role="region"
 				aria-labelledby={buttonId}
+				hidden={!open}
 				className={`overflow-hidden transition-all duration-200 ${
 					open ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
 				}`}
