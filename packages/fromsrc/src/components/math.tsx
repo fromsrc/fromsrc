@@ -1,8 +1,7 @@
 "use client"
 
-import katex from "katex"
 import type { ReactNode } from "react"
-import { useMemo } from "react"
+import { useEffect, useState } from "react"
 
 function extractText(children: ReactNode): string {
 	if (typeof children === "string") return children
@@ -14,6 +13,10 @@ function extractText(children: ReactNode): string {
 	return ""
 }
 
+interface KatexAPI {
+	renderToString: (tex: string, options: { displayMode: boolean; throwOnError: boolean }) => string
+}
+
 interface MathProps {
 	children: ReactNode
 	display?: boolean
@@ -21,16 +24,34 @@ interface MathProps {
 
 export function Math({ children, display = false }: MathProps) {
 	const text = extractText(children)
-	const html = useMemo(() => {
-		try {
-			return katex.renderToString(text, {
-				displayMode: display,
-				throwOnError: false,
-			})
-		} catch {
-			return text
+	const [html, setHtml] = useState<string>("")
+
+	useEffect(() => {
+		let mounted = true
+
+		async function render() {
+			try {
+				const module = await import("katex" as string)
+				const katex = module.default as KatexAPI
+				const rendered = katex.renderToString(text, {
+					displayMode: display,
+					throwOnError: false,
+				})
+				if (mounted) setHtml(rendered)
+			} catch {
+				if (mounted) setHtml(text)
+			}
+		}
+
+		render()
+		return () => {
+			mounted = false
 		}
 	}, [text, display])
+
+	if (!html) {
+		return display ? <div className="my-4 animate-pulse h-8 bg-surface/30 rounded" /> : <span />
+	}
 
 	if (display) {
 		return (
