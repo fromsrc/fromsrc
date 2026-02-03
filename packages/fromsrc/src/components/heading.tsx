@@ -1,12 +1,19 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { memo, useCallback, type JSX, type ReactNode } from "react"
 import { useCopy } from "../hooks/copy"
 
+/**
+ * Props for the Anchor component
+ */
 export interface AnchorProps {
+	/** Heading level (1-6) */
 	level: 1 | 2 | 3 | 4 | 5 | 6
+	/** Unique identifier for the anchor link */
 	id: string
+	/** Content to display inside the heading */
 	children: ReactNode
+	/** Optional additional CSS classes */
 	className?: string
 }
 
@@ -19,20 +26,30 @@ const sizes: Record<number, string> = {
 	6: "text-sm font-medium",
 }
 
-export function Anchor({ level, id, children, className }: AnchorProps) {
+export const Anchor = memo(function Anchor({
+	level,
+	id,
+	children,
+	className,
+}: AnchorProps): JSX.Element {
 	const { copied, copy } = useCopy()
 	const Tag = `h${level}` as const
+
+	const handleClick = useCallback(
+		(e: React.MouseEvent<HTMLAnchorElement>): void => {
+			e.preventDefault()
+			const url = `${window.location.origin}${window.location.pathname}#${id}`
+			copy(url)
+			window.history.pushState(null, "", `#${id}`)
+		},
+		[id, copy]
+	)
 
 	return (
 		<Tag id={id} className={`group relative scroll-mt-20 ${sizes[level]} ${className || ""}`}>
 			<a
 				href={`#${id}`}
-				onClick={(e) => {
-					e.preventDefault()
-					const url = `${window.location.origin}${window.location.pathname}#${id}`
-					copy(url)
-					window.history.pushState(null, "", `#${id}`)
-				}}
+				onClick={handleClick}
 				className="absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
 				aria-label="copy link"
 			>
@@ -59,28 +76,28 @@ export function Anchor({ level, id, children, className }: AnchorProps) {
 			{children}
 		</Tag>
 	)
-}
+})
 
-export function H1(props: Omit<AnchorProps, "level">) {
+export function H1(props: Omit<AnchorProps, "level">): JSX.Element {
 	return <Anchor level={1} {...props} />
 }
 
-export function H2(props: Omit<AnchorProps, "level">) {
+export function H2(props: Omit<AnchorProps, "level">): JSX.Element {
 	return <Anchor level={2} {...props} />
 }
 
-export function H3(props: Omit<AnchorProps, "level">) {
+export function H3(props: Omit<AnchorProps, "level">): JSX.Element {
 	return <Anchor level={3} {...props} />
 }
 
-export function H4(props: Omit<AnchorProps, "level">) {
+export function H4(props: Omit<AnchorProps, "level">): JSX.Element {
 	return <Anchor level={4} {...props} />
 }
 
-export function H5(props: Omit<AnchorProps, "level">) {
+export function H5(props: Omit<AnchorProps, "level">): JSX.Element {
 	return <Anchor level={5} {...props} />
 }
 
-export function H6(props: Omit<AnchorProps, "level">) {
+export function H6(props: Omit<AnchorProps, "level">): JSX.Element {
 	return <Anchor level={6} {...props} />
 }
