@@ -198,9 +198,10 @@ export default defineConfig({
 export function Hero() {
 	const [active, setActive] = useState(0)
 	const [copied, setCopied] = useState(false)
+	const current = files[active]!
 
 	const copy = () => {
-		navigator.clipboard.writeText(files[active].raw)
+		navigator.clipboard.writeText(current.raw)
 		setCopied(true)
 		setTimeout(() => setCopied(false), 2000)
 	}
@@ -268,12 +269,12 @@ export function Hero() {
 								className="pr-6 text-dim text-right select-none border-r border-line mr-6 leading-relaxed"
 								aria-hidden="true"
 							>
-								{files[active].lines.map((line) => (
+								{current.lines.map((line) => (
 									<div key={line.num}>{line.num}</div>
 								))}
 							</div>
 							<pre className="leading-relaxed">
-								{files[active].lines.map((line) => (
+								{current.lines.map((line) => (
 									<div key={line.num}>{line.content}</div>
 								))}
 							</pre>
