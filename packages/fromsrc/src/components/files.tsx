@@ -1,6 +1,6 @@
 "use client"
 
-import { type KeyboardEvent, type ReactNode, useCallback, useState } from "react"
+import { type KeyboardEvent, memo, type ReactNode, useCallback, useState } from "react"
 
 /**
  * Container for file tree display
@@ -13,7 +13,7 @@ export interface FilesProps {
 /**
  * Root component for file tree structure
  */
-export function Files({ children, label = "File tree" }: FilesProps): ReactNode {
+export const Files = memo(function Files({ children, label = "File tree" }: FilesProps): ReactNode {
 	return (
 		<div
 			role="tree"
@@ -23,7 +23,7 @@ export function Files({ children, label = "File tree" }: FilesProps): ReactNode 
 			{children}
 		</div>
 	)
-}
+})
 
 /**
  * Props for individual file item
@@ -36,7 +36,7 @@ export interface FileProps {
 /**
  * Leaf node representing a single file
  */
-export function File({ name, icon }: FileProps): ReactNode {
+export const File = memo(function File({ name, icon }: FileProps): ReactNode {
 	return (
 		<div
 			role="treeitem"
@@ -52,7 +52,7 @@ export function File({ name, icon }: FileProps): ReactNode {
 			<span>{name}</span>
 		</div>
 	)
-}
+})
 
 /**
  * Props for folder item with expandable children

@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, type ReactNode, useCallback, useContext, useState } from "react"
+import { createContext, memo, type ReactNode, useCallback, useContext, useState } from "react"
 
 interface CodeGroupContext {
 	active: string
@@ -92,10 +92,10 @@ export function CodeTab({ value, label, children }: CodeTabProps): ReactNode {
 	)
 }
 
-export function CodeTabs({ children }: CodeTabsProps): ReactNode {
+export const CodeTabs = memo(function CodeTabs({ children }: CodeTabsProps): ReactNode {
 	return (
 		<div role="tablist" aria-label="code examples" className="flex border-b border-white/10 bg-bg">
 			{children}
 		</div>
 	)
-}
+})
