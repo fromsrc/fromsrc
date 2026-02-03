@@ -8,5 +8,5 @@ interface Props {
 }
 
 export function SearchModal({ docs }: Props) {
-	return <Search basePath="/docs" docs={docs} />
+	return <Search basePath="/docs" docs={docs} hidden />
 }

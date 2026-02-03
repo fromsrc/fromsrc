@@ -7,6 +7,7 @@ import type { DocMeta } from "../content"
 interface Props {
 	basePath?: string
 	docs: DocMeta[]
+	hidden?: boolean
 }
 
 function fuzzy(text: string, query: string): number {
@@ -40,7 +41,7 @@ function rank(doc: DocMeta, query: string): number {
 	return titleScore + descScore
 }
 
-export function Search({ basePath = "/docs", docs }: Props) {
+export function Search({ basePath = "/docs", docs, hidden }: Props) {
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState("")
 	const [selected, setSelected] = useState(0)
@@ -101,6 +102,7 @@ export function Search({ basePath = "/docs", docs }: Props) {
 	}
 
 	if (!open) {
+		if (hidden) return null
 		return (
 			<button
 				type="button"
