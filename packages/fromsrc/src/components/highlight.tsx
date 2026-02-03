@@ -1,9 +1,17 @@
-import type { ReactNode } from "react"
+import { type ReactNode, type JSX, memo } from "react"
 
+/**
+ * Available highlight colors for the Highlight component
+ */
 export type HighlightColor = "yellow" | "green" | "blue" | "red" | "purple"
 
+/**
+ * Props for the Highlight component
+ */
 export interface HighlightProps {
+	/** Content to highlight */
 	children: ReactNode
+	/** Highlight color variant */
 	color?: HighlightColor
 }
 
@@ -15,14 +23,35 @@ const colors: Record<HighlightColor, string> = {
 	purple: "bg-purple-500/20 text-purple-200",
 }
 
-export function Highlight({ children, color = "yellow" }: HighlightProps) {
-	return <mark className={`rounded px-1 transition-colors ${colors[color]}`}>{children}</mark>
+function HighlightBase({ children, color = "yellow" }: HighlightProps): JSX.Element {
+	return (
+		<mark
+			className={`rounded px-1 transition-colors ${colors[color]}`}
+			role="mark"
+			aria-label={`highlighted text in ${color}`}
+		>
+			{children}
+		</mark>
+	)
 }
 
+/**
+ * Renders highlighted text with customizable color
+ */
+export const Highlight = memo(HighlightBase)
+
+/**
+ * Available underline styles for the Underline component
+ */
 export type UnderlineStyle = "solid" | "wavy" | "dotted" | "dashed"
 
+/**
+ * Props for the Underline component
+ */
 export interface UnderlineProps {
+	/** Content to underline */
 	children: ReactNode
+	/** Underline style variant */
 	style?: UnderlineStyle
 }
 
@@ -33,12 +62,19 @@ const underlineStyles: Record<UnderlineStyle, string> = {
 	dashed: "decoration-dashed",
 }
 
-export function Underline({ children, style = "solid" }: UnderlineProps) {
+function UnderlineBase({ children, style = "solid" }: UnderlineProps): JSX.Element {
 	return (
 		<span
 			className={`underline decoration-accent underline-offset-4 transition-colors ${underlineStyles[style]}`}
+			role="text"
+			aria-label={`underlined text with ${style} style`}
 		>
 			{children}
 		</span>
 	)
 }
+
+/**
+ * Renders underlined text with customizable style
+ */
+export const Underline = memo(UnderlineBase)
