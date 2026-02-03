@@ -1,12 +1,24 @@
 "use client"
 
-import { memo, type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
+import type { JSX, ReactNode } from "react"
+import { useCallback, useEffect, useId, useRef, useState } from "react"
 
 /**
+ * tooltip position state
+ * @param x - horizontal offset from viewport left
+ * @param y - vertical offset from viewport top
+ */
+interface TooltipPosition {
+	x: number
+	y: number
+}
+
+/**
+ * props for tooltip component
  * @param content - tooltip text or element
  * @param children - trigger element
- * @param side - tooltip position
- * @param delay - show delay in ms
+ * @param side - tooltip position relative to trigger
+ * @param delay - show delay in milliseconds
  * @example <Tooltip content="copy"><button>...</button></Tooltip>
  */
 export interface TooltipProps {
@@ -16,16 +28,16 @@ export interface TooltipProps {
 	delay?: number
 }
 
-export function Tooltip({ content, children, side = "top", delay = 200 }: TooltipProps) {
-	const [show, setShow] = useState(false)
-	const [position, setPosition] = useState({ x: 0, y: 0 })
+export function Tooltip({ content, children, side = "top", delay = 200 }: TooltipProps): JSX.Element {
+	const [show, setShow] = useState<boolean>(false)
+	const [position, setPosition] = useState<TooltipPosition>({ x: 0, y: 0 })
 	const triggerRef = useRef<HTMLSpanElement>(null)
 	const tooltipRef = useRef<HTMLDivElement>(null)
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 	const id = useId()
 	const tooltipId = `tooltip-${id}`
 
-	const hide = useCallback(() => {
+	const hide = useCallback((): void => {
 		if (timeoutRef.current) clearTimeout(timeoutRef.current)
 		setShow(false)
 	}, [])
@@ -45,7 +57,7 @@ export function Tooltip({ content, children, side = "top", delay = 200 }: Toolti
 		return () => document.removeEventListener("keydown", handleEscape)
 	}, [show, hide])
 
-	const updatePosition = useCallback(() => {
+	const updatePosition = useCallback((): void => {
 		if (!triggerRef.current || !tooltipRef.current) return
 
 		const trigger = triggerRef.current.getBoundingClientRect()
@@ -57,7 +69,7 @@ export function Tooltip({ content, children, side = "top", delay = 200 }: Toolti
 		setPosition({ x, y })
 	}, [side])
 
-	const handleEnter = useCallback(() => {
+	const handleEnter = useCallback((): void => {
 		timeoutRef.current = setTimeout(() => {
 			setShow(true)
 			requestAnimationFrame(updatePosition)
