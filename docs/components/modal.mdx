@@ -1,0 +1,48 @@
+---
+title: modal
+description: dialog overlay for focused content
+order: 13
+---
+
+the modal component displays content in a focused overlay.
+
+## usage
+
+```text
+const [open, setOpen] = useState(false)
+
+<button onClick={() => setOpen(true)}>open modal</button>
+
+<Modal open={open} onClose={() => setOpen(false)} title="confirm">
+  <p>are you sure you want to continue?</p>
+</Modal>
+```
+
+## props
+
+| prop | type | description |
+|------|------|-------------|
+| open | `boolean` | whether modal is visible |
+| onClose | `() => void` | callback when modal should close |
+| title | `string` | optional title in header |
+| children | `ReactNode` | modal content |
+
+## features
+
+- closes on `Escape` key
+- closes on backdrop click
+- prevents body scroll while open
+- focus trap inside modal
+- aria attributes for accessibility
+
+## without title
+
+for custom layouts, omit the title prop:
+
+```text
+<Modal open={open} onClose={onClose}>
+  <div className="p-4">
+    custom content here
+  </div>
+</Modal>
+```

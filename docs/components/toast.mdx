@@ -1,0 +1,73 @@
+---
+title: toast
+description: notification toasts for user feedback
+order: 14
+---
+
+the toast system provides temporary notifications.
+
+## setup
+
+wrap your app with the toast provider:
+
+```text
+import { ToastProvider } from "fromsrc/client"
+
+export default function Layout({ children }) {
+  return (
+    <ToastProvider>
+      {children}
+    </ToastProvider>
+  )
+}
+```
+
+## usage
+
+use the `useToast` hook to show notifications:
+
+```text
+import { useToast } from "fromsrc/client"
+
+function SaveButton() {
+  const { add } = useToast()
+
+  return (
+    <button onClick={() => add({
+      type: "success",
+      message: "changes saved"
+    })}>
+      save
+    </button>
+  )
+}
+```
+
+## types
+
+| type | appearance |
+|------|------------|
+| info | blue, info icon |
+| success | green, check icon |
+| warning | yellow, alert icon |
+| error | red, x icon |
+
+## options
+
+| option | type | default | description |
+|--------|------|---------|-------------|
+| message | `string` | required | notification text |
+| type | `string` | "info" | info, success, warning, error |
+| duration | `number` | 3000 | auto-dismiss time in ms |
+
+## manual dismiss
+
+toasts auto-dismiss but can be manually closed:
+
+```text
+const { add, remove } = useToast()
+
+const id = add({ message: "processing..." })
+// later...
+remove(id)
+```
