@@ -1,0 +1,174 @@
+---
+title: i18n
+description: internationalize your documentation
+order: 10
+---
+
+support multiple languages in your documentation.
+
+## content organization
+
+### separate folders
+
+organize translated content by locale:
+
+```
+docs/
+  en/
+    index.mdx
+    quickstart.mdx
+  fr/
+    index.mdx
+    quickstart.mdx
+  de/
+    index.mdx
+    quickstart.mdx
+```
+
+### file extensions
+
+use locale suffixes:
+
+```
+docs/
+  index.mdx           # default (en)
+  index.fr.mdx        # french
+  index.de.mdx        # german
+```
+
+## url patterns
+
+### subpath (recommended)
+
+```
+docs.example.com/en/guide
+docs.example.com/fr/guide
+docs.example.com/de/guide
+```
+
+```ts
+// app/[locale]/docs/[...slug]/page.tsx
+export default function Page({ params }) {
+  const { locale, slug } = params
+  return <DocPage locale={locale} slug={slug} />
+}
+```
+
+### subdomain
+
+```
+en.docs.example.com/guide
+fr.docs.example.com/guide
+de.docs.example.com/guide
+```
+
+## language switcher
+
+```tsx
+import { LanguageSwitch } from "fromsrc/client"
+
+<LanguageSwitch
+  current="en"
+  locales={[
+    { code: "en", label: "English" },
+    { code: "fr", label: "Français" },
+    { code: "de", label: "Deutsch" },
+  ]}
+  onChange={(locale) => router.push(`/${locale}${pathname}`)}
+/>
+```
+
+## rtl support
+
+for right-to-left languages like arabic and hebrew:
+
+```tsx
+<html dir={locale === "ar" ? "rtl" : "ltr"}>
+```
+
+```css
+[dir="rtl"] .sidebar {
+  border-left: none;
+  border-right: 1px solid var(--color-line);
+}
+```
+
+## content loading
+
+load localized content dynamically:
+
+```ts
+export async function getDocs(locale: string) {
+  const files = await glob(`docs/${locale}/**/*.mdx`)
+  return files.map(file => loadDoc(file))
+}
+```
+
+## fallbacks
+
+fall back to default locale when translation missing:
+
+```ts
+async function getDoc(locale: string, slug: string) {
+  const localizedPath = `docs/${locale}/${slug}.mdx`
+  const defaultPath = `docs/en/${slug}.mdx`
+
+  const exists = await Bun.file(localizedPath).exists()
+  return loadDoc(exists ? localizedPath : defaultPath)
+}
+```
+
+## translation workflow
+
+### recommended tools
+
+- [crowdin](https://crowdin.com) - translation management
+- [lokalise](https://lokalise.com) - localization platform
+- [phrase](https://phrase.com) - translation automation
+
+### sync workflow
+
+```bash
+# export source strings
+bun run i18n:export
+
+# import translations
+bun run i18n:import
+
+# build all locales
+bun run build
+```
+
+## metadata
+
+localize page metadata:
+
+```tsx
+export async function generateMetadata({ params }) {
+  const doc = await getDoc(params.locale, params.slug)
+  return {
+    title: doc.title,
+    description: doc.description,
+    alternates: {
+      languages: {
+        en: `/en/${params.slug}`,
+        fr: `/fr/${params.slug}`,
+      }
+    }
+  }
+}
+```
+
+## search
+
+index each locale separately:
+
+```ts
+const enIndex = createSearchIndex(enDocs)
+const frIndex = createSearchIndex(frDocs)
+
+function search(query: string, locale: string) {
+  const index = locale === "fr" ? frIndex : enIndex
+  return index.search(query)
+}
+```

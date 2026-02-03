@@ -1,6 +1,19 @@
 import type { SidebarFolder, SidebarItem, SidebarSection } from "fromsrc/client"
 import { Sidebar as SidebarBase } from "fromsrc/client"
-import { BookOpen, Download, Palette, Rocket, Settings, Sliders, Sparkles } from "lucide-react"
+import {
+	BookOpen,
+	Cloud,
+	Download,
+	Globe,
+	Palette,
+	Pen,
+	Rocket,
+	Search,
+	Settings,
+	Sliders,
+	Sparkles,
+	Tags,
+} from "lucide-react"
 import { Logo } from "@/app/components/logo"
 import { getNavigation } from "../_lib/content"
 
@@ -12,6 +25,11 @@ const icons: Record<string, React.ReactNode> = {
 	theming: <Palette size={14} />,
 	ai: <Sparkles size={14} />,
 	customization: <Sliders size={14} />,
+	writing: <Pen size={14} />,
+	search: <Search size={14} />,
+	versioning: <Tags size={14} />,
+	deploying: <Cloud size={14} />,
+	i18n: <Globe size={14} />,
 }
 
 export async function Sidebar() {
