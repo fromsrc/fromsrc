@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useCallback, useId, useRef, useState } from "react"
 import { IconCheck, IconChevronDown } from "./icons"
 
 interface Version {
@@ -13,14 +13,21 @@ interface VersionSelectProps {
 	versions: Version[]
 	current: string
 	onChange?: (version: string) => void
+	label?: string
 }
 
-export function VersionSelect({ versions, current, onChange }: VersionSelectProps) {
+export function VersionSelect({ versions, current, onChange, label = "Version" }: VersionSelectProps) {
 	const [open, setOpen] = useState(false)
 	const [focused, setFocused] = useState(-1)
 	const containerRef = useRef<HTMLDivElement>(null)
+	const triggerRef = useRef<HTMLButtonElement>(null)
+	const listRef = useRef<HTMLDivElement>(null)
+	const instanceId = useId()
+	const listboxId = `${instanceId}-listbox`
 	const currentVersion = versions.find((v) => v.id === current)
 	const currentIndex = versions.findIndex((v) => v.id === current)
+
+	const getOptionId = useCallback((versionId: string) => `${instanceId}-option-${versionId}`, [instanceId])
 
 	const selectVersion = (version: Version) => {
 		if (version.href) {
@@ -29,7 +36,14 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 			onChange?.(version.id)
 		}
 		setOpen(false)
+		triggerRef.current?.focus()
 	}
+
+	const close = useCallback(() => {
+		setOpen(false)
+		setFocused(-1)
+		triggerRef.current?.focus()
+	}, [])
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		if (!open) {
@@ -41,33 +55,47 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 			return
 		}
 
-		if (e.key === "Escape") {
-			e.preventDefault()
-			setOpen(false)
-			setFocused(-1)
-		} else if (e.key === "ArrowDown") {
-			e.preventDefault()
-			setFocused((f) => Math.min(f + 1, versions.length - 1))
-		} else if (e.key === "ArrowUp") {
-			e.preventDefault()
-			setFocused((f) => Math.max(f - 1, 0))
-		} else if (e.key === "Enter" || e.key === " ") {
-			e.preventDefault()
-			if (focused >= 0 && versions[focused]) {
-				selectVersion(versions[focused])
-			}
-		} else if (e.key === "Home") {
-			e.preventDefault()
-			setFocused(0)
-		} else if (e.key === "End") {
-			e.preventDefault()
-			setFocused(versions.length - 1)
+		switch (e.key) {
+			case "Escape":
+				e.preventDefault()
+				close()
+				break
+			case "ArrowDown":
+				e.preventDefault()
+				setFocused((f) => Math.min(f + 1, versions.length - 1))
+				break
+			case "ArrowUp":
+				e.preventDefault()
+				setFocused((f) => Math.max(f - 1, 0))
+				break
+			case "Enter":
+			case " ":
+				e.preventDefault()
+				if (focused >= 0) {
+					const version = versions[focused]
+					if (version) selectVersion(version)
+				}
+				break
+			case "Home":
+				e.preventDefault()
+				setFocused(0)
+				break
+			case "End":
+				e.preventDefault()
+				setFocused(versions.length - 1)
+				break
+			case "Tab":
+				close()
+				break
 		}
 	}
+
+	const focusedVersion = focused >= 0 ? versions[focused] : undefined
 
 	return (
 		<div className="relative" ref={containerRef}>
 			<button
+				ref={triggerRef}
 				type="button"
 				onClick={() => {
 					setOpen(!open)
@@ -83,6 +111,8 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 				className="flex items-center gap-2 px-3 py-1.5 text-sm bg-surface border border-line rounded-lg hover:bg-surface/80 transition-colors"
 				aria-expanded={open}
 				aria-haspopup="listbox"
+				aria-controls={open ? listboxId : undefined}
+				aria-label={`${label}: ${currentVersion?.label || current}`}
 			>
 				<span className="text-fg">{currentVersion?.label || current}</span>
 				<IconChevronDown
@@ -92,24 +122,29 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 			</button>
 			{open && (
 				<>
-					<div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden="true" />
 					<div
+						className="fixed inset-0 z-40"
+						onClick={close}
+						onKeyDown={(e) => e.key === "Escape" && close()}
+						aria-hidden="true"
+					/>
+					<div
+						ref={listRef}
+						id={listboxId}
 						className="absolute left-0 top-full mt-1 z-50 min-w-[120px] py-1 bg-surface border border-line rounded-lg shadow-lg"
 						role="listbox"
-						tabIndex={-1}
-						aria-activedescendant={focused >= 0 ? `version-${versions[focused]?.id}` : undefined}
+						aria-label={label}
+						aria-activedescendant={focusedVersion ? getOptionId(focusedVersion.id) : undefined}
 					>
 						{versions.map((version, i) => (
-							<button
+							<div
 								key={version.id}
-								id={`version-${version.id}`}
-								type="button"
+								id={getOptionId(version.id)}
 								role="option"
 								aria-selected={version.id === current}
 								onClick={() => selectVersion(version)}
-								onKeyDown={handleKeyDown}
-								onFocus={() => setFocused(i)}
-								className={`flex items-center justify-between gap-2 w-full px-3 py-2 text-sm text-left hover:bg-bg transition-colors ${
+								onMouseEnter={() => setFocused(i)}
+								className={`flex items-center justify-between gap-2 w-full px-3 py-2 text-sm text-left cursor-pointer hover:bg-bg transition-colors ${
 									i === focused ? "bg-bg" : ""
 								}`}
 							>
@@ -117,7 +152,7 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 									{version.label}
 								</span>
 								{version.id === current && <IconCheck size={14} className="text-accent" />}
-							</button>
+							</div>
 						))}
 					</div>
 				</>
