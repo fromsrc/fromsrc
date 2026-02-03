@@ -1,12 +1,14 @@
 "use client"
 
-import type { ReactNode } from "react"
+import type React from "react"
+import { type ReactNode, memo } from "react"
 import { IconAlertCircle, IconCheckCircle, IconInfo, IconXCircle } from "./icons"
 
 /**
- * @param children - alert content
- * @param type - visual style variant
- * @param title - optional heading
+ * props for the alert component
+ * @property children - alert content
+ * @property type - visual style variant
+ * @property title - optional heading
  * @example <Alert type="warning">check your input</Alert>
  */
 export interface AlertProps {
@@ -29,12 +31,12 @@ const styles = {
 	error: "border-red-500/20 bg-red-500/5 text-red-300 [&_svg]:text-red-400",
 }
 
-export function Alert({ children, type = "info", title }: AlertProps) {
+function AlertBase({ children, type = "info", title }: AlertProps): React.ReactElement {
 	const Icon = icons[type]
 
 	return (
 		<div className={`flex gap-3 rounded-lg border p-4 ${styles[type]}`} role="alert">
-			<Icon size={20} className="shrink-0 mt-0.5" />
+			<Icon size={20} className="shrink-0 mt-0.5" aria-hidden="true" />
 			<div className="min-w-0">
 				{title && <div className="mb-1 font-medium text-fg">{title}</div>}
 				<div className="text-sm">{children}</div>
@@ -42,3 +44,5 @@ export function Alert({ children, type = "info", title }: AlertProps) {
 		</div>
 	)
 }
+
+export const Alert = memo(AlertBase)
