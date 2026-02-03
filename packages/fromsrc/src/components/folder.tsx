@@ -2,18 +2,25 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useState } from "react"
 import { NavLink } from "./navlink"
 import type { SidebarFolder } from "./sidebar"
 
+/**
+ * Props for the Folder component.
+ */
 interface Props {
+	/** The folder data containing title, items, and optional icon/href. */
 	folder: SidebarFolder
+	/** Base path for constructing navigation URLs. */
 	basePath: string
+	/** Current nesting depth of this folder. */
 	depth?: number
+	/** How many levels deep folders should be open by default. */
 	defaultOpenLevel?: number
 }
 
-export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Props) {
+export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Props): ReactNode {
 	const pathname = usePathname()
 	const isActive = folder.href && pathname === folder.href
 	const hasActiveChild = folder.items.some((item) => {
@@ -26,12 +33,26 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 	const shouldAutoOpen = folder.defaultOpen ?? depth <= defaultOpenLevel
 	const [open, setOpen] = useState(shouldAutoOpen)
 
-	useEffect(() => {
+	useEffect((): void => {
 		if (hasActiveChild || isActive) setOpen(true)
 	}, [hasActiveChild, isActive])
 
+	const toggle = useCallback((): void => {
+		setOpen((prev) => !prev)
+	}, [])
+
+	const handleKeyDown = useCallback(
+		(event: React.KeyboardEvent<HTMLButtonElement>): void => {
+			if (event.key === "Enter" || event.key === " ") {
+				event.preventDefault()
+				toggle()
+			}
+		},
+		[toggle],
+	)
+
 	return (
-		<li>
+		<li role="treeitem" aria-expanded={open}>
 			<div className="flex items-center">
 				{folder.href ? (
 					<Link
@@ -52,8 +73,10 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 				) : (
 					<button
 						type="button"
-						onClick={() => setOpen(!open)}
+						onClick={toggle}
+						onKeyDown={handleKeyDown}
 						aria-expanded={open}
+						aria-controls={`folder-${folder.title}`}
 						className="flex-1 flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
 					>
 						{folder.icon && (
@@ -66,9 +89,11 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 				)}
 				<button
 					type="button"
-					onClick={() => setOpen(!open)}
+					onClick={toggle}
+					onKeyDown={handleKeyDown}
 					aria-expanded={open}
-					aria-label={open ? "collapse" : "expand"}
+					aria-label={open ? `collapse ${folder.title}` : `expand ${folder.title}`}
+					aria-controls={`folder-${folder.title}`}
 					className="p-1 text-muted hover:text-fg transition-colors"
 				>
 					<svg
@@ -83,7 +108,11 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 				</button>
 			</div>
 			{open && (
-				<ul className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5">
+				<ul
+					id={`folder-${folder.title}`}
+					role="group"
+					className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5"
+				>
 					{folder.items.map((item) => {
 						if (item.type === "folder") {
 							return (
@@ -97,7 +126,7 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 							)
 						}
 						return (
-							<li key={item.href}>
+							<li key={item.href} role="treeitem">
 								<NavLink href={item.href} icon={item.icon}>
 									{item.title}
 								</NavLink>
