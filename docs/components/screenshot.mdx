@@ -1,0 +1,63 @@
+---
+title: screenshot
+description: images with browser frames
+order: 22
+---
+
+display screenshots with optional browser chrome decoration.
+
+## usage
+
+```mdx
+<Screenshot
+  src="/screenshot.png"
+  alt="dashboard view"
+  caption="the main dashboard"
+/>
+```
+
+## without browser frame
+
+```mdx
+<Screenshot
+  src="/image.png"
+  alt="simple image"
+  browser={false}
+/>
+```
+
+## frame component
+
+wrap any content in a titled frame:
+
+```mdx
+<Frame title="preview">
+  <div className="p-4 bg-surface rounded">
+    your content here
+  </div>
+</Frame>
+```
+
+<Frame title="preview">
+  <div className="p-4 bg-surface rounded text-center text-muted">
+    your content here
+  </div>
+</Frame>
+
+## props
+
+### screenshot
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| src | string | - | image source url |
+| alt | string | - | alt text for accessibility |
+| caption | string | - | optional caption below image |
+| browser | boolean | true | show browser chrome |
+
+### frame
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | - | optional title in header |
+| children | ReactNode | - | content to wrap |

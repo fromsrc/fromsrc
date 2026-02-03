@@ -35,6 +35,21 @@ import {
 	Video,
 	Mermaid,
 	TocInline,
+	Kbd,
+	Shortcut,
+	Endpoint,
+	Param,
+	Response,
+	Screenshot,
+	Frame,
+	Property,
+	Properties,
+	Note,
+	Important,
+	Experimental,
+	Changelog,
+	Release,
+	Change,
 } from "fromsrc/client"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -177,6 +192,21 @@ const components = {
 	Video,
 	Mermaid,
 	TocInline,
+	Kbd,
+	Shortcut,
+	Endpoint,
+	Param,
+	Response,
+	Screenshot,
+	Frame,
+	Property,
+	Properties,
+	Note,
+	Important,
+	Experimental,
+	Changelog,
+	Release,
+	Change,
 }
 
 interface Props {

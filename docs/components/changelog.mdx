@@ -1,0 +1,59 @@
+---
+title: changelog
+description: version history display
+order: 25
+---
+
+display version history with categorized changes.
+
+## usage
+
+```mdx
+<Changelog>
+  <Release version="2.0.0" date="2026-01-15">
+    <Change type="added">dark mode support</Change>
+    <Change type="changed">improved search performance</Change>
+    <Change type="fixed">sidebar collapse animation</Change>
+  </Release>
+  <Release version="1.5.0" date="2026-01-01">
+    <Change type="added">keyboard navigation</Change>
+    <Change type="deprecated">old search api</Change>
+  </Release>
+</Changelog>
+```
+
+<Changelog>
+  <Release version="2.0.0" date="2026-01-15">
+    <Change type="added">dark mode support</Change>
+    <Change type="changed">improved search performance</Change>
+    <Change type="fixed">sidebar collapse animation</Change>
+  </Release>
+  <Release version="1.5.0" date="2026-01-01">
+    <Change type="added">keyboard navigation</Change>
+    <Change type="deprecated">old search api</Change>
+  </Release>
+</Changelog>
+
+## change types
+
+| type | color | use for |
+|------|-------|---------|
+| added | green | new features |
+| changed | blue | modifications |
+| fixed | amber | bug fixes |
+| removed | red | removed features |
+| deprecated | orange | deprecated apis |
+| security | purple | security fixes |
+
+## all types
+
+<Changelog>
+  <Release version="1.0.0">
+    <Change type="added">new feature</Change>
+    <Change type="changed">updated behavior</Change>
+    <Change type="fixed">bug fix</Change>
+    <Change type="removed">removed feature</Change>
+    <Change type="deprecated">deprecated api</Change>
+    <Change type="security">security patch</Change>
+  </Release>
+</Changelog>

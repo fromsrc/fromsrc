@@ -1,0 +1,67 @@
+---
+title: endpoint
+description: document rest api endpoints
+order: 21
+---
+
+document rest api endpoints with method badges and parameters.
+
+## usage
+
+```mdx
+<Endpoint method="GET" path="/api/users/:id" description="get a user by id">
+  <Param name="id" type="string" required description="the user id" />
+</Endpoint>
+```
+
+<Endpoint method="GET" path="/api/users/:id" description="get a user by id">
+  <Param name="id" type="string" required description="the user id" />
+</Endpoint>
+
+## methods
+
+all http methods are supported with color coding:
+
+<Endpoint method="GET" path="/api/resource" />
+<Endpoint method="POST" path="/api/resource" />
+<Endpoint method="PUT" path="/api/resource/:id" />
+<Endpoint method="PATCH" path="/api/resource/:id" />
+<Endpoint method="DELETE" path="/api/resource/:id" />
+
+## parameters
+
+```mdx
+<Endpoint method="POST" path="/api/users" description="create a new user">
+  <Param name="name" type="string" required description="user's full name" />
+  <Param name="email" type="string" required description="user's email address" />
+  <Param name="role" type="string" description="user role (admin, user)" />
+</Endpoint>
+```
+
+<Endpoint method="POST" path="/api/users" description="create a new user">
+  <Param name="name" type="string" required description="user's full name" />
+  <Param name="email" type="string" required description="user's email address" />
+  <Param name="role" type="string" description="user role (admin, user)" />
+</Endpoint>
+
+## responses
+
+document response codes:
+
+```mdx
+<Response status={200} description="success">
+  returns the user object
+</Response>
+
+<Response status={404} description="not found">
+  user does not exist
+</Response>
+```
+
+<Response status={200} description="success">
+  returns the user object
+</Response>
+
+<Response status={404} description="not found">
+  user does not exist
+</Response>
