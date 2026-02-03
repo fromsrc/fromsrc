@@ -23,5 +23,5 @@ export function useClickOutside<T extends HTMLElement>(
 		[ref, handler]
 	)
 
-	useEventListener(document, "click", handleClick, enabled)
+	useEventListener(typeof document !== "undefined" ? document : null, "click", handleClick, enabled)
 }

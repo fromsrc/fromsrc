@@ -19,5 +19,5 @@ export function useEscapeKey(handler: () => void, enabled = true): void {
 		[handler]
 	)
 
-	useEventListener(document, "keydown", handleKey, enabled)
+	useEventListener(typeof document !== "undefined" ? document : null, "keydown", handleKey, enabled)
 }

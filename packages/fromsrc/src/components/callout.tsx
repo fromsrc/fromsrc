@@ -106,7 +106,8 @@ const config: Record<CalloutType, CalloutConfig> = {
 }
 
 function CalloutComponent({ type = "info", title, children }: CalloutProps): JSX.Element {
-	const { icon, border, bg, text, label } = config[type]
+	const cfg = config[type] || config.info
+	const { icon, border, bg, text, label } = cfg
 
 	return (
 		<aside
