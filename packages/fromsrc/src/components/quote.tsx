@@ -14,16 +14,16 @@ export function Quote({ children, author, role, avatar }: QuoteProps) {
 	return (
 		<figure className="my-6 p-6 rounded-xl border border-line bg-surface/30">
 			<blockquote className="text-lg text-fg italic leading-relaxed">"{children}"</blockquote>
-			{(author || role) && (
+			{author && (
 				<figcaption className="mt-4 flex items-center gap-3">
 					{avatar && (
 						<div className="w-10 h-10 rounded-full overflow-hidden relative">
-							<Image src={avatar} alt={author || ""} fill className="object-cover" />
+							<Image src={avatar} alt="" fill className="object-cover" aria-hidden="true" />
 						</div>
 					)}
 					<div>
-						{author && <div className="text-sm font-medium text-fg">{author}</div>}
-						{role && <div className="text-xs text-muted">{role}</div>}
+						<cite className="text-sm font-medium text-fg not-italic">{author}</cite>
+						{role && <p className="text-xs text-muted">{role}</p>}
 					</div>
 				</figcaption>
 			)}
@@ -53,12 +53,12 @@ export function Testimonial({ children, author, role, avatar }: TestimonialProps
 			<figcaption className="mt-4 flex items-center gap-3">
 				{avatar && (
 					<div className="w-8 h-8 rounded-full overflow-hidden relative">
-						<Image src={avatar} alt={author} fill className="object-cover" />
+						<Image src={avatar} alt="" fill className="object-cover" aria-hidden="true" />
 					</div>
 				)}
 				<div>
-					<div className="text-sm font-medium text-fg">{author}</div>
-					{role && <div className="text-xs text-muted">{role}</div>}
+					<cite className="text-sm font-medium text-fg not-italic">{author}</cite>
+					{role && <p className="text-xs text-muted">{role}</p>}
 				</div>
 			</figcaption>
 		</figure>
