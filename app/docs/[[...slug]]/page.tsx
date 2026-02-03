@@ -67,8 +67,8 @@ export default async function DocPage({ params }: Props) {
 	const next = currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null
 
 	return (
-		<div className="flex w-full">
-			<article className="flex-1 min-w-0 max-w-5xl py-12 px-8 lg:px-12">
+		<div className="flex w-full max-w-7xl mx-auto">
+			<article className="flex-1 min-w-0 py-12 px-8 lg:px-12">
 				<header className="mb-10">
 					<div className="mb-3">
 						<Breadcrumb base="/docs" />
