@@ -11,7 +11,12 @@ export interface SearchAdapter {
 	index?(docs: SearchDoc[]): void | Promise<void>
 }
 
-function fuzzy(text: string, query: string): number {
+interface ContentMatch {
+	score: number
+	snippet: string
+}
+
+function fuzzy(text: string | undefined, query: string | undefined): number {
 	if (!query || !text) return 0
 	if (query.length > text.length) return 0
 
@@ -38,7 +43,7 @@ function fuzzy(text: string, query: string): number {
 	return qi < q.length ? 0 : score
 }
 
-function searchContent(content: string, query: string): { score: number; snippet: string } | null {
+function searchContent(content: string | undefined, query: string): ContentMatch | null {
 	if (!content || !query) return null
 
 	const idx = content.toLowerCase().indexOf(query.toLowerCase())
@@ -54,7 +59,9 @@ function searchContent(content: string, query: string): { score: number; snippet
 
 export const localSearch: SearchAdapter = {
 	search(query: string, docs: SearchDoc[]): SearchResult[] {
-		const q = query.trim()
+		if (!docs || docs.length === 0) return []
+
+		const q = query?.trim() ?? ""
 		if (!q) {
 			return docs.slice(0, 8).map((doc) => ({ doc, score: 0 }))
 		}
@@ -63,8 +70,8 @@ export const localSearch: SearchAdapter = {
 
 		for (const doc of docs) {
 			const titleScore = fuzzy(doc.title, q) * 3
-			const descScore = doc.description ? fuzzy(doc.description, q) : 0
-			const contentResult = doc.content ? searchContent(doc.content, q) : null
+			const descScore = fuzzy(doc.description, q)
+			const contentResult = searchContent(doc.content, q)
 			const score = titleScore + descScore + (contentResult?.score ?? 0)
 
 			if (score > 0) {
@@ -77,6 +84,6 @@ export const localSearch: SearchAdapter = {
 	},
 }
 
-export function createSearchAdapter(adapter: SearchAdapter): SearchAdapter {
+export function createSearchAdapter<T extends SearchAdapter>(adapter: T): T {
 	return adapter
 }
