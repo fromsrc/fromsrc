@@ -1,0 +1,314 @@
+---
+title: forms
+description: form input components
+order: 60
+---
+
+form components for collecting user input.
+
+## input
+
+text input with label, error, and hint support.
+
+### usage
+
+```tsx
+import { Input } from "fromsrc/client"
+
+<Input label="email" placeholder="you@example.com" />
+```
+
+<Input label="email" placeholder="you@example.com" />
+
+### sizes
+
+<div className="flex flex-col gap-4">
+  <Input size="sm" placeholder="small" />
+  <Input size="md" placeholder="medium" />
+  <Input size="lg" placeholder="large" />
+</div>
+
+### with error
+
+<Input label="username" error="username is required" />
+
+### with hint
+
+<Input label="password" type="password" hint="must be 8+ characters" />
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| variant | "default" \| "error" | "default" | visual style |
+| size | "sm" \| "md" \| "lg" | "md" | input size |
+| label | ReactNode | - | accessible label |
+| error | ReactNode | - | error message |
+| hint | ReactNode | - | helper text |
+
+## button
+
+interactive button with loading state.
+
+### usage
+
+```tsx
+import { Button } from "fromsrc/client"
+
+<Button variant="primary">submit</Button>
+```
+
+<Button variant="primary">submit</Button>
+
+### variants
+
+<div className="flex gap-2 flex-wrap">
+  <Button variant="default">default</Button>
+  <Button variant="primary">primary</Button>
+  <Button variant="ghost">ghost</Button>
+  <Button variant="danger">danger</Button>
+</div>
+
+### sizes
+
+<div className="flex gap-2 items-center flex-wrap">
+  <Button size="sm">small</Button>
+  <Button size="md">medium</Button>
+  <Button size="lg">large</Button>
+</div>
+
+### loading
+
+<Button variant="primary" loading>saving...</Button>
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| variant | "default" \| "primary" \| "ghost" \| "danger" | "default" | visual style |
+| size | "sm" \| "md" \| "lg" | "md" | button size |
+| loading | boolean | false | show loading spinner |
+
+## select
+
+dropdown select with keyboard navigation.
+
+### usage
+
+```tsx
+import { Select } from "fromsrc/client"
+
+<Select
+  options={[
+    { value: "react", label: "react" },
+    { value: "vue", label: "vue" },
+    { value: "svelte", label: "svelte" },
+  ]}
+  placeholder="choose framework"
+/>
+```
+
+<Select
+  options={[
+    { value: "react", label: "react" },
+    { value: "vue", label: "vue" },
+    { value: "svelte", label: "svelte" },
+  ]}
+  placeholder="choose framework"
+/>
+
+### with label
+
+<Select
+  label="framework"
+  options={[
+    { value: "react", label: "react" },
+    { value: "vue", label: "vue" },
+  ]}
+/>
+
+### with error
+
+<Select
+  label="country"
+  error="selection required"
+  options={[
+    { value: "us", label: "united states" },
+    { value: "uk", label: "united kingdom" },
+  ]}
+/>
+
+### disabled options
+
+<Select
+  options={[
+    { value: "free", label: "free" },
+    { value: "pro", label: "pro" },
+    { value: "enterprise", label: "enterprise", disabled: true },
+  ]}
+/>
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| options | SelectOption[] | required | list of options |
+| value | string | - | controlled value |
+| defaultValue | string | "" | uncontrolled default |
+| onChange | (value: string) => void | - | change callback |
+| placeholder | string | "select..." | placeholder text |
+| disabled | boolean | false | disable select |
+| error | ReactNode | - | error message |
+| label | ReactNode | - | accessible label |
+
+### SelectOption
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| value | string | required | option value |
+| label | string | required | display text |
+| disabled | boolean | false | disable option |
+
+## checkbox
+
+checkbox input with label and indeterminate state.
+
+### usage
+
+```tsx
+import { Checkbox } from "fromsrc/client"
+
+<Checkbox label="accept terms" />
+```
+
+<Checkbox label="accept terms" />
+
+### sizes
+
+<div className="flex flex-col gap-3">
+  <Checkbox size="sm" label="small checkbox" />
+  <Checkbox size="md" label="medium checkbox" />
+  <Checkbox size="lg" label="large checkbox" />
+</div>
+
+### with error
+
+<Checkbox label="required field" error="you must accept" />
+
+### indeterminate
+
+<Checkbox label="select all" indeterminate />
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| label | ReactNode | - | accessible label |
+| size | "sm" \| "md" \| "lg" | "md" | checkbox size |
+| indeterminate | boolean | false | show indeterminate state |
+| error | ReactNode | - | error message |
+
+## switch
+
+toggle switch for boolean values.
+
+### usage
+
+```tsx
+import { Switch } from "fromsrc/client"
+import { useState } from "react"
+
+function Example() {
+  const [on, setOn] = useState(false)
+  return <Switch label="notifications" checked={on} onChange={setOn} />
+}
+```
+
+<Switch label="notifications" />
+
+### sizes
+
+<div className="flex flex-col gap-3">
+  <Switch size="sm" label="small" />
+  <Switch size="md" label="medium" />
+  <Switch size="lg" label="large" />
+</div>
+
+### disabled
+
+<Switch label="disabled switch" disabled />
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| checked | boolean | false | whether switch is on |
+| onChange | (checked: boolean) => void | - | toggle callback |
+| size | "sm" \| "md" \| "lg" | "md" | switch size |
+| label | string | - | accessible label |
+| disabled | boolean | false | disable switch |
+
+## autofill
+
+search input with autocomplete suggestions.
+
+### usage
+
+```tsx
+import { Autofill } from "fromsrc/client"
+
+<Autofill
+  items={[
+    { id: "1", label: "javascript" },
+    { id: "2", label: "typescript" },
+    { id: "3", label: "python" },
+  ]}
+  placeholder="search languages"
+/>
+```
+
+<Autofill
+  items={[
+    { id: "1", label: "javascript" },
+    { id: "2", label: "typescript" },
+    { id: "3", label: "python" },
+    { id: "4", label: "rust" },
+    { id: "5", label: "go" },
+  ]}
+  placeholder="search languages"
+/>
+
+### with selection callback
+
+```tsx
+<Autofill
+  items={items}
+  onSelect={(item) => console.log("selected:", item)}
+/>
+```
+
+### features
+
+- filters as you type
+- keyboard navigation with arrow keys
+- `Enter` to select highlighted item
+- `Escape` to close suggestions
+- closes on outside click
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| items | AutofillItem[] | required | list of suggestions |
+| placeholder | string | "search..." | placeholder text |
+| value | string | - | controlled value |
+| onChange | (value: string) => void | - | input change callback |
+| onSelect | (item: AutofillItem) => void | - | selection callback |
+
+### AutofillItem
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| id | string | required | unique identifier |
+| label | string | required | display text |
+| value | string | - | value when selected (defaults to label) |
