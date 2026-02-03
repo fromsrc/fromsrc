@@ -1,0 +1,281 @@
+---
+title: auth
+description: protect docs with authentication
+order: 10
+---
+
+restrict access to documentation for private or premium content.
+
+## folder structure
+
+<Files>
+  <Folder name="docs" defaultOpen>
+    <Folder name="public" defaultOpen>
+      <File name="index.mdx" />
+      <File name="getting-started.mdx" />
+    </Folder>
+    <Folder name="private">
+      <File name="internal.mdx" />
+      <File name="api-keys.mdx" />
+    </Folder>
+  </Folder>
+</Files>
+
+## content schema
+
+mark pages as protected:
+
+```tsx
+import { defineContent, extendSchema, z } from "fromsrc"
+
+const docs = defineContent({
+  dir: "docs",
+  schema: extendSchema({
+    protected: z.boolean().optional(),
+    role: z.enum(["user", "admin", "enterprise"]).optional(),
+  }),
+})
+
+export const getDoc = docs.getDoc
+export const getAllDocs = docs.getAllDocs
+```
+
+## protected frontmatter
+
+```yaml
+---
+title: internal api
+description: internal documentation
+protected: true
+role: admin
+---
+```
+
+## proxy protection
+
+protect routes at the edge:
+
+```tsx
+import { NextRequest } from "next/server"
+import { getSession } from "@/lib/auth"
+
+const protectedPaths = ["/docs/private", "/docs/internal"]
+
+export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  const isProtected = protectedPaths.some((path) =>
+    pathname.startsWith(path)
+  )
+
+  if (!isProtected) return
+
+  const session = await getSession(request)
+
+  if (!session) {
+    return Response.redirect(new URL("/login", request.url))
+  }
+}
+```
+
+## page-level auth
+
+check access in page component:
+
+```tsx
+import { notFound, redirect } from "next/navigation"
+import { getSession } from "@/lib/auth"
+import { getDoc } from "@/lib/content"
+import { MDX } from "@/components/mdx"
+
+interface Props {
+  params: Promise<{ slug: string[] }>
+}
+
+export default async function DocPage({ params }: Props) {
+  const { slug } = await params
+  const doc = await getDoc(slug)
+
+  if (!doc) notFound()
+
+  if (doc.data.protected) {
+    const session = await getSession()
+    if (!session) redirect("/login")
+
+    if (doc.data.role && session.role !== doc.data.role) {
+      return <AccessDenied />
+    }
+  }
+
+  return (
+    <article>
+      <h1>{doc.title}</h1>
+      <MDX source={doc.content} />
+    </article>
+  )
+}
+
+function AccessDenied() {
+  return (
+    <div className="max-w-md mx-auto py-12 text-center">
+      <h1 className="text-xl font-medium mb-2">access denied</h1>
+      <p className="text-muted">upgrade to view this content</p>
+    </div>
+  )
+}
+```
+
+## session helper
+
+```tsx
+import { cookies } from "next/headers"
+import { verify } from "jsonwebtoken"
+
+interface Session {
+  id: string
+  email: string
+  role: "user" | "admin" | "enterprise"
+}
+
+export async function getSession(): Promise<Session | null> {
+  const cookieStore = await cookies()
+  const token = cookieStore.get("session")?.value
+
+  if (!token) return null
+
+  try {
+    return verify(token, process.env.JWT_SECRET!) as Session
+  } catch {
+    return null
+  }
+}
+```
+
+## navigation filtering
+
+hide protected pages from sidebar:
+
+```tsx
+import { getAllDocs } from "@/lib/content"
+import { getSession } from "@/lib/auth"
+
+export async function getNavigation() {
+  const session = await getSession()
+  const docs = await getAllDocs()
+
+  return docs.filter((doc) => {
+    if (!doc.data.protected) return true
+    if (!session) return false
+    if (!doc.data.role) return true
+    return session.role === doc.data.role
+  })
+}
+```
+
+## login page
+
+```tsx
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const router = useRouter()
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const res = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (res.ok) {
+      router.push("/docs")
+    }
+  }
+
+  return (
+    <div className="max-w-sm mx-auto py-12">
+      <h1 className="text-xl font-medium mb-6">login</h1>
+      <form onSubmit={submit} className="space-y-4">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email"
+          className="w-full px-3 py-2 bg-surface border border-line rounded"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="password"
+          className="w-full px-3 py-2 bg-surface border border-line rounded"
+        />
+        <button
+          type="submit"
+          className="w-full px-3 py-2 bg-accent text-white rounded"
+        >
+          sign in
+        </button>
+      </form>
+    </div>
+  )
+}
+```
+
+## api route
+
+```tsx
+import { sign } from "jsonwebtoken"
+import { cookies } from "next/headers"
+
+export async function POST(request: Request) {
+  const { email, password } = await request.json()
+
+  const user = await authenticate(email, password)
+  if (!user) {
+    return Response.json({ error: "invalid" }, { status: 401 })
+  }
+
+  const token = sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET!,
+    { expiresIn: "7d" }
+  )
+
+  const cookieStore = await cookies()
+  cookieStore.set("session", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+  })
+
+  return Response.json({ success: true })
+}
+```
+
+## protected badge
+
+show lock icon on protected pages:
+
+```tsx
+export function ProtectedBadge({ protected: isProtected }) {
+  if (!isProtected) return null
+
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-muted">
+      <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0110 0v4" />
+      </svg>
+      protected
+    </span>
+  )
+}
+```

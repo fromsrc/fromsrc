@@ -1,0 +1,357 @@
+---
+title: navigation
+description: custom sidebar and navigation
+order: 11
+---
+
+build custom navigation structures for your documentation.
+
+## basic sidebar
+
+```tsx
+import Link from "next/link"
+import { getAllDocs } from "@/lib/content"
+
+export async function Sidebar() {
+  const docs = await getAllDocs()
+
+  return (
+    <nav className="w-64 p-4 border-r border-line">
+      <ul className="space-y-1">
+        {docs.map((doc) => (
+          <li key={doc.slug.join("/")}>
+            <Link
+              href={`/docs/${doc.slug.join("/")}`}
+              className="block px-3 py-2 text-sm text-muted hover:text-fg rounded hover:bg-surface"
+            >
+              {doc.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+```
+
+## grouped navigation
+
+organize docs into sections:
+
+```tsx
+import Link from "next/link"
+import { getAllDocs } from "@/lib/content"
+
+export async function Sidebar() {
+  const docs = await getAllDocs()
+
+  const groups = docs.reduce((acc, doc) => {
+    const section = doc.slug[0] || "overview"
+    if (!acc[section]) acc[section] = []
+    acc[section].push(doc)
+    return acc
+  }, {} as Record<string, typeof docs>)
+
+  return (
+    <nav className="w-64 p-4 border-r border-line">
+      {Object.entries(groups).map(([section, items]) => (
+        <div key={section} className="mb-6">
+          <h3 className="px-3 mb-2 text-xs font-medium uppercase text-muted">
+            {section}
+          </h3>
+          <ul className="space-y-1">
+            {items.map((doc) => (
+              <li key={doc.slug.join("/")}>
+                <Link
+                  href={`/docs/${doc.slug.join("/")}`}
+                  className="block px-3 py-1.5 text-sm text-muted hover:text-fg"
+                >
+                  {doc.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  )
+}
+```
+
+## active link
+
+highlight the current page:
+
+```tsx
+"use client"
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+
+interface Props {
+  href: string
+  children: React.ReactNode
+}
+
+export function NavLink({ href, children }: Props) {
+  const pathname = usePathname()
+  const active = pathname === href
+
+  return (
+    <Link
+      href={href}
+      className={`block px-3 py-1.5 text-sm rounded ${
+        active
+          ? "bg-surface text-fg font-medium"
+          : "text-muted hover:text-fg"
+      }`}
+    >
+      {children}
+    </Link>
+  )
+}
+```
+
+## collapsible sections
+
+```tsx
+"use client"
+
+import { useState } from "react"
+
+interface Props {
+  title: string
+  children: React.ReactNode
+  defaultOpen?: boolean
+}
+
+export function NavSection({ title, children, defaultOpen = true }: Props) {
+  const [open, setOpen] = useState(defaultOpen)
+
+  return (
+    <div className="mb-4">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium"
+      >
+        {title}
+        <svg
+          className={`w-4 h-4 transition-transform ${open ? "rotate-90" : ""}`}
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+      {open && <div className="mt-1">{children}</div>}
+    </div>
+  )
+}
+```
+
+## breadcrumbs
+
+show page hierarchy:
+
+```tsx
+import Link from "next/link"
+
+interface Props {
+  slug: string[]
+}
+
+export function Breadcrumbs({ slug }: Props) {
+  const items = slug.map((segment, index) => ({
+    label: segment,
+    href: `/docs/${slug.slice(0, index + 1).join("/")}`,
+  }))
+
+  return (
+    <nav className="flex items-center gap-2 text-sm text-muted mb-4">
+      <Link href="/docs" className="hover:text-fg">
+        docs
+      </Link>
+      {items.map((item, index) => (
+        <span key={item.href} className="flex items-center gap-2">
+          <span>/</span>
+          {index === items.length - 1 ? (
+            <span className="text-fg">{item.label}</span>
+          ) : (
+            <Link href={item.href} className="hover:text-fg">
+              {item.label}
+            </Link>
+          )}
+        </span>
+      ))}
+    </nav>
+  )
+}
+```
+
+## prev/next links
+
+navigate between docs:
+
+```tsx
+import Link from "next/link"
+import { getAllDocs } from "@/lib/content"
+
+interface Props {
+  slug: string[]
+}
+
+export async function PrevNext({ slug }: Props) {
+  const docs = await getAllDocs()
+  const currentPath = slug.join("/")
+  const index = docs.findIndex((d) => d.slug.join("/") === currentPath)
+
+  const prev = index > 0 ? docs[index - 1] : null
+  const next = index < docs.length - 1 ? docs[index + 1] : null
+
+  return (
+    <nav className="flex justify-between mt-12 pt-6 border-t border-line">
+      {prev ? (
+        <Link
+          href={`/docs/${prev.slug.join("/")}`}
+          className="group flex flex-col"
+        >
+          <span className="text-xs text-muted">previous</span>
+          <span className="text-sm group-hover:text-accent">{prev.title}</span>
+        </Link>
+      ) : (
+        <div />
+      )}
+      {next && (
+        <Link
+          href={`/docs/${next.slug.join("/")}`}
+          className="group flex flex-col text-right"
+        >
+          <span className="text-xs text-muted">next</span>
+          <span className="text-sm group-hover:text-accent">{next.title}</span>
+        </Link>
+      )}
+    </nav>
+  )
+}
+```
+
+## mobile sidebar
+
+responsive navigation drawer:
+
+```tsx
+"use client"
+
+import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
+
+export function MobileSidebar({ children }) {
+  const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="md:hidden p-2"
+        aria-label="menu"
+      >
+        <svg className="w-5 h-5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 12h18M3 6h18M3 18h18" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 top-0 bottom-0 w-64 bg-bg border-r border-line">
+            {children}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+```
+
+## table of contents
+
+in-page navigation:
+
+```tsx
+"use client"
+
+import { useEffect, useState } from "react"
+
+interface Heading {
+  id: string
+  text: string
+  level: number
+}
+
+export function TableOfContents({ headings }: { headings: Heading[] }) {
+  const [active, setActive] = useState("")
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id)
+          }
+        }
+      },
+      { rootMargin: "-80px 0px -80% 0px" }
+    )
+
+    for (const heading of headings) {
+      const element = document.getElementById(heading.id)
+      if (element) observer.observe(element)
+    }
+
+    return () => observer.disconnect()
+  }, [headings])
+
+  return (
+    <nav className="w-48 p-4 text-sm">
+      <h4 className="font-medium mb-3">on this page</h4>
+      <ul className="space-y-2">
+        {headings.map((heading) => (
+          <li key={heading.id} style={{ paddingLeft: (heading.level - 2) * 12 }}>
+            <a
+              href={`#${heading.id}`}
+              className={active === heading.id ? "text-accent" : "text-muted hover:text-fg"}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+```
+
+## order configuration
+
+control page order in frontmatter:
+
+```yaml
+---
+title: getting started
+order: 1
+---
+```
+
+sort navigation by order:
+
+```tsx
+const docs = await getAllDocs()
+const sorted = docs.sort((a, b) => (a.data.order || 999) - (b.data.order || 999))
+```

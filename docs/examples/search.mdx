@@ -1,0 +1,242 @@
+---
+title: search
+description: configure and customize search
+order: 8
+---
+
+add fast full-text search to your documentation.
+
+## basic setup
+
+fromsrc includes orama search by default:
+
+```tsx
+import { Search } from "fromsrc/client"
+
+export function Header() {
+  return (
+    <header className="flex items-center justify-between px-4 py-3">
+      <Logo />
+      <Search />
+    </header>
+  )
+}
+```
+
+## search index
+
+generate the search index at build time:
+
+```tsx
+import { generateSearchIndex, getAllDocs } from "fromsrc"
+
+export async function GET() {
+  const docs = await getAllDocs()
+  const index = await generateSearchIndex(docs)
+
+  return Response.json(index)
+}
+```
+
+## keyboard shortcut
+
+open search with cmd+k:
+
+```tsx
+"use client"
+
+import { useEffect, useState } from "react"
+
+export function Search() {
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setOpen((o) => !o)
+      }
+    }
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted bg-surface rounded border border-line"
+      >
+        <span>search</span>
+        <kbd className="text-xs">cmd+k</kbd>
+      </button>
+      {open && <SearchDialog onClose={() => setOpen(false)} />}
+    </>
+  )
+}
+```
+
+## search dialog
+
+```tsx
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { search } from "@/lib/search"
+
+interface Props {
+  onClose: () => void
+}
+
+export function SearchDialog({ onClose }: Props) {
+  const [query, setQuery] = useState("")
+  const [results, setResults] = useState([])
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!query) return setResults([])
+    const timer = setTimeout(async () => {
+      const hits = await search(query)
+      setResults(hits)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [query])
+
+  const navigate = (href: string) => {
+    router.push(href)
+    onClose()
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50" onClick={onClose}>
+      <div
+        className="max-w-lg mx-auto mt-24 bg-bg border border-line rounded-lg shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="search docs..."
+          className="w-full px-4 py-3 bg-transparent border-b border-line outline-none"
+          autoFocus
+        />
+        <div className="max-h-80 overflow-y-auto">
+          {results.map((result) => (
+            <button
+              key={result.id}
+              onClick={() => navigate(result.href)}
+              className="w-full px-4 py-3 text-left hover:bg-surface"
+            >
+              <div className="font-medium">{result.title}</div>
+              <div className="text-sm text-muted truncate">{result.content}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+## algolia integration
+
+use algolia instead of orama:
+
+```tsx
+import algoliasearch from "algoliasearch"
+
+const client = algoliasearch(
+  process.env.ALGOLIA_APP_ID!,
+  process.env.ALGOLIA_API_KEY!
+)
+
+const index = client.initIndex("docs")
+
+export async function search(query: string) {
+  const { hits } = await index.search(query, {
+    hitsPerPage: 10,
+    attributesToRetrieve: ["title", "content", "href"],
+  })
+  return hits
+}
+
+export async function indexDocs(docs: Doc[]) {
+  const records = docs.map((doc) => ({
+    objectID: doc.slug.join("/"),
+    title: doc.title,
+    content: doc.content,
+    href: `/docs/${doc.slug.join("/")}`,
+  }))
+  await index.saveObjects(records)
+}
+```
+
+## search filters
+
+filter by section or category:
+
+```tsx
+const filters = [
+  { label: "all", value: "" },
+  { label: "guides", value: "guides" },
+  { label: "api", value: "api" },
+  { label: "examples", value: "examples" },
+]
+
+export function SearchFilters({ selected, onSelect }) {
+  return (
+    <div className="flex gap-1 px-4 py-2 border-b border-line">
+      {filters.map((filter) => (
+        <button
+          key={filter.value}
+          onClick={() => onSelect(filter.value)}
+          className={`px-2 py-1 text-xs rounded ${
+            selected === filter.value
+              ? "bg-accent text-white"
+              : "text-muted hover:text-fg"
+          }`}
+        >
+          {filter.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+```
+
+## recent searches
+
+save and display recent searches:
+
+```tsx
+"use client"
+
+import { useEffect, useState } from "react"
+
+const KEY = "recent-searches"
+const MAX = 5
+
+export function useRecentSearches() {
+  const [recent, setRecent] = useState<string[]>([])
+
+  useEffect(() => {
+    const stored = localStorage.getItem(KEY)
+    if (stored) setRecent(JSON.parse(stored))
+  }, [])
+
+  const add = (query: string) => {
+    const updated = [query, ...recent.filter((q) => q !== query)].slice(0, MAX)
+    setRecent(updated)
+    localStorage.setItem(KEY, JSON.stringify(updated))
+  }
+
+  const clear = () => {
+    setRecent([])
+    localStorage.removeItem(KEY)
+  }
+
+  return { recent, add, clear }
+}
+```
