@@ -45,12 +45,16 @@ export function Sidebar({
 	collapsible,
 }: Props) {
 	const [collapsed, setCollapsed] = useState(false)
+	const [hovered, setHovered] = useState(false)
 
 	const toggle = () => setCollapsed(!collapsed)
+	const showExpanded = !collapsed || hovered
 
 	return (
 		<aside
-			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200 ease-out overflow-hidden`}
+			onMouseEnter={() => collapsed && setHovered(true)}
+			onMouseLeave={() => setHovered(false)}
+			className={`${collapsed ? (hovered ? "w-60 shadow-xl z-50" : "w-16") : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width,box-shadow] duration-200 ease-out overflow-hidden`}
 		>
 			<div className="px-3 h-14 flex items-center">
 				{collapsible && (
@@ -63,7 +67,7 @@ export function Sidebar({
 						<PanelLeft size={18} aria-hidden="true" />
 					</button>
 				)}
-				{!collapsed && (
+				{showExpanded && (
 					<Link
 						href="/"
 						className="flex items-center text-sm text-fg hover:text-accent transition-colors"
@@ -82,7 +86,7 @@ export function Sidebar({
 						const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
 						window.dispatchEvent(event)
 					}}
-					className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${collapsed ? "w-10 justify-center" : "w-full px-2.5 gap-2"}`}
+					className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${showExpanded ? "w-full px-2.5 gap-2" : "w-10 justify-center"}`}
 					aria-label="search"
 				>
 					<svg
@@ -100,19 +104,19 @@ export function Sidebar({
 						/>
 					</svg>
 					<span
-						className={`text-xs transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}
+						className={`text-xs transition-opacity duration-200 ${showExpanded ? "block" : "hidden"}`}
 					>
 						search...
 					</span>
 					<kbd
-						className={`ml-auto text-[10px] font-mono text-muted/60 transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}
+						className={`ml-auto text-[10px] font-mono text-muted/60 transition-opacity duration-200 ${showExpanded ? "block" : "hidden"}`}
 					>
 						⌘K
 					</kbd>
 				</button>
 			</div>
 			<nav className="px-3 flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-				{collapsed ? (
+				{!showExpanded ? (
 					<div className="flex flex-col items-center">
 						{navigation.flatMap((section) =>
 							section.items.map((item, i) => {
