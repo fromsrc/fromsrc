@@ -1,0 +1,48 @@
+---
+title: copyable
+description: copy text to clipboard
+order: 32
+---
+
+text that can be copied with one click.
+
+## inline copyable
+
+```mdx
+<Copyable value="npm install fromsrc" />
+```
+
+<Copyable value="npm install fromsrc" />
+
+## with label
+
+```mdx
+<Copyable label="install:" value="npm install fromsrc" />
+```
+
+<Copyable label="install:" value="npm install fromsrc" />
+
+## copy block
+
+full-width copyable block:
+
+```mdx
+<CopyBlock>NEXT_PUBLIC_API_KEY=your-api-key</CopyBlock>
+```
+
+<CopyBlock>NEXT_PUBLIC_API_KEY=your-api-key</CopyBlock>
+
+## props
+
+### copyable
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| value | string | - | text to copy |
+| label | string | - | optional label |
+
+### copyblock
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| children | string | - | text to copy |
