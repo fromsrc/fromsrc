@@ -1,0 +1,77 @@
+---
+title: list
+description: styled list components
+order: 42
+---
+
+enhanced list formatting options.
+
+## checklist
+
+task list with check/x icons:
+
+```mdx
+<CheckList>
+  <CheckItem checked>completed task</CheckItem>
+  <CheckItem checked>another done</CheckItem>
+  <CheckItem checked={false}>not done yet</CheckItem>
+</CheckList>
+```
+
+<CheckList>
+  <CheckItem checked>completed task</CheckItem>
+  <CheckItem checked>another done</CheckItem>
+  <CheckItem checked={false}>not done yet</CheckItem>
+</CheckList>
+
+## bullet list
+
+simple bullets:
+
+```mdx
+<BulletList>
+  <BulletItem>first item</BulletItem>
+  <BulletItem>second item</BulletItem>
+  <BulletItem>third item</BulletItem>
+</BulletList>
+```
+
+<BulletList>
+  <BulletItem>first item</BulletItem>
+  <BulletItem>second item</BulletItem>
+  <BulletItem>third item</BulletItem>
+</BulletList>
+
+## number list
+
+numbered items with styled badges:
+
+```mdx
+<NumberList>
+  <NumberItem number={1}>first step</NumberItem>
+  <NumberItem number={2}>second step</NumberItem>
+  <NumberItem number={3}>third step</NumberItem>
+</NumberList>
+```
+
+<NumberList>
+  <NumberItem number={1}>first step</NumberItem>
+  <NumberItem number={2}>second step</NumberItem>
+  <NumberItem number={3}>third step</NumberItem>
+</NumberList>
+
+## props
+
+### checkitem
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| checked | boolean | true | show check or x |
+| children | ReactNode | - | item content |
+
+### numberitem
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| number | number | - | item number |
+| children | ReactNode | - | item content |
