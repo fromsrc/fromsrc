@@ -100,6 +100,7 @@ this hook enables:
 <TypeTable
   data={{
     docs: { type: "DocMeta[]", required: true, description: "ordered list of docs for navigation" },
+    basePath: { type: "string", default: '"/docs"', description: "base path for documentation routes" },
   }}
 />
 
@@ -120,6 +121,7 @@ function ActiveIndicator({ ids }: { ids: string[] }) {
   data={{
     ids: { type: "string[]", required: true, description: "array of element ids to track" },
     offset: { type: "number", default: "100", description: "scroll offset from top" },
+    threshold: { type: "number", default: "0.5", description: "intersection threshold" },
   }}
 />
 
