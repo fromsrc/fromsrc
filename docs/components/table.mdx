@@ -1,0 +1,210 @@
+---
+title: table
+description: data tables with sorting and responsive features
+order: 40
+---
+
+display tabular data with optional sorting, custom rendering, and mobile responsiveness.
+
+## usage
+
+```tsx
+const data = [
+  { name: "react", stars: 220000, language: "javascript" },
+  { name: "vue", stars: 205000, language: "typescript" },
+  { name: "svelte", stars: 75000, language: "typescript" },
+]
+
+const columns = [
+  { key: "name", header: "name" },
+  { key: "stars", header: "stars" },
+  { key: "language", header: "language" },
+]
+
+<Table data={data} columns={columns} />
+```
+
+<Table
+  data={[
+    { name: "react", stars: 220000, language: "javascript" },
+    { name: "vue", stars: 205000, language: "typescript" },
+    { name: "svelte", stars: 75000, language: "typescript" },
+  ]}
+  columns={[
+    { key: "name", header: "name" },
+    { key: "stars", header: "stars" },
+    { key: "language", header: "language" },
+  ]}
+/>
+
+## sorting
+
+enable sorting on columns with `sortable`:
+
+```tsx
+const columns = [
+  { key: "name", header: "name", sortable: true },
+  { key: "stars", header: "stars", sortable: true },
+  { key: "language", header: "language" },
+]
+
+<Table data={data} columns={columns} defaultSort="stars" defaultDirection="desc" />
+```
+
+<Table
+  data={[
+    { name: "react", stars: 220000, language: "javascript" },
+    { name: "vue", stars: 205000, language: "typescript" },
+    { name: "svelte", stars: 75000, language: "typescript" },
+  ]}
+  columns={[
+    { key: "name", header: "name", sortable: true },
+    { key: "stars", header: "stars", sortable: true },
+    { key: "language", header: "language" },
+  ]}
+  defaultSort="stars"
+  defaultDirection="desc"
+/>
+
+## custom rendering
+
+use the `render` function to customize cell output:
+
+```tsx
+const columns = [
+  { key: "name", header: "name" },
+  {
+    key: "stars",
+    header: "stars",
+    render: (value) => `${(value / 1000).toFixed(0)}k`,
+  },
+  {
+    key: "language",
+    header: "language",
+    render: (value) => <Badge>{value}</Badge>,
+  },
+]
+```
+
+<Table
+  data={[
+    { name: "react", stars: 220000, language: "javascript" },
+    { name: "vue", stars: 205000, language: "typescript" },
+    { name: "svelte", stars: 75000, language: "typescript" },
+  ]}
+  columns={[
+    { key: "name", header: "name" },
+    { key: "stars", header: "stars", render: (value) => `${(value / 1000).toFixed(0)}k` },
+    { key: "language", header: "language", render: (value) => <Badge>{value}</Badge> },
+  ]}
+/>
+
+## responsive
+
+hide columns on mobile with `hideOnMobile`:
+
+```tsx
+const columns = [
+  { key: "name", header: "name" },
+  { key: "stars", header: "stars" },
+  { key: "language", header: "language", hideOnMobile: true },
+  { key: "license", header: "license", hideOnMobile: true },
+]
+```
+
+<Table
+  data={[
+    { name: "react", stars: 220000, language: "javascript", license: "mit" },
+    { name: "vue", stars: 205000, language: "typescript", license: "mit" },
+    { name: "svelte", stars: 75000, language: "typescript", license: "mit" },
+  ]}
+  columns={[
+    { key: "name", header: "name" },
+    { key: "stars", header: "stars" },
+    { key: "language", header: "language", hideOnMobile: true },
+    { key: "license", header: "license", hideOnMobile: true },
+  ]}
+/>
+
+## styles
+
+### striped
+
+alternating row colors:
+
+```tsx
+<Table data={data} columns={columns} striped />
+```
+
+<Table
+  data={[
+    { name: "react", stars: 220000 },
+    { name: "vue", stars: 205000 },
+    { name: "svelte", stars: 75000 },
+    { name: "solid", stars: 30000 },
+  ]}
+  columns={[
+    { key: "name", header: "name" },
+    { key: "stars", header: "stars" },
+  ]}
+  striped
+/>
+
+### compact
+
+reduced padding:
+
+```tsx
+<Table data={data} columns={columns} compact />
+```
+
+<Table
+  data={[
+    { name: "react", stars: 220000 },
+    { name: "vue", stars: 205000 },
+    { name: "svelte", stars: 75000 },
+  ]}
+  columns={[
+    { key: "name", header: "name" },
+    { key: "stars", header: "stars" },
+  ]}
+  compact
+/>
+
+### column width
+
+set fixed widths:
+
+```tsx
+const columns = [
+  { key: "name", header: "name", width: "200px" },
+  { key: "stars", header: "stars", width: "100px" },
+]
+```
+
+## props
+
+### table
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| data | T[] | - | array of row objects |
+| columns | TableColumn[] | - | column definitions |
+| defaultSort | string | - | initial sort column key |
+| defaultDirection | "asc" \| "desc" | "asc" | initial sort direction |
+| striped | boolean | false | alternating row colors |
+| hoverable | boolean | true | row hover effect |
+| compact | boolean | false | reduced padding |
+| caption | string | - | accessible table description |
+| className | string | - | additional css classes |
+
+### tablecolumn
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| key | string | - | property name from data |
+| header | string | - | column header text |
+| sortable | boolean | false | enable sorting |
+| width | string | - | fixed column width |
+| render | function | - | custom cell renderer |
+| hideOnMobile | boolean | false | hide on small screens |
