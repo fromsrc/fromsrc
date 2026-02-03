@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useState } from "react"
+import { type ReactNode, useId, useState } from "react"
 import { IconChevronRight } from "./icons"
 
 interface Props {
@@ -11,13 +11,18 @@ interface Props {
 
 export function Collapsible({ title, defaultOpen = false, children }: Props) {
 	const [open, setOpen] = useState(defaultOpen)
+	const id = useId()
+	const buttonId = `${id}-button`
+	const contentId = `${id}-content`
 
 	return (
 		<div className="my-4 rounded-lg border border-line overflow-hidden">
 			<button
+				id={buttonId}
 				type="button"
 				onClick={() => setOpen(!open)}
 				aria-expanded={open}
+				aria-controls={contentId}
 				className="flex items-center gap-2 w-full px-4 py-3 text-sm text-left text-fg hover:bg-surface/50 transition-colors"
 			>
 				<IconChevronRight
@@ -27,11 +32,14 @@ export function Collapsible({ title, defaultOpen = false, children }: Props) {
 				{title}
 			</button>
 			<div
-				className={`overflow-hidden transition-all duration-200 ${
-					open ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
-				}`}
+				id={contentId}
+				role="region"
+				aria-labelledby={buttonId}
+				className={`grid transition-[grid-template-rows] duration-200 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
 			>
-				<div className="px-4 pb-4 pt-0">{children}</div>
+				<div className="overflow-hidden">
+					<div className="px-4 pb-4 pt-0">{children}</div>
+				</div>
 			</div>
 		</div>
 	)

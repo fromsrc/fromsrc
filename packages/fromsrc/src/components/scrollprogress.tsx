@@ -1,38 +1,56 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 export interface ScrollProgressProps {
 	color?: string
 	height?: number
+	label?: string
 }
 
-export function ScrollProgress({ color = "var(--accent)", height = 2 }: ScrollProgressProps) {
-	const [progress, setProgress] = useState(0)
+export function ScrollProgress({
+	color = "var(--accent)",
+	height = 2,
+	label = "Page scroll progress",
+}: ScrollProgressProps) {
+	const [progress, setProgress] = useState<number>(0)
+	const rafRef = useRef<number>(0)
 
-	useEffect(() => {
-		function handleScroll() {
+	const handleScroll = useCallback(() => {
+		if (rafRef.current) return
+
+		rafRef.current = requestAnimationFrame(() => {
 			const scrollTop = document.documentElement.scrollTop
 			const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
 			const newProgress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0
 			setProgress(newProgress)
-		}
-
-		window.addEventListener("scroll", handleScroll, { passive: true })
-		return () => window.removeEventListener("scroll", handleScroll)
+			rafRef.current = 0
+		})
 	}, [])
+
+	useEffect(() => {
+		handleScroll()
+		window.addEventListener("scroll", handleScroll, { passive: true })
+		return () => {
+			window.removeEventListener("scroll", handleScroll)
+			if (rafRef.current) cancelAnimationFrame(rafRef.current)
+		}
+	}, [handleScroll])
+
+	const rounded = Math.round(progress)
 
 	return (
 		<div
 			className="fixed left-0 top-0 z-50 w-full"
 			style={{ height }}
 			role="progressbar"
-			aria-valuenow={Math.round(progress)}
+			aria-valuenow={rounded}
 			aria-valuemin={0}
 			aria-valuemax={100}
+			aria-label={label}
 		>
 			<div
-				className="h-full transition-all duration-100"
+				className="h-full transition-[width] duration-100"
 				style={{
 					width: `${progress}%`,
 					backgroundColor: color,
