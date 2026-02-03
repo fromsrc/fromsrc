@@ -64,6 +64,18 @@ import {
 	Quote,
 	Testimonials,
 	Testimonial,
+	Compare,
+	Column,
+	CompareRow,
+	Feature,
+	Features,
+	FeatureCard,
+	Copyable,
+	CopyBlock,
+	DefinitionList,
+	Definition,
+	Glossary,
+	GlossaryItem,
 } from "fromsrc/client"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -235,6 +247,18 @@ const components = {
 	Quote,
 	Testimonials,
 	Testimonial,
+	Compare,
+	Column,
+	CompareRow,
+	Feature,
+	Features,
+	FeatureCard,
+	Copyable,
+	CopyBlock,
+	DefinitionList,
+	Definition,
+	Glossary,
+	GlossaryItem,
 }
 
 interface Props {
