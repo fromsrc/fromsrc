@@ -1,14 +1,18 @@
 "use client"
 
-import type { ReactNode } from "react"
+import type { JSX, ReactNode } from "react"
 import { IconCheck, IconCircle, IconX } from "./icons"
 
 interface ListProps {
 	children: ReactNode
 }
 
-export function CheckList({ children }: ListProps) {
-	return <ul className="my-4 space-y-2">{children}</ul>
+export function CheckList({ children }: ListProps): JSX.Element {
+	return (
+		<ul className="my-4 space-y-2" role="list">
+			{children}
+		</ul>
+	)
 }
 
 interface CheckItemProps {
@@ -16,9 +20,9 @@ interface CheckItemProps {
 	children: ReactNode
 }
 
-export function CheckItem({ checked = true, children }: CheckItemProps) {
+export function CheckItem({ checked = true, children }: CheckItemProps): JSX.Element {
 	return (
-		<li className="flex items-start gap-2">
+		<li className="flex items-start gap-2" aria-label={checked ? "included" : "not included"}>
 			{checked ? (
 				<IconCheck size={16} className="mt-0.5 text-emerald-400 shrink-0" />
 			) : (
@@ -29,15 +33,19 @@ export function CheckItem({ checked = true, children }: CheckItemProps) {
 	)
 }
 
-export function BulletList({ children }: ListProps) {
-	return <ul className="my-4 space-y-2">{children}</ul>
+export function BulletList({ children }: ListProps): JSX.Element {
+	return (
+		<ul className="my-4 space-y-2" role="list">
+			{children}
+		</ul>
+	)
 }
 
 interface BulletItemProps {
 	children: ReactNode
 }
 
-export function BulletItem({ children }: BulletItemProps) {
+export function BulletItem({ children }: BulletItemProps): JSX.Element {
 	return (
 		<li className="flex items-start gap-2">
 			<IconCircle size={6} className="mt-2 text-muted shrink-0" />
@@ -51,9 +59,9 @@ interface NumberListProps {
 	children: ReactNode
 }
 
-export function NumberList({ start = 1, children }: NumberListProps) {
+export function NumberList({ start = 1, children }: NumberListProps): JSX.Element {
 	return (
-		<ol className="my-4 space-y-2 list-none" start={start}>
+		<ol className="my-4 space-y-2 list-none" start={start} role="list">
 			{children}
 		</ol>
 	)
@@ -64,9 +72,9 @@ interface NumberItemProps {
 	children: ReactNode
 }
 
-export function NumberItem({ number, children }: NumberItemProps) {
+export function NumberItem({ number, children }: NumberItemProps): JSX.Element {
 	return (
-		<li className="flex items-start gap-3">
+		<li className="flex items-start gap-3" value={number}>
 			<span className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-surface border border-line text-xs font-medium text-muted">
 				{number}
 			</span>
