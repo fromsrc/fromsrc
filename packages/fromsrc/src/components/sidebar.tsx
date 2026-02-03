@@ -20,6 +20,7 @@ export interface SidebarFolder {
 	items: (SidebarItem | SidebarFolder)[]
 	defaultOpen?: boolean
 	icon?: ReactNode
+	href?: string
 }
 
 export interface SidebarSection {
