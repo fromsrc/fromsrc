@@ -99,7 +99,7 @@ export function Install({ package: pkg }: InstallProps) {
 		}
 
 		e.preventDefault()
-		setActive(managers[nextIndex])
+		setActive(managers[nextIndex]!)
 		const tabs = tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
 		tabs?.[nextIndex]?.focus()
 	}

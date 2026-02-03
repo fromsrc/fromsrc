@@ -85,7 +85,7 @@ export function Graph({
 		}
 
 		for (let i = 0; i < nodes.length; i++) {
-			const node = nodes[i]
+			const node = nodes[i]!
 			const pos = positions.get(node.id)
 			if (!pos) continue
 
@@ -170,7 +170,7 @@ export function Graph({
 			setFocused((prev) => (prev - 1 + nodes.length) % nodes.length)
 		} else if ((e.key === "Enter" || e.key === " ") && focused >= 0 && onNodeClick) {
 			e.preventDefault()
-			onNodeClick(nodes[focused])
+			onNodeClick(nodes[focused]!)
 		}
 	}
 

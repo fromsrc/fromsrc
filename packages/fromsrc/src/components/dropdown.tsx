@@ -31,7 +31,7 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 		(current: number, direction: 1 | -1): number => {
 			let next = current + direction
 			while (next >= 0 && next < selectableItems.length) {
-				if (!selectableItems[next].disabled) return next
+				if (!selectableItems[next]!.disabled) return next
 				next += direction
 			}
 			return current

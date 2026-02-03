@@ -140,13 +140,13 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 		for (const doc of docs) {
 			if (doc.slug.startsWith("components/")) {
-				sections[1].items.push(doc)
+				sections[1]!.items.push(doc)
 			} else if (doc.slug.startsWith("api/")) {
-				sections[2].items.push(doc)
+				sections[2]!.items.push(doc)
 			} else if (doc.slug.startsWith("examples/")) {
-				sections[3].items.push(doc)
+				sections[3]!.items.push(doc)
 			} else {
-				sections[0].items.push(doc)
+				sections[0]!.items.push(doc)
 			}
 		}
 
@@ -329,13 +329,13 @@ export async function getNavigation(docsDir: string): Promise<{ title: string; i
 
 	for (const doc of docs) {
 		if (doc.slug.startsWith("components/")) {
-			sections[1].items.push(doc)
+			sections[1]!.items.push(doc)
 		} else if (doc.slug.startsWith("api/")) {
-			sections[2].items.push(doc)
+			sections[2]!.items.push(doc)
 		} else if (doc.slug.startsWith("examples/")) {
-			sections[3].items.push(doc)
+			sections[3]!.items.push(doc)
 		} else {
-			sections[0].items.push(doc)
+			sections[0]!.items.push(doc)
 		}
 	}
 

@@ -69,7 +69,7 @@ export function Select({
 		(current: number, direction: 1 | -1): number => {
 			let next = current + direction
 			while (next >= 0 && next < options.length) {
-				if (!options[next].disabled) return next
+				if (!options[next]!.disabled) return next
 				next += direction
 			}
 			return current

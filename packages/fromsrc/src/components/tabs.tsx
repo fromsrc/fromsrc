@@ -57,7 +57,7 @@ export function Tabs({ items, defaultValue, children }: TabsProps) {
 		}
 
 		e.preventDefault()
-		setActive(items[nextIndex])
+		setActive(items[nextIndex]!)
 		const tabs = tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
 		tabs?.[nextIndex]?.focus()
 	}

@@ -55,7 +55,7 @@ export function LanguageSwitch({ current, locales, onChange }: LanguageSwitchPro
 				e.preventDefault()
 				break
 			case "Enter":
-				onChange?.(locales[index].code)
+				onChange?.(locales[index]!.code)
 				setOpen(false)
 				break
 		}

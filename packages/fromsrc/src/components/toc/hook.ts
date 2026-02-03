@@ -99,7 +99,7 @@ export function useToc(multi = false): TocState {
 				window.innerHeight + Math.ceil(window.scrollY) >= document.documentElement.scrollHeight
 
 			if (atBottom && headings.length > 0) {
-				setActive(headings[headings.length - 1].id)
+				setActive(headings[headings.length - 1]!.id)
 				return
 			}
 
@@ -116,7 +116,7 @@ export function useToc(multi = false): TocState {
 			}
 
 			if (!current && headings.length > 0) {
-				current = headings[0].id
+				current = headings[0]!.id
 			}
 
 			setActive(current)
