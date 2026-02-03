@@ -1,0 +1,95 @@
+---
+title: accessibility
+description: accessible documentation for all users
+order: 11
+---
+
+fromsrc components follow wcag 2.1 guidelines.
+
+## aria attributes
+
+all interactive components include appropriate aria attributes:
+
+| component | attributes |
+|-----------|------------|
+| search | `role="combobox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant` |
+| dropdown | `role="menu"`, `aria-haspopup`, `aria-expanded` |
+| accordion | `aria-expanded`, `aria-controls` |
+| modal | `role="dialog"`, `aria-modal` |
+| tooltip | `role="tooltip"` |
+| progress | `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax` |
+| alert | `role="alert"` |
+| tabs | `role="tablist"`, `role="tab"`, `aria-selected` |
+
+decorative icons use `aria-hidden="true"` to be ignored by screen readers.
+
+## keyboard navigation
+
+interactive components support full keyboard control:
+
+| key | action |
+|-----|--------|
+| Tab | move focus between elements |
+| Enter/Space | activate buttons, select items |
+| Arrow Up/Down | navigate lists, menus, search results |
+| Escape | close modals, dropdowns, search |
+| Cmd/Ctrl+K | open search |
+
+<Callout type="tip">
+the search component shows keyboard hints at the bottom of the modal.
+</Callout>
+
+## focus management
+
+focus is managed automatically:
+
+- modals trap focus within the dialog
+- dropdowns return focus to trigger on close
+- search input receives focus when opened
+- skip links allow jumping to main content
+
+all focusable elements have visible focus indicators using the `outline` style.
+
+## screen readers
+
+components announce state changes:
+
+- `aria-expanded` indicates open/closed state
+- `aria-selected` indicates current selection
+- `aria-current` marks active navigation items
+- `aria-label` provides accessible names for icon buttons
+
+<Callout type="info">
+use semantic html (headings, lists, landmarks) in your content for better navigation.
+</Callout>
+
+## color contrast
+
+the default theme meets wcag aa standards:
+
+| pair | contrast ratio |
+|------|----------------|
+| fg on bg | 19.6:1 |
+| muted on bg | 5.8:1 |
+| accent on bg | 5.3:1 |
+
+<Callout type="warning">
+custom themes should maintain at least 4.5:1 contrast for text and 3:1 for ui components.
+</Callout>
+
+### testing contrast
+
+use browser devtools or online tools to verify:
+
+```bash
+# lighthouse accessibility audit
+npx lighthouse http://localhost:3000 --only-categories=accessibility
+```
+
+## best practices
+
+- use descriptive link text (not "click here")
+- provide alt text for meaningful images
+- maintain heading hierarchy (h1, h2, h3)
+- ensure form inputs have labels
+- avoid motion for users with vestibular disorders

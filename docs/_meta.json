@@ -15,6 +15,7 @@
 		"keyboard",
 		"versioning",
 		"deploying",
-		"i18n"
+		"i18n",
+		"accessibility"
 	]
 }
