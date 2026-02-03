@@ -1,27 +1,43 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import type { JSX, KeyboardEvent, MouseEvent } from "react"
 
+/** Node in the graph visualization */
 export interface GraphNode {
+	/** Unique identifier for the node */
 	id: string
+	/** Display title shown below the node */
 	title: string
+	/** Optional grouping category */
 	group?: string
 }
 
+/** Connection between two nodes */
 export interface GraphLink {
+	/** ID of the source node */
 	source: string
+	/** ID of the target node */
 	target: string
 }
 
+/** Props for the Graph component */
 export interface GraphProps {
+	/** Array of nodes to display */
 	nodes: GraphNode[]
+	/** Array of links connecting nodes */
 	links: GraphLink[]
+	/** Callback when a node is clicked or activated */
 	onNodeClick?: (node: GraphNode) => void
+	/** Canvas width in pixels */
 	width?: number
+	/** Canvas height in pixels */
 	height?: number
+	/** Accessible label for the graph */
 	label?: string
 }
 
+/** Internal position coordinates */
 interface Position {
 	x: number
 	y: number
@@ -37,13 +53,13 @@ export function Graph({
 	width = 600,
 	height = 400,
 	label = "Graph visualization",
-}: GraphProps) {
+}: GraphProps): JSX.Element {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [positions, setPositions] = useState<Map<string, Position>>(new Map())
 	const [hovered, setHovered] = useState<string | null>(null)
 	const [focused, setFocused] = useState<number>(-1)
 
-	useEffect(() => {
+	useEffect((): void => {
 		const newPositions = new Map<string, Position>()
 		nodes.forEach((node, i) => {
 			const angle = (2 * Math.PI * i) / nodes.length
@@ -56,7 +72,7 @@ export function Graph({
 		setPositions(newPositions)
 	}, [nodes, width, height])
 
-	const draw = useCallback(() => {
+	const draw = useCallback((): void => {
 		const canvas = canvasRef.current
 		if (!canvas) return
 
@@ -115,7 +131,7 @@ export function Graph({
 		}
 	}, [nodes, links, positions, width, height, hovered, focused])
 
-	useEffect(() => {
+	useEffect((): void => {
 		draw()
 	}, [draw])
 
@@ -137,7 +153,7 @@ export function Graph({
 	)
 
 	const handleClick = useCallback(
-		(e: React.MouseEvent<HTMLCanvasElement>) => {
+		(e: MouseEvent<HTMLCanvasElement>): void => {
 			if (!onNodeClick) return
 
 			const rect = canvasRef.current?.getBoundingClientRect()
@@ -152,7 +168,7 @@ export function Graph({
 	)
 
 	const handleMove = useCallback(
-		(e: React.MouseEvent<HTMLCanvasElement>) => {
+		(e: MouseEvent<HTMLCanvasElement>): void => {
 			const rect = canvasRef.current?.getBoundingClientRect()
 			if (!rect) return
 
@@ -164,35 +180,72 @@ export function Graph({
 		[findNode],
 	)
 
-	const handleLeave = useCallback(() => {
+	const handleLeave = useCallback((): void => {
 		setHovered(null)
 	}, [])
 
 	const handleKeyDown = useCallback(
-		(e: React.KeyboardEvent<HTMLCanvasElement>) => {
+		(e: KeyboardEvent<HTMLCanvasElement>): void => {
 			if (nodes.length === 0) return
 
-			if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-				e.preventDefault()
-				setFocused((prev) => (prev + 1) % nodes.length)
-			} else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-				e.preventDefault()
-				setFocused((prev) => (prev - 1 + nodes.length) % nodes.length)
-			} else if ((e.key === "Enter" || e.key === " ") && focused >= 0 && onNodeClick) {
-				e.preventDefault()
-				onNodeClick(nodes[focused]!)
+			switch (e.key) {
+				case "ArrowRight":
+				case "ArrowDown":
+				case "Tab": {
+					if (e.key === "Tab" && e.shiftKey) {
+						e.preventDefault()
+						setFocused((prev) => (prev - 1 + nodes.length) % nodes.length)
+					} else if (e.key === "Tab") {
+						e.preventDefault()
+						setFocused((prev) => (prev + 1) % nodes.length)
+					} else {
+						e.preventDefault()
+						setFocused((prev) => (prev + 1) % nodes.length)
+					}
+					break
+				}
+				case "ArrowLeft":
+				case "ArrowUp": {
+					e.preventDefault()
+					setFocused((prev) => (prev - 1 + nodes.length) % nodes.length)
+					break
+				}
+				case "Home": {
+					e.preventDefault()
+					setFocused(0)
+					break
+				}
+				case "End": {
+					e.preventDefault()
+					setFocused(nodes.length - 1)
+					break
+				}
+				case "Enter":
+				case " ": {
+					if (focused >= 0 && onNodeClick) {
+						e.preventDefault()
+						onNodeClick(nodes[focused]!)
+					}
+					break
+				}
+				case "Escape": {
+					e.preventDefault()
+					setFocused(-1)
+					canvasRef.current?.blur()
+					break
+				}
 			}
 		},
 		[nodes, focused, onNodeClick],
 	)
 
-	const handleFocus = useCallback(() => {
+	const handleFocus = useCallback((): void => {
 		if (focused < 0 && nodes.length > 0) {
 			setFocused(0)
 		}
 	}, [focused, nodes.length])
 
-	const handleBlur = useCallback(() => {
+	const handleBlur = useCallback((): void => {
 		setFocused(-1)
 	}, [])
 
