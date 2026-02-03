@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react"
+import { useScrollLock } from "../hooks/scrolllock"
 import { IconX } from "./icons"
 
 export interface ModalProps {
@@ -45,12 +46,13 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 		[onClose]
 	)
 
+	useScrollLock(open)
+
 	useEffect(() => {
 		if (open) {
 			previousFocus.current = document.activeElement as HTMLElement
 			setVisible(true)
 			requestAnimationFrame(() => setAnimate(true))
-			document.body.style.overflow = "hidden"
 			document.addEventListener("keydown", handleKeyDown)
 		} else {
 			setAnimate(false)
@@ -60,7 +62,6 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 
 		return () => {
 			document.removeEventListener("keydown", handleKeyDown)
-			document.body.style.overflow = ""
 			previousFocus.current?.focus()
 		}
 	}, [open, handleKeyDown])

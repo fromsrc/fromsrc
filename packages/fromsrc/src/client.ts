@@ -151,8 +151,10 @@ export { Video } from "./components/video"
 export type { ZoomProps } from "./components/zoom"
 export { Zoom } from "./components/zoom"
 export { useAnchorScroll, type AnchorOptions } from "./hooks/anchor"
+export { useClickOutside } from "./hooks/clickoutside"
 export { useCopy } from "./hooks/copy"
 export { useDebounce } from "./hooks/debounce"
+export { useEscapeKey } from "./hooks/escapekey"
 export { useKeyboardNav } from "./hooks/keyboard"
 export {
 	useIsDesktop,
@@ -163,4 +165,5 @@ export {
 	usePrefersReducedMotion,
 } from "./hooks/media"
 export { useScrollSpy, type ScrollSpyOptions } from "./hooks/scrollspy"
+export { useScrollLock } from "./hooks/scrolllock"
 export { useLocalStorage, useSessionStorage } from "./hooks/storage"

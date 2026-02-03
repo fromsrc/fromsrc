@@ -1,6 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react"
+import { useClickOutside } from "../hooks/clickoutside"
+import { useEscapeKey } from "../hooks/escapekey"
 
 export interface PopoverProps {
 	trigger: ReactNode
@@ -21,30 +23,8 @@ export function Popover({ trigger, children, align = "start", side = "bottom" }:
 		triggerRef.current?.focus()
 	}, [])
 
-	useEffect(() => {
-		if (!open) return
-
-		function handleClick(e: MouseEvent) {
-			const target = e.target
-			if (target instanceof Node && containerRef.current && !containerRef.current.contains(target)) {
-				close()
-			}
-		}
-
-		function handleKey(e: KeyboardEvent) {
-			if (e.key === "Escape") {
-				e.preventDefault()
-				close()
-			}
-		}
-
-		document.addEventListener("click", handleClick)
-		document.addEventListener("keydown", handleKey)
-		return () => {
-			document.removeEventListener("click", handleClick)
-			document.removeEventListener("keydown", handleKey)
-		}
-	}, [open, close])
+	useClickOutside(containerRef, close, open)
+	useEscapeKey(close, open)
 
 	useEffect(() => {
 		if (open) {

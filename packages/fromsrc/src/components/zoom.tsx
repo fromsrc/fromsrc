@@ -1,6 +1,8 @@
 "use client"
 
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
+import { useEscapeKey } from "../hooks/escapekey"
+import { useScrollLock } from "../hooks/scrolllock"
 
 export interface ZoomProps {
 	children: ReactNode
@@ -17,11 +19,13 @@ export function Zoom({ children, className }: ZoomProps) {
 		triggerRef.current?.focus()
 	}, [])
 
+	useEscapeKey(close, open)
+	useScrollLock(open)
+
 	useEffect(() => {
 		if (!open) return
 
-		function onKey(e: KeyboardEvent) {
-			if (e.key === "Escape") close()
+		function onTab(e: KeyboardEvent) {
 			if (e.key === "Tab") {
 				e.preventDefault()
 				closeRef.current?.focus()
@@ -29,14 +33,9 @@ export function Zoom({ children, className }: ZoomProps) {
 		}
 
 		closeRef.current?.focus()
-		document.body.style.overflow = "hidden"
-		window.addEventListener("keydown", onKey)
-
-		return () => {
-			document.body.style.overflow = ""
-			window.removeEventListener("keydown", onKey)
-		}
-	}, [open, close])
+		window.addEventListener("keydown", onTab)
+		return () => window.removeEventListener("keydown", onTab)
+	}, [open])
 
 	return (
 		<>

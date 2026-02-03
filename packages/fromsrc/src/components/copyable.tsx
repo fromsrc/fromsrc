@@ -1,31 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCopy } from "../hooks/copy"
 import { IconCheck, IconCopy } from "./icons"
-
-function usecopy(text: string) {
-	const [copied, setCopied] = useState(false)
-	const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
-
-	useEffect(() => {
-		return () => {
-			if (timeoutRef.current) clearTimeout(timeoutRef.current)
-		}
-	}, [])
-
-	const copy = useCallback(async () => {
-		try {
-			await navigator.clipboard.writeText(text)
-			setCopied(true)
-			if (timeoutRef.current) clearTimeout(timeoutRef.current)
-			timeoutRef.current = setTimeout(() => setCopied(false), 2000)
-		} catch {
-			setCopied(false)
-		}
-	}, [text])
-
-	return { copied, copy }
-}
 
 interface CopyableProps {
 	value: string
@@ -33,7 +9,7 @@ interface CopyableProps {
 }
 
 export function Copyable({ value, label }: CopyableProps) {
-	const { copied, copy } = usecopy(value)
+	const { copied, copy } = useCopy()
 
 	return (
 		<div className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-surface border border-line font-mono text-sm">
@@ -41,7 +17,7 @@ export function Copyable({ value, label }: CopyableProps) {
 			<span className="text-fg">{value}</span>
 			<button
 				type="button"
-				onClick={copy}
+				onClick={() => copy(value)}
 				className="text-muted hover:text-fg transition-colors"
 				aria-label="copy to clipboard"
 			>
@@ -63,14 +39,14 @@ interface CopyBlockProps {
 }
 
 export function CopyBlock({ children }: CopyBlockProps) {
-	const { copied, copy } = usecopy(children)
+	const { copied, copy } = useCopy()
 
 	return (
 		<div className="my-4 flex items-center justify-between gap-4 px-4 py-3 rounded-xl bg-surface border border-line font-mono text-sm">
 			<span className="text-fg truncate">{children}</span>
 			<button
 				type="button"
-				onClick={copy}
+				onClick={() => copy(children)}
 				className="shrink-0 text-muted hover:text-fg transition-colors"
 				aria-label="copy to clipboard"
 			>

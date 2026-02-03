@@ -1,6 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react"
+import { useCallback, useId, useRef, useState, type ReactNode } from "react"
+import { useClickOutside } from "../hooks/clickoutside"
 
 export interface DropdownItem {
 	label: string
@@ -38,21 +39,12 @@ export function Dropdown({ trigger, items, align = "start" }: DropdownProps) {
 		[selectableItems]
 	)
 
-	useEffect(() => {
-		if (!open) {
-			setIndex(-1)
-			return
-		}
+	const close = useCallback(() => {
+		setOpen(false)
+		setIndex(-1)
+	}, [])
 
-		function handleClick(e: MouseEvent) {
-			if (ref.current && !ref.current.contains(e.target as Node)) {
-				setOpen(false)
-			}
-		}
-
-		document.addEventListener("click", handleClick)
-		return () => document.removeEventListener("click", handleClick)
-	}, [open])
+	useClickOutside(ref, close, open)
 
 	function handleKeyDown(e: React.KeyboardEvent) {
 		if (!open) {
