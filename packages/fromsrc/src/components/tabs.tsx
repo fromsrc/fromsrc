@@ -2,8 +2,11 @@
 
 import {
 	createContext,
+	type Dispatch,
+	type JSX,
 	type KeyboardEvent,
 	type ReactNode,
+	type SetStateAction,
 	useCallback,
 	useContext,
 	useId,
@@ -13,33 +16,42 @@ import {
 
 interface TabsContextValue {
 	active: string
-	setActive: (value: string) => void
+	setActive: Dispatch<SetStateAction<string>>
 	id: string
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null)
 
 /**
- * @param items - array of tab names
- * @param defaultValue - initially active tab
- * @param children - Tab elements
- * @example <Tabs items={["npm", "yarn"]}><Tab value="npm">...</Tab></Tabs>
+ * Accessible tabbed interface component with keyboard navigation.
+ * Supports arrow keys, Home, and End for navigation.
+ * @property items - array of tab names to display
+ * @property defaultValue - initially active tab, defaults to first item
+ * @property children - Tab elements corresponding to items
+ * @example
+ * ```tsx
+ * <Tabs items={["npm", "yarn", "pnpm"]}>
+ *   <Tab value="npm">npm install fromsrc</Tab>
+ *   <Tab value="yarn">yarn add fromsrc</Tab>
+ *   <Tab value="pnpm">pnpm add fromsrc</Tab>
+ * </Tabs>
+ * ```
  */
 export interface TabsProps {
-	items: string[]
+	items: readonly string[]
 	defaultValue?: string
 	children: ReactNode
 }
 
-export function Tabs({ items, defaultValue, children }: TabsProps) {
-	const [active, setActive] = useState(defaultValue || items[0] || "")
+export function Tabs({ items, defaultValue, children }: TabsProps): JSX.Element {
+	const [active, setActive] = useState<string>(defaultValue ?? items[0] ?? "")
 	const id = useId()
 	const tabsRef = useRef<HTMLDivElement>(null)
 
 	const handleKeyDown = useCallback(
-		(e: KeyboardEvent<HTMLDivElement>) => {
+		(e: KeyboardEvent<HTMLDivElement>): void => {
 			const currentIndex = items.indexOf(active)
-			let nextIndex = currentIndex
+			let nextIndex: number = currentIndex
 
 			switch (e.key) {
 				case "ArrowLeft":
@@ -59,7 +71,10 @@ export function Tabs({ items, defaultValue, children }: TabsProps) {
 			}
 
 			e.preventDefault()
-			setActive(items[nextIndex]!)
+			const nextItem = items[nextIndex]
+			if (nextItem !== undefined) {
+				setActive(nextItem)
+			}
 			const tabs = tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
 			tabs?.[nextIndex]?.focus()
 		},
@@ -110,15 +125,17 @@ export function Tabs({ items, defaultValue, children }: TabsProps) {
 }
 
 /**
- * @param value - matches item from parent Tabs
- * @param children - tab panel content
+ * Individual tab panel content within a Tabs container.
+ * Only renders when its value matches the active tab.
+ * @property value - must match an item from parent Tabs items array
+ * @property children - content to display when tab is active
  */
 export interface TabProps {
 	value: string
 	children: ReactNode
 }
 
-export function Tab({ value, children }: TabProps) {
+export function Tab({ value, children }: TabProps): JSX.Element | null {
 	const context = useContext(TabsContext)
 	if (!context) return null
 	if (context.active !== value) return null
