@@ -1,10 +1,10 @@
 "use client"
 
-import { PanelLeft } from "lucide-react"
 import Link from "next/link"
 import { type ReactNode, useRef, useState } from "react"
 import type { DocMeta } from "../content"
 import { Folder } from "./folder"
+import { IconPanelLeft } from "./icons"
 import { NavLink } from "./navlink"
 
 export interface SidebarItem {
@@ -81,7 +81,7 @@ export function Sidebar({
 						className="w-10 h-10 flex items-center justify-center text-muted hover:text-fg transition-colors shrink-0"
 						aria-label={collapsed ? "expand sidebar" : "collapse sidebar"}
 					>
-						<PanelLeft size={18} aria-hidden="true" />
+						<IconPanelLeft size={18} />
 					</button>
 				)}
 				{showExpanded && (

@@ -1,7 +1,7 @@
 "use client"
 
-import { ChevronRight } from "lucide-react"
 import { type ReactNode, useState } from "react"
+import { IconChevronRight } from "./icons"
 
 interface Props {
 	title: string
@@ -20,10 +20,9 @@ export function Collapsible({ title, defaultOpen = false, children }: Props) {
 				aria-expanded={open}
 				className="flex items-center gap-2 w-full px-4 py-3 text-sm text-left text-fg hover:bg-surface/50 transition-colors"
 			>
-				<ChevronRight
+				<IconChevronRight
 					size={16}
 					className={`text-muted transition-transform duration-200 ${open ? "rotate-90" : ""}`}
-					aria-hidden="true"
 				/>
 				{title}
 			</button>
@@ -47,10 +46,9 @@ export function Details({ summary, children }: DetailsProps) {
 	return (
 		<details className="my-4 group">
 			<summary className="flex items-center gap-2 cursor-pointer text-sm text-fg list-none [&::-webkit-details-marker]:hidden">
-				<ChevronRight
+				<IconChevronRight
 					size={16}
 					className="text-muted transition-transform duration-200 group-open:rotate-90"
-					aria-hidden="true"
 				/>
 				{summary}
 			</summary>

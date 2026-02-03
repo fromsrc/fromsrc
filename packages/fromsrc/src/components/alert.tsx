@@ -1,7 +1,7 @@
 "use client"
 
-import { AlertCircle, CheckCircle, Info, XCircle } from "lucide-react"
 import type { ReactNode } from "react"
+import { IconAlertCircle, IconCheckCircle, IconInfo, IconXCircle } from "./icons"
 
 export interface AlertProps {
 	children: ReactNode
@@ -10,10 +10,10 @@ export interface AlertProps {
 }
 
 const icons = {
-	info: Info,
-	success: CheckCircle,
-	warning: AlertCircle,
-	error: XCircle,
+	info: IconInfo,
+	success: IconCheckCircle,
+	warning: IconAlertCircle,
+	error: IconXCircle,
 }
 
 const styles = {
@@ -28,7 +28,7 @@ export function Alert({ children, type = "info", title }: AlertProps) {
 
 	return (
 		<div className={`flex gap-3 rounded-lg border p-4 ${styles[type]}`} role="alert">
-			<Icon className="size-5 shrink-0 mt-0.5" aria-hidden />
+			<Icon size={20} className="shrink-0 mt-0.5" />
 			<div className="min-w-0">
 				{title && <div className="mb-1 font-medium text-fg">{title}</div>}
 				<div className="text-sm">{children}</div>

@@ -1,7 +1,7 @@
 "use client"
 
-import { ThumbsUp, ThumbsDown } from "lucide-react"
 import { useState } from "react"
+import { IconThumbsDown, IconThumbsUp } from "./icons"
 
 export interface FeedbackProps {
 	onFeedback?: (helpful: boolean) => void | Promise<void>
@@ -36,7 +36,7 @@ export function Feedback({ onFeedback }: FeedbackProps) {
 					className="rounded-md p-1.5 text-muted hover:bg-surface hover:text-fg transition-colors"
 					aria-label="yes, helpful"
 				>
-					<ThumbsUp className="size-4" aria-hidden />
+					<IconThumbsUp size={16} />
 				</button>
 				<button
 					type="button"
@@ -44,7 +44,7 @@ export function Feedback({ onFeedback }: FeedbackProps) {
 					className="rounded-md p-1.5 text-muted hover:bg-surface hover:text-fg transition-colors"
 					aria-label="no, not helpful"
 				>
-					<ThumbsDown className="size-4" aria-hidden />
+					<IconThumbsDown size={16} />
 				</button>
 			</div>
 		</div>

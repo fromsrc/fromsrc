@@ -1,7 +1,7 @@
 "use client"
 
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
+import { IconChevronLeft, IconChevronRight } from "./icons"
 
 interface PaginationProps {
 	prev?: {
@@ -27,10 +27,9 @@ export function Pagination({ prev, next }: PaginationProps) {
 					href={prev.href}
 					className="flex items-center gap-2 px-4 py-3 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors group"
 				>
-					<ChevronLeft
+					<IconChevronLeft
 						size={16}
 						className="text-muted group-hover:text-fg transition-colors"
-						aria-hidden="true"
 					/>
 					<div className="text-left">
 						<div className="text-xs text-muted">previous</div>
@@ -49,10 +48,9 @@ export function Pagination({ prev, next }: PaginationProps) {
 						<div className="text-xs text-muted">next</div>
 						<div className="text-sm font-medium text-fg">{next.title}</div>
 					</div>
-					<ChevronRight
+					<IconChevronRight
 						size={16}
 						className="text-muted group-hover:text-fg transition-colors"
-						aria-hidden="true"
 					/>
 				</Link>
 			) : (

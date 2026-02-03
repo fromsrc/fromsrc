@@ -1,7 +1,7 @@
 "use client"
 
-import { Star } from "lucide-react"
 import { useState } from "react"
+import { IconStar } from "./icons"
 
 export interface RatingProps {
 	value?: number
@@ -36,7 +36,7 @@ export function Rating({ value = 0, max = 5, onChange, readonly = false }: Ratin
 							readonly ? "cursor-default" : "cursor-pointer hover:text-yellow-400"
 						} ${filled ? "text-yellow-400" : "text-muted/30"}`}
 					>
-						<Star className="size-5" fill={filled ? "currentColor" : "none"} aria-hidden />
+						<IconStar size={20} fill={filled ? "currentColor" : "none"} />
 					</button>
 				)
 			})}

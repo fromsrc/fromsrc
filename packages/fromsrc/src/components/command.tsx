@@ -1,7 +1,7 @@
 "use client"
 
-import { Search } from "lucide-react"
 import { useEffect, useState, type ReactNode } from "react"
+import { IconSearch } from "./icons"
 
 export interface CommandItem {
 	id: string
@@ -51,7 +51,7 @@ export function Command({ items, placeholder = "search...", onSelect }: CommandP
 	return (
 		<div className="w-full rounded-lg border border-line bg-bg">
 			<div className="flex items-center gap-2 border-b border-line px-3">
-				<Search className="size-4 text-muted" aria-hidden />
+				<IconSearch size={16} className="text-muted" />
 				<input
 					type="text"
 					value={query}

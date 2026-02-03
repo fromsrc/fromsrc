@@ -1,7 +1,7 @@
 "use client"
 
-import { X } from "lucide-react"
 import { useEffect, type ReactNode } from "react"
+import { IconX } from "./icons"
 
 export interface ModalProps {
 	open: boolean
@@ -54,7 +54,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 							className="rounded p-1 text-muted hover:bg-surface hover:text-fg"
 							aria-label="close"
 						>
-							<X className="size-5" aria-hidden />
+							<IconX size={20} />
 						</button>
 					</div>
 				)}

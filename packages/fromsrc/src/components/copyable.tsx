@@ -1,7 +1,7 @@
 "use client"
 
-import { Check, Copy } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import { IconCheck, IconCopy } from "./icons"
 
 interface CopyableProps {
 	value: string
@@ -40,9 +40,9 @@ export function Copyable({ value, label }: CopyableProps) {
 				aria-label={copied ? "copied" : "copy to clipboard"}
 			>
 				{copied ? (
-					<Check size={14} className="text-emerald-400" aria-hidden="true" />
+					<IconCheck size={14} className="text-emerald-400" />
 				) : (
-					<Copy size={14} aria-hidden="true" />
+					<IconCopy size={14} />
 				)}
 			</button>
 		</div>
@@ -84,9 +84,9 @@ export function CopyBlock({ children }: CopyBlockProps) {
 				aria-label={copied ? "copied" : "copy to clipboard"}
 			>
 				{copied ? (
-					<Check size={16} className="text-emerald-400" aria-hidden="true" />
+					<IconCheck size={16} className="text-emerald-400" />
 				) : (
-					<Copy size={16} aria-hidden="true" />
+					<IconCopy size={16} />
 				)}
 			</button>
 		</div>

@@ -1,7 +1,7 @@
 "use client"
 
-import { ExternalLink } from "lucide-react"
 import type { ReactNode } from "react"
+import { IconExternalLink } from "./icons"
 
 interface LinkCardProps {
 	href: string
@@ -30,10 +30,9 @@ export function LinkCard({ href, title, description, icon }: LinkCardProps) {
 				{description && <div className="text-sm text-muted truncate">{description}</div>}
 			</div>
 			{isExternal && (
-				<ExternalLink
+				<IconExternalLink
 					size={16}
 					className="shrink-0 text-muted group-hover:text-fg transition-colors"
-					aria-hidden="true"
 				/>
 			)}
 		</a>

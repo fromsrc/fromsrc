@@ -1,7 +1,7 @@
 "use client"
 
-import { AlertCircle, CheckCircle, Info, X, XCircle } from "lucide-react"
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react"
+import { IconAlertCircle, IconCheckCircle, IconInfo, IconX, IconXCircle } from "./icons"
 
 export interface Toast {
 	id: string
@@ -50,10 +50,10 @@ export function useToast() {
 }
 
 const icons = {
-	info: Info,
-	success: CheckCircle,
-	warning: AlertCircle,
-	error: XCircle,
+	info: IconInfo,
+	success: IconCheckCircle,
+	warning: IconAlertCircle,
+	error: IconXCircle,
 }
 
 const styles = {
@@ -78,7 +78,7 @@ function ToastContainer() {
 						className={`flex items-center gap-3 rounded-lg border px-4 py-3 shadow-lg ${styles[toast.type]}`}
 						role="alert"
 					>
-						<Icon className="size-5 shrink-0" aria-hidden />
+						<Icon size={20} className="shrink-0" />
 						<span className="text-sm">{toast.message}</span>
 						<button
 							type="button"
@@ -86,7 +86,7 @@ function ToastContainer() {
 							className="ml-2 rounded p-1 hover:bg-white/10"
 							aria-label="dismiss"
 						>
-							<X className="size-4" aria-hidden />
+							<IconX size={16} />
 						</button>
 					</div>
 				)

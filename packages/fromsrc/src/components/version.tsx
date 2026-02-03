@@ -1,7 +1,7 @@
 "use client"
 
-import { Check, ChevronDown } from "lucide-react"
 import { useRef, useState } from "react"
+import { IconCheck, IconChevronDown } from "./icons"
 
 interface Version {
 	id: string
@@ -85,10 +85,9 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 				aria-haspopup="listbox"
 			>
 				<span className="text-fg">{currentVersion?.label || current}</span>
-				<ChevronDown
+				<IconChevronDown
 					size={14}
 					className={`text-muted transition-transform ${open ? "rotate-180" : ""}`}
-					aria-hidden="true"
 				/>
 			</button>
 			{open && (
@@ -117,9 +116,7 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 								<span className={version.id === current ? "text-fg" : "text-muted"}>
 									{version.label}
 								</span>
-								{version.id === current && (
-									<Check size={14} className="text-accent" aria-hidden="true" />
-								)}
+								{version.id === current && <IconCheck size={14} className="text-accent" />}
 							</button>
 						))}
 					</div>

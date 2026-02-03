@@ -1,7 +1,7 @@
 "use client"
 
-import { Languages, Check } from "lucide-react"
-import { useState, useRef, useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
+import { IconCheck, IconLanguages } from "./icons"
 
 export interface Locale {
 	code: string
@@ -71,7 +71,7 @@ export function LanguageSwitch({ current, locales, onChange }: LanguageSwitchPro
 				aria-haspopup="listbox"
 				className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-muted hover:bg-surface hover:text-fg transition-colors"
 			>
-				<Languages className="size-4" aria-hidden />
+				<IconLanguages size={16} />
 				<span>{currentLocale?.name ?? current}</span>
 			</button>
 
@@ -97,7 +97,7 @@ export function LanguageSwitch({ current, locales, onChange }: LanguageSwitchPro
 						>
 							{locale.flag && <span>{locale.flag}</span>}
 							<span className="flex-1 text-left">{locale.name}</span>
-							{locale.code === current && <Check className="size-4" aria-hidden />}
+							{locale.code === current && <IconCheck size={16} />}
 						</button>
 					))}
 				</div>
