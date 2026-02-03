@@ -18,10 +18,13 @@ export function LinkCard({ href, title, description, icon }: LinkCardProps) {
 			href={href}
 			target={isExternal ? "_blank" : undefined}
 			rel={isExternal ? "noopener noreferrer" : undefined}
-			className="my-4 flex items-center gap-4 p-4 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors group"
+			className="my-4 flex items-center gap-4 p-4 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-fg/20 transition-colors group"
 		>
 			{icon && (
-				<div className="shrink-0 w-10 h-10 rounded-lg bg-bg border border-line flex items-center justify-center text-muted group-hover:text-fg transition-colors">
+				<div
+					className="shrink-0 w-10 h-10 rounded-lg bg-bg border border-line flex items-center justify-center text-muted group-hover:text-fg transition-colors"
+					aria-hidden="true"
+				>
 					{icon}
 				</div>
 			)}
@@ -30,10 +33,13 @@ export function LinkCard({ href, title, description, icon }: LinkCardProps) {
 				{description && <div className="text-sm text-muted truncate">{description}</div>}
 			</div>
 			{isExternal && (
-				<IconExternalLink
-					size={16}
-					className="shrink-0 text-muted group-hover:text-fg transition-colors"
-				/>
+				<>
+					<IconExternalLink
+						size={16}
+						className="shrink-0 text-muted group-hover:text-fg transition-colors"
+					/>
+					<span className="sr-only">(opens in new tab)</span>
+				</>
 			)}
 		</a>
 	)
