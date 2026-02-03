@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, type ReactNode, useContext, useState } from "react"
+import { createContext, type ReactNode, useCallback, useContext, useState } from "react"
 
 interface CodeGroupContext {
 	active: string
@@ -10,8 +10,9 @@ interface CodeGroupContext {
 const Context = createContext<CodeGroupContext | null>(null)
 
 /**
- * @param children - CodeTab elements
- * @param defaultValue - initially active tab value
+ * container for tabbed code blocks
+ * @property children - CodeTab elements
+ * @property defaultValue - initially active tab value
  */
 export interface CodeGroupProps {
 	children: ReactNode
@@ -19,9 +20,10 @@ export interface CodeGroupProps {
 }
 
 /**
- * @param value - unique tab identifier
- * @param label - displayed tab name
- * @param children - tab content
+ * individual tab within a code group
+ * @property value - unique tab identifier
+ * @property label - displayed tab name
+ * @property children - tab content
  */
 export interface CodeTabProps {
 	value: string
@@ -29,7 +31,15 @@ export interface CodeTabProps {
 	children: ReactNode
 }
 
-export function CodeGroup({ children, defaultValue }: CodeGroupProps) {
+/**
+ * wrapper for tab buttons in a code group
+ * @property children - CodeTab button elements
+ */
+export interface CodeTabsProps {
+	children: ReactNode
+}
+
+export function CodeGroup({ children, defaultValue }: CodeGroupProps): ReactNode {
 	const [active, set] = useState(defaultValue || "")
 
 	return (
@@ -39,28 +49,53 @@ export function CodeGroup({ children, defaultValue }: CodeGroupProps) {
 	)
 }
 
-export function CodeTab({ value, label, children }: CodeTabProps) {
+export function CodeTab({ value, label, children }: CodeTabProps): ReactNode {
 	const ctx = useContext(Context)
+
+	const handleClick = useCallback((): void => {
+		ctx?.set(value)
+	}, [ctx, value])
+
 	if (!ctx) return null
 
 	const isActive = ctx.active === value || (!ctx.active && value === label)
+	const tabId = `tab-${value}`
+	const panelId = `panel-${value}`
 
 	return (
 		<>
 			<button
 				type="button"
-				onClick={() => ctx.set(value)}
+				role="tab"
+				id={tabId}
+				aria-selected={isActive}
+				aria-controls={panelId}
+				tabIndex={isActive ? 0 : -1}
+				onClick={handleClick}
 				className={`px-4 py-2 text-sm font-medium border-b ${
 					isActive ? "border-fg/30 text-fg bg-fg/5" : "border-transparent text-fg/60 hover:text-fg"
 				}`}
 			>
 				{label}
 			</button>
-			{isActive && <div className="[&>pre]:!mt-0 [&>pre]:!rounded-t-none">{children}</div>}
+			{isActive && (
+				<div
+					role="tabpanel"
+					id={panelId}
+					aria-labelledby={tabId}
+					className="[&>pre]:!mt-0 [&>pre]:!rounded-t-none"
+				>
+					{children}
+				</div>
+			)}
 		</>
 	)
 }
 
-export function CodeTabs({ children }: { children: ReactNode }) {
-	return <div className="flex border-b border-white/10 bg-bg">{children}</div>
+export function CodeTabs({ children }: CodeTabsProps): ReactNode {
+	return (
+		<div role="tablist" aria-label="code examples" className="flex border-b border-white/10 bg-bg">
+			{children}
+		</div>
+	)
 }
