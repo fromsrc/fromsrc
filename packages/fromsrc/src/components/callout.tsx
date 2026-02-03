@@ -69,11 +69,11 @@ export function Callout({ type = "info", title, children }: CalloutProps) {
 	const { icon, border, bg, text } = config[type]
 
 	return (
-		<div className={`my-6 rounded-lg border-l-4 ${border} ${bg} px-4 py-2`}>
+		<div className={`my-4 rounded border-l-4 ${border} ${bg} px-3 py-2`}>
 			{title && <p className={`mb-2 font-semibold ${text}`}>{title}</p>}
-			<p className={`flex items-center gap-2 text-sm ${text}`}>
-				<span className="size-5 shrink-0">{icon}</span>
-				<span className="text-fg/80">{children}</span>
+			<p className={`flex items-center gap-2 ${text}`}>
+				<span className="size-4 shrink-0">{icon}</span>
+				<span className="text-sm text-fg/80">{children}</span>
 			</p>
 		</div>
 	)
