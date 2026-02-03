@@ -43,14 +43,14 @@ benefits:
 add a version dropdown to your docs:
 
 ```tsx
-import { Version } from "fromsrc/client"
+import { VersionSelect } from "fromsrc/client"
 
-<Version
+<VersionSelect
   current="v3"
   versions={[
-    { label: "v3 (latest)", href: "/" },
-    { label: "v2", href: "https://v2.docs.site.com" },
-    { label: "v1", href: "https://v1.docs.site.com" },
+    { id: "v3", label: "v3 (latest)", href: "/" },
+    { id: "v2", label: "v2", href: "https://v2.docs.site.com" },
+    { id: "v1", label: "v1", href: "https://v1.docs.site.com" },
   ]}
 />
 ```

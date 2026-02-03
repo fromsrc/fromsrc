@@ -28,13 +28,11 @@ export function Header() {
 generate the search index at build time:
 
 ```tsx
-import { generateSearchIndex, getAllDocs } from "fromsrc"
+import { getSearchDocs } from "fromsrc"
 
 export async function GET() {
-  const docs = await getAllDocs()
-  const index = await generateSearchIndex(docs)
-
-  return Response.json(index)
+  const docs = await getSearchDocs()
+  return Response.json(docs)
 }
 ```
 
