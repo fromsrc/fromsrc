@@ -13,7 +13,7 @@ export default defineConfig([
 		format: ["esm"],
 		dts: true,
 		treeshake: true,
-		splitting: true,
+		splitting: false,
 		external: ["react", "next", "react/jsx-runtime", "mermaid", "katex"],
 		banner: {
 			js: '"use client";',
