@@ -20,11 +20,7 @@ export function ZigzagLine({ heading, upper = heading.level, lower = heading.lev
 	return (
 		<>
 			{offset !== upperOffset && (
-				<svg
-					viewBox="0 0 16 16"
-					className="absolute -top-1.5 left-0 size-4"
-					aria-hidden="true"
-				>
+				<svg viewBox="0 0 16 16" className="absolute -top-1.5 left-0 size-4" aria-hidden="true">
 					<line
 						x1={upperOffset}
 						y1="0"

@@ -1,9 +1,9 @@
 "use client"
 
-import { useToc } from "./hook"
 import { TocDefault } from "./default"
-import { TocMinimal } from "./minimal"
+import { useToc } from "./hook"
 import { TocInline } from "./inline"
+import { TocMinimal } from "./minimal"
 
 export type TocVariant = "default" | "minimal" | "inline"
 
@@ -65,5 +65,5 @@ export function Toc({
 	)
 }
 
-export { useToc } from "./hook"
 export type { Heading, TocState } from "./hook"
+export { useToc } from "./hook"

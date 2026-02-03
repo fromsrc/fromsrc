@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import type { ReactNode } from "react"
 
 interface AvatarProps {
@@ -26,11 +27,9 @@ function getInitials(name: string): string {
 export function Avatar({ src, name, size = "md" }: AvatarProps) {
 	if (src) {
 		return (
-			<img
-				src={src}
-				alt={name}
-				className={`${sizes[size]} rounded-full object-cover`}
-			/>
+			<div className={`${sizes[size]} rounded-full overflow-hidden relative`}>
+				<Image src={src} alt={name} fill className="object-cover" />
+			</div>
 		)
 	}
 
@@ -48,12 +47,8 @@ interface AvatarGroupProps {
 	max?: number
 }
 
-export function AvatarGroup({ children, max = 5 }: AvatarGroupProps) {
-	return (
-		<div className="flex -space-x-2">
-			{children}
-		</div>
-	)
+export function AvatarGroup({ children }: AvatarGroupProps) {
+	return <div className="flex -space-x-2">{children}</div>
 }
 
 interface UserProps {

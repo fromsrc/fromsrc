@@ -39,7 +39,9 @@ export function Change({ type, children }: ChangeProps) {
 	const style = typeStyles[type]
 	return (
 		<div className="flex items-start gap-2 text-sm">
-			<span className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider font-medium ${style.bg} ${style.text}`}>
+			<span
+				className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider font-medium ${style.bg} ${style.text}`}
+			>
 				{style.label}
 			</span>
 			<span className="text-muted">{children}</span>

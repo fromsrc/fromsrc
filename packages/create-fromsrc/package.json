@@ -4,7 +4,10 @@
 	"description": "create a new fromsrc documentation site",
 	"type": "module",
 	"bin": "./dist/bin.js",
-	"files": ["dist", "template"],
+	"files": [
+		"dist",
+		"template"
+	],
 	"scripts": {
 		"build": "tsup src/bin.ts --format esm --dts",
 		"dev": "tsup src/bin.ts --format esm --dts --watch"

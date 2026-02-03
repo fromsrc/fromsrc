@@ -81,7 +81,7 @@ export function useToc(multi = false): TocState {
 						setActiveRange(ordered.map((h) => h.id))
 					}
 				},
-				{ rootMargin: "0px", threshold: 0.5 }
+				{ rootMargin: "0px", threshold: 0.5 },
 			)
 
 			for (const { id } of headings) {

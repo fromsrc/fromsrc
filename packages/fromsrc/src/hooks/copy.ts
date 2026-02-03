@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useCallback, useState } from "react"
 
 export function useCopy(duration = 1500) {
 	const [copied, setCopied] = useState(false)
@@ -11,7 +11,7 @@ export function useCopy(duration = 1500) {
 			setCopied(true)
 			setTimeout(() => setCopied(false), duration)
 		},
-		[duration]
+		[duration],
 	)
 
 	return { copied, copy }

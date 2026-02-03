@@ -2,7 +2,7 @@ import { Logo } from "./logo"
 
 export function Nav() {
 	return (
-		<nav className="fixed top-0 left-0 right-0 z-50 px-6" role="navigation" aria-label="main">
+		<nav className="fixed top-0 left-0 right-0 z-50 px-6" aria-label="main">
 			<div className="mx-auto max-w-5xl rounded-b-2xl bg-[#111111]/95 backdrop-blur-sm border border-line/60 border-t-0 px-5 py-3 flex items-center justify-between">
 				<a
 					href="/"
@@ -16,9 +16,15 @@ export function Nav() {
 				</a>
 
 				<div className="hidden md:flex items-center gap-6 text-xs text-muted">
-					<a href="#why" className="hover:text-fg transition-colors duration-200">why</a>
-					<a href="#features" className="hover:text-fg transition-colors duration-200">features</a>
-					<a href="#ai" className="hover:text-fg transition-colors duration-200">ai</a>
+					<a href="#why" className="hover:text-fg transition-colors duration-200">
+						why
+					</a>
+					<a href="#features" className="hover:text-fg transition-colors duration-200">
+						features
+					</a>
+					<a href="#ai" className="hover:text-fg transition-colors duration-200">
+						ai
+					</a>
 				</div>
 
 				<a

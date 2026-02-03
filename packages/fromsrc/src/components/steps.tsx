@@ -8,9 +8,7 @@ export interface StepsProps {
 
 export function Steps({ children }: StepsProps) {
 	return (
-		<div className="steps my-6 ml-4 border-l border-line pl-6 [counter-reset:step]">
-			{children}
-		</div>
+		<div className="steps my-6 ml-4 border-l border-line pl-6 [counter-reset:step]">{children}</div>
 	)
 }
 

@@ -54,11 +54,7 @@ const gapClasses = {
 }
 
 export function Grid({ cols = 2, gap = "md", children }: GridProps) {
-	return (
-		<div className={`grid ${colClasses[cols]} ${gapClasses[gap]} my-6`}>
-			{children}
-		</div>
-	)
+	return <div className={`grid ${colClasses[cols]} ${gapClasses[gap]} my-6`}>{children}</div>
 }
 
 interface FlexProps {

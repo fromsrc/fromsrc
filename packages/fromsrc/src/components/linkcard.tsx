@@ -27,9 +27,7 @@ export function LinkCard({ href, title, description, icon }: LinkCardProps) {
 			)}
 			<div className="flex-1 min-w-0">
 				<div className="text-sm font-medium text-fg truncate">{title}</div>
-				{description && (
-					<div className="text-sm text-muted truncate">{description}</div>
-				)}
+				{description && <div className="text-sm text-muted truncate">{description}</div>}
 			</div>
 			{isExternal && (
 				<ExternalLink

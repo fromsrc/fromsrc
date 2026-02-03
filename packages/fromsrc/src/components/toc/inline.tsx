@@ -37,7 +37,10 @@ export function TocInline({
 
 	if (!collapsible) {
 		return (
-			<nav aria-label="table of contents" className="my-6 rounded-lg border border-line bg-surface/30 p-4">
+			<nav
+				aria-label="table of contents"
+				className="my-6 rounded-lg border border-line bg-surface/30 p-4"
+			>
 				<p className="text-xs font-medium text-fg mb-3">{title}</p>
 				{content}
 			</nav>
@@ -45,7 +48,10 @@ export function TocInline({
 	}
 
 	return (
-		<nav aria-label="table of contents" className="my-6 rounded-lg border border-line bg-surface/30">
+		<nav
+			aria-label="table of contents"
+			className="my-6 rounded-lg border border-line bg-surface/30"
+		>
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}

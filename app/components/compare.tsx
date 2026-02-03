@@ -1,5 +1,9 @@
 const principles = [
-	{ id: "1.1", title: "composable", desc: "small pieces that combine freely. no monolithic architecture." },
+	{
+		id: "1.1",
+		title: "composable",
+		desc: "small pieces that combine freely. no monolithic architecture.",
+	},
 	{ id: "1.2", title: "editable", desc: "change anything without fighting the framework." },
 	{ id: "1.3", title: "customizable", desc: "swap any component, style, or behavior." },
 	{ id: "1.4", title: "optimized", desc: "incremental builds only. scales to thousands of files." },
@@ -24,8 +28,8 @@ export function Compare() {
 						<h2 className="text-xl mt-1">why fromsrc</h2>
 					</div>
 					<p className="text-muted max-w-xl">
-						Documentation should be as flexible as the code it describes.
-						We built fromsrc around four principles.
+						Documentation should be as flexible as the code it describes. We built fromsrc around
+						four principles.
 					</p>
 				</header>
 
@@ -34,7 +38,10 @@ export function Compare() {
 						<div className="text-xs text-muted uppercase tracking-widest mb-6">principles</div>
 						<ul>
 							{principles.map((p) => (
-								<li key={p.id} className="flex items-start gap-4 py-4 border-b border-line last:border-0">
+								<li
+									key={p.id}
+									className="flex items-start gap-4 py-4 border-b border-line last:border-0"
+								>
 									<span className="text-dim text-xs tabular-nums w-6">{p.id}</span>
 									<div className="flex-1">
 										<span className="text-fg">{p.title}</span>
@@ -49,8 +56,13 @@ export function Compare() {
 						<div className="text-xs text-accent uppercase tracking-widest mb-6">what you get</div>
 						<ul>
 							{benefits.map((b) => (
-								<li key={b} className="flex items-center gap-4 py-4 border-b border-line last:border-0">
-									<span className="text-accent" aria-hidden="true">+</span>
+								<li
+									key={b}
+									className="flex items-center gap-4 py-4 border-b border-line last:border-0"
+								>
+									<span className="text-accent" aria-hidden="true">
+										+
+									</span>
 									<span className="text-fg">{b}</span>
 								</li>
 							))}

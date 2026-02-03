@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
 import { ChevronRight } from "lucide-react"
+import { type ReactNode, useState } from "react"
 
 interface Props {
 	title: string

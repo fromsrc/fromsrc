@@ -1,9 +1,9 @@
-import { notFound } from "next/navigation"
-import Link from "next/link"
-import { Toc, Breadcrumb } from "fromsrc/client"
 import type { DocMeta } from "fromsrc"
-import { getDoc, getAllDocs } from "../_lib/content"
+import { Breadcrumb, Toc } from "fromsrc/client"
+import Link from "next/link"
+import { notFound } from "next/navigation"
 import { MDX } from "../_components/mdx"
+import { getAllDocs, getDoc } from "../_lib/content"
 
 interface Props {
 	params: Promise<{ slug?: string[] }>
@@ -74,17 +74,26 @@ export default async function DocPage({ params }: Props) {
 						<Breadcrumb base="/docs" />
 					</div>
 					<h1 className="text-2xl font-medium mb-2 text-fg">{doc.title}</h1>
-					{doc.description && (
-						<p className="text-sm text-muted mb-4">{doc.description}</p>
-					)}
+					{doc.description && <p className="text-sm text-muted mb-4">{doc.description}</p>}
 					<a
 						href={`https://github.com/fromsrc/fromsrc/edit/main/docs/${doc.slug || "index"}.mdx`}
 						target="_blank"
 						rel="noopener noreferrer"
 						className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-fg transition-colors"
 					>
-						<svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+						<svg
+							className="w-3 h-3"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+							/>
 						</svg>
 						edit
 					</a>
@@ -94,12 +103,11 @@ export default async function DocPage({ params }: Props) {
 				</div>
 				<nav className="mt-8 pt-8 border-t border-line flex justify-between gap-4">
 					{prev ? (
-						<Link
-							href={prev.slug ? `/docs/${prev.slug}` : "/docs"}
-							className="group flex-1"
-						>
+						<Link href={prev.slug ? `/docs/${prev.slug}` : "/docs"} className="group flex-1">
 							<span className="flex items-center gap-2 text-[10px] text-muted group-hover:text-dim transition-colors">
-								<kbd className="px-1.5 py-0.5 bg-surface border border-line rounded text-[9px]">←</kbd>
+								<kbd className="px-1.5 py-0.5 bg-surface border border-line rounded text-[9px]">
+									←
+								</kbd>
 								previous
 							</span>
 							<span className="block text-sm text-fg group-hover:text-muted transition-colors">
@@ -116,7 +124,9 @@ export default async function DocPage({ params }: Props) {
 						>
 							<span className="flex items-center justify-end gap-2 text-[10px] text-muted group-hover:text-dim transition-colors">
 								next
-								<kbd className="px-1.5 py-0.5 bg-surface border border-line rounded text-[9px]">→</kbd>
+								<kbd className="px-1.5 py-0.5 bg-surface border border-line rounded text-[9px]">
+									→
+								</kbd>
 							</span>
 							<span className="block text-sm text-fg group-hover:text-muted transition-colors">
 								{next.title}

@@ -10,9 +10,7 @@ export type BaseSchema = typeof baseSchema
 
 export type InferSchema<T extends z.ZodType> = z.infer<T>
 
-export function defineSchema<T extends z.ZodObject<z.ZodRawShape>>(
-	schema: T
-): T {
+export function defineSchema<T extends z.ZodObject<z.ZodRawShape>>(schema: T): T {
 	return baseSchema.merge(schema) as unknown as T
 }
 

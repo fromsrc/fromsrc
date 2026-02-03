@@ -1,44 +1,46 @@
 {
-  "name": "fromsrc-monorepo",
-  "version": "0.0.0",
-  "private": true,
-  "workspaces": ["packages/*"],
-  "scripts": {
-    "dev": "next dev",
-    "build": "bun run build:pkg && next build",
-    "build:pkg": "cd packages/fromsrc && bun run build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "@mdx-js/mdx": "^3.1.1",
-    "@shikijs/rehype": "^3.22.0",
-    "@shikijs/transformers": "^3.22.0",
-    "fromsrc": "workspace:*",
-    "gray-matter": "^4.0.3",
-    "lucide-react": "^0.563.0",
-    "next": "16.1.6",
-    "next-mdx-remote": "^5.0.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "remark-gfm": "^4.0.1",
-    "shiki": "^3.22.0"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "autoprefixer": "^10.4.24",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18",
-    "typescript": "^5"
-  },
-  "ignoreScripts": [
-    "sharp",
-    "unrs-resolver"
-  ],
-  "trustedDependencies": [
-    "sharp",
-    "unrs-resolver"
-  ]
+	"name": "fromsrc-monorepo",
+	"version": "0.0.0",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "next dev",
+		"build": "bun run build:pkg && next build",
+		"build:pkg": "cd packages/fromsrc && bun run build",
+		"start": "next start"
+	},
+	"dependencies": {
+		"@mdx-js/mdx": "^3.1.1",
+		"@shikijs/rehype": "^3.22.0",
+		"@shikijs/transformers": "^3.22.0",
+		"fromsrc": "workspace:*",
+		"gray-matter": "^4.0.3",
+		"lucide-react": "^0.563.0",
+		"next": "16.1.6",
+		"next-mdx-remote": "^5.0.0",
+		"react": "19.2.3",
+		"react-dom": "19.2.3",
+		"remark-gfm": "^4.0.1",
+		"shiki": "^3.22.0"
+	},
+	"devDependencies": {
+		"@tailwindcss/postcss": "^4.1.18",
+		"@types/node": "^20",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"autoprefixer": "^10.4.24",
+		"postcss": "^8.5.6",
+		"tailwindcss": "^4.1.18",
+		"typescript": "^5"
+	},
+	"ignoreScripts": [
+		"sharp",
+		"unrs-resolver"
+	],
+	"trustedDependencies": [
+		"sharp",
+		"unrs-resolver"
+	]
 }

@@ -1,7 +1,7 @@
 "use client"
 
-import { Search } from "fromsrc/client"
 import type { DocMeta } from "fromsrc"
+import { Search } from "fromsrc/client"
 
 interface Props {
 	docs: DocMeta[]

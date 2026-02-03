@@ -1,6 +1,6 @@
 "use client"
 
-import { Check, X, Circle } from "lucide-react"
+import { Check, Circle, X } from "lucide-react"
 import type { ReactNode } from "react"
 
 interface ListProps {

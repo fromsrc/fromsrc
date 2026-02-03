@@ -1,8 +1,8 @@
 import type { ReactNode } from "react"
-import { Sidebar } from "./_components/sidebar"
-import { MobileNavigation } from "./_components/mobilenav"
 import { KeyboardNav } from "./_components/keyboard"
+import { MobileNavigation } from "./_components/mobilenav"
 import { SearchModal } from "./_components/search"
+import { Sidebar } from "./_components/sidebar"
 import { getAllDocs } from "./_lib/content"
 
 export default async function DocsLayout({ children }: { children: ReactNode }) {

@@ -26,7 +26,7 @@ export function Mermaid({ chart }: MermaidProps) {
 
 				const { svg: rendered } = await mermaid.render(
 					id.replace(/:/g, ""),
-					chart.replaceAll("\\n", "\n")
+					chart.replaceAll("\\n", "\n"),
 				)
 
 				if (mounted) {

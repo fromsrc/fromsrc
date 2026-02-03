@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import type { ReactNode } from "react"
 
 interface QuoteProps {
@@ -12,17 +13,13 @@ interface QuoteProps {
 export function Quote({ children, author, role, avatar }: QuoteProps) {
 	return (
 		<figure className="my-6 p-6 rounded-xl border border-line bg-surface/30">
-			<blockquote className="text-lg text-fg italic leading-relaxed">
-				"{children}"
-			</blockquote>
+			<blockquote className="text-lg text-fg italic leading-relaxed">"{children}"</blockquote>
 			{(author || role) && (
 				<figcaption className="mt-4 flex items-center gap-3">
 					{avatar && (
-						<img
-							src={avatar}
-							alt={author || ""}
-							className="w-10 h-10 rounded-full object-cover"
-						/>
+						<div className="w-10 h-10 rounded-full overflow-hidden relative">
+							<Image src={avatar} alt={author || ""} fill className="object-cover" />
+						</div>
 					)}
 					<div>
 						{author && <div className="text-sm font-medium text-fg">{author}</div>}
@@ -55,11 +52,9 @@ export function Testimonial({ children, author, role, avatar }: TestimonialProps
 			<blockquote className="text-sm text-muted leading-relaxed">{children}</blockquote>
 			<figcaption className="mt-4 flex items-center gap-3">
 				{avatar && (
-					<img
-						src={avatar}
-						alt={author}
-						className="w-8 h-8 rounded-full object-cover"
-					/>
+					<div className="w-8 h-8 rounded-full overflow-hidden relative">
+						<Image src={avatar} alt={author} fill className="object-cover" />
+					</div>
 				)}
 				<div>
 					<div className="text-sm font-medium text-fg">{author}</div>

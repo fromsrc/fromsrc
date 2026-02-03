@@ -1,6 +1,6 @@
 import { MobileNav as MobileNavBase } from "fromsrc/client"
-import { getNavigation, getAllDocs } from "../_lib/content"
 import { Logo } from "@/app/components/logo"
+import { getAllDocs, getNavigation } from "../_lib/content"
 
 export async function MobileNavigation() {
 	const navigation = await getNavigation()

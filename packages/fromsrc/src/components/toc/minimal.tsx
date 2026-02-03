@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import type { Heading } from "./hook"
-import { ZigzagLine, getItemOffset } from "./zigzag"
+import { getItemOffset, ZigzagLine } from "./zigzag"
 
 interface Props {
 	headings: Heading[]
@@ -110,7 +110,7 @@ export function TocMinimal({ headings, active, zigzag }: Props) {
 							width: svg.width,
 							height: svg.height,
 							maskImage: `url("data:image/svg+xml,${encodeURIComponent(
-								`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`
+								`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`,
 							)}")`,
 						}}
 					>
@@ -162,11 +162,7 @@ export function TocMinimal({ headings, active, zigzag }: Props) {
 							aria-current={active === heading.id ? "true" : undefined}
 							className={`block text-xs py-1 transition-colors ${
 								heading.level === 3 ? "pl-2" : ""
-							} ${
-								active === heading.id
-									? "text-fg"
-									: "text-muted hover:text-fg"
-							}`}
+							} ${active === heading.id ? "text-fg" : "text-muted hover:text-fg"}`}
 						>
 							{heading.text}
 						</a>

@@ -35,9 +35,7 @@ export function Video({
 	const isVimeo = src.includes("vimeo.com")
 
 	if (isYoutube) {
-		const id = src.includes("youtu.be")
-			? src.split("/").pop()
-			: new URL(src).searchParams.get("v")
+		const id = src.includes("youtu.be") ? src.split("/").pop() : new URL(src).searchParams.get("v")
 
 		return (
 			<div className="my-4 aspect-video rounded-lg overflow-hidden border border-line">

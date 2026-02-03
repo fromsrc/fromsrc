@@ -1,16 +1,8 @@
+import type { SidebarFolder, SidebarItem, SidebarSection } from "fromsrc/client"
 import { Sidebar as SidebarBase } from "fromsrc/client"
-import type { SidebarSection, SidebarItem, SidebarFolder } from "fromsrc/client"
-import { getNavigation, getAllDocs } from "../_lib/content"
+import { BookOpen, Download, Palette, Rocket, Settings, Sliders, Sparkles } from "lucide-react"
 import { Logo } from "@/app/components/logo"
-import {
-	BookOpen,
-	Download,
-	Settings,
-	Rocket,
-	Palette,
-	Sparkles,
-	Sliders,
-} from "lucide-react"
+import { getAllDocs, getNavigation } from "../_lib/content"
 
 const icons: Record<string, React.ReactNode> = {
 	introduction: <BookOpen size={14} />,

@@ -37,9 +37,7 @@ export function TabNav({ tabs }: TabNavProps) {
 						role="tab"
 						aria-selected={active}
 						className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-							active
-								? "bg-bg text-fg shadow-sm"
-								: "text-muted hover:text-fg hover:bg-bg/50"
+							active ? "bg-bg text-fg shadow-sm" : "text-muted hover:text-fg hover:bg-bg/50"
 						}`}
 					>
 						{tab.icon && (
@@ -90,12 +88,7 @@ export function TabNavDropdown({ tabs }: TabNavDropdownProps) {
 					stroke="currentColor"
 					aria-hidden="true"
 				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M19 9l-7 7-7-7"
-					/>
+					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
 				</svg>
 			</button>
 			<div className="absolute left-0 right-0 top-full mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all bg-surface border border-line rounded-lg shadow-lg overflow-hidden z-50">

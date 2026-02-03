@@ -1,7 +1,7 @@
 "use client"
 
-import { useKeyboardNav } from "fromsrc/client"
 import type { DocMeta } from "fromsrc"
+import { useKeyboardNav } from "fromsrc/client"
 
 interface Props {
 	docs: DocMeta[]

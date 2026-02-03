@@ -1,12 +1,12 @@
 "use client"
 
-import Link from "next/link"
-import { useState, type ReactNode } from "react"
 import { PanelLeft } from "lucide-react"
+import Link from "next/link"
+import { type ReactNode, useState } from "react"
 import type { DocMeta } from "../content"
+import { Folder } from "./folder"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
-import { Folder } from "./folder"
 
 export interface SidebarItem {
 	type: "item"
@@ -38,7 +38,15 @@ interface Props {
 	collapsible?: boolean
 }
 
-export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", github, collapsible }: Props) {
+export function Sidebar({
+	title,
+	logo,
+	navigation,
+	docs,
+	basePath = "/docs",
+	github,
+	collapsible,
+}: Props) {
 	const [collapsed, setCollapsed] = useState(false)
 
 	const toggle = () => setCollapsed(!collapsed)
@@ -59,7 +67,10 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 					</button>
 				)}
 				{!collapsed && (
-					<Link href="/" className="flex items-center text-sm text-fg hover:text-accent transition-colors">
+					<Link
+						href="/"
+						className="flex items-center text-sm text-fg hover:text-accent transition-colors"
+					>
 						<div className="w-10 h-10 flex items-center justify-center shrink-0 text-muted">
 							{logo}
 						</div>
@@ -77,11 +88,30 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 					className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${collapsed ? "w-10 justify-center" : "w-full px-2.5 gap-2"}`}
 					aria-label="search"
 				>
-					<svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+					<svg
+						className="w-4 h-4 shrink-0"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						aria-hidden="true"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+						/>
 					</svg>
-					<span className={`text-xs transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}>search...</span>
-					<kbd className={`ml-auto text-[10px] font-mono text-muted/60 transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}>⌘K</kbd>
+					<span
+						className={`text-xs transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}
+					>
+						search...
+					</span>
+					<kbd
+						className={`ml-auto text-[10px] font-mono text-muted/60 transition-opacity duration-200 ${collapsed ? "hidden" : "block"}`}
+					>
+						⌘K
+					</kbd>
 				</button>
 			</div>
 			<nav className="px-3 flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -90,8 +120,12 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 						{navigation.flatMap((section) =>
 							section.items.map((item, i) => {
 								const href = !("type" in item)
-									? item.slug ? `${basePath}/${item.slug}` : basePath
-									: item.type === "item" ? item.href : null
+									? item.slug
+										? `${basePath}/${item.slug}`
+										: basePath
+									: item.type === "item"
+										? item.href
+										: null
 								if (!href) return null
 								const icon = "icon" in item ? item.icon : null
 								return (
@@ -104,7 +138,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 										{icon || <span className="w-4 h-4 rounded bg-surface" />}
 									</Link>
 								)
-							})
+							}),
 						)}
 					</div>
 				) : (
@@ -129,7 +163,9 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 									}
 									return (
 										<li key={i}>
-											<NavLink href={item.href} icon={item.icon}>{item.title}</NavLink>
+											<NavLink href={item.href} icon={item.icon}>
+												{item.title}
+											</NavLink>
 										</li>
 									)
 								})}

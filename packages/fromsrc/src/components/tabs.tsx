@@ -1,13 +1,13 @@
 "use client"
 
 import {
+	Children,
 	createContext,
+	isValidElement,
+	type ReactElement,
+	type ReactNode,
 	useContext,
 	useState,
-	type ReactNode,
-	type ReactElement,
-	Children,
-	isValidElement,
 } from "react"
 
 interface TabsContextValue {

@@ -26,16 +26,10 @@ export function Screenshot({ src, alt, caption, browser = true, className = "" }
 					<img src={src} alt={alt} className="w-full" />
 				</div>
 			) : (
-				<img
-					src={src}
-					alt={alt}
-					className="w-full rounded-lg border border-line"
-				/>
+				<img src={src} alt={alt} className="w-full rounded-lg border border-line" />
 			)}
 			{caption && (
-				<figcaption className="mt-2 text-center text-sm text-muted">
-					{caption}
-				</figcaption>
+				<figcaption className="mt-2 text-center text-sm text-muted">{caption}</figcaption>
 			)}
 		</figure>
 	)

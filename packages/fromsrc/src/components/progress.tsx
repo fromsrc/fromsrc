@@ -64,14 +64,12 @@ export function ProgressSteps({ current, total, labels }: ProgressStepsProps) {
 							{i + 1}
 						</div>
 						{i < total - 1 && (
-							<div
-								className={`w-8 h-0.5 ${i < current ? "bg-accent" : "bg-line"}`}
-							/>
+							<div className={`w-8 h-0.5 ${i < current ? "bg-accent" : "bg-line"}`} />
 						)}
 					</div>
 				))}
 			</div>
-			{labels && labels[current] && (
+			{labels?.[current] && (
 				<div className="text-center mt-3 text-sm text-muted">{labels[current]}</div>
 			)}
 		</div>

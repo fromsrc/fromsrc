@@ -1,10 +1,10 @@
-import { Nav } from "./components/nav"
-import { Hero } from "./components/hero"
 import { Compare } from "./components/compare"
 import { Features } from "./components/features"
-import { Native } from "./components/native"
-import { Parts } from "./components/parts"
 import { Foot } from "./components/foot"
+import { Hero } from "./components/hero"
+import { Native } from "./components/native"
+import { Nav } from "./components/nav"
+import { Parts } from "./components/parts"
 
 export default function Page() {
 	return (

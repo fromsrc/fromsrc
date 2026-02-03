@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { intro, outro, text, select, confirm, spinner, isCancel } from "@clack/prompts"
+import { confirm, intro, isCancel, outro, select, spinner, text } from "@clack/prompts"
 import { program } from "commander"
 import pc from "picocolors"
 import { create } from "./index"
@@ -30,9 +30,7 @@ program
 			options.template ||
 			(await select({
 				message: "template",
-				options: [
-					{ value: "next", label: "next.js", hint: "recommended" },
-				],
+				options: [{ value: "next", label: "next.js", hint: "recommended" }],
 			}))
 
 		if (isCancel(template)) {

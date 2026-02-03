@@ -29,9 +29,7 @@ export function Endpoint({ method, path, description, children }: EndpointProps)
 				<code className="text-sm font-mono text-fg">{path}</code>
 			</div>
 			{description && (
-				<div className="px-4 py-3 text-sm text-muted border-b border-line">
-					{description}
-				</div>
+				<div className="px-4 py-3 text-sm text-muted border-b border-line">{description}</div>
 			)}
 			{children && <div className="p-4">{children}</div>}
 		</div>

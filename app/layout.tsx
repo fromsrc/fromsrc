@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { JetBrains_Mono, Instrument_Serif } from "next/font/google"
+import { Instrument_Serif, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 
 const mono = JetBrains_Mono({

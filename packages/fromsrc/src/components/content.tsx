@@ -1,26 +1,26 @@
 "use client"
 
-import { useEffect, useState, type ReactNode, type ComponentPropsWithoutRef } from "react"
 import type { MDXModule } from "mdx/types"
-import { CodeBlock } from "./codeblock"
-import { Install } from "./install"
-import { Create } from "./create"
-import { Callout } from "./callout"
-import { Steps, Step } from "./steps"
-import { Tabs, Tab } from "./tabs"
-import { Cards, Card } from "./cards"
+import { type ComponentPropsWithoutRef, type ReactNode, useEffect, useState } from "react"
 import { Accordion, AccordionItem } from "./accordion"
-import { Files, File, Folder } from "./files"
 import { Badge } from "./badge"
 import { Banner } from "./banner"
-import { Zoom } from "./zoom"
+import { Callout } from "./callout"
+import { Card, Cards } from "./cards"
+import { CodeBlock } from "./codeblock"
 import { CodeGroup, CodeTab, CodeTabs } from "./codegroup"
-import { TypeTable } from "./typetable"
+import { Create } from "./create"
+import { File, Files, Folder } from "./files"
 import { Github } from "./github"
-import { Tooltip } from "./tooltip"
-import { Video } from "./video"
+import { Install } from "./install"
 import { Mermaid } from "./mermaid"
+import { Step, Steps } from "./steps"
+import { Tab, Tabs } from "./tabs"
 import { TocInline } from "./toc/inline"
+import { Tooltip } from "./tooltip"
+import { TypeTable } from "./typetable"
+import { Video } from "./video"
+import { Zoom } from "./zoom"
 
 interface Props {
 	source: string
@@ -179,11 +179,8 @@ export function Content({ source }: Props) {
 			const { compile, run } = await import("@mdx-js/mdx")
 			const { default: remarkGfm } = await import("remark-gfm")
 			const { default: rehypeShiki } = await import("@shikijs/rehype")
-			const {
-				transformerNotationHighlight,
-				transformerNotationDiff,
-				transformerNotationFocus,
-			} = await import("@shikijs/transformers")
+			const { transformerNotationHighlight, transformerNotationDiff, transformerNotationFocus } =
+				await import("@shikijs/transformers")
 			const runtime = await import("react/jsx-runtime")
 
 			const code = await compile(source, {
@@ -201,8 +198,8 @@ export function Content({ source }: Props) {
 								transformerNotationFocus(),
 								{
 									pre(node: { properties: Record<string, string> }) {
-										const lang = (this as unknown as { options: { lang?: string } }).options
-											.lang || ""
+										const lang =
+											(this as unknown as { options: { lang?: string } }).options.lang || ""
 										if (lang) {
 											node.properties["data-language"] = lang
 										}
@@ -219,9 +216,7 @@ export function Content({ source }: Props) {
 				baseUrl: import.meta.url,
 			})) as MDXModule
 
-			setContent(
-				() => module.default as React.ComponentType<{ components: typeof components }>
-			)
+			setContent(() => module.default as React.ComponentType<{ components: typeof components }>)
 		}
 		load()
 	}, [source])

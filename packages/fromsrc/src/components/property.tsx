@@ -9,7 +9,14 @@ interface PropertyProps {
 	children?: ReactNode
 }
 
-export function Property({ name, type, required, default: defaultValue, deprecated, children }: PropertyProps) {
+export function Property({
+	name,
+	type,
+	required,
+	default: defaultValue,
+	deprecated,
+	children,
+}: PropertyProps) {
 	return (
 		<div className={`py-4 border-b border-line last:border-0 ${deprecated ? "opacity-60" : ""}`}>
 			<div className="flex flex-wrap items-center gap-2 mb-2">

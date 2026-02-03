@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { type ReactNode, useState } from "react"
 
 export interface TypeInfo {
 	type: string
@@ -55,9 +55,7 @@ function TypeRow({ name, info }: { name: string; info: TypeInfo }) {
 					</code>
 				</td>
 				<td className="px-4 py-3 text-muted font-mono text-xs">{info.type}</td>
-				<td className="px-4 py-3 text-muted text-xs hidden sm:table-cell">
-					{info.default || "-"}
-				</td>
+				<td className="px-4 py-3 text-muted text-xs hidden sm:table-cell">{info.default || "-"}</td>
 			</tr>
 			{open && info.description && (
 				<tr className="border-t border-line/30 bg-surface/30">

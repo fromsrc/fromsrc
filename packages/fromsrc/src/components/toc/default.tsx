@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import type { Heading } from "./hook"
-import { ZigzagLine, getItemOffset } from "./zigzag"
+import { getItemOffset, ZigzagLine } from "./zigzag"
 
 interface Props {
 	headings: Heading[]
@@ -94,7 +94,7 @@ export function TocDefault({ headings, active, activeRange, zigzag }: Props) {
 							width: svg.width,
 							height: svg.height,
 							maskImage: `url("data:image/svg+xml,${encodeURIComponent(
-								`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`
+								`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`,
 							)}")`,
 						}}
 					>

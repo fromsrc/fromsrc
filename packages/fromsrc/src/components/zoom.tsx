@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState, type ReactNode } from "react"
+import { type ReactNode, useCallback, useEffect, useState } from "react"
 
 export interface ZoomProps {
 	children: ReactNode

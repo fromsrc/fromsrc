@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process"
-import { cpSync, mkdirSync, writeFileSync, existsSync } from "node:fs"
-import { join, dirname } from "node:path"
+import { cpSync, existsSync, mkdirSync } from "node:fs"
+import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
 interface CreateOptions {

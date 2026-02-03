@@ -1,7 +1,7 @@
 "use client"
 
+import { Check, ChevronDown } from "lucide-react"
 import { useState } from "react"
-import { ChevronDown, Check } from "lucide-react"
 
 interface Version {
 	id: string
@@ -37,11 +37,7 @@ export function VersionSelect({ versions, current, onChange }: VersionSelectProp
 			</button>
 			{open && (
 				<>
-					<div
-						className="fixed inset-0 z-40"
-						onClick={() => setOpen(false)}
-						aria-hidden="true"
-					/>
+					<div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden="true" />
 					<div
 						className="absolute left-0 top-full mt-1 z-50 min-w-[120px] py-1 bg-surface border border-line rounded-lg shadow-lg"
 						role="listbox"

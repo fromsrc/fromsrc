@@ -1,4 +1,4 @@
-import { Logo, Bolt } from "./logo"
+import { Bolt, Logo } from "./logo"
 
 const links = {
 	product: [
@@ -28,7 +28,8 @@ export function Foot() {
 			<div className="mx-auto max-w-5xl rounded-t-4xl bg-linear-to-b from-[#1a1a1a] to-[#0a0a0a] border border-line border-b-0 px-8 py-12 md:px-12 md:py-16">
 				<div className="mb-16">
 					<h2 className="font-serif text-4xl md:text-5xl leading-tight mb-6">
-						Ready to build docs<br />
+						Ready to build docs
+						<br />
 						<span className="text-muted">that don't fight you?</span>
 					</h2>
 					<div className="flex flex-wrap items-center gap-6">

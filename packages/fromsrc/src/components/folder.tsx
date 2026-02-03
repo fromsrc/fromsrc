@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import type { SidebarFolder } from "./sidebar"
+import { useEffect, useState } from "react"
 import { NavLink } from "./navlink"
+import type { SidebarFolder } from "./sidebar"
 
 interface Props {
 	folder: SidebarFolder
@@ -52,7 +52,9 @@ export function Folder({ folder, basePath }: Props) {
 						}
 						return (
 							<li key={i}>
-								<NavLink href={item.href} icon={item.icon}>{item.title}</NavLink>
+								<NavLink href={item.href} icon={item.icon}>
+									{item.title}
+								</NavLink>
 							</li>
 						)
 					})}

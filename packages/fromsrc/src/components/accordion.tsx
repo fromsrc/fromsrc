@@ -1,13 +1,12 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { type ReactNode, useState } from "react"
 
 export interface AccordionProps {
 	children: ReactNode
-	type?: "single" | "multiple"
 }
 
-export function Accordion({ children, type = "single" }: AccordionProps) {
+export function Accordion({ children }: AccordionProps) {
 	return <div className="my-6 divide-y divide-line border-y border-line">{children}</div>
 }
 

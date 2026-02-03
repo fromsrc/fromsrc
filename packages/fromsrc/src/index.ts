@@ -1,13 +1,11 @@
+export { calcReadTime, ReadTime } from "./components/readtime"
 export {
-	getDoc,
-	getAllDocs,
-	getNavigation,
-	defineContent,
+	type ContentConfig,
 	type Doc,
 	type DocMeta,
-	type ContentConfig,
+	defineContent,
+	getAllDocs,
+	getDoc,
+	getNavigation,
 } from "./content"
-
-export { baseSchema, defineSchema, extendSchema, z, type InferSchema } from "./schema"
-
-export { ReadTime, calcReadTime } from "./components/readtime"
+export { baseSchema, defineSchema, extendSchema, type InferSchema, z } from "./schema"

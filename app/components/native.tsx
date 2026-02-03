@@ -15,8 +15,8 @@ export function Native() {
 						<h2 className="text-xl mt-1">ai-native</h2>
 					</div>
 					<p className="text-muted max-w-xl">
-						Every docs page has raw content endpoints. Feed pages to AI tools,
-						get docs for RAG, or connect via MCP.
+						Every docs page has raw content endpoints. Feed pages to AI tools, get docs for RAG, or
+						connect via MCP.
 					</p>
 				</header>
 
@@ -36,7 +36,9 @@ export function Native() {
 					<div className="rounded-2xl bg-surface border border-line p-5 text-sm flex flex-col justify-between">
 						<div className="space-y-4">
 							<div className="flex gap-3">
-								<span className="text-muted" aria-hidden="true">$</span>
+								<span className="text-muted" aria-hidden="true">
+									$
+								</span>
 								<code>curl fromsrc.com/docs/auth/llms.txt</code>
 							</div>
 							<div className="pl-6 text-muted border-l border-line">
