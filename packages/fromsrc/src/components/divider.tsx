@@ -1,10 +1,16 @@
-import type { ComponentProps } from "react"
+import { type ComponentProps, type JSX, memo } from "react"
 
-export type DividerProps = ComponentProps<"hr"> & {
+/**
+ * Props for the Divider component
+ */
+export interface DividerProps extends ComponentProps<"hr"> {
+	/**
+	 * Optional label displayed in the center of the divider
+	 */
 	label?: string
 }
 
-export function Divider({ label, className, ...props }: DividerProps) {
+function DividerBase({ label, className, ...props }: DividerProps): JSX.Element {
 	if (label) {
 		return (
 			<div
@@ -12,12 +18,17 @@ export function Divider({ label, className, ...props }: DividerProps) {
 				aria-label={label}
 				className={className ?? "flex items-center gap-4 my-8"}
 			>
-				<div aria-hidden="true" className="flex-1 h-px bg-line" />
+				<hr aria-hidden="true" className="flex-1 border-0 h-px bg-line m-0" />
 				<span className="text-xs text-muted uppercase tracking-wider">{label}</span>
-				<div aria-hidden="true" className="flex-1 h-px bg-line" />
+				<hr aria-hidden="true" className="flex-1 border-0 h-px bg-line m-0" />
 			</div>
 		)
 	}
 
 	return <hr className={className ?? "border-line my-8"} {...props} />
 }
+
+/**
+ * Horizontal divider with optional centered label
+ */
+export const Divider = memo(DividerBase)
