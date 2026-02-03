@@ -1,22 +1,33 @@
 "use client"
 
-import { useState } from "react"
+import { memo, useCallback, useState } from "react"
 import type { Heading } from "./hook"
 
+/**
+ * props for the inline table of contents component
+ */
 export interface TocInlineProps {
+	/** list of headings to display */
 	headings: Heading[]
+	/** title shown above the toc */
 	title?: string
+	/** whether the toc can be collapsed */
 	collapsible?: boolean
+	/** initial open state when collapsible */
 	defaultOpen?: boolean
 }
 
-export function TocInline({
+function TocInlineBase({
 	headings,
 	title = "on this page",
 	collapsible = true,
 	defaultOpen = false,
-}: TocInlineProps) {
+}: TocInlineProps): React.ReactElement | null {
 	const [open, setOpen] = useState(defaultOpen)
+
+	const toggle = useCallback((): void => {
+		setOpen((prev) => !prev)
+	}, [])
 
 	if (headings.length === 0) return null
 
@@ -54,7 +65,7 @@ export function TocInline({
 		>
 			<button
 				type="button"
-				onClick={() => setOpen(!open)}
+				onClick={toggle}
 				aria-expanded={open}
 				className="w-full flex items-center justify-between px-4 py-3 text-xs font-medium text-fg"
 			>
@@ -73,3 +84,5 @@ export function TocInline({
 		</nav>
 	)
 }
+
+export const TocInline = memo(TocInlineBase)
