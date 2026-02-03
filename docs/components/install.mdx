@@ -1,0 +1,29 @@
+---
+title: install
+description: package install command with tabs
+order: 15
+---
+
+shows install commands for multiple package managers.
+
+## usage
+
+```mdx
+<Install package="fromsrc" />
+```
+
+<Install package="fromsrc" />
+
+## multiple packages
+
+```mdx
+<Install package="fromsrc @types/react" />
+```
+
+<Install package="fromsrc @types/react" />
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| package | string | - | package name(s) to install |

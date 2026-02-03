@@ -1,0 +1,53 @@
+---
+title: mobilenav
+description: mobile navigation drawer
+order: 45
+---
+
+slide-out navigation for mobile devices.
+
+## usage
+
+```tsx
+import { MobileNav } from "fromsrc/client"
+
+<MobileNav
+  title="docs"
+  navigation={navigation}
+  docs={docs}
+  basePath="/docs"
+/>
+```
+
+## with logo
+
+```tsx
+<MobileNav
+  title="fromsrc"
+  logo={<Logo />}
+  navigation={navigation}
+  docs={docs}
+/>
+```
+
+## with github
+
+```tsx
+<MobileNav
+  title="docs"
+  navigation={navigation}
+  docs={docs}
+  github="https://github.com/fromsrc/fromsrc"
+/>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| title | string | - | header title |
+| logo | ReactNode | - | logo element |
+| navigation | SidebarSection[] | - | navigation structure |
+| docs | DocMeta[] | - | docs for search |
+| basePath | string | "/docs" | base path for links |
+| github | string | - | github url |

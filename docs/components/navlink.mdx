@@ -1,0 +1,40 @@
+---
+title: navlink
+description: navigation link with active state
+order: 46
+---
+
+sidebar navigation link with automatic active state detection.
+
+## usage
+
+```tsx
+import { NavLink } from "fromsrc/client"
+
+<NavLink href="/docs/intro">introduction</NavLink>
+```
+
+## with icon
+
+```tsx
+<NavLink href="/docs/api" icon={<ApiIcon />}>
+  api reference
+</NavLink>
+```
+
+## with click handler
+
+```tsx
+<NavLink href="/docs/guide" onClick={closeMenu}>
+  guide
+</NavLink>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| href | string | - | link destination |
+| children | ReactNode | - | link text |
+| icon | ReactNode | - | optional icon |
+| onClick | () => void | - | click handler |
