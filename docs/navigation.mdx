@@ -3,23 +3,28 @@ title: navigation
 description: configure page tree and sidebar navigation
 ---
 
+import { Files, Folder, File } from "fromsrc/client"
+
 # navigation
 
 fromsrc uses a file-based navigation system. your docs folder structure determines the sidebar navigation.
 
 ## folder structure
 
-```
-docs/
-├── index.mdx          # /docs
-├── installation.mdx   # /docs/installation
-├── quickstart.mdx     # /docs/quickstart
-├── components/
-│   ├── button.mdx     # /docs/components/button
-│   └── card.mdx       # /docs/components/card
-└── api/
-    └── hooks.mdx      # /docs/api/hooks
-```
+<Files>
+  <Folder name="docs" defaultOpen>
+    <File name="index.mdx" />
+    <File name="installation.mdx" />
+    <File name="quickstart.mdx" />
+    <Folder name="components" defaultOpen>
+      <File name="button.mdx" />
+      <File name="card.mdx" />
+    </Folder>
+    <Folder name="api" defaultOpen>
+      <File name="hooks.mdx" />
+    </Folder>
+  </Folder>
+</Files>
 
 ## meta files
 
@@ -43,14 +48,16 @@ pages are displayed in the order specified. pages not listed appear after the sp
 
 create `_meta.json` in subdirectories for nested navigation:
 
-```
-docs/
-├── _meta.json
-├── components/
-│   ├── _meta.json
-│   ├── button.mdx
-│   └── card.mdx
-```
+<Files>
+  <Folder name="docs" defaultOpen>
+    <File name="_meta.json" />
+    <Folder name="components" defaultOpen>
+      <File name="_meta.json" />
+      <File name="button.mdx" />
+      <File name="card.mdx" />
+    </Folder>
+  </Folder>
+</Files>
 
 ```json
 {
