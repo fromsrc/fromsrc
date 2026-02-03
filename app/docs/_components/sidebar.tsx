@@ -33,6 +33,17 @@ export async function Sidebar() {
 					href: `/docs/${item.slug}`,
 				})),
 			})
+		} else if (section.title === "examples") {
+			referenceItems.push({
+				type: "folder",
+				title: "examples",
+				defaultOpen: false,
+				items: section.items.map((item) => ({
+					type: "item" as const,
+					title: item.title,
+					href: `/docs/${item.slug}`,
+				})),
+			})
 		} else {
 			navigation.push({
 				title: section.title,

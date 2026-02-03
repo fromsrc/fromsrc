@@ -1,0 +1,202 @@
+---
+title: monorepo
+description: document multiple packages
+order: 4
+---
+
+document multiple packages in a monorepo with a unified docs site.
+
+## structure
+
+<Files>
+  <Folder name="packages" defaultOpen>
+    <Folder name="core" defaultOpen>
+      <File name="package.json" />
+      <File name="README.md" />
+    </Folder>
+    <Folder name="react">
+      <File name="package.json" />
+      <File name="README.md" />
+    </Folder>
+    <Folder name="cli">
+      <File name="package.json" />
+      <File name="README.md" />
+    </Folder>
+  </Folder>
+  <Folder name="docs" defaultOpen>
+    <Folder name="core">
+      <File name="index.mdx" />
+    </Folder>
+    <Folder name="react">
+      <File name="index.mdx" />
+    </Folder>
+    <Folder name="cli">
+      <File name="index.mdx" />
+    </Folder>
+    <File name="index.mdx" />
+  </Folder>
+  <Folder name="apps">
+    <Folder name="docs">
+      <File name="package.json" />
+    </Folder>
+  </Folder>
+</Files>
+
+## package-specific content
+
+create a content loader for each package:
+
+```tsx
+import { defineContent, z } from "fromsrc"
+
+const packageSchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  order: z.number().optional(),
+  package: z.string().optional(),
+})
+
+export const core = defineContent({
+  dir: "docs/core",
+  schema: packageSchema,
+})
+
+export const react = defineContent({
+  dir: "docs/react",
+  schema: packageSchema,
+})
+
+export const cli = defineContent({
+  dir: "docs/cli",
+  schema: packageSchema,
+})
+```
+
+## unified navigation
+
+combine package navigations:
+
+```tsx
+import { core, react, cli } from "@/lib/content"
+
+export async function getUnifiedNavigation() {
+  const [coreNav, reactNav, cliNav] = await Promise.all([
+    core.getNavigation(),
+    react.getNavigation(),
+    cli.getNavigation(),
+  ])
+
+  return [
+    { title: "overview", items: [{ slug: "", title: "introduction" }] },
+    { title: "core", items: coreNav.flatMap((s) => s.items) },
+    { title: "react", items: reactNav.flatMap((s) => s.items) },
+    { title: "cli", items: cliNav.flatMap((s) => s.items) },
+  ]
+}
+```
+
+## package switcher
+
+add tabs to switch between packages:
+
+```tsx
+"use client"
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+
+const packages = [
+  { name: "core", href: "/docs/core" },
+  { name: "react", href: "/docs/react" },
+  { name: "cli", href: "/docs/cli" },
+]
+
+export function PackageTabs() {
+  const pathname = usePathname()
+
+  return (
+    <div className="flex gap-1 border-b border-line mb-6">
+      {packages.map((pkg) => {
+        const active = pathname.startsWith(pkg.href)
+        return (
+          <Link
+            key={pkg.name}
+            href={pkg.href}
+            className={`px-4 py-2 text-sm border-b-2 -mb-px ${
+              active
+                ? "border-accent text-fg"
+                : "border-transparent text-muted hover:text-fg"
+            }`}
+          >
+            {pkg.name}
+          </Link>
+        )
+      })}
+    </div>
+  )
+}
+```
+
+## cross-references
+
+link between packages:
+
+```mdx
+see the <Link href="/docs/core/api">core api</Link> for the base implementation.
+```
+
+## shared components
+
+reuse mdx components across packages:
+
+```tsx
+import { Callout, CodeBlock, TypeTable } from "fromsrc/client"
+
+export const components = {
+  Callout,
+  CodeBlock,
+  TypeTable,
+  PackageLink: ({ pkg, path, children }) => (
+    <Link href={`/docs/${pkg}/${path}`}>{children}</Link>
+  ),
+}
+```
+
+## auto-generated docs
+
+extract api docs from package exports:
+
+```tsx
+import { readFileSync } from "fs"
+import { parse } from "@typescript-eslint/parser"
+
+export function extractExports(packagePath: string) {
+  const indexPath = `packages/${packagePath}/src/index.ts`
+  const source = readFileSync(indexPath, "utf-8")
+  const ast = parse(source, { sourceType: "module" })
+
+  return ast.body
+    .filter((node) => node.type === "ExportNamedDeclaration")
+    .map((node) => node.declaration?.id?.name)
+    .filter(Boolean)
+}
+```
+
+## workspace configuration
+
+configure turborepo for docs builds:
+
+```json
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "docs#build": {
+      "dependsOn": ["core#build", "react#build", "cli#build"]
+    }
+  }
+}
+```
+
+this ensures packages are built before docs.

@@ -1,0 +1,172 @@
+---
+title: versioning
+description: version your documentation
+order: 3
+---
+
+strategies for versioning documentation with fromsrc.
+
+## branch-based versioning
+
+use git branches to maintain different doc versions:
+
+<Files>
+  <Folder name="main branch" defaultOpen>
+    <File name="docs/index.mdx" />
+    <File name="docs/installation.mdx" />
+  </Folder>
+  <Folder name="v1 branch">
+    <File name="docs/index.mdx" />
+    <File name="docs/installation.mdx" />
+  </Folder>
+</Files>
+
+deploy each branch to a subdomain:
+
+- `docs.example.com` → main branch (latest)
+- `v1.docs.example.com` → v1 branch
+
+### pros
+
+- no content duplication in main branch
+- independent builds per version
+- clean git history
+
+### cons
+
+- requires multiple deployments
+- harder to search across versions
+
+## folder-based versioning
+
+keep all versions in a single branch:
+
+<Files>
+  <Folder name="docs" defaultOpen>
+    <Folder name="v2" defaultOpen>
+      <File name="index.mdx" />
+    </Folder>
+    <Folder name="v1">
+      <File name="index.mdx" />
+    </Folder>
+  </Folder>
+</Files>
+
+### content loader
+
+```tsx
+import { defineContent, z } from "fromsrc"
+
+const versions = ["v2", "v1"] as const
+
+type Version = typeof versions[number]
+
+export function createVersionedContent(version: Version) {
+  return defineContent({
+    dir: `docs/${version}`,
+    schema: z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      order: z.number().optional(),
+    }),
+  })
+}
+```
+
+### version switcher
+
+```tsx
+"use client"
+
+import { useRouter, usePathname } from "next/navigation"
+
+const versions = ["v2", "v1"]
+
+export function VersionSwitcher() {
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const currentVersion = versions.find((v) =>
+    pathname.includes(`/docs/${v}`)
+  ) || versions[0]
+
+  const switchVersion = (version: string) => {
+    const newPath = pathname.replace(
+      `/docs/${currentVersion}`,
+      `/docs/${version}`
+    )
+    router.push(newPath)
+  }
+
+  return (
+    <select
+      value={currentVersion}
+      onChange={(e) => switchVersion(e.target.value)}
+      className="bg-surface border border-line rounded px-2 py-1 text-sm"
+    >
+      {versions.map((v) => (
+        <option key={v} value={v}>
+          {v}
+        </option>
+      ))}
+    </select>
+  )
+}
+```
+
+### pros
+
+- single deployment
+- easy to search across versions
+- unified navigation
+
+### cons
+
+- larger repo size
+- potential content duplication
+
+## api versioning
+
+for api docs, use a date-based system (like stripe):
+
+```yaml
+---
+title: create user
+description: create a new user
+version: 2026-01-01
+---
+```
+
+```tsx
+const schema = extendSchema({
+  version: z.string(),
+  deprecated: z.boolean().optional(),
+  replacement: z.string().optional(),
+})
+```
+
+### deprecation notice
+
+```tsx
+function DeprecationBanner({ doc }) {
+  if (!doc.data.deprecated) return null
+
+  return (
+    <Callout type="warning">
+      this endpoint is deprecated.
+      {doc.data.replacement && (
+        <> use <Link href={doc.data.replacement}>the new version</Link>.</>
+      )}
+    </Callout>
+  )
+}
+```
+
+## recommendation
+
+for most projects, branch-based versioning is simpler:
+
+1. maintain docs alongside code in feature branches
+2. deploy latest docs from main
+3. archive old versions to version branches
+4. link to archived docs from main site

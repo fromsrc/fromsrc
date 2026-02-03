@@ -116,6 +116,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			{ title: "introduction", items: [] },
 			{ title: "components", items: [] },
 			{ title: "api", items: [] },
+			{ title: "examples", items: [] },
 		]
 
 		for (const doc of docs) {
@@ -123,6 +124,8 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 				sections[1].items.push(doc)
 			} else if (doc.slug.startsWith("api/")) {
 				sections[2].items.push(doc)
+			} else if (doc.slug.startsWith("examples/")) {
+				sections[3].items.push(doc)
 			} else {
 				sections[0].items.push(doc)
 			}
@@ -218,6 +221,7 @@ export async function getNavigation(docsDir: string) {
 		{ title: "introduction", items: [] },
 		{ title: "components", items: [] },
 		{ title: "api", items: [] },
+		{ title: "examples", items: [] },
 	]
 
 	for (const doc of docs) {
@@ -225,6 +229,8 @@ export async function getNavigation(docsDir: string) {
 			sections[1].items.push(doc)
 		} else if (doc.slug.startsWith("api/")) {
 			sections[2].items.push(doc)
+		} else if (doc.slug.startsWith("examples/")) {
+			sections[3].items.push(doc)
 		} else {
 			sections[0].items.push(doc)
 		}
