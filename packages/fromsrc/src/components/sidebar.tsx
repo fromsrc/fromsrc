@@ -1,12 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { type ReactNode, useEffect, useRef, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import type { DocMeta } from "../content"
 import { Folder } from "./folder"
 import { IconPanelLeft } from "./icons"
 import { NavLink } from "./navlink"
 
+/**
+ * A single navigation item with a link destination.
+ */
 export interface SidebarItem {
 	type: "item"
 	title: string
@@ -14,6 +17,9 @@ export interface SidebarItem {
 	icon?: ReactNode
 }
 
+/**
+ * A collapsible folder containing nested items or subfolders.
+ */
 export interface SidebarFolder {
 	type: "folder"
 	title: string
@@ -23,11 +29,17 @@ export interface SidebarFolder {
 	href?: string
 }
 
+/**
+ * A labeled section grouping navigation items.
+ */
 export interface SidebarSection {
 	title: string
 	items: (SidebarItem | SidebarFolder | DocMeta)[]
 }
 
+/**
+ * Configuration props for the Sidebar component.
+ */
 interface Props {
 	title: string
 	logo?: ReactNode
@@ -46,40 +58,49 @@ export function Sidebar({
 	github,
 	collapsible,
 	defaultOpenLevel = 0,
-}: Props) {
+}: Props): ReactNode {
 	const [collapsed, setCollapsed] = useState(false)
 	const [hovered, setHovered] = useState(false)
 	const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-	useEffect(() => {
+	useEffect((): void => {
 		const stored = localStorage.getItem("sidebar-collapsed")
 		if (stored === "true") setCollapsed(true)
 	}, [])
 
-	const toggle = () => {
-		const next = !collapsed
-		setCollapsed(next)
-		localStorage.setItem("sidebar-collapsed", String(next))
-	}
+	const toggle = useCallback((): void => {
+		setCollapsed((prev) => {
+			const next = !prev
+			localStorage.setItem("sidebar-collapsed", String(next))
+			return next
+		})
+	}, [])
+
 	const showExpanded = !collapsed || hovered
 
-	const handleEnter = () => {
+	const handleEnter = useCallback((): void => {
 		if (leaveTimer.current) {
 			clearTimeout(leaveTimer.current)
 			leaveTimer.current = null
 		}
 		if (collapsed) setHovered(true)
-	}
+	}, [collapsed])
 
-	const handleLeave = () => {
+	const handleLeave = useCallback((): void => {
 		leaveTimer.current = setTimeout(() => setHovered(false), 150)
-	}
+	}, [])
+
+	const openSearch = useCallback((): void => {
+		const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+		window.dispatchEvent(event)
+	}, [])
 
 	return (
 		<aside
 			onMouseEnter={handleEnter}
 			onMouseLeave={handleLeave}
-			aria-label="sidebar"
+			aria-label="sidebar navigation"
+			aria-expanded={showExpanded}
 			className={`${collapsed ? (hovered ? "w-60 shadow-lg z-50" : "w-16") : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width,box-shadow] duration-200 ease-out overflow-hidden`}
 		>
 			<div className="px-3 h-14 flex items-center">
@@ -89,6 +110,7 @@ export function Sidebar({
 						onClick={toggle}
 						className="w-10 h-10 flex items-center justify-center text-muted hover:text-fg transition-colors shrink-0"
 						aria-label={collapsed ? "expand sidebar" : "collapse sidebar"}
+						aria-pressed={!collapsed}
 					>
 						<IconPanelLeft size={18} />
 					</button>
@@ -108,12 +130,10 @@ export function Sidebar({
 			<div className="px-3 h-12 flex items-center">
 				<button
 					type="button"
-					onClick={() => {
-						const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
-						window.dispatchEvent(event)
-					}}
+					onClick={openSearch}
 					className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${showExpanded ? "w-full px-2.5 gap-2" : "w-10 justify-center"}`}
-					aria-label="search"
+					aria-label="open search"
+					aria-keyshortcuts="Meta+K"
 				>
 					<svg
 						className="w-4 h-4 shrink-0"
@@ -179,11 +199,14 @@ export function Sidebar({
 					</div>
 				) : (
 					navigation.map((section) => (
-						<div key={section.title} className="mb-6">
-							<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider whitespace-nowrap">
+						<section key={section.title} className="mb-6" aria-labelledby={`section-${section.title}`}>
+							<h3
+								id={`section-${section.title}`}
+								className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider whitespace-nowrap"
+							>
 								{section.title}
 							</h3>
-							<ul className="space-y-0.5">
+							<ul role="list" className="space-y-0.5">
 								{section.items.map((item, i) => {
 									if (!("type" in item)) {
 										return (
@@ -214,7 +237,7 @@ export function Sidebar({
 									)
 								})}
 							</ul>
-						</div>
+						</section>
 					))
 				)}
 			</nav>
