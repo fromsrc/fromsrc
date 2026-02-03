@@ -14,51 +14,22 @@ use `InlineMath` for equations within text.
 the equation <InlineMath>E = mc^2</InlineMath> is famous.
 ```
 
-the equation <InlineMath>E = mc^2</InlineMath> is famous.
-
 ## block math
 
 use `BlockMath` for standalone equations.
 
 ```mdx
-<BlockMath>
-  \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
-</BlockMath>
+<BlockMath>x^2 + y^2 = r^2</BlockMath>
 ```
-
-<BlockMath>\int_0^\infty e^{-x^2} dx = \frac{"\sqrt{\pi}"}{2}</BlockMath>
 
 ## math component
 
 the base `Math` component with display mode option.
 
 ```mdx
-<Math>x^2 + y^2 = r^2</Math>
-<Math display>x^2 + y^2 = r^2</Math>
+<Math>a + b = c</Math>
+<Math display>a + b = c</Math>
 ```
-
-inline: <Math>x^2 + y^2 = r^2</Math>
-
-display mode:
-<Math display>x^2 + y^2 = r^2</Math>
-
-## examples
-
-### fractions
-
-<InlineMath>\frac{a}{b}</InlineMath>
-
-### subscripts and superscripts
-
-<InlineMath>x_i^2</InlineMath>
-
-### greek letters
-
-<InlineMath>\alpha + \beta = \gamma</InlineMath>
-
-### matrices
-
-<BlockMath>\begin{"{pmatrix}"} a & b \\ c & d \end{"{pmatrix}"}</BlockMath>
 
 ## props
 
@@ -89,8 +60,9 @@ requires katex as a peer dependency.
 bun add katex
 ```
 
-import katex css in your layout:
+add katex css to your layout:
 
 ```tsx
+// in layout.tsx
 import "katex/dist/katex.min.css"
 ```
