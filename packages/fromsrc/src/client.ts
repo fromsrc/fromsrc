@@ -106,4 +106,12 @@ export { Zoom } from "./components/zoom"
 export { useAnchorScroll, type AnchorOptions } from "./hooks/anchor"
 export { useCopy } from "./hooks/copy"
 export { useKeyboardNav } from "./hooks/keyboard"
+export {
+	useIsDesktop,
+	useIsMobile,
+	useIsTablet,
+	useMediaQuery,
+	usePrefersDark,
+	usePrefersReducedMotion,
+} from "./hooks/media"
 export { useScrollSpy, type ScrollSpyOptions } from "./hooks/scrollspy"
