@@ -28,7 +28,7 @@ export const Feature = memo(function Feature({
 			)}
 			<div>
 				<h3 className="text-sm font-medium text-fg">{title}</h3>
-				<p className="text-sm text-muted mt-1">{children}</p>
+				<div className="text-sm text-muted mt-1">{children}</div>
 			</div>
 		</article>
 	)
@@ -82,7 +82,7 @@ export const FeatureCard = memo(function FeatureCard({
 				</div>
 			)}
 			<h3 className="text-sm font-medium text-fg mb-1">{title}</h3>
-			<p className="text-sm text-muted mt-1">{children}</p>
+			<div className="text-sm text-muted mt-1">{children}</div>
 		</article>
 	)
 })
