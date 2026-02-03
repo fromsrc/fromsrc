@@ -1,0 +1,133 @@
+---
+title: api reference
+description: all exports from fromsrc
+order: 1
+---
+
+fromsrc exports from two entry points:
+
+- `fromsrc` - server utilities and content helpers
+- `fromsrc/client` - react components and hooks
+
+## fromsrc
+
+server-side utilities for content loading.
+
+### functions
+
+<TypeTable
+  data={{
+    getDoc: { type: "(dir, slug[]) => Promise<Doc | null>", description: "load a single document by slug" },
+    getAllDocs: { type: "(dir) => Promise<DocMeta[]>", description: "load metadata for all documents" },
+    getNavigation: { type: "(dir) => Promise<Section[]>", description: "generate navigation structure" },
+    defineContent: { type: "(config) => ContentAPI", description: "create typed content loader" },
+  }}
+/>
+
+### schema utilities
+
+<TypeTable
+  data={{
+    baseSchema: { type: "ZodObject", description: "default frontmatter schema (title, description, order)" },
+    defineSchema: { type: "(schema) => schema", description: "define custom frontmatter schema" },
+    extendSchema: { type: "(fields) => ZodObject", description: "extend base schema with extra fields" },
+    z: { type: "typeof zod", description: "re-exported zod for schema definitions" },
+  }}
+/>
+
+### types
+
+```typescript
+interface Doc {
+  slug: string
+  title: string
+  description?: string
+  order?: number
+  content: string
+  data: Record<string, unknown>
+}
+
+interface DocMeta {
+  slug: string
+  title: string
+  description?: string
+  order?: number
+}
+
+interface ContentConfig {
+  dir: string
+  schema?: ZodObject
+}
+```
+
+## fromsrc/client
+
+react components for building documentation ui.
+
+### layout components
+
+| component | description |
+|-----------|-------------|
+| Sidebar | navigation sidebar with sections and folders |
+| MobileNav | mobile navigation drawer |
+| Breadcrumb | breadcrumb navigation |
+| Toc | table of contents sidebar |
+| TocInline | inline table of contents |
+
+### content components
+
+| component | description |
+|-----------|-------------|
+| CodeBlock | syntax highlighted code with copy button |
+| CodeGroup | tabbed code blocks |
+| Callout | info, warning, error, tip callouts |
+| Steps | numbered step lists |
+| Tabs | tabbed content panels |
+| Cards | grid of linked cards |
+| Accordion | collapsible sections |
+| Files | file tree display |
+| TypeTable | api property documentation |
+
+### utility components
+
+| component | description |
+|-----------|-------------|
+| Badge | inline badges |
+| Banner | dismissible banners |
+| Link | external link with icon |
+| Zoom | image lightbox |
+| Tooltip | hover tooltips |
+| Github | github repo info |
+| Video | embedded video |
+| Mermaid | mermaid diagrams |
+| ThemeToggle | light/dark mode toggle |
+| BackToTop | scroll to top button |
+
+### hooks
+
+<TypeTable
+  data={{
+    useToc: { type: "() => TocState", description: "access table of contents state" },
+    useKeyboardNav: { type: "(docs) => void", description: "enable keyboard navigation" },
+    useCopy: { type: "(duration?) => { copied, copy }", description: "copy to clipboard utility" },
+  }}
+/>
+
+## usage example
+
+```tsx
+// server component (page.tsx)
+import { getDoc, getAllDocs } from "fromsrc"
+
+const doc = await getDoc("docs", ["installation"])
+const docs = await getAllDocs("docs")
+```
+
+```tsx
+// client component
+import { Sidebar, Search, Toc } from "fromsrc/client"
+
+<Sidebar navigation={nav} />
+<Search docs={docs} />
+<Toc />
+```

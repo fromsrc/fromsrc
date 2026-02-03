@@ -1,0 +1,171 @@
+---
+title: content api
+description: loading and querying documentation content
+order: 3
+---
+
+utilities for loading mdx content from the filesystem.
+
+## getDoc
+
+load a single document by slug.
+
+```tsx
+import { getDoc } from "fromsrc"
+
+const doc = await getDoc("docs", ["components", "button"])
+// loads docs/components/button.mdx
+
+if (doc) {
+  console.log(doc.title)
+  console.log(doc.content)
+}
+```
+
+<TypeTable
+  data={{
+    dir: { type: "string", required: true, description: "directory containing mdx files" },
+    slug: { type: "string[]", required: true, description: "path segments to the document" },
+  }}
+/>
+
+### getDoc returns
+
+returns `Doc | null`. null if the file doesn't exist.
+
+```typescript
+interface Doc {
+  slug: string        // "components/button"
+  title: string       // from frontmatter
+  description?: string
+  order?: number
+  content: string     // raw mdx content
+  data: Record<string, unknown>  // all frontmatter
+}
+```
+
+## getAllDocs
+
+load metadata for all documents in a directory.
+
+```tsx
+import { getAllDocs } from "fromsrc"
+
+const docs = await getAllDocs("docs")
+
+docs.forEach(doc => {
+  console.log(doc.slug, doc.title)
+})
+```
+
+<TypeTable
+  data={{
+    dir: { type: "string", required: true, description: "directory to scan recursively" },
+  }}
+/>
+
+### getAllDocs returns
+
+returns `DocMeta[]` sorted by order field.
+
+```typescript
+interface DocMeta {
+  slug: string
+  title: string
+  description?: string
+  order?: number
+}
+```
+
+## getNavigation
+
+generate navigation structure from documents.
+
+```tsx
+import { getNavigation } from "fromsrc"
+
+const nav = await getNavigation("docs")
+// [
+//   { title: "introduction", items: [...] },
+//   { title: "components", items: [...] },
+// ]
+```
+
+groups documents into sections based on path prefixes.
+
+## defineContent
+
+create a typed content loader with custom schema.
+
+```tsx
+import { defineContent, extendSchema, z } from "fromsrc"
+
+const content = defineContent({
+  dir: "docs",
+  schema: extendSchema({
+    author: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+})
+
+const doc = await content.getDoc(["installation"])
+// doc.data.author is typed
+```
+
+<TypeTable
+  data={{
+    dir: { type: "string", required: true, description: "content directory" },
+    schema: { type: "ZodObject", description: "custom frontmatter schema" },
+  }}
+/>
+
+### defineContent returns
+
+```typescript
+interface ContentAPI {
+  getDoc: (slug: string[]) => Promise<Doc | null>
+  getAllDocs: () => Promise<DocMeta[]>
+  getNavigation: () => Promise<Section[]>
+  schema: ZodObject
+}
+```
+
+## schema utilities
+
+### baseSchema
+
+the default frontmatter schema.
+
+```typescript
+const baseSchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  order: z.number().optional(),
+})
+```
+
+### extendSchema
+
+extend the base schema with additional fields.
+
+```tsx
+import { extendSchema, z } from "fromsrc"
+
+const schema = extendSchema({
+  author: z.string(),
+  publishedAt: z.string().datetime(),
+})
+```
+
+### defineSchema
+
+define a completely custom schema (not extending base).
+
+```tsx
+import { defineSchema, z } from "fromsrc"
+
+const schema = defineSchema(z.object({
+  name: z.string(),
+  version: z.string(),
+}))
+```
