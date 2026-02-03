@@ -50,6 +50,8 @@ import {
 	Changelog,
 	Release,
 	Change,
+	Collapsible,
+	Details,
 } from "fromsrc/client"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -207,6 +209,8 @@ const components = {
 	Changelog,
 	Release,
 	Change,
+	Collapsible,
+	Details,
 }
 
 interface Props {
