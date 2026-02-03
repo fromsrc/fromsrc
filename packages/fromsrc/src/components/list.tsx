@@ -1,7 +1,7 @@
 "use client"
 
-import { Check, Circle, X } from "lucide-react"
 import type { ReactNode } from "react"
+import { IconCheck, IconCircle, IconX } from "./icons"
 
 interface ListProps {
 	children: ReactNode
@@ -20,9 +20,9 @@ export function CheckItem({ checked = true, children }: CheckItemProps) {
 	return (
 		<li className="flex items-start gap-2">
 			{checked ? (
-				<Check size={16} className="mt-0.5 text-emerald-400 shrink-0" aria-hidden="true" />
+				<IconCheck size={16} className="mt-0.5 text-emerald-400 shrink-0" />
 			) : (
-				<X size={16} className="mt-0.5 text-red-400 shrink-0" aria-hidden="true" />
+				<IconX size={16} className="mt-0.5 text-red-400 shrink-0" />
 			)}
 			<span className="text-sm text-muted">{children}</span>
 		</li>
@@ -40,7 +40,7 @@ interface BulletItemProps {
 export function BulletItem({ children }: BulletItemProps) {
 	return (
 		<li className="flex items-start gap-2">
-			<Circle size={6} className="mt-2 text-muted shrink-0 fill-current" aria-hidden="true" />
+			<IconCircle size={6} className="mt-2 text-muted shrink-0" />
 			<span className="text-sm text-muted">{children}</span>
 		</li>
 	)
@@ -74,5 +74,3 @@ export function NumberItem({ number, children }: NumberItemProps) {
 		</li>
 	)
 }
-
-export type { ListProps, CheckItemProps, BulletItemProps, NumberListProps, NumberItemProps }

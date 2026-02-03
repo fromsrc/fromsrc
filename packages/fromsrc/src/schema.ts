@@ -6,8 +6,6 @@ export const baseSchema = z.object({
 	order: z.number().optional(),
 })
 
-export type BaseSchema = typeof baseSchema
-
 export type InferSchema<T extends z.ZodType> = z.infer<T>
 
 export function defineSchema<T extends z.ZodRawShape>(schema: z.ZodObject<T>) {
