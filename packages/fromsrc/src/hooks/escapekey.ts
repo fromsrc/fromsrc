@@ -2,7 +2,12 @@
 
 import { useEffect } from "react"
 
-export function useEscapeKey(handler: () => void, enabled = true) {
+/**
+ * Triggers a callback when the Escape key is pressed
+ * @param handler - Callback invoked when Escape is pressed
+ * @param enabled - Whether the listener is active (default: true)
+ */
+export function useEscapeKey(handler: () => void, enabled = true): void {
 	useEffect(() => {
 		if (!enabled) return
 

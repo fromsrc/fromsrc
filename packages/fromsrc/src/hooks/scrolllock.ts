@@ -2,7 +2,11 @@
 
 import { useEffect } from "react"
 
-export function useScrollLock(locked: boolean) {
+/**
+ * Locks page scrolling by setting body overflow to hidden
+ * @param locked - Whether scrolling should be locked
+ */
+export function useScrollLock(locked: boolean): void {
 	useEffect(() => {
 		if (!locked) return
 

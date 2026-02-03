@@ -62,6 +62,10 @@ function flatten(
 
 /**
  * Flattens navigation tree to linear list for prev/next page navigation
+ * @param navigation - Array of sidebar sections containing navigation items
+ * @param pathname - Current page pathname to find in the navigation
+ * @param basePath - Base path for constructing page hrefs (default: "/docs")
+ * @returns Object containing prev/next links, all pages, and current index
  */
 export function usePagination(
 	navigation: SidebarSection[],

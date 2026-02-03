@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react"
 
 /**
- * Returns true when the user is at the top of the page (scroll < 10px)
+ * Tracks whether the user is at the top of the page
+ * @returns true when scroll position is less than 10px from the top
  */
-export function useIsScrollTop() {
+export function useIsScrollTop(): boolean {
 	const [atTop, setAtTop] = useState(true)
 
 	useEffect(() => {
