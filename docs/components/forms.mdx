@@ -36,6 +36,10 @@ import { Input } from "fromsrc/client"
 
 <Input label="password" type="password" hint="must be 8+ characters" />
 
+### with tooltip
+
+<Input label="api key" tooltip="find this in your dashboard settings" />
+
 ### props
 
 | prop | type | default | description |
@@ -45,6 +49,7 @@ import { Input } from "fromsrc/client"
 | label | ReactNode | - | accessible label |
 | error | ReactNode | - | error message |
 | hint | ReactNode | - | helper text |
+| tooltip | ReactNode | - | help text shown on hover |
 
 ## button
 
@@ -148,6 +153,17 @@ import { Select } from "fromsrc/client"
   ]}
 />
 
+### with tooltip
+
+<Select
+  label="region"
+  tooltip="select the region closest to your users"
+  options={[
+    { value: "us", label: "us-east" },
+    { value: "eu", label: "eu-west" },
+  ]}
+/>
+
 ### props
 
 | prop | type | default | description |
@@ -160,6 +176,7 @@ import { Select } from "fromsrc/client"
 | disabled | boolean | false | disable select |
 | error | ReactNode | - | error message |
 | label | ReactNode | - | accessible label |
+| tooltip | ReactNode | - | help text shown on hover |
 
 ### SelectOption
 
@@ -199,6 +216,10 @@ import { Checkbox } from "fromsrc/client"
 
 <Checkbox label="select all" indeterminate />
 
+### with tooltip
+
+<Checkbox label="enable analytics" tooltip="we collect anonymous usage data" />
+
 ### props
 
 | prop | type | default | description |
@@ -207,6 +228,7 @@ import { Checkbox } from "fromsrc/client"
 | size | "sm" \| "md" \| "lg" | "md" | checkbox size |
 | indeterminate | boolean | false | show indeterminate state |
 | error | ReactNode | - | error message |
+| tooltip | ReactNode | - | help text shown on hover |
 
 ## switch
 
@@ -238,6 +260,10 @@ function Example() {
 
 <Switch label="disabled switch" disabled />
 
+### with tooltip
+
+<Switch label="dark mode" tooltip="toggle between light and dark theme" />
+
 ### props
 
 | prop | type | default | description |
@@ -247,6 +273,7 @@ function Example() {
 | size | "sm" \| "md" \| "lg" | "md" | switch size |
 | label | string | - | accessible label |
 | disabled | boolean | false | disable switch |
+| tooltip | ReactNode | - | help text shown on hover |
 
 ## autofill
 
@@ -426,6 +453,10 @@ import { Textarea } from "fromsrc/client"
 
 <Textarea label="notes" autoresize placeholder="grows as you type..." />
 
+### with tooltip
+
+<Textarea label="feedback" tooltip="your feedback helps us improve" />
+
 ### props
 
 | prop | type | default | description |
@@ -438,3 +469,4 @@ import { Textarea } from "fromsrc/client"
 | autoresize | boolean | false | auto-resize based on content |
 | maxLength | number | - | maximum character count |
 | showCount | boolean | false | show character count |
+| tooltip | ReactNode | - | help text shown on hover |
