@@ -71,8 +71,8 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 				<button
 					type="button"
 					onClick={() => {
-						const event = new KeyboardEvent("keydown", { key: "k", metaKey: true })
-						document.dispatchEvent(event)
+						const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+						window.dispatchEvent(event)
 					}}
 					className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${collapsed ? "w-10 justify-center" : "w-full px-2.5 gap-2"}`}
 					aria-label="search"
