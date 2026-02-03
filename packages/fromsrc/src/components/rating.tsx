@@ -1,6 +1,6 @@
 "use client"
 
-import { type KeyboardEvent, type ReactElement, useCallback, useRef, useState } from "react"
+import { memo, type KeyboardEvent, type ReactElement, useCallback, useRef, useState } from "react"
 import { IconStar } from "./icons"
 
 /**
@@ -19,7 +19,7 @@ export interface RatingProps {
 	label?: string
 }
 
-export function Rating({
+function RatingBase({
 	value = 0,
 	max = 5,
 	onChange,
@@ -137,3 +137,5 @@ export function Rating({
 		</div>
 	)
 }
+
+export const Rating = memo(RatingBase)

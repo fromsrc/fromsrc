@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, forwardRef, useId } from "react"
+import { type ReactNode, forwardRef, memo, useId } from "react"
 import { ErrorMessage } from "./errormessage"
 import { FormLabel } from "./formlabel"
 
@@ -36,9 +36,9 @@ const sizes: Record<InputSize, string> = {
 	lg: "h-12 px-4 text-base",
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-	{ variant = "default", size = "md", label, error, hint, tooltip, className = "", id, ...props },
-	ref,
+function InputBase(
+	{ variant = "default", size = "md", label, error, hint, tooltip, className = "", id, ...props }: InputProps,
+	ref: React.ForwardedRef<HTMLInputElement>,
 ): React.ReactElement {
 	const generatedId = useId()
 	const inputId = id || generatedId
@@ -67,4 +67,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 			)}
 		</div>
 	)
-})
+}
+
+export const Input = memo(forwardRef<HTMLInputElement, InputProps>(InputBase))

@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import type { ComponentPropsWithoutRef } from "react"
 
 export type BadgeVariant = "default" | "success" | "warning" | "error" | "info"
@@ -21,7 +22,7 @@ const styles: Record<BadgeVariant, string> = {
 	info: "bg-blue-500/10 text-blue-400 border-blue-500/30",
 }
 
-export function Badge({ children, variant = "default", className = "", ...props }: BadgeProps) {
+function BadgeBase({ children, variant = "default", className = "", ...props }: BadgeProps) {
 	return (
 		<span
 			role="status"
@@ -32,3 +33,5 @@ export function Badge({ children, variant = "default", className = "", ...props 
 		</span>
 	)
 }
+
+export const Badge = memo(BadgeBase)

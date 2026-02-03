@@ -1,6 +1,6 @@
 "use client"
 
-import { type KeyboardEvent, type ReactNode, useCallback, useId, useRef, useState } from "react"
+import { type KeyboardEvent, type ReactNode, memo, useCallback, useId, useRef, useState } from "react"
 import { CopyButton } from "./copybutton"
 
 const managers = ["npm", "pnpm", "yarn", "bun"] as const
@@ -21,7 +21,7 @@ export interface CreateProps {
 	package?: string
 }
 
-export function Create({ package: pkg = "fromsrc" }: CreateProps): ReactNode {
+function CreateBase({ package: pkg = "fromsrc" }: CreateProps): ReactNode {
 	const [active, setActive] = useState<Manager>("npm")
 	const command = `${commands[active]} ${pkg}`
 	const id = useId()
@@ -139,3 +139,5 @@ export function Create({ package: pkg = "fromsrc" }: CreateProps): ReactNode {
 		</figure>
 	)
 }
+
+export const Create = memo(CreateBase)

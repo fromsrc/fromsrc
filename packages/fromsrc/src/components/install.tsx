@@ -1,6 +1,6 @@
 "use client"
 
-import { type KeyboardEvent, type ReactElement, useCallback, useId, useRef, useState } from "react"
+import { type KeyboardEvent, type ReactElement, memo, useCallback, useId, useRef, useState } from "react"
 import { CopyButton } from "./copybutton"
 
 const managers = ["npm", "pnpm", "yarn", "bun"] as const
@@ -21,7 +21,7 @@ export interface InstallProps {
 	package: string
 }
 
-export function Install({ package: pkg }: InstallProps): ReactElement {
+function InstallBase({ package: pkg }: InstallProps): ReactElement {
 	const [active, setActive] = useState<Manager>("npm")
 	const command = `${commands[active]} ${pkg}`
 	const id = useId()
@@ -139,3 +139,5 @@ export function Install({ package: pkg }: InstallProps): ReactElement {
 		</figure>
 	)
 }
+
+export const Install = memo(InstallBase)

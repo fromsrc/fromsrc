@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import type { JSX } from "react"
 import { useCallback, useState } from "react"
 import { IconThumbsDown, IconThumbsUp } from "./icons"
@@ -12,7 +13,7 @@ export interface FeedbackProps {
 	onFeedback?: (helpful: boolean) => void | Promise<void>
 }
 
-export function Feedback({ onFeedback }: FeedbackProps): JSX.Element {
+function FeedbackBase({ onFeedback }: FeedbackProps): JSX.Element {
 	const [submitted, setSubmitted] = useState<boolean>(false)
 	const [selected, setSelected] = useState<boolean | null>(null)
 
@@ -70,3 +71,5 @@ export function Feedback({ onFeedback }: FeedbackProps): JSX.Element {
 		</div>
 	)
 }
+
+export const Feedback = memo(FeedbackBase)

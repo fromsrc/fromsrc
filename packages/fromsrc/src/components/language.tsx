@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import type { JSX, KeyboardEvent } from "react"
 import { IconCheck, IconLanguages } from "./icons"
 
@@ -22,7 +22,7 @@ export interface LanguageSwitchProps {
 	onChange?: (code: string) => void
 }
 
-export function LanguageSwitch({ current, locales, onChange }: LanguageSwitchProps): JSX.Element {
+function LanguageSwitchBase({ current, locales, onChange }: LanguageSwitchProps): JSX.Element {
 	const [open, setOpen] = useState<boolean>(false)
 	const [index, setIndex] = useState<number>(0)
 	const ref = useRef<HTMLDivElement>(null)
@@ -135,3 +135,5 @@ export function LanguageSwitch({ current, locales, onChange }: LanguageSwitchPro
 		</div>
 	)
 }
+
+export const LanguageSwitch = memo(LanguageSwitchBase)
