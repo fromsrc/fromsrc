@@ -1,0 +1,83 @@
+---
+title: avatar
+description: user avatars
+order: 34
+---
+
+display user avatars with fallback initials.
+
+## avatar
+
+with image:
+
+```mdx
+<Avatar
+  src="https://api.dicebear.com/7.x/avataaars/svg?seed=john"
+  name="John Doe"
+/>
+```
+
+<Avatar
+  src="https://api.dicebear.com/7.x/avataaars/svg?seed=john"
+  name="John Doe"
+/>
+
+## fallback initials
+
+without image shows initials:
+
+```mdx
+<Avatar name="Jane Smith" />
+```
+
+<Avatar name="Jane Smith" />
+
+## sizes
+
+```mdx
+<Avatar name="Small" size="sm" />
+<Avatar name="Medium" size="md" />
+<Avatar name="Large" size="lg" />
+```
+
+<div className="flex items-center gap-2">
+  <Avatar name="Small" size="sm" />
+  <Avatar name="Medium" size="md" />
+  <Avatar name="Large" size="lg" />
+</div>
+
+## user
+
+avatar with name and role:
+
+```mdx
+<User
+  name="Alice Johnson"
+  role="Engineer"
+  avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=alice"
+/>
+```
+
+<User
+  name="Alice Johnson"
+  role="Engineer"
+  avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=alice"
+/>
+
+## props
+
+### avatar
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| src | string | - | image url |
+| name | string | - | user name |
+| size | "sm" \| "md" \| "lg" | "md" | avatar size |
+
+### user
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| name | string | - | user name |
+| avatar | string | - | image url |
+| role | string | - | user role |
