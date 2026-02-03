@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { type KeyboardEvent, useId, useRef, useState } from "react"
 import { useCopy } from "../hooks/copy"
 
 const managers = ["npm", "pnpm", "yarn", "bun"] as const
@@ -20,7 +20,7 @@ function CopyButton({ text }: { text: string }) {
 		<button
 			type="button"
 			onClick={() => copy(text)}
-			aria-label={copied ? "Copied" : "Copy code"}
+			aria-label={copied ? "Copied" : "Copy command"}
 			style={{
 				display: "flex",
 				alignItems: "center",
@@ -74,6 +74,35 @@ interface InstallProps {
 export function Install({ package: pkg }: InstallProps) {
 	const [active, setActive] = useState<Manager>("npm")
 	const command = `${commands[active]} ${pkg}`
+	const id = useId()
+	const tablistRef = useRef<HTMLDivElement>(null)
+
+	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+		const currentIndex = managers.indexOf(active)
+		let nextIndex = currentIndex
+
+		switch (e.key) {
+			case "ArrowLeft":
+				nextIndex = currentIndex > 0 ? currentIndex - 1 : managers.length - 1
+				break
+			case "ArrowRight":
+				nextIndex = currentIndex < managers.length - 1 ? currentIndex + 1 : 0
+				break
+			case "Home":
+				nextIndex = 0
+				break
+			case "End":
+				nextIndex = managers.length - 1
+				break
+			default:
+				return
+		}
+
+		e.preventDefault()
+		setActive(managers[nextIndex])
+		const tabs = tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
+		tabs?.[nextIndex]?.focus()
+	}
 
 	return (
 		<figure
@@ -96,11 +125,22 @@ export function Install({ package: pkg }: InstallProps) {
 					borderBottom: "1px solid #1c1c1c",
 				}}
 			>
-				<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-					{managers.map((m) => (
+				<div
+					ref={tablistRef}
+					role="tablist"
+					aria-label="Package managers"
+					onKeyDown={handleKeyDown}
+					style={{ display: "flex", alignItems: "center", gap: "4px" }}
+				>
+					{managers.map((m, index) => (
 						<button
 							key={m}
+							id={`${id}-tab-${index}`}
 							type="button"
+							role="tab"
+							aria-selected={active === m}
+							aria-controls={`${id}-panel`}
+							tabIndex={active === m ? 0 : -1}
 							onClick={() => setActive(m)}
 							style={{
 								padding: "4px 10px",
@@ -121,6 +161,10 @@ export function Install({ package: pkg }: InstallProps) {
 				<CopyButton text={command} />
 			</div>
 			<div
+				id={`${id}-panel`}
+				role="tabpanel"
+				aria-labelledby={`${id}-tab-${managers.indexOf(active)}`}
+				tabIndex={0}
 				style={{
 					padding: "14px 16px",
 					fontSize: "13px",
