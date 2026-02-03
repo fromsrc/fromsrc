@@ -1,0 +1,83 @@
+---
+title: responsive
+description: responsive layout helpers
+order: 44
+---
+
+layout utilities for responsive design.
+
+## show
+
+conditionally show content by breakpoint:
+
+```mdx
+<Show above="md">desktop only</Show>
+<Show below="md">mobile only</Show>
+```
+
+### breakpoints
+
+| breakpoint | min-width |
+|------------|-----------|
+| sm | 640px |
+| md | 768px |
+| lg | 1024px |
+| xl | 1280px |
+
+## grid
+
+responsive grid layouts:
+
+```mdx
+<Grid cols={2}>
+  <div>column 1</div>
+  <div>column 2</div>
+</Grid>
+```
+
+### column options
+
+```mdx
+<Grid cols={3} gap="lg">
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+</Grid>
+```
+
+## flex
+
+flexible layouts:
+
+```mdx
+<Flex direction="row" align="center" justify="between">
+  <div>left</div>
+  <div>right</div>
+</Flex>
+```
+
+## props
+
+### show
+
+| prop | type | description |
+|------|------|-------------|
+| above | breakpoint | show above this size |
+| below | breakpoint | show below this size |
+
+### grid
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| cols | 1-4 | 2 | columns |
+| gap | "sm" \| "md" \| "lg" | "md" | spacing |
+
+### flex
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| direction | "row" \| "col" | "row" | direction |
+| align | "start" \| "center" \| "end" \| "stretch" | "start" | align-items |
+| justify | "start" \| "center" \| "end" \| "between" | "start" | justify-content |
+| gap | "sm" \| "md" \| "lg" | "md" | spacing |
+| wrap | boolean | false | flex-wrap |

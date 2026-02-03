@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState, type ReactNode } from "react"
-import { PanelLeftClose, PanelLeft } from "lucide-react"
+import { PanelLeft } from "lucide-react"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
@@ -45,7 +45,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 
 	return (
 		<aside
-			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200 ease-out`}
+			className={`${collapsed ? "w-16" : "w-60"} shrink-0 border-r border-line h-screen sticky top-0 flex flex-col bg-bg transition-[width] duration-200 ease-out overflow-hidden`}
 		>
 			<div className="px-3 h-14 flex items-center">
 				{collapsible && (
@@ -55,17 +55,15 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 						className="w-10 h-10 flex items-center justify-center text-muted hover:text-fg transition-colors shrink-0"
 						aria-label={collapsed ? "expand sidebar" : "collapse sidebar"}
 					>
-						{collapsed ? <PanelLeft size={18} aria-hidden="true" /> : <PanelLeftClose size={18} aria-hidden="true" />}
+						<PanelLeft size={18} aria-hidden="true" />
 					</button>
 				)}
 				{!collapsed && (
 					<Link href="/" className="flex items-center text-sm text-fg hover:text-accent transition-colors">
-						<div className="w-8 h-8 flex items-center justify-center shrink-0">
-							<div className="p-1 rounded-lg bg-surface border border-line">
-								{logo}
-							</div>
+						<div className="w-10 h-10 flex items-center justify-center shrink-0 text-muted">
+							{logo}
 						</div>
-						<span className="ml-1.5 whitespace-nowrap">{title}</span>
+						<span className="whitespace-nowrap">{title}</span>
 					</Link>
 				)}
 			</div>
@@ -73,8 +71,8 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 				<button
 					type="button"
 					onClick={() => {
-						const event = new KeyboardEvent("keydown", { key: "k", metaKey: true })
-						document.dispatchEvent(event)
+						const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+						window.dispatchEvent(event)
 					}}
 					className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${collapsed ? "w-10 justify-center" : "w-full px-2.5 gap-2"}`}
 					aria-label="search"
@@ -112,7 +110,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 				) : (
 					navigation.map((section) => (
 						<div key={section.title} className="mb-6">
-							<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider">
+							<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider whitespace-nowrap">
 								{section.title}
 							</h3>
 							<ul className="space-y-0.5">

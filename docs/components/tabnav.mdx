@@ -1,0 +1,101 @@
+---
+title: tabnav
+description: multi-section navigation tabs
+order: 43
+---
+
+navigate between documentation sections.
+
+## usage
+
+```tsx
+import { TabNav } from "fromsrc/client"
+
+const tabs = [
+  { id: "guide", label: "guide", href: "/docs/guide" },
+  { id: "api", label: "api", href: "/docs/api" },
+  { id: "examples", label: "examples", href: "/docs/examples" },
+]
+
+<TabNav tabs={tabs} />
+```
+
+## with icons
+
+```tsx
+import { Book, Code, Layers } from "lucide-react"
+
+const tabs = [
+  { id: "guide", label: "guide", href: "/docs/guide", icon: <Book size={16} /> },
+  { id: "api", label: "api", href: "/docs/api", icon: <Code size={16} /> },
+  { id: "examples", label: "examples", href: "/docs/examples", icon: <Layers size={16} /> },
+]
+
+<TabNav tabs={tabs} />
+```
+
+## custom matching
+
+match specific paths:
+
+```tsx
+const tabs = [
+  {
+    id: "docs",
+    label: "docs",
+    href: "/docs",
+    match: ["/docs/guide", "/docs/intro"]
+  },
+  {
+    id: "api",
+    label: "api",
+    href: "/api",
+    match: ["/api/hooks", "/api/components"]
+  },
+]
+```
+
+## dropdown variant
+
+for mobile or space-constrained layouts:
+
+```tsx
+<TabNavDropdown tabs={tabs} />
+```
+
+## integration
+
+place in sidebar header:
+
+```tsx
+import { Sidebar, TabNav } from "fromsrc/client"
+
+function Layout({ children }) {
+  return (
+    <Sidebar
+      header={<TabNav tabs={tabs} />}
+      items={items}
+    >
+      {children}
+    </Sidebar>
+  )
+}
+```
+
+## props
+
+### tabnav
+
+| prop | type | description |
+|------|------|-------------|
+| tabs | NavTab[] | navigation tabs |
+
+### navtab
+
+| prop | type | description |
+|------|------|-------------|
+| id | string | unique identifier |
+| label | string | display label |
+| href | string | target url |
+| icon | ReactNode | optional icon |
+| match | string[] | urls to match for active state |

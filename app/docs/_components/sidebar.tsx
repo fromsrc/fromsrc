@@ -65,7 +65,7 @@ export async function Sidebar() {
 			})
 		} else {
 			navigation.push({
-				title: section.title,
+				title: section.title === "introduction" ? "getting started" : section.title,
 				items: section.items.map((item) => ({
 					type: "item" as const,
 					title: item.title,

@@ -33,7 +33,7 @@ export function Folder({ folder, basePath }: Props) {
 				className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
 			>
 				{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
-				<span className="flex-1 text-left">{folder.title}</span>
+				<span className="flex-1 text-left truncate">{folder.title}</span>
 				<svg
 					className={`w-3.5 h-3.5 transition-transform ${open ? "" : "-rotate-90"}`}
 					fill="none"

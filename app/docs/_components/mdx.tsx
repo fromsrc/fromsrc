@@ -96,6 +96,11 @@ import {
 	BulletItem,
 	NumberList,
 	NumberItem,
+	TabNav,
+	TabNavDropdown,
+	Show,
+	Grid,
+	Flex,
 } from "fromsrc/client"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -299,6 +304,11 @@ const components = {
 	BulletItem,
 	NumberList,
 	NumberItem,
+	TabNav,
+	TabNavDropdown,
+	Show,
+	Grid,
+	Flex,
 }
 
 interface Props {
