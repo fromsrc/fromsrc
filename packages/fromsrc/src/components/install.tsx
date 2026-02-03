@@ -1,6 +1,6 @@
 "use client"
 
-import { type KeyboardEvent, useId, useRef, useState } from "react"
+import { type KeyboardEvent, type ReactElement, useCallback, useId, useRef, useState } from "react"
 import { useCopy } from "../hooks/copy"
 
 const managers = ["npm", "pnpm", "yarn", "bun"] as const
@@ -13,14 +13,41 @@ const commands: Record<Manager, string> = {
 	bun: "bun add",
 }
 
-function CopyButton({ text }: { text: string }) {
+/**
+ * Props for the CopyButton component
+ */
+interface CopyButtonProps {
+	/** The text to copy to clipboard */
+	text: string
+}
+
+function CopyButton({ text }: CopyButtonProps): ReactElement {
 	const { copied, copy } = useCopy()
+
+	const handleClick = useCallback((): void => {
+		copy(text)
+	}, [copy, text])
+
+	const handleMouseEnter = useCallback(
+		(e: React.MouseEvent<HTMLButtonElement>): void => {
+			if (!copied) e.currentTarget.style.color = "#fafafa"
+		},
+		[copied]
+	)
+
+	const handleMouseLeave = useCallback(
+		(e: React.MouseEvent<HTMLButtonElement>): void => {
+			if (!copied) e.currentTarget.style.color = "#737373"
+		},
+		[copied]
+	)
 
 	return (
 		<button
 			type="button"
-			onClick={() => copy(text)}
-			aria-label={copied ? "Copied" : "Copy command"}
+			onClick={handleClick}
+			aria-label={copied ? "Copied to clipboard" : "Copy install command"}
+			aria-live="polite"
 			style={{
 				display: "flex",
 				alignItems: "center",
@@ -32,12 +59,8 @@ function CopyButton({ text }: { text: string }) {
 				cursor: "pointer",
 				transition: "color 0.15s",
 			}}
-			onMouseEnter={(e) => {
-				if (!copied) e.currentTarget.style.color = "#fafafa"
-			}}
-			onMouseLeave={(e) => {
-				if (!copied) e.currentTarget.style.color = "#737373"
-			}}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
 		>
 			{copied ? (
 				<svg
@@ -60,52 +83,65 @@ function CopyButton({ text }: { text: string }) {
 					aria-hidden="true"
 				>
 					<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-					<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+					<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2-2v1" />
 				</svg>
 			)}
 		</button>
 	)
 }
 
+/**
+ * Props for the Install component
+ */
 export interface InstallProps {
+	/** The package name to display in the install command */
 	package: string
 }
 
-export function Install({ package: pkg }: InstallProps) {
+export function Install({ package: pkg }: InstallProps): ReactElement {
 	const [active, setActive] = useState<Manager>("npm")
 	const command = `${commands[active]} ${pkg}`
 	const id = useId()
 	const tablistRef = useRef<HTMLDivElement>(null)
 
-	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-		const currentIndex = managers.indexOf(active)
-		let nextIndex = currentIndex
+	const handleKeyDown = useCallback(
+		(e: KeyboardEvent<HTMLDivElement>): void => {
+			const currentIndex = managers.indexOf(active)
+			let nextIndex = currentIndex
 
-		switch (e.key) {
-			case "ArrowLeft":
-				nextIndex = currentIndex > 0 ? currentIndex - 1 : managers.length - 1
-				break
-			case "ArrowRight":
-				nextIndex = currentIndex < managers.length - 1 ? currentIndex + 1 : 0
-				break
-			case "Home":
-				nextIndex = 0
-				break
-			case "End":
-				nextIndex = managers.length - 1
-				break
-			default:
-				return
-		}
+			switch (e.key) {
+				case "ArrowLeft":
+					nextIndex = currentIndex > 0 ? currentIndex - 1 : managers.length - 1
+					break
+				case "ArrowRight":
+					nextIndex = currentIndex < managers.length - 1 ? currentIndex + 1 : 0
+					break
+				case "Home":
+					nextIndex = 0
+					break
+				case "End":
+					nextIndex = managers.length - 1
+					break
+				default:
+					return
+			}
 
-		e.preventDefault()
-		setActive(managers[nextIndex]!)
-		const tabs = tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
-		tabs?.[nextIndex]?.focus()
-	}
+			e.preventDefault()
+			setActive(managers[nextIndex]!)
+			const tabs = tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
+			tabs?.[nextIndex]?.focus()
+		},
+		[active]
+	)
+
+	const handleTabClick = useCallback((manager: Manager): void => {
+		setActive(manager)
+	}, [])
 
 	return (
 		<figure
+			role="group"
+			aria-label={`Install ${pkg} package`}
 			style={{
 				position: "relative",
 				margin: "24px 0",
@@ -141,7 +177,7 @@ export function Install({ package: pkg }: InstallProps) {
 							aria-selected={active === m}
 							aria-controls={`${id}-panel`}
 							tabIndex={active === m ? 0 : -1}
-							onClick={() => setActive(m)}
+							onClick={() => handleTabClick(m)}
 							style={{
 								padding: "4px 10px",
 								fontSize: "13px",
@@ -172,8 +208,10 @@ export function Install({ package: pkg }: InstallProps) {
 					fontFamily: "var(--font-mono), ui-monospace, monospace",
 				}}
 			>
-				<span style={{ color: "#7ee787" }}>{commands[active]}</span>
-				<span style={{ color: "#fafafa" }}> {pkg}</span>
+				<code aria-label={`Command: ${command}`}>
+					<span style={{ color: "#7ee787" }}>{commands[active]}</span>
+					<span style={{ color: "#fafafa" }}> {pkg}</span>
+				</code>
 			</div>
 		</figure>
 	)
