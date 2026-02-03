@@ -11,6 +11,13 @@ export function Cards({ children }: CardsProps) {
 	return <div className="my-6 grid gap-4 sm:grid-cols-2">{children}</div>
 }
 
+/**
+ * @param title - card heading
+ * @param description - optional subtext
+ * @param href - link destination
+ * @param icon - optional icon element
+ * @example <Card title="setup" href="/docs/setup" />
+ */
 export interface CardProps {
 	title: string
 	description?: string

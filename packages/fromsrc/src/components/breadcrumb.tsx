@@ -8,6 +8,10 @@ export interface BreadcrumbItem {
 	label: string
 }
 
+/**
+ * @param base - root path for breadcrumb generation
+ * @example <Breadcrumb base="/docs" />
+ */
 export interface BreadcrumbProps {
 	base?: string
 }

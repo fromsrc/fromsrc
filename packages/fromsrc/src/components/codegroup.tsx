@@ -9,11 +9,20 @@ interface CodeGroupContext {
 
 const Context = createContext<CodeGroupContext | null>(null)
 
+/**
+ * @param children - CodeTab elements
+ * @param defaultValue - initially active tab value
+ */
 export interface CodeGroupProps {
 	children: ReactNode
 	defaultValue?: string
 }
 
+/**
+ * @param value - unique tab identifier
+ * @param label - displayed tab name
+ * @param children - tab content
+ */
 export interface CodeTabProps {
 	value: string
 	label: string

@@ -3,6 +3,12 @@
 import type { ReactNode } from "react"
 import { IconAlertCircle, IconCheckCircle, IconInfo, IconXCircle } from "./icons"
 
+/**
+ * @param children - alert content
+ * @param type - visual style variant
+ * @param title - optional heading
+ * @example <Alert type="warning">check your input</Alert>
+ */
 export interface AlertProps {
 	children: ReactNode
 	type?: "info" | "success" | "warning" | "error"

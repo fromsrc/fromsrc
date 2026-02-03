@@ -4,6 +4,12 @@ import type { ReactNode } from "react"
 
 export type CalloutType = "info" | "warning" | "error" | "tip"
 
+/**
+ * @param type - callout style
+ * @param title - optional heading
+ * @param children - callout content
+ * @example <Callout type="tip">use shortcuts</Callout>
+ */
 export interface CalloutProps {
 	type?: CalloutType
 	title?: string

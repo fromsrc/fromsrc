@@ -1,3 +1,8 @@
+/**
+ * @param size - spinner dimensions
+ * @param className - additional classes
+ * @example <Spinner size="sm" />
+ */
 export interface SpinnerProps {
 	size?: "sm" | "md" | "lg"
 	className?: string
@@ -36,6 +41,11 @@ export function Spinner({ size = "md", className = "" }: SpinnerProps) {
 	)
 }
 
+/**
+ * @param text - loading message
+ * @param size - spinner size
+ * @example <Loading text="fetching..." />
+ */
 export interface LoadingProps {
 	text?: string
 	size?: "sm" | "md" | "lg"

@@ -4,6 +4,10 @@ import type { ComponentPropsWithoutRef } from "react"
 
 export type BadgeVariant = "default" | "success" | "warning" | "error" | "info"
 
+/**
+ * @param variant - color variant
+ * @example <Badge variant="success">active</Badge>
+ */
 export interface BadgeProps extends ComponentPropsWithoutRef<"span"> {
 	variant?: BadgeVariant
 }

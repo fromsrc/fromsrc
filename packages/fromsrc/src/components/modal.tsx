@@ -4,6 +4,12 @@ import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 
 import { useScrollLock } from "../hooks/scrolllock"
 import { IconX } from "./icons"
 
+/**
+ * @param open - controls visibility
+ * @param onClose - close handler
+ * @param title - optional modal heading
+ * @param children - modal content
+ */
 export interface ModalProps {
 	open: boolean
 	onClose: () => void

@@ -4,6 +4,12 @@ import { type ReactNode, useEffect, useState } from "react"
 
 export type BannerVariant = "default" | "rainbow"
 
+/**
+ * @param id - unique id for dismiss persistence
+ * @param variant - visual style
+ * @param children - banner content
+ * @example <Banner id="sale" variant="rainbow">50% off</Banner>
+ */
 export interface BannerProps {
 	id?: string
 	variant?: BannerVariant

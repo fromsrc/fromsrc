@@ -2,6 +2,13 @@
 
 import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
 
+/**
+ * @param content - tooltip text or element
+ * @param children - trigger element
+ * @param side - tooltip position
+ * @param delay - show delay in ms
+ * @example <Tooltip content="copy"><button>...</button></Tooltip>
+ */
 export interface TooltipProps {
 	content: ReactNode
 	children: ReactNode

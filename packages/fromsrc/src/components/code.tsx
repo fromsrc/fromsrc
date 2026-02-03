@@ -1,5 +1,10 @@
 import type { ReactNode } from "react"
 
+/**
+ * @param children - code text
+ * @param color - highlight color
+ * @example <Code color="green">success</Code>
+ */
 export interface CodeProps {
 	children: ReactNode
 	color?: "default" | "green" | "red" | "yellow" | "blue"

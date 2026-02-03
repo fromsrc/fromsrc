@@ -10,6 +10,11 @@ export function Accordion({ children }: AccordionProps) {
 	return <div className="my-6 divide-y divide-line border-y border-line">{children}</div>
 }
 
+/**
+ * @param title - accordion header text
+ * @param children - collapsible content
+ * @param defaultOpen - expanded on mount
+ */
 export interface AccordionItemProps {
 	title: string
 	children: ReactNode

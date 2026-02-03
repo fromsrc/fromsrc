@@ -18,6 +18,12 @@ interface TabsContextValue {
 
 const TabsContext = createContext<TabsContextValue | null>(null)
 
+/**
+ * @param items - array of tab names
+ * @param defaultValue - initially active tab
+ * @param children - Tab elements
+ * @example <Tabs items={["npm", "yarn"]}><Tab value="npm">...</Tab></Tabs>
+ */
 export interface TabsProps {
 	items: string[]
 	defaultValue?: string
@@ -99,6 +105,10 @@ export function Tabs({ items, defaultValue, children }: TabsProps) {
 	)
 }
 
+/**
+ * @param value - matches item from parent Tabs
+ * @param children - tab panel content
+ */
 export interface TabProps {
 	value: string
 	children: ReactNode
