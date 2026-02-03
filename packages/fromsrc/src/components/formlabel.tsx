@@ -8,20 +8,22 @@ import { Tooltip } from "./tooltip"
  * @property label - Text or element to display as the label
  * @property tooltip - Help text shown on hover via info icon
  * @property htmlFor - ID of the associated form element
+ * @property id - ID for the label element itself (for aria-labelledby)
  */
 export interface FormLabelProps {
 	label: ReactNode
 	tooltip?: ReactNode
 	htmlFor?: string
+	id?: string
 }
 
 /**
  * Shared form label with optional tooltip info icon.
  * Consolidates the label+tooltip pattern used across form components.
  */
-function FormLabelInner({ label, tooltip, htmlFor }: FormLabelProps): JSX.Element {
+function FormLabelInner({ label, tooltip, htmlFor, id }: FormLabelProps): JSX.Element {
 	return (
-		<label htmlFor={htmlFor} className="flex items-center gap-1.5 text-sm font-medium text-fg">
+		<label id={id} htmlFor={htmlFor} className="flex items-center gap-1.5 text-sm font-medium text-fg">
 			{label}
 			{tooltip && (
 				<Tooltip content={tooltip}>

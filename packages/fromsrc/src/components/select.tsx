@@ -3,7 +3,7 @@
 import type React from "react"
 import { type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { useClickOutside } from "../hooks/clickoutside"
-import { Tooltip } from "./tooltip"
+import { FormLabel } from "./formlabel"
 
 /**
  * Option item for the Select component.
@@ -152,25 +152,7 @@ export function Select({
 
 	return (
 		<div className="flex flex-col gap-1.5">
-			{label && (
-				<label id={labelId} className="flex items-center gap-1.5 text-sm font-medium text-fg">
-					{label}
-					{tooltip && (
-						<Tooltip content={tooltip}>
-							<svg
-								aria-hidden="true"
-								className="h-3.5 w-3.5 text-muted"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<circle cx="12" cy="12" r="10" strokeWidth={2} />
-								<path strokeLinecap="round" strokeWidth={2} d="M12 16v-4m0-4h.01" />
-							</svg>
-						</Tooltip>
-					)}
-				</label>
-			)}
+			{label && <FormLabel label={label} tooltip={tooltip} id={labelId} />}
 			<div ref={containerRef} className="relative">
 				<button
 					ref={triggerRef}
