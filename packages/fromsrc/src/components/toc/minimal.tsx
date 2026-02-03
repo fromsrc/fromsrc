@@ -1,16 +1,23 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
+import type { JSX } from "react"
 import type { Heading } from "./hook"
 import { buildZigzagPath, getItemOffset, ZigzagLine } from "./zigzag"
 
+/**
+ * Props for the TocMinimal component
+ */
 interface Props {
+	/** List of headings to display in the table of contents */
 	headings: Heading[]
+	/** ID of the currently active heading */
 	active: string
+	/** Enable zigzag line style instead of default vertical bar */
 	zigzag?: boolean
 }
 
-export function TocMinimal({ headings, active, zigzag }: Props) {
+function TocMinimalBase({ headings, active, zigzag }: Props): JSX.Element {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const thumbRef = useRef<HTMLDivElement>(null)
 	const progressRef = useRef<HTMLDivElement>(null)
@@ -102,7 +109,7 @@ export function TocMinimal({ headings, active, zigzag }: Props) {
 						<a
 							key={heading.id}
 							href={`#${heading.id}`}
-							aria-current={active === heading.id ? "true" : undefined}
+							aria-current={active === heading.id ? "location" : undefined}
 							className={`relative py-1.5 text-sm transition-colors ${
 								active === heading.id ? "text-fg" : "text-muted hover:text-fg"
 							}`}
@@ -123,19 +130,24 @@ export function TocMinimal({ headings, active, zigzag }: Props) {
 
 	return (
 		<nav aria-label="table of contents" className="flex gap-3">
-			<div ref={containerRef} className="relative w-0.5 bg-line rounded-full">
+			<div
+				ref={containerRef}
+				className="relative w-0.5 bg-line rounded-full"
+				role="presentation"
+				aria-hidden="true"
+			>
 				<div
 					ref={thumbRef}
 					className="absolute left-0 top-0 w-full h-3 bg-fg rounded-full"
 					style={{ willChange: "transform" }}
 				/>
 			</div>
-			<ul className="space-y-1">
+			<ul role="list" className="space-y-1">
 				{headings.map((heading) => (
 					<li key={heading.id}>
 						<a
 							href={`#${heading.id}`}
-							aria-current={active === heading.id ? "true" : undefined}
+							aria-current={active === heading.id ? "location" : undefined}
 							className={`block text-xs py-1 transition-colors ${
 								heading.level === 3 ? "pl-2" : ""
 							} ${active === heading.id ? "text-fg" : "text-muted hover:text-fg"}`}
@@ -148,3 +160,8 @@ export function TocMinimal({ headings, active, zigzag }: Props) {
 		</nav>
 	)
 }
+
+/**
+ * Minimal table of contents component with scroll progress indicator
+ */
+export const TocMinimal = memo(TocMinimalBase)
