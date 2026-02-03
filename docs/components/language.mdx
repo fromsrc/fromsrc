@@ -1,0 +1,74 @@
+---
+title: language
+description: language switcher for internationalized docs
+order: 12
+---
+
+the language switch component provides a dropdown for switching between locales in internationalized documentation.
+
+## usage
+
+```text
+<LanguageSwitch
+  current="en"
+  locales={[
+    { code: "en", name: "English", flag: "🇺🇸" },
+    { code: "es", name: "Español", flag: "🇪🇸" },
+    { code: "ja", name: "日本語", flag: "🇯🇵" }
+  ]}
+  onChange={(code) => console.log(code)}
+/>
+```
+
+## props
+
+| prop | type | description |
+|------|------|-------------|
+| current | `string` | current locale code |
+| locales | `Locale[]` | available locales |
+| onChange | `(code: string) => void` | callback when locale changes |
+
+## types
+
+```text
+interface Locale {
+  code: string
+  name: string
+  flag?: string
+}
+```
+
+## with routing
+
+integrate with your i18n routing:
+
+```text
+"use client"
+
+import { useRouter, usePathname } from "next/navigation"
+import { LanguageSwitch } from "fromsrc/client"
+
+export function LocaleSwitcher() {
+  const router = useRouter()
+  const pathname = usePathname()
+
+  return (
+    <LanguageSwitch
+      current="en"
+      locales={locales}
+      onChange={(code) => {
+        router.push(`/${code}${pathname}`)
+      }}
+    />
+  )
+}
+```
+
+## keyboard navigation
+
+the language switch supports full keyboard navigation:
+
+- `Enter` or `Space` to open
+- `ArrowUp` / `ArrowDown` to navigate
+- `Enter` to select
+- `Escape` to close

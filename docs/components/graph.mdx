@@ -1,0 +1,62 @@
+---
+title: graph
+description: visualize document relationships
+order: 11
+---
+
+the graph component displays an interactive node graph for visualizing relationships between documents.
+
+## usage
+
+```text
+<Graph
+  nodes={[
+    { id: "intro", title: "introduction" },
+    { id: "install", title: "installation" },
+    { id: "config", title: "configuration" }
+  ]}
+  links={[
+    { source: "intro", target: "install" },
+    { source: "install", target: "config" }
+  ]}
+/>
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| nodes | `GraphNode[]` | required | array of nodes to display |
+| links | `GraphLink[]` | required | array of connections between nodes |
+| onNodeClick | `(node: GraphNode) => void` | - | callback when a node is clicked |
+| width | `number` | 600 | canvas width |
+| height | `number` | 400 | canvas height |
+
+## types
+
+```text
+interface GraphNode {
+  id: string
+  title: string
+  group?: string
+}
+
+interface GraphLink {
+  source: string
+  target: string
+}
+```
+
+## navigation
+
+use onNodeClick to navigate to pages:
+
+```text
+<Graph
+  nodes={nodes}
+  links={links}
+  onNodeClick={(node) => {
+    window.location.href = `/docs/${node.id}`
+  }}
+/>
+```
