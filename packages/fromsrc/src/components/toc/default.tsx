@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import type { Heading } from "./hook"
-import { getItemOffset, ZigzagLine } from "./zigzag"
+import { buildZigzagPath, getItemOffset, ZigzagLine } from "./zigzag"
 
 interface Props {
 	headings: Heading[]
@@ -24,37 +24,13 @@ export function TocDefault({ headings, active, activeRange, zigzag }: Props) {
 
 		const container = containerRef.current
 
-		function buildPath() {
-			if (container.clientHeight === 0) return
-
-			let w = 0
-			let h = 0
-			const d: string[] = []
-
-			for (let i = 0; i < headings.length; i++) {
-				const item = headings[i]
-				if (!item) continue
-
-				const element = container.querySelector(`a[href="#${item.id}"]`) as HTMLElement | null
-				if (!element) continue
-
-				const styles = getComputedStyle(element)
-				const offset = item.level >= 3 ? 10.5 : 0.5
-				const top = element.offsetTop + parseFloat(styles.paddingTop)
-				const bottom = element.offsetTop + element.clientHeight - parseFloat(styles.paddingBottom)
-
-				w = Math.max(offset, w)
-				h = Math.max(h, bottom)
-
-				d.push(`${i === 0 ? "M" : "L"}${offset} ${top}`)
-				d.push(`L${offset} ${bottom}`)
-			}
-
-			setSvg({ path: d.join(" "), width: w + 1, height: h })
+		function update() {
+			const result = buildZigzagPath(headings, container)
+			if (result) setSvg(result)
 		}
 
-		const observer = new ResizeObserver(buildPath)
-		buildPath()
+		const observer = new ResizeObserver(update)
+		update()
 		observer.observe(container)
 
 		return () => observer.disconnect()

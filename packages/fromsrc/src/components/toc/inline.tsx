@@ -55,6 +55,7 @@ export function TocInline({
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
 				className="w-full flex items-center justify-between px-4 py-3 text-xs font-medium text-fg"
 			>
 				{title}
