@@ -115,3 +115,4 @@ export {
 	usePrefersReducedMotion,
 } from "./hooks/media"
 export { useScrollSpy, type ScrollSpyOptions } from "./hooks/scrollspy"
+export { useLocalStorage, useSessionStorage } from "./hooks/storage"
