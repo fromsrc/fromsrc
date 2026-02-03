@@ -36,6 +36,8 @@ export function Avatar({ src, name, size = "md" }: AvatarProps) {
 	return (
 		<div
 			className={`${sizes[size]} rounded-full bg-surface border border-line flex items-center justify-center font-medium text-muted`}
+			role="img"
+			aria-label={name}
 		>
 			{getInitials(name)}
 		</div>
@@ -44,11 +46,15 @@ export function Avatar({ src, name, size = "md" }: AvatarProps) {
 
 interface AvatarGroupProps {
 	children: ReactNode
-	max?: number
+	label: string
 }
 
-export function AvatarGroup({ children }: AvatarGroupProps) {
-	return <div className="flex -space-x-2">{children}</div>
+export function AvatarGroup({ children, label }: AvatarGroupProps) {
+	return (
+		<div className="flex -space-x-2" role="group" aria-label={label}>
+			{children}
+		</div>
+	)
 }
 
 interface UserProps {
