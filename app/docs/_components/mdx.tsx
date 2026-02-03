@@ -4,6 +4,7 @@ import {
 	transformerNotationFocus,
 	transformerNotationHighlight,
 } from "@shikijs/transformers"
+import type { ShikiTransformerContext } from "@shikijs/types"
 import {
 	Accordion,
 	AccordionItem,
@@ -113,8 +114,8 @@ import {
 	TocInline,
 	Tooltip,
 	Tweet,
-	TypePopup,
 	Typed,
+	TypePopup,
 	TypeTable,
 	Typewriter,
 	Underline,
@@ -302,9 +303,11 @@ export async function MDX({ source }: Props) {
 									transformerNotationDiff(),
 									transformerNotationFocus(),
 									{
-										pre(node: { properties: Record<string, string> }) {
-											const lang =
-												(this as unknown as { options: { lang?: string } }).options.lang || ""
+										pre(
+											this: ShikiTransformerContext,
+											node: { properties: Record<string, string> },
+										) {
+											const lang = this.options.lang || ""
 											if (lang) {
 												node.properties["data-language"] = lang
 											}

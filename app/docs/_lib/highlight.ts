@@ -1,36 +1,39 @@
-import { createHighlighter, type Highlighter } from "shiki"
+import { type BundledLanguage, createHighlighter, type Highlighter } from "shiki"
+
+const supportedLangs: BundledLanguage[] = [
+	"javascript",
+	"typescript",
+	"tsx",
+	"jsx",
+	"json",
+	"bash",
+	"shell",
+	"css",
+	"html",
+	"markdown",
+	"mdx",
+	"yaml",
+	"python",
+	"go",
+	"rust",
+]
 
 let highlighter: Highlighter | null = null
 
-export async function getHighlighter() {
+export async function getHighlighter(): Promise<Highlighter> {
 	if (!highlighter) {
 		highlighter = await createHighlighter({
 			themes: ["github-dark"],
-			langs: [
-				"javascript",
-				"typescript",
-				"tsx",
-				"jsx",
-				"json",
-				"bash",
-				"shell",
-				"css",
-				"html",
-				"markdown",
-				"mdx",
-				"yaml",
-				"python",
-				"go",
-				"rust",
-			],
+			langs: supportedLangs,
 		})
 	}
 	return highlighter
 }
 
-export async function highlight(code: string, lang: string = "text") {
+export async function highlight(code: string, lang: string = "text"): Promise<string> {
 	const h = await getHighlighter()
-	const validLang = h.getLoadedLanguages().includes(lang as any) ? lang : "text"
+	const loaded = h.getLoadedLanguages()
+	const validLang = loaded.includes(lang as BundledLanguage) ? (lang as BundledLanguage) : "text"
 
 	return h.codeToHtml(code, {
 		lang: validLang,

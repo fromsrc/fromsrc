@@ -17,10 +17,11 @@ import {
 	Sparkles,
 	Tags,
 } from "lucide-react"
+import type { ReactNode } from "react"
 import { Logo } from "@/app/components/logo"
 import { getNavigation } from "../_lib/content"
 
-const icons: Record<string, React.ReactNode> = {
+const icons: Record<string, ReactNode> = {
 	introduction: <BookOpen size={14} />,
 	installation: <Download size={14} />,
 	quickstart: <Rocket size={14} />,
