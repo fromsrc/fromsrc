@@ -4,30 +4,62 @@ description: configure search for your documentation
 order: 7
 ---
 
-fromsrc includes built-in client-side search. for larger sites, use a search adapter.
+fromsrc includes built-in full-text search with a pluggable adapter system.
 
 ## built-in search
 
-the default search works out of the box with no configuration:
+the default search works out of the box with full-text content search:
 
 ```tsx
 import { Search } from "fromsrc/client"
+import { getSearchDocs } from "./_lib/content"
+
+const docs = await getSearchDocs()
 
 <Search docs={docs} basePath="/docs" />
 ```
 
 ### features
 
-- fuzzy matching
-- instant results
+- full-text body content search
+- fuzzy title/description matching
+- content snippets in results
 - keyboard navigation
-- recent searches
+- instant results
 
-## search adapters
+## search adapter interface
 
-for larger documentation sites, use a hosted search service.
+fromsrc uses a pluggable adapter pattern for search:
 
-### orama (recommended)
+```ts
+import type { SearchAdapter, SearchResult } from "fromsrc"
+
+interface SearchAdapter {
+  search(query: string, docs: SearchDoc[]): SearchResult[]
+  index?(docs: SearchDoc[]): void | Promise<void>
+}
+```
+
+### using a custom adapter
+
+```tsx
+import { Search } from "fromsrc/client"
+import { createSearchAdapter } from "fromsrc"
+
+const myAdapter = createSearchAdapter({
+  search(query, docs) {
+    return docs
+      .filter(d => d.title.includes(query))
+      .map(doc => ({ doc, score: 1 }))
+  }
+})
+
+<Search docs={docs} adapter={myAdapter} />
+```
+
+## future adapters
+
+### @fromsrc/orama
 
 fast, open-source search with vector support:
 
@@ -36,15 +68,17 @@ bun add @fromsrc/orama
 ```
 
 ```tsx
-import { OramaSearch } from "@fromsrc/orama"
+import { createOramaAdapter } from "@fromsrc/orama"
 
-<OramaSearch
-  endpoint="https://cloud.orama.run/v1/indexes/..."
-  apiKey="your-api-key"
-/>
+const adapter = createOramaAdapter({
+  endpoint: "https://cloud.orama.run/v1/indexes/...",
+  apiKey: "your-api-key"
+})
+
+<Search docs={docs} adapter={adapter} />
 ```
 
-### algolia
+### @fromsrc/algolia
 
 industry-standard hosted search:
 
@@ -53,60 +87,15 @@ bun add @fromsrc/algolia
 ```
 
 ```tsx
-import { AlgoliaSearch } from "@fromsrc/algolia"
+import { createAlgoliaAdapter } from "@fromsrc/algolia"
 
-<AlgoliaSearch
-  appId="your-app-id"
-  apiKey="your-search-key"
-  indexName="docs"
-/>
-```
+const adapter = createAlgoliaAdapter({
+  appId: "your-app-id",
+  apiKey: "your-search-key",
+  indexName: "docs"
+})
 
-### custom adapter
-
-build your own search adapter:
-
-```tsx
-import { SearchBase } from "fromsrc/client"
-
-function CustomSearch({ onSearch }) {
-  return (
-    <SearchBase
-      onSearch={async (query) => {
-        const results = await yourSearchApi(query)
-        return results.map(r => ({
-          title: r.title,
-          href: r.url,
-          content: r.excerpt
-        }))
-      }}
-    />
-  )
-}
-```
-
-## indexing
-
-### build-time indexing
-
-generate a search index at build time:
-
-```ts
-// scripts/index.ts
-import { indexDocs } from "fromsrc"
-import { docs } from "../app/docs/_lib/content"
-
-const index = indexDocs(docs)
-await Bun.write("public/search-index.json", JSON.stringify(index))
-```
-
-### runtime indexing
-
-index documents on the fly:
-
-```tsx
-const docs = await getDocs()
-const searchIndex = createSearchIndex(docs)
+<Search docs={docs} adapter={adapter} />
 ```
 
 ## keyboard shortcuts
@@ -117,3 +106,24 @@ const searchIndex = createSearchIndex(docs)
 | `↑` / `↓` | navigate results |
 | `Enter` | go to result |
 | `Escape` | close search |
+
+## searchdoc type
+
+the search component accepts an array of searchable documents:
+
+```ts
+interface SearchDoc {
+  slug: string
+  title: string
+  description?: string
+  content: string  // stripped body text for searching
+}
+```
+
+use `getSearchDocs()` to get documents with content for full-text search:
+
+```ts
+import { getSearchDocs } from "./_lib/content"
+
+const searchDocs = await getSearchDocs()
+```
