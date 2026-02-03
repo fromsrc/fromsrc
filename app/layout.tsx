@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Instrument_Serif, JetBrains_Mono } from "next/font/google"
+import type { ReactNode } from "react"
 import "katex/dist/katex.min.css"
 import "./globals.css"
 
@@ -43,7 +44,7 @@ export const viewport: Viewport = {
 	themeColor: "#0a0a0a",
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="en">
 			<body className={`${mono.variable} ${serif.variable}`}>{children}</body>

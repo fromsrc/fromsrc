@@ -1,11 +1,12 @@
 import type { DocMeta } from "fromsrc"
 import { Breadcrumb, Toc } from "fromsrc/client"
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDX } from "../_components/mdx"
 import { getAllDocs, getDoc } from "../_lib/content"
 
-interface Props {
+type Props = {
 	params: Promise<{ slug?: string[] }>
 }
 
@@ -36,14 +37,14 @@ function sortDocs(docs: DocMeta[]): DocMeta[] {
 	]
 }
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
 	const docs = await getAllDocs()
 	return docs.map((doc) => ({
 		slug: doc.slug ? doc.slug.split("/") : [],
 	}))
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const { slug = [] } = await params
 	const doc = await getDoc(slug)
 
