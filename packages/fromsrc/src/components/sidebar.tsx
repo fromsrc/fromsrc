@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState, type ReactNode } from "react"
-import { PanelLeftClose, PanelLeft } from "lucide-react"
+import { PanelLeft } from "lucide-react"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
@@ -55,7 +55,7 @@ export function Sidebar({ title, logo, navigation, docs, basePath = "/docs", git
 						className="w-10 h-10 flex items-center justify-center text-muted hover:text-fg transition-colors shrink-0"
 						aria-label={collapsed ? "expand sidebar" : "collapse sidebar"}
 					>
-						{collapsed ? <PanelLeft size={18} aria-hidden="true" /> : <PanelLeftClose size={18} aria-hidden="true" />}
+						<PanelLeft size={18} aria-hidden="true" />
 					</button>
 				)}
 				{!collapsed && (
