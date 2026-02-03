@@ -1,22 +1,31 @@
 "use client"
 
 import Link from "next/link"
-import type { ReactNode } from "react"
+import type { JSX, ReactNode } from "react"
 
+/**
+ * Container for Card components in a responsive grid layout.
+ * @property children - Card elements to display in grid
+ */
 export interface CardsProps {
 	children: ReactNode
 }
 
-export function Cards({ children }: CardsProps) {
+export function Cards({ children }: CardsProps): JSX.Element {
 	return <div className="my-6 grid gap-4 sm:grid-cols-2">{children}</div>
 }
 
 /**
- * @param title - card heading
- * @param description - optional subtext
- * @param href - link destination
- * @param icon - optional icon element
- * @example <Card title="setup" href="/docs/setup" />
+ * A card component that renders as a link or static container.
+ * @property title - card heading text
+ * @property description - optional subtext below title
+ * @property href - optional link destination, renders as anchor when provided
+ * @property icon - optional icon element displayed above title
+ * @example
+ * ```tsx
+ * <Card title="setup" href="/docs/setup" />
+ * <Card title="feature" description="details" icon={<Icon />} />
+ * ```
  */
 export interface CardProps {
 	title: string
@@ -25,8 +34,8 @@ export interface CardProps {
 	icon?: ReactNode
 }
 
-export function Card({ title, description, href, icon }: CardProps) {
-	const content = (
+export function Card({ title, description, href, icon }: CardProps): JSX.Element {
+	const content: JSX.Element = (
 		<>
 			{icon && <div className="mb-3 text-muted">{icon}</div>}
 			<h3 className="font-medium text-fg">{title}</h3>
