@@ -2,6 +2,8 @@
 
 export type { AccordionItemProps, AccordionProps } from "./components/accordion"
 export { Accordion, AccordionItem } from "./components/accordion"
+export type { AlertProps } from "./components/alert"
+export { Alert } from "./components/alert"
 export { Avatar, AvatarGroup, User } from "./components/avatar"
 export { BackToTop } from "./components/backtotop"
 export type { BadgeProps, BadgeVariant } from "./components/badge"
