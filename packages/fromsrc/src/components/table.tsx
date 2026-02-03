@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useCallback, useId, useMemo, useState } from "react"
+import { type ReactNode, memo, useCallback, useId, useMemo, useState } from "react"
 
 /**
  * Sort direction for table columns
@@ -176,7 +176,7 @@ interface SortIconProps {
 	direction: SortDirection
 }
 
-function SortIcon({ active, direction }: SortIconProps): ReactNode {
+const SortIcon = memo(function SortIcon({ active, direction }: SortIconProps): ReactNode {
 	return (
 		<svg
 			aria-hidden="true"
@@ -196,4 +196,4 @@ function SortIcon({ active, direction }: SortIconProps): ReactNode {
 			)}
 		</svg>
 	)
-}
+})
