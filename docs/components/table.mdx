@@ -86,19 +86,6 @@ const columns = [
 ]
 ```
 
-<Table
-  data={[
-    { name: "react", stars: 220000, language: "javascript" },
-    { name: "vue", stars: 205000, language: "typescript" },
-    { name: "svelte", stars: 75000, language: "typescript" },
-  ]}
-  columns={[
-    { key: "name", header: "name" },
-    { key: "stars", header: "stars", render: (value) => `${(value / 1000).toFixed(0)}k` },
-    { key: "language", header: "language", render: (value) => <Badge>{value}</Badge> },
-  ]}
-/>
-
 ## responsive
 
 hide columns on mobile with `hideOnMobile`:
