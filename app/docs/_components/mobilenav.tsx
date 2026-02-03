@@ -3,8 +3,7 @@ import { Logo } from "@/app/components/logo"
 import { getAllDocs, getNavigation } from "../_lib/content"
 
 export async function MobileNavigation() {
-	const navigation = await getNavigation()
-	const docs = await getAllDocs()
+	const [navigation, docs] = await Promise.all([getNavigation(), getAllDocs()])
 
 	return (
 		<MobileNavBase

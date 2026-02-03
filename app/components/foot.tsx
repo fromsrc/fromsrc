@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Bolt, Logo } from "./logo"
 
 type Link = {
@@ -38,13 +39,13 @@ export function Foot() {
 						<span className="text-muted">that don't fight you?</span>
 					</h2>
 					<div className="flex flex-wrap items-center gap-6">
-						<a
+						<Link
 							href="/docs"
 							className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-full text-sm hover:bg-accent/90 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg"
 						>
 							<Bolt />
 							introduction
-						</a>
+						</Link>
 						<code className="text-muted">npx create-fromsrc</code>
 					</div>
 				</div>

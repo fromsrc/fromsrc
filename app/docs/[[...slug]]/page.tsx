@@ -58,8 +58,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function DocPage({ params }: Props) {
 	const { slug = [] } = await params
-	const doc = await getDoc(slug)
-	const allDocs = sortDocs(await getAllDocs())
+	const [doc, rawDocs] = await Promise.all([getDoc(slug), getAllDocs()])
+	const allDocs = sortDocs(rawDocs)
 
 	if (!doc) notFound()
 

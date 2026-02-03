@@ -21,8 +21,12 @@ export async function GET() {
 	lines.push("## content")
 	lines.push("")
 
-	for (const meta of metas) {
-		const doc = await getDoc(meta.slug ? meta.slug.split("/") : [])
+	const docs = await Promise.all(
+		metas.map((meta) => getDoc(meta.slug ? meta.slug.split("/") : [])),
+	)
+
+	for (let i = 0; i < metas.length; i++) {
+		const doc = docs[i]
 		if (!doc) continue
 
 		lines.push(`### ${doc.title}`)

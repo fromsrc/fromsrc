@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 import { Copy } from "./copy"
 import { Bolt } from "./logo"
@@ -242,13 +243,13 @@ export function Hero() {
 				</header>
 
 				<div className="flex items-center gap-6 mb-20">
-					<a
+					<Link
 						href="/docs"
 						className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-full text-sm hover:bg-accent/90 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg"
 					>
 						<Bolt />
 						introduction
-					</a>
+					</Link>
 					<Copy
 						text="npx create-fromsrc"
 						className="text-xs underline underline-offset-4 shimmer"
