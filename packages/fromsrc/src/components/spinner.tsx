@@ -12,10 +12,12 @@ const sizes = {
 export function Spinner({ size = "md", className = "" }: SpinnerProps) {
 	return (
 		<svg
-			className={`animate-spin ${sizes[size]} ${className}`}
+			className={`animate-spin will-change-transform ${sizes[size]} ${className}`}
 			viewBox="0 0 24 24"
 			fill="none"
+			role="status"
 			aria-label="loading"
+			aria-hidden="true"
 		>
 			<circle
 				className="opacity-25"
@@ -41,7 +43,12 @@ export interface LoadingProps {
 
 export function Loading({ text, size = "md" }: LoadingProps) {
 	return (
-		<div className="flex items-center justify-center gap-2 text-muted">
+		<div
+			role="status"
+			aria-live="polite"
+			aria-label={text || "loading"}
+			className="flex items-center justify-center gap-2 text-muted"
+		>
 			<Spinner size={size} />
 			{text && <span className="text-sm">{text}</span>}
 		</div>
