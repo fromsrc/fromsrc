@@ -20,7 +20,7 @@ interface KatexAPI {
 /**
  * Props for the Math component
  */
-interface MathProps {
+export interface MathProps {
 	/** LaTeX content to render */
 	children: ReactNode
 	/** Whether to render as block display mode */
@@ -81,7 +81,7 @@ export const Math = memo(MathBase)
 /**
  * Props for the BlockMath component
  */
-interface BlockMathProps {
+export interface BlockMathProps {
 	/** LaTeX content to render as a block */
 	children: ReactNode
 }
@@ -95,7 +95,7 @@ export const BlockMath = memo(BlockMathBase)
 /**
  * Props for the InlineMath component
  */
-interface InlineMathProps {
+export interface InlineMathProps {
 	/** LaTeX content to render inline */
 	children: ReactNode
 }

@@ -3,7 +3,7 @@ import { type JSX, type ReactNode, memo } from "react"
 /**
  * props for a single keyboard key display
  */
-interface KbdProps {
+export interface KbdProps {
 	children: ReactNode
 	className?: string
 }
@@ -23,7 +23,7 @@ export const Kbd = memo(KbdBase)
 /**
  * props for a keyboard shortcut with multiple keys
  */
-interface ShortcutProps {
+export interface ShortcutProps {
 	keys: string[]
 }
 

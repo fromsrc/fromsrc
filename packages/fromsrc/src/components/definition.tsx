@@ -5,7 +5,7 @@ import { type ComponentProps, type JSX, type ReactNode, memo } from "react"
 /**
  * Props for the DefinitionList component
  */
-type DefinitionListProps = ComponentProps<"dl">
+export type DefinitionListProps = ComponentProps<"dl">
 
 /**
  * A semantic definition list container using dl element
@@ -20,7 +20,7 @@ export const DefinitionList = memo(function DefinitionList({
 /**
  * Props for the Definition component
  */
-interface DefinitionProps extends ComponentProps<"div"> {
+export interface DefinitionProps extends ComponentProps<"div"> {
 	/** The term being defined */
 	term: ReactNode
 }
@@ -45,7 +45,7 @@ export const Definition = memo(function Definition({
 /**
  * Props for the Glossary component
  */
-type GlossaryProps = ComponentProps<"dl">
+export type GlossaryProps = ComponentProps<"dl">
 
 /**
  * A styled glossary container using semantic dl element
@@ -65,7 +65,7 @@ export const Glossary = memo(function Glossary({
 /**
  * Props for the GlossaryItem component
  */
-interface GlossaryItemProps extends ComponentProps<"div"> {
+export interface GlossaryItemProps extends ComponentProps<"div"> {
 	/** The term being defined */
 	term: ReactNode
 }
