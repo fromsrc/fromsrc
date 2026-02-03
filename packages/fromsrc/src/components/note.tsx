@@ -1,12 +1,25 @@
-import type { ReactNode } from "react"
+import { type ReactNode, type JSX, memo } from "react"
 
+/**
+ * Props for note-style callout components
+ */
 export interface NoteProps {
+	/** Content to display inside the note */
 	children: ReactNode
+	/** Additional CSS classes */
 	className?: string
+	/** Accessible label for screen readers */
 	label?: string
 }
 
-export function Note({ children, className = "", label = "Note" }: NoteProps) {
+/**
+ * Subtle informational callout with left border
+ */
+export const Note = memo(function Note({
+	children,
+	className = "",
+	label = "Note",
+}: NoteProps): JSX.Element {
 	return (
 		<aside
 			role="note"
@@ -16,9 +29,16 @@ export function Note({ children, className = "", label = "Note" }: NoteProps) {
 			{children}
 		</aside>
 	)
-}
+})
 
-export function Important({ children, className = "", label = "Important" }: NoteProps) {
+/**
+ * Warning callout for important information
+ */
+export const Important = memo(function Important({
+	children,
+	className = "",
+	label = "Important",
+}: NoteProps): JSX.Element {
 	return (
 		<aside
 			role="note"
@@ -28,9 +48,16 @@ export function Important({ children, className = "", label = "Important" }: Not
 			{children}
 		</aside>
 	)
-}
+})
 
-export function Experimental({ children, className = "", label = "Experimental" }: NoteProps) {
+/**
+ * Callout for experimental or unstable features
+ */
+export const Experimental = memo(function Experimental({
+	children,
+	className = "",
+	label = "Experimental",
+}: NoteProps): JSX.Element {
 	return (
 		<aside
 			role="note"
@@ -46,4 +73,4 @@ export function Experimental({ children, className = "", label = "Experimental" 
 			<div className="mt-1">{children}</div>
 		</aside>
 	)
-}
+})
