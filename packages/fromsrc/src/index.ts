@@ -24,3 +24,4 @@ export {
 	createSearchAdapter,
 	localSearch,
 } from "./search"
+export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
