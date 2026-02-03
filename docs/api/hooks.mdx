@@ -102,3 +102,86 @@ this hook enables:
     docs: { type: "DocMeta[]", required: true, description: "ordered list of docs for navigation" },
   }}
 />
+
+## useScrollSpy
+
+track which heading is currently visible in the viewport.
+
+```tsx
+import { useScrollSpy } from "fromsrc/client"
+
+function ActiveIndicator({ ids }: { ids: string[] }) {
+  const activeId = useScrollSpy(ids)
+  return <div>active: {activeId}</div>
+}
+```
+
+<TypeTable
+  data={{
+    ids: { type: "string[]", required: true, description: "array of element ids to track" },
+    offset: { type: "number", default: "100", description: "scroll offset from top" },
+  }}
+/>
+
+## useAnchorScroll
+
+smooth scrolling to anchor links with configurable offset.
+
+```tsx
+import { useAnchorScroll } from "fromsrc/client"
+
+function DocsLayout() {
+  useAnchorScroll({ offset: 80 })
+  return <main>...</main>
+}
+```
+
+<TypeTable
+  data={{
+    offset: { type: "number", default: "80", description: "scroll offset for fixed headers" },
+    smooth: { type: "boolean", default: "true", description: "enable smooth scrolling" },
+  }}
+/>
+
+## useMediaQuery
+
+react to media query changes.
+
+```tsx
+import { useIsMobile, useIsDesktop } from "fromsrc/client"
+
+function ResponsiveLayout() {
+  const isMobile = useIsMobile()
+  return isMobile ? <MobileLayout /> : <DesktopLayout />
+}
+```
+
+available hooks:
+- `useMediaQuery(query)` - custom media query
+- `useIsMobile()` - below 768px
+- `useIsTablet()` - 769px to 1024px
+- `useIsDesktop()` - above 1025px
+- `usePrefersDark()` - dark mode preference
+- `usePrefersReducedMotion()` - reduced motion preference
+
+## useLocalStorage
+
+persist state to local storage.
+
+```tsx
+import { useLocalStorage } from "fromsrc/client"
+
+function Preferences() {
+  const [theme, setTheme] = useLocalStorage("theme", "dark")
+  return <button onClick={() => setTheme("light")}>light</button>
+}
+```
+
+<TypeTable
+  data={{
+    key: { type: "string", required: true, description: "storage key" },
+    defaultValue: { type: "T", required: true, description: "default value if not stored" },
+  }}
+/>
+
+also available: `useSessionStorage` with same api.
