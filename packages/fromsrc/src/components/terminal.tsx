@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, useEffect, useState } from "react"
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react"
 
 interface TerminalProps {
 	title?: string
@@ -11,7 +11,7 @@ export function Terminal({ title = "Terminal", children }: TerminalProps) {
 	return (
 		<div className="my-6 rounded-xl border border-line overflow-hidden">
 			<div className="flex items-center gap-2 px-4 py-2.5 bg-[#0a0a0a] border-b border-line">
-				<div className="flex gap-1.5">
+				<div className="flex gap-1.5" aria-hidden="true">
 					<div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
 					<div className="w-3 h-3 rounded-full bg-[#febc2e]" />
 					<div className="w-3 h-3 rounded-full bg-[#28c840]" />
@@ -50,6 +50,10 @@ interface TypedProps {
 	speed?: number
 }
 
+const caretStyle: CSSProperties = {
+	animation: "caret 530ms steps(1) infinite",
+}
+
 export function Typed({ text, speed = 50 }: TypedProps) {
 	const [displayed, setDisplayed] = useState("")
 	const [done, setDone] = useState(false)
@@ -76,8 +80,13 @@ export function Typed({ text, speed = 50 }: TypedProps) {
 
 	return (
 		<span>
+			<style>{`@keyframes caret { 50% { opacity: 0; } }`}</style>
 			{displayed}
-			{!done && <span className="animate-pulse">▋</span>}
+			{!done && (
+				<span style={caretStyle} aria-hidden="true">
+					▋
+				</span>
+			)}
 		</span>
 	)
 }
