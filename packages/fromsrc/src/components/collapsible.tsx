@@ -3,13 +3,13 @@
 import { type ReactNode, useId, useState } from "react"
 import { IconChevronRight } from "./icons"
 
-interface Props {
+export interface CollapsibleProps {
 	title: string
 	defaultOpen?: boolean
 	children: ReactNode
 }
 
-export function Collapsible({ title, defaultOpen = false, children }: Props) {
+export function Collapsible({ title, defaultOpen = false, children }: CollapsibleProps) {
 	const [open, setOpen] = useState(defaultOpen)
 	const id = useId()
 	const buttonId = `${id}-button`
@@ -45,7 +45,7 @@ export function Collapsible({ title, defaultOpen = false, children }: Props) {
 	)
 }
 
-interface DetailsProps {
+export interface DetailsProps {
 	summary: string
 	children: ReactNode
 }
