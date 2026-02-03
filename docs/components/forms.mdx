@@ -312,3 +312,129 @@ import { Autofill } from "fromsrc/client"
 | id | string | required | unique identifier |
 | label | string | required | display text |
 | value | string | - | value when selected (defaults to label) |
+
+## radio
+
+radio button group for selecting one option from a set.
+
+### usage
+
+```tsx
+import { Radio, RadioGroup } from "fromsrc/client"
+
+<RadioGroup label="plan">
+  <Radio value="free" label="free" />
+  <Radio value="pro" label="pro" />
+  <Radio value="team" label="team" />
+</RadioGroup>
+```
+
+<RadioGroup label="plan" defaultValue="pro">
+  <Radio value="free" label="free" />
+  <Radio value="pro" label="pro" />
+  <Radio value="team" label="team" />
+</RadioGroup>
+
+### sizes
+
+<div className="flex gap-8">
+  <RadioGroup label="small" size="sm">
+    <Radio value="a" label="option a" />
+    <Radio value="b" label="option b" />
+  </RadioGroup>
+  <RadioGroup label="medium" size="md">
+    <Radio value="a" label="option a" />
+    <Radio value="b" label="option b" />
+  </RadioGroup>
+  <RadioGroup label="large" size="lg">
+    <Radio value="a" label="option a" />
+    <Radio value="b" label="option b" />
+  </RadioGroup>
+</div>
+
+### horizontal
+
+<RadioGroup label="theme" orientation="horizontal" defaultValue="system">
+  <Radio value="light" label="light" />
+  <Radio value="dark" label="dark" />
+  <Radio value="system" label="system" />
+</RadioGroup>
+
+### disabled
+
+<RadioGroup label="disabled group" disabled defaultValue="a">
+  <Radio value="a" label="option a" />
+  <Radio value="b" label="option b" />
+</RadioGroup>
+
+### RadioGroup props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| value | string | - | controlled value |
+| defaultValue | string | - | uncontrolled default |
+| onChange | (value: string) => void | - | change callback |
+| name | string | - | form field name |
+| size | "sm" \| "md" \| "lg" | "md" | radio size |
+| label | string | - | group label for accessibility |
+| orientation | "horizontal" \| "vertical" | "vertical" | layout direction |
+| disabled | boolean | false | disable all radios |
+
+### Radio props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| value | string | required | unique value for this option |
+| label | ReactNode | - | accessible label |
+| disabled | boolean | false | disable this radio |
+
+## textarea
+
+multi-line text input with autoresize and character count.
+
+### usage
+
+```tsx
+import { Textarea } from "fromsrc/client"
+
+<Textarea label="message" placeholder="type here..." />
+```
+
+<Textarea label="message" placeholder="type here..." />
+
+### sizes
+
+<div className="flex flex-col gap-4">
+  <Textarea size="sm" placeholder="small" />
+  <Textarea size="md" placeholder="medium" />
+  <Textarea size="lg" placeholder="large" />
+</div>
+
+### with error
+
+<Textarea label="bio" error="bio is required" />
+
+### with hint
+
+<Textarea label="description" hint="keep it brief" />
+
+### character count
+
+<Textarea label="tweet" maxLength={280} showCount placeholder="what's happening?" />
+
+### autoresize
+
+<Textarea label="notes" autoresize placeholder="grows as you type..." />
+
+### props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| variant | "default" \| "error" | "default" | visual style |
+| size | "sm" \| "md" \| "lg" | "md" | textarea size |
+| label | ReactNode | - | accessible label |
+| error | ReactNode | - | error message |
+| hint | ReactNode | - | helper text |
+| autoresize | boolean | false | auto-resize based on content |
+| maxLength | number | - | maximum character count |
+| showCount | boolean | false | show character count |
