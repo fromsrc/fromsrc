@@ -56,6 +56,24 @@ export function useToc(multi = false): TocState {
 	useEffect(() => {
 		if (headings.length === 0) return
 
+		function findClosest(): string {
+			let closest = headings[0]?.id || ""
+			let minDistance = Infinity
+
+			for (const { id } of headings) {
+				const el = document.getElementById(id)
+				if (!el) continue
+				const rect = el.getBoundingClientRect()
+				const distance = Math.abs(rect.top)
+				if (distance < minDistance) {
+					minDistance = distance
+					closest = id
+				}
+			}
+
+			return closest
+		}
+
 		if (multi) {
 			const visible = new Set<string>()
 
@@ -70,18 +88,16 @@ export function useToc(multi = false): TocState {
 					}
 
 					if (visible.size === 0) {
-						const first = headings[0]
-						if (first) {
-							setActive(first.id)
-							setActiveRange([first.id])
-						}
+						const closest = findClosest()
+						setActive(closest)
+						setActiveRange(closest ? [closest] : [])
 					} else {
 						const ordered = headings.filter((h) => visible.has(h.id))
 						setActive(ordered[0]?.id || "")
 						setActiveRange(ordered.map((h) => h.id))
 					}
 				},
-				{ rootMargin: "0px", threshold: 0.5 },
+				{ rootMargin: "0px", threshold: 0.9 },
 			)
 
 			for (const { id } of headings) {
