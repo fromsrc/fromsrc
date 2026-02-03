@@ -1,11 +1,13 @@
 import type { ReactNode } from "react"
 
+export type HighlightColor = "yellow" | "green" | "blue" | "red" | "purple"
+
 export interface HighlightProps {
 	children: ReactNode
-	color?: "yellow" | "green" | "blue" | "red" | "purple"
+	color?: HighlightColor
 }
 
-const colors = {
+const colors: Record<HighlightColor, string> = {
 	yellow: "bg-yellow-500/20 text-yellow-200",
 	green: "bg-green-500/20 text-green-200",
 	blue: "bg-blue-500/20 text-blue-200",
@@ -14,15 +16,19 @@ const colors = {
 }
 
 export function Highlight({ children, color = "yellow" }: HighlightProps) {
-	return <mark className={`rounded px-1 ${colors[color]}`}>{children}</mark>
+	return (
+		<mark className={`rounded px-1 transition-colors ${colors[color]}`}>{children}</mark>
+	)
 }
+
+export type UnderlineStyle = "solid" | "wavy" | "dotted" | "dashed"
 
 export interface UnderlineProps {
 	children: ReactNode
-	style?: "solid" | "wavy" | "dotted" | "dashed"
+	style?: UnderlineStyle
 }
 
-const underlineStyles = {
+const underlineStyles: Record<UnderlineStyle, string> = {
 	solid: "decoration-solid",
 	wavy: "decoration-wavy",
 	dotted: "decoration-dotted",
@@ -31,7 +37,9 @@ const underlineStyles = {
 
 export function Underline({ children, style = "solid" }: UnderlineProps) {
 	return (
-		<span className={`underline decoration-accent underline-offset-4 ${underlineStyles[style]}`}>
+		<span
+			className={`underline decoration-accent underline-offset-4 transition-colors ${underlineStyles[style]}`}
+		>
 			{children}
 		</span>
 	)
