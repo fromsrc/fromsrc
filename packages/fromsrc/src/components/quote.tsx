@@ -1,16 +1,23 @@
 "use client"
 
 import Image from "next/image"
-import type { ReactNode } from "react"
+import { type ReactNode, memo } from "react"
 
+/**
+ * Props for the Quote component
+ */
 export interface QuoteProps {
+	/** Quote content */
 	children: ReactNode
+	/** Author name */
 	author?: string
+	/** Author role or title */
 	role?: string
+	/** Avatar image URL */
 	avatar?: string
 }
 
-export function Quote({ children, author, role, avatar }: QuoteProps) {
+function QuoteBase({ children, author, role, avatar }: QuoteProps): React.JSX.Element {
 	return (
 		<figure className="my-6 p-6 rounded-xl border border-line bg-surface/30">
 			<blockquote className="text-lg text-fg italic leading-relaxed">"{children}"</blockquote>
@@ -31,22 +38,37 @@ export function Quote({ children, author, role, avatar }: QuoteProps) {
 	)
 }
 
+export const Quote = memo(QuoteBase)
+
+/**
+ * Props for the Testimonials grid container
+ */
 export interface TestimonialsProps {
+	/** Testimonial components */
 	children: ReactNode
 }
 
-export function Testimonials({ children }: TestimonialsProps) {
+function TestimonialsBase({ children }: TestimonialsProps): React.JSX.Element {
 	return <div className="grid gap-4 md:grid-cols-2 my-6">{children}</div>
 }
 
+export const Testimonials = memo(TestimonialsBase)
+
+/**
+ * Props for the Testimonial component
+ */
 export interface TestimonialProps {
+	/** Testimonial content */
 	children: ReactNode
+	/** Author name */
 	author: string
+	/** Author role or title */
 	role?: string
+	/** Avatar image URL */
 	avatar?: string
 }
 
-export function Testimonial({ children, author, role, avatar }: TestimonialProps) {
+function TestimonialBase({ children, author, role, avatar }: TestimonialProps): React.JSX.Element {
 	return (
 		<figure className="p-5 rounded-xl border border-line bg-surface/30">
 			<blockquote className="text-sm text-muted leading-relaxed">{children}</blockquote>
@@ -64,3 +86,5 @@ export function Testimonial({ children, author, role, avatar }: TestimonialProps
 		</figure>
 	)
 }
+
+export const Testimonial = memo(TestimonialBase)
