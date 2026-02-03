@@ -9,7 +9,8 @@
 		"dev": "next dev",
 		"build": "bun run build:pkg && next build",
 		"build:pkg": "cd packages/fromsrc && bun run build",
-		"start": "next start"
+		"start": "next start",
+		"prepare": "husky"
 	},
 	"dependencies": {
 		"@mdx-js/mdx": "^3.1.1",
@@ -34,6 +35,7 @@
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
 		"autoprefixer": "^10.4.24",
+		"husky": "^9.1.7",
 		"postcss": "^8.5.6",
 		"tailwindcss": "^4.1.18",
 		"typescript": "^5"

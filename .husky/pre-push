@@ -1,0 +1,1 @@
+cd packages/fromsrc && bun run build && cd ../.. && bun run build
