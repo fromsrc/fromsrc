@@ -49,8 +49,8 @@ function MobileFolder({
 						href={folder.href}
 						onClick={onNavigate}
 						prefetch
-						className={`flex-1 flex items-center gap-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
-							isActive ? "text-fg bg-surface" : "text-muted hover:text-fg"
+						className={`flex-1 flex items-center gap-2 px-2 py-2.5 min-h-[44px] text-xs rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
+							isActive ? "text-fg bg-surface" : "text-muted hover:text-fg active:text-fg"
 						}`}
 					>
 						{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
@@ -61,7 +61,7 @@ function MobileFolder({
 						type="button"
 						onClick={() => setOpen(!open)}
 						aria-expanded={open}
-						className="flex-1 flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
+						className="flex-1 flex items-center gap-2 px-2 py-2.5 min-h-[44px] text-xs text-muted hover:text-fg active:text-fg rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
 					>
 						{folder.icon && <span className="w-4 h-4 shrink-0">{folder.icon}</span>}
 						<span className="flex-1 text-left">{folder.title}</span>
@@ -72,10 +72,10 @@ function MobileFolder({
 					onClick={() => setOpen(!open)}
 					aria-expanded={open}
 					aria-label={open ? "collapse" : "expand"}
-					className="p-1 text-muted hover:text-fg transition-colors"
+					className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-muted hover:text-fg active:text-fg transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md"
 				>
 					<svg
-						className={`w-3.5 h-3.5 transition-transform ${open ? "" : "-rotate-90"}`}
+						className={`w-4 h-4 transition-transform ${open ? "" : "-rotate-90"}`}
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke="currentColor"
@@ -118,6 +118,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 	const pathname = usePathname()
 	const closeRef = useRef<HTMLButtonElement>(null)
 	const openRef = useRef<HTMLButtonElement>(null)
+	const drawerRef = useRef<HTMLElement>(null)
 
 	useEffect(() => {
 		setOpen(false)
@@ -153,10 +154,36 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 		return () => window.removeEventListener("keydown", onKey)
 	}, [open, close])
 
+	useEffect(() => {
+		if (!open || !drawerRef.current) return
+		const drawer = drawerRef.current
+		const focusable = drawer.querySelectorAll<HTMLElement>(
+			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+		)
+		const first = focusable[0]
+		const last = focusable[focusable.length - 1]
+
+		const trap = (e: KeyboardEvent) => {
+			if (e.key !== "Tab") return
+			if (e.shiftKey && document.activeElement === first) {
+				e.preventDefault()
+				last?.focus()
+			} else if (!e.shiftKey && document.activeElement === last) {
+				e.preventDefault()
+				first?.focus()
+			}
+		}
+		drawer.addEventListener("keydown", trap)
+		return () => drawer.removeEventListener("keydown", trap)
+	}, [open])
+
 	return (
 		<>
-			<header className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 py-3 border-b border-line bg-bg">
-				<Link href="/" className="flex items-center gap-2 text-sm text-fg">
+			<header className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b border-line bg-bg">
+				<Link
+					href="/"
+					className="flex items-center gap-2 text-sm text-fg min-h-[44px] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md"
+				>
 					<div className="p-1 rounded-lg bg-surface border border-line">{logo}</div>
 					{title}
 				</Link>
@@ -164,7 +191,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 					ref={openRef}
 					type="button"
 					onClick={() => setOpen(true)}
-					className="p-2 text-muted hover:text-fg transition-colors"
+					className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-muted hover:text-fg active:text-fg transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md"
 					aria-label="open menu"
 				>
 					<svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" className="size-5">
@@ -173,26 +200,28 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 				</button>
 			</header>
 			{open && (
-				<div className="lg:hidden fixed inset-0 z-50">
+				<div className="lg:hidden fixed inset-0 z-50" role="presentation">
 					<button
 						type="button"
 						className={`absolute inset-0 bg-bg/80 backdrop-blur-sm cursor-default ${closing ? "animate-fadeout" : "animate-fadein"}`}
 						onClick={close}
 						aria-label="close menu"
+						tabIndex={-1}
 					/>
 					<aside
+						ref={drawerRef}
 						role="dialog"
 						aria-modal="true"
 						aria-label="navigation menu"
-						className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[380px] bg-bg border-l border-line shadow-2xl flex flex-col ${closing ? "animate-slideout" : "animate-slidein"}`}
+						className={`absolute top-0 right-0 bottom-0 w-[85vw] max-w-[400px] bg-bg border-l border-line shadow-2xl flex flex-col ${closing ? "animate-slideout" : "animate-slidein"}`}
 					>
-						<div className="flex items-center justify-between px-4 py-3 border-b border-line">
+						<div className="flex items-center justify-between px-4 h-14 border-b border-line">
 							<span className="text-sm text-fg font-medium">{title}</span>
 							<button
 								ref={closeRef}
 								type="button"
 								onClick={close}
-								className="p-2 text-muted hover:text-fg transition-colors"
+								className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-muted hover:text-fg active:text-fg transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md"
 								aria-label="close menu"
 							>
 								<svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" className="size-5">
@@ -203,7 +232,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 						<div className="p-4">
 							<Search basePath={basePath} docs={docs} />
 						</div>
-						<nav className="flex-1 px-4 pb-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+						<nav className="flex-1 px-4 pb-4 overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] [-webkit-overflow-scrolling:touch]">
 							{navigation.map((section) => (
 								<div key={section.title} className="mb-6">
 									<h3 className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider">
@@ -246,13 +275,13 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 							))}
 						</nav>
 						{github && (
-							<div className="p-4 border-t border-line">
+							<div className="px-4 py-3 border-t border-line">
 								<a
 									href={github}
 									target="_blank"
 									rel="noopener noreferrer"
 									aria-label="view on github"
-									className="flex items-center gap-2 text-xs text-muted hover:text-fg transition-colors"
+									className="flex items-center gap-2 px-2 py-2.5 min-h-[44px] text-xs text-muted hover:text-fg active:text-fg transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded-md"
 								>
 									<svg
 										className="w-4 h-4"

@@ -31,7 +31,7 @@ export function NavLink({ href, children, icon, onClick, external }: Props) {
 				target="_blank"
 				rel="noopener noreferrer"
 				onClick={onClick}
-				className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-md border-l-2 text-muted hover:text-fg hover:bg-surface/50 border-transparent transition-colors"
+				className="flex items-center gap-2 px-2 py-2 lg:py-1.5 min-h-[44px] lg:min-h-0 text-xs rounded-md border-l-2 text-muted hover:text-fg active:text-fg hover:bg-surface/50 border-transparent transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
 			>
 				{icon && (
 					<span className="w-4 h-4 shrink-0" aria-hidden="true">
@@ -64,10 +64,10 @@ export function NavLink({ href, children, icon, onClick, external }: Props) {
 			onClick={onClick}
 			prefetch
 			aria-current={isActive ? "page" : undefined}
-			className={`flex items-center gap-2 px-2 py-1.5 text-xs rounded-md border-l-2 transition-colors ${
+			className={`flex items-center gap-2 px-2 py-2 lg:py-1.5 min-h-[44px] lg:min-h-0 text-xs rounded-md border-l-2 transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
 				isActive
 					? "text-fg bg-surface border-accent"
-					: "text-muted hover:text-fg hover:bg-surface/50 border-transparent"
+					: "text-muted hover:text-fg active:text-fg hover:bg-surface/50 border-transparent"
 			}`}
 		>
 			{icon && (
