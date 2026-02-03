@@ -14,7 +14,10 @@ export function Screenshot({ src, alt, caption, browser = true, className = "" }
 		<figure className={`my-6 ${className}`}>
 			{browser ? (
 				<div className="rounded-lg border border-line overflow-hidden bg-surface">
-					<div className="flex items-center gap-2 px-4 py-2.5 border-b border-line bg-bg">
+					<div
+						className="flex items-center gap-2 px-4 py-2.5 border-b border-line bg-bg"
+						aria-hidden="true"
+					>
 						<div className="flex gap-1.5">
 							<span className="w-3 h-3 rounded-full bg-red-500/80" />
 							<span className="w-3 h-3 rounded-full bg-yellow-500/80" />
