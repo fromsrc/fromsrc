@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { type ReactNode, useEffect, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import type { DocMeta } from "../content"
 import { NavLink } from "./navlink"
 import { Search } from "./search"
@@ -91,6 +91,8 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 	const [open, setOpen] = useState(false)
 	const [closing, setClosing] = useState(false)
 	const pathname = usePathname()
+	const closeRef = useRef<HTMLButtonElement>(null)
+	const openRef = useRef<HTMLButtonElement>(null)
 
 	useEffect(() => {
 		setOpen(false)
@@ -99,6 +101,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 	useEffect(() => {
 		if (open) {
 			document.body.style.overflow = "hidden"
+			closeRef.current?.focus()
 		} else {
 			document.body.style.overflow = ""
 		}
@@ -107,13 +110,23 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 		}
 	}, [open])
 
-	const close = () => {
+	const close = useCallback(() => {
 		setClosing(true)
 		setTimeout(() => {
 			setOpen(false)
 			setClosing(false)
+			openRef.current?.focus()
 		}, 200)
-	}
+	}, [])
+
+	useEffect(() => {
+		if (!open) return
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key === "Escape") close()
+		}
+		window.addEventListener("keydown", onKey)
+		return () => window.removeEventListener("keydown", onKey)
+	}, [open, close])
 
 	return (
 		<>
@@ -123,6 +136,7 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 					{title}
 				</Link>
 				<button
+					ref={openRef}
 					type="button"
 					onClick={() => setOpen(true)}
 					className="p-2 text-muted hover:text-fg transition-colors"
@@ -142,11 +156,15 @@ export function MobileNav({ title, logo, navigation, docs, basePath = "/docs", g
 						aria-label="close menu"
 					/>
 					<aside
+						role="dialog"
+						aria-modal="true"
+						aria-label="navigation menu"
 						className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[380px] bg-bg border-l border-line shadow-2xl flex flex-col ${closing ? "animate-slideout" : "animate-slidein"}`}
 					>
 						<div className="flex items-center justify-between px-4 py-3 border-b border-line">
 							<span className="text-sm text-fg font-medium">{title}</span>
 							<button
+								ref={closeRef}
 								type="button"
 								onClick={close}
 								className="p-2 text-muted hover:text-fg transition-colors"
