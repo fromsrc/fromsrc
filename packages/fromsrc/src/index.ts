@@ -486,3 +486,11 @@ export { type Annotation, remarkAnnotation } from "./remarkannotation"
 export { type RemarkVideoOptions, remarkVideo } from "./remarkvideo"
 export { remarkMermaid } from "./remarkmermaid"
 export { remarkBlockMath } from "./remarkblockmath"
+export { remarkCodeTitle } from "./remarkcodetitle"
+export {
+	type ContentChange,
+	type ContentDiff,
+	contentFromDocs,
+	diffContent,
+	formatChangelog as formatContentDiff,
+} from "./contentdiff"
