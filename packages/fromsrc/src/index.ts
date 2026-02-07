@@ -298,3 +298,36 @@ export {
 	contrastRatio,
 	cssVariables,
 } from "./themeutil"
+export {
+	type FromsrcConfig,
+	type ResolvedConfig,
+	defineConfig,
+	resolveConfig,
+	loadConfig,
+	mergeConfig,
+} from "./config"
+export {
+	type CliCommand,
+	type CliConfig,
+	parseArgs,
+	formatHelp,
+	spinner,
+	createCli,
+} from "./cli"
+export {
+	type OembedData,
+	type OembedProvider,
+	providers,
+	resolve,
+	resolveMany,
+	extractUrls,
+} from "./oembed"
+export {
+	type HighlightResult,
+	type SnippetOptions,
+	highlightMatches,
+	generateSnippet,
+	highlightHtml,
+	tokenize,
+	fuzzyHighlight,
+} from "./highlight"
