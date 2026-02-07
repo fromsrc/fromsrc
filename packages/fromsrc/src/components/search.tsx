@@ -212,6 +212,7 @@ export function Search({
 							<Results
 								results={results}
 								selected={safeSelected}
+								query={debouncedQuery}
 								listRef={listRef}
 								onResultClick={handleResultClick}
 								onResultKeyDown={handleResultKeyDown}

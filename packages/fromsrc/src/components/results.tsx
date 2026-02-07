@@ -1,8 +1,27 @@
 "use client"
 
-import type { JSX, RefObject } from "react"
+import type { JSX, ReactNode, RefObject } from "react"
 import { useMemo } from "react"
 import type { SearchResult } from "../search"
+
+function highlightMatch(text: string, query: string): ReactNode {
+	if (!query.trim()) return text
+	const words = query.trim().split(/\s+/).filter(Boolean)
+	const escaped = words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")
+	const pattern = new RegExp(`(${escaped})`, "gi")
+	const parts = text.split(pattern)
+	if (parts.length === 1) return text
+	const matcher = new RegExp(`^(?:${escaped})$`, "i")
+	return parts.map((part, i) =>
+		matcher.test(part) ? (
+			<mark key={i} className="bg-transparent text-fg font-medium">
+				{part}
+			</mark>
+		) : (
+			part
+		),
+	)
+}
 
 export function getOptionId(index: number): string {
 	return `search-option-${index}`
@@ -27,6 +46,7 @@ function groupResults(results: SearchResult[]): Map<string, SearchResult[]> {
 interface ResultsProps {
 	results: SearchResult[]
 	selected: number
+	query: string
 	listRef: RefObject<HTMLUListElement | null>
 	onResultClick: (slug: string | undefined) => void
 	onResultKeyDown: (e: React.KeyboardEvent, slug: string | undefined) => void
@@ -35,6 +55,7 @@ interface ResultsProps {
 export function Results({
 	results,
 	selected,
+	query,
 	listRef,
 	onResultClick,
 	onResultKeyDown,
@@ -68,13 +89,15 @@ export function Results({
 											: "text-muted hover:bg-bg/50"
 									}`}
 								>
-									<div className="text-sm">{result.doc.title}</div>
+									<div className="text-sm">{highlightMatch(result.doc.title, query)}</div>
 									{result.snippet ? (
-										<div className="text-xs text-dim truncate">{result.snippet}</div>
+										<div className="text-xs text-dim truncate">
+											{highlightMatch(result.snippet, query)}
+										</div>
 									) : (
 										result.doc.description && (
 											<div className="text-xs text-dim truncate">
-												{result.doc.description}
+												{highlightMatch(result.doc.description, query)}
 											</div>
 										)
 									)}
