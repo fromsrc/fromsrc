@@ -223,6 +223,11 @@
 	text-align: center;
 }
 
+.prose > section {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 500px;
+}
+
 .prose kbd {
 	padding: 2px 6px;
 	background: var(--color-surface);
