@@ -231,7 +231,9 @@ export { useEventListener } from "./hooks/eventlistener"
 export { useFocusTrap, FOCUSABLE_SELECTOR, type FocusTrapOptions } from "./hooks/focustrap"
 export { useHash } from "./hooks/hash"
 export { useInView, type InViewOptions } from "./hooks/inview"
+export { useInterval } from "./hooks/interval"
 export { useKeyboardNav } from "./hooks/keyboard"
+export { useMounted } from "./hooks/mounted"
 export {
 	useIsDesktop,
 	useIsMobile,
@@ -244,6 +246,7 @@ export { useScrollSpy, type ScrollSpyOptions } from "./hooks/scrollspy"
 export { useScrollLock } from "./hooks/scrolllock"
 export { useIsScrollTop } from "./hooks/scrolltop"
 export { usePagination, type PageLink, type PaginationResult } from "./hooks/pagination"
+export { usePrevious } from "./hooks/previous"
 export { useReadProgress, type ReadProgressOptions } from "./hooks/readprogress"
 export { useLocalStorage, useSessionStorage } from "./hooks/storage"
 export { useToggle, type ToggleResult } from "./hooks/toggle"
