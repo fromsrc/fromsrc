@@ -12,8 +12,15 @@ export interface DocMeta {
 	order?: number
 }
 
+export interface Heading {
+	id: string
+	text: string
+	level: number
+}
+
 export interface SearchDoc extends DocMeta {
 	content: string
+	headings?: Heading[]
 }
 
 export interface Doc<T extends Record<string, unknown> = Record<string, unknown>> extends DocMeta {
@@ -154,12 +161,12 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 		return navCache
 	}
 
-	let searchCache: (Meta & { content: string })[] | null = null
+	let searchCache: (Meta & { content: string; headings?: Heading[] })[] | null = null
 
-	async function getSearchDocs(): Promise<(Meta & { content: string })[]> {
+	async function getSearchDocs(): Promise<(Meta & { content: string; headings?: Heading[] })[]> {
 		if (searchCache) return searchCache
 
-		const docs: (Meta & { content: string })[] = []
+		const docs: (Meta & { content: string; headings?: Heading[] })[] = []
 
 		async function scan(dir: string, prefix = ""): Promise<void> {
 			const entries = await readdir(dir, { withFileTypes: true })
@@ -173,11 +180,13 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 					const { data, content } = matter(source)
 					const parsed = schema.parse(data) as z.infer<T>
 					const slug = `${prefix}${entry.name.replace(".mdx", "")}`
+					const headings = extractHeadings(content)
 
 					docs.push({
 						slug: slug === "index" ? "" : slug,
 						...parsed,
 						content: stripMdx(content),
+						headings: headings.length > 0 ? headings : undefined,
 					})
 				}
 			}
@@ -203,6 +212,35 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 		getSearchDocs,
 		schema,
 	}
+}
+
+function stripHeadingFormatting(text: string): string {
+	return text
+		.replace(/\*\*([^*]+)\*\*/g, "$1")
+		.replace(/\*([^*]+)\*/g, "$1")
+		.replace(/`([^`]+)`/g, "$1")
+		.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+		.trim()
+}
+
+function headingId(text: string): string {
+	return text.toLowerCase().replace(/\s+/g, "-")
+}
+
+export function extractHeadings(content: string): Heading[] {
+	const headings: Heading[] = []
+	const lines = content.split("\n")
+
+	for (const line of lines) {
+		const match = line.match(/^(#{2,4})\s+(.+)$/)
+		if (!match) continue
+
+		const level = match[1]!.length
+		const raw = stripHeadingFormatting(match[2]!)
+		headings.push({ id: headingId(raw), text: raw, level })
+	}
+
+	return headings
 }
 
 function stripMdx(content: string): string {
@@ -363,6 +401,7 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 				const { data, content } = matter(source)
 				const parsed = baseSchema.parse(data)
 				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
+				const headings = extractHeadings(content)
 
 				docs.push({
 					slug: slug === "index" ? "" : slug,
@@ -370,6 +409,7 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 					description: parsed.description,
 					order: parsed.order,
 					content: stripMdx(content),
+					headings: headings.length > 0 ? headings : undefined,
 				})
 			}
 		}

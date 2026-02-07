@@ -4,6 +4,7 @@ export interface SearchResult {
 	doc: SearchDoc
 	score: number
 	snippet?: string
+	anchor?: string
 }
 
 export interface SearchAdapter {
@@ -13,6 +14,12 @@ export interface SearchAdapter {
 
 interface ContentMatch {
 	score: number
+	snippet: string
+}
+
+interface HeadingMatch {
+	score: number
+	anchor: string
 	snippet: string
 }
 
@@ -57,6 +64,21 @@ function searchContent(content: string | undefined, query: string): ContentMatch
 	return { score: 5, snippet: prefix + content.slice(start, end).trim() + suffix }
 }
 
+function searchHeadings(doc: SearchDoc, query: string): HeadingMatch | null {
+	if (!doc.headings || !query) return null
+
+	let best: HeadingMatch | null = null
+
+	for (const heading of doc.headings) {
+		const score = fuzzy(heading.text, query) * 2
+		if (score > 0 && (!best || score > best.score)) {
+			best = { score, anchor: heading.id, snippet: heading.text }
+		}
+	}
+
+	return best
+}
+
 export const localSearch: SearchAdapter = {
 	search(query: string, docs: SearchDoc[]): SearchResult[] {
 		if (!docs || docs.length === 0) return []
@@ -71,11 +93,18 @@ export const localSearch: SearchAdapter = {
 		for (const doc of docs) {
 			const titleScore = fuzzy(doc.title, q) * 3
 			const descScore = fuzzy(doc.description, q)
+			const headingResult = searchHeadings(doc, q)
 			const contentResult = searchContent(doc.content, q)
-			const score = titleScore + descScore + (contentResult?.score ?? 0)
+			const score =
+				titleScore + descScore + (headingResult?.score ?? 0) + (contentResult?.score ?? 0)
 
 			if (score > 0) {
-				results.push({ doc, score, snippet: contentResult?.snippet })
+				results.push({
+					doc,
+					score,
+					snippet: headingResult?.snippet ?? contentResult?.snippet,
+					anchor: headingResult?.anchor,
+				})
 			}
 		}
 
