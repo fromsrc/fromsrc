@@ -39,6 +39,7 @@ export { rehypeInlineCode } from "./rehypeinline"
 export { rehypeExternalLinks, type RehypeLinksOptions } from "./rehypelinks"
 export { remarkAlerts } from "./remark"
 export { remarkTs2Js } from "./remarkts2js"
+export { remarkImage, type RemarkImageOptions } from "./remarkimage"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
 export { preloadPage, preloadSearch, preloadConfig } from "./preload"
 export { transformerCollapse } from "./collapse"
@@ -52,3 +53,20 @@ export {
 	generateSearchIndex,
 	searchFromIndex,
 } from "./searchindex"
+export {
+	type TypeProperty,
+	type TypeDefinition,
+	parseTypes,
+	parseTypeFile,
+} from "./autotype"
+export {
+	type OpenApiSpec,
+	type OpenApiEndpoint,
+	type OpenApiParameter,
+	type OpenApiRequestBody,
+	type OpenApiResponse,
+	type OpenApiSchema,
+	type OpenApiTag,
+	parseOpenApi,
+	generateEndpointSlug,
+} from "./openapi"
