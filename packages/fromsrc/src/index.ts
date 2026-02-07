@@ -22,4 +22,9 @@ export {
 } from "./search"
 export { lastModified, lastModifiedAll } from "./lastmodified"
 export { type LlmsConfig, generateLlmsIndex, generateLlmsFull } from "./llms"
+export {
+	type ContentSource,
+	type RemoteSourceConfig,
+	createRemoteSource,
+} from "./source"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
