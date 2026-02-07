@@ -6,9 +6,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { DocMeta, SearchDoc } from "../content"
 import { useDebounce } from "../hooks/debounce"
 import { useLocalStorage } from "../hooks/storage"
-import type { SearchAdapter, SearchResult } from "../search"
+import type { SearchAdapter } from "../search"
 import { localSearch } from "../search"
+import { IconSearch } from "./icons"
 import { Recent } from "./recent"
+import { Results, getOptionId } from "./results"
 
 export interface SearchProps {
 	basePath?: string
@@ -21,10 +23,6 @@ export interface SearchProps {
 function toSearchDoc(doc: DocMeta | SearchDoc): SearchDoc {
 	if ("content" in doc) return doc
 	return { ...doc, content: "" }
-}
-
-function getOptionId(index: number): string {
-	return `search-option-${index}`
 }
 
 export function Search({
@@ -70,7 +68,7 @@ export function Search({
 		}
 	}, [open])
 
-	const results = useMemo<SearchResult[]>(() => {
+	const results = useMemo(() => {
 		return adapter.search(debouncedQuery, searchDocs)
 	}, [adapter, searchDocs, debouncedQuery])
 
@@ -167,20 +165,7 @@ export function Search({
 				onClick={handleOpenClick}
 				className="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted bg-surface border border-line rounded-lg hover:border-dim transition-colors"
 			>
-				<svg
-					className="w-3.5 h-3.5"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					aria-hidden="true"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-					/>
-				</svg>
+				<IconSearch className="w-3.5 h-3.5" size={14} />
 				<span className="flex-1 text-left">search</span>
 				<kbd className="px-1.5 py-0.5 text-[10px] bg-bg border border-line rounded">⌘K</kbd>
 			</button>
@@ -198,20 +183,7 @@ export function Search({
 			<div className="relative z-10 max-w-lg mx-auto mt-[20vh]">
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
-						<svg
-							className="w-4 h-4 text-muted"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							aria-hidden="true"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-							/>
-						</svg>
+						<IconSearch className="w-4 h-4 text-muted" size={16} />
 						<input
 							ref={inputRef}
 							type="text"
@@ -237,33 +209,13 @@ export function Search({
 						) : results.length === 0 ? (
 							<div className="p-8 text-center text-muted text-sm">no results</div>
 						) : (
-							<ul ref={listRef} id="search-listbox" role="listbox" className="p-2">
-								{results.map((result, i) => (
-									<li
-										key={result.doc.slug || "index"}
-										id={getOptionId(i)}
-										role="option"
-										aria-selected={i === safeSelected}
-										onClick={() => handleResultClick(result.doc.slug)}
-										onKeyDown={(e) => handleResultKeyDown(e, result.doc.slug)}
-										tabIndex={-1}
-										className={`w-full text-left px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-											i === safeSelected
-												? "bg-bg border border-line text-fg"
-												: "text-muted hover:bg-bg/50"
-										}`}
-									>
-										<div className="text-sm">{result.doc.title}</div>
-										{result.snippet ? (
-											<div className="text-xs text-dim truncate">{result.snippet}</div>
-										) : (
-											result.doc.description && (
-												<div className="text-xs text-dim truncate">{result.doc.description}</div>
-											)
-										)}
-									</li>
-								))}
-							</ul>
+							<Results
+								results={results}
+								selected={safeSelected}
+								listRef={listRef}
+								onResultClick={handleResultClick}
+								onResultKeyDown={handleResultKeyDown}
+							/>
 						)}
 					</div>
 					<div className="flex items-center justify-center gap-4 px-4 py-2 border-t border-line text-[10px] text-dim">
