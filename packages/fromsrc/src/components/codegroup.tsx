@@ -1,49 +1,71 @@
 "use client"
 
-import { createContext, memo, type ReactNode, useCallback, useContext, useState } from "react"
+import {
+	createContext,
+	memo,
+	type ReactNode,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
+
+const KEY = "fromsrc-code-lang"
 
 interface CodeGroupContext {
 	active: string
 	set: (v: string) => void
+	tabs: Set<string>
 }
 
 const Context = createContext<CodeGroupContext | null>(null)
 
-/**
- * container for tabbed code blocks
- * @property children - CodeTab elements
- * @property defaultValue - initially active tab value
- */
 export interface CodeGroupProps {
 	children: ReactNode
 	defaultValue?: string
 }
 
-/**
- * individual tab within a code group
- * @property value - unique tab identifier
- * @property label - displayed tab name
- * @property children - tab content
- */
 export interface CodeTabProps {
 	value: string
 	label: string
 	children: ReactNode
 }
 
-/**
- * wrapper for tab buttons in a code group
- * @property children - CodeTab button elements
- */
 export interface CodeTabsProps {
 	children: ReactNode
 }
 
 export function CodeGroup({ children, defaultValue }: CodeGroupProps): ReactNode {
-	const [active, set] = useState(defaultValue || "")
+	const [active, rawSet] = useState(defaultValue || "")
+	const tabs = useRef(new Set<string>()).current
+
+	useEffect(() => {
+		try {
+			const stored = localStorage.getItem(KEY)
+			if (stored && tabs.has(stored)) rawSet(stored)
+		} catch {}
+	}, [tabs])
+
+	useEffect(() => {
+		function handler(e: Event): void {
+			const v = (e as CustomEvent).detail as string
+			if (tabs.has(v)) rawSet(v)
+		}
+		window.addEventListener(KEY, handler)
+		return () => window.removeEventListener(KEY, handler)
+	}, [tabs])
+
+	const set = useCallback((v: string): void => {
+		rawSet(v)
+		try {
+			localStorage.setItem(KEY, v)
+		} catch {}
+		window.dispatchEvent(new CustomEvent(KEY, { detail: v }))
+	}, [])
 
 	return (
-		<Context.Provider value={{ active, set }}>
+		<Context.Provider value={{ active, set, tabs }}>
 			<div className="my-4 rounded-lg border border-white/10 overflow-hidden">{children}</div>
 		</Context.Provider>
 	)
@@ -57,6 +79,8 @@ export function CodeTab({ value, label, children }: CodeTabProps): ReactNode {
 	}, [ctx, value])
 
 	if (!ctx) return null
+
+	ctx.tabs.add(value)
 
 	const isActive = ctx.active === value || (!ctx.active && value === label)
 	const tabId = `tab-${value}`
