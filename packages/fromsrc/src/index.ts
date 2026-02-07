@@ -72,6 +72,7 @@ export {
 	generateEndpointSlug,
 } from "./openapi"
 export { remarkInstall } from "./remarkinstall"
+export { remarkInclude, type IncludeOptions } from "./include"
 export {
 	type TocHeading,
 	type TocNode,
@@ -85,3 +86,12 @@ export {
 	getDirection,
 	createI18n,
 } from "./i18n"
+export { remarkMath } from "./remarkmath"
+export { rehypeSlug, generateSlug } from "./rehypeslug"
+export {
+	type WatcherConfig,
+	type WatchEvent,
+	type WatchHandler,
+	createWatcher,
+	clearAllCaches,
+} from "./watcher"
