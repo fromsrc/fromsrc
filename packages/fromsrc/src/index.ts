@@ -29,6 +29,7 @@ export {
 } from "./source"
 export { type McpConfig, generateMcpManifest, createMcpHandler } from "./mcp"
 export { rehypeAnchors } from "./rehype"
+export { rehypeInlineCode } from "./rehypeinline"
 export { remarkAlerts } from "./remark"
 export { remarkTs2Js } from "./remarkts2js"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
