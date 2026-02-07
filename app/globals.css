@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "./docs/_components/prose.css";
 
+@view-transition {
+	navigation: auto;
+}
+
 @theme {
 	--color-bg: #0c0c0c;
 	--color-fg: #fafafa;
