@@ -17,7 +17,7 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
 			<HeadingCopy />
 			<div className="flex min-h-screen bg-bg">
 				<KeyboardNav docs={docs} />
-				<div className="hidden lg:block">
+				<div className="hidden lg:contents">
 					<Sidebar />
 				</div>
 				<main id="main" className="flex-1 min-w-0">{children}</main>
