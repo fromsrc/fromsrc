@@ -236,7 +236,9 @@ export { useFocusTrap, FOCUSABLE_SELECTOR, type FocusTrapOptions } from "./hooks
 export { useHash } from "./hooks/hash"
 export { useInView, type InViewOptions } from "./hooks/inview"
 export { useInterval } from "./hooks/interval"
-export { useKeyboardNav } from "./hooks/keyboard"
+export { useKeyboardNav, useKeyboardShortcut } from "./hooks/keyboard"
+export type { SkipLinkProps } from "./components/skiplink"
+export { SkipLink } from "./components/skiplink"
 export { useMounted } from "./hooks/mounted"
 export {
 	useIsDesktop,

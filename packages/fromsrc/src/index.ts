@@ -469,3 +469,4 @@ export {
 	requireEnv,
 	optionalEnv,
 } from "./env"
+export { type TableWrapOptions, rehypeTableWrap } from "./rehypetablewrap"
