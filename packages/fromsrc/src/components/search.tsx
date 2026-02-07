@@ -5,17 +5,11 @@ import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { DocMeta, SearchDoc } from "../content"
 import { useDebounce } from "../hooks/debounce"
+import { useLocalStorage } from "../hooks/storage"
 import type { SearchAdapter, SearchResult } from "../search"
 import { localSearch } from "../search"
+import { Recent } from "./recent"
 
-/**
- * Props for the Search component.
- * @property basePath - Base URL path for documentation links (default: "/docs")
- * @property docs - Array of documents to search through
- * @property hidden - When true, hides the search trigger button
- * @property adapter - Search adapter implementation (default: localSearch)
- * @property debounce - Debounce delay in milliseconds (default: 100)
- */
 export interface SearchProps {
 	basePath?: string
 	docs: (DocMeta | SearchDoc)[]
@@ -47,6 +41,7 @@ export function Search({
 	const listRef = useRef<HTMLUListElement>(null)
 	const router = useRouter()
 	const prevQueryRef = useRef("")
+	const [recent, setRecent] = useLocalStorage<string[]>("fromsrc-recent-searches", [])
 
 	const searchDocs = useMemo(() => docs.map(toSearchDoc), [docs])
 	const debouncedQuery = useDebounce(query, debounce)
@@ -98,12 +93,22 @@ export function Search({
 		}
 	}, [safeSelected])
 
+	const saveRecent = useCallback(
+		(q: string): void => {
+			const trimmed = q.trim()
+			if (!trimmed) return
+			setRecent((prev) => [trimmed, ...prev.filter((p) => p !== trimmed)].slice(0, 5))
+		},
+		[setRecent],
+	)
+
 	const navigate = useCallback(
 		(slug: string | undefined): void => {
+			saveRecent(query)
 			router.push(slug ? `${basePath}/${slug}` : basePath)
 			setOpen(false)
 		},
-		[router, basePath],
+		[router, basePath, query, saveRecent],
 	)
 
 	const handleInputKeyDown = useCallback(
@@ -149,6 +154,10 @@ export function Search({
 		},
 		[navigate],
 	)
+
+	const handleRecentSelect = useCallback((q: string): void => {
+		setQuery(q)
+	}, [])
 
 	if (!open) {
 		if (hidden) return null
@@ -223,7 +232,9 @@ export function Search({
 						</kbd>
 					</div>
 					<div className="max-h-80 overflow-y-auto">
-						{results.length === 0 ? (
+						{!debouncedQuery.trim() && recent.length > 0 ? (
+							<Recent items={recent} onSelect={handleRecentSelect} />
+						) : results.length === 0 ? (
 							<div className="p-8 text-center text-muted text-sm">no results</div>
 						) : (
 							<ul ref={listRef} id="search-listbox" role="listbox" className="p-2">
