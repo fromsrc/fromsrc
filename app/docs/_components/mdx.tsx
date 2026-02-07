@@ -365,7 +365,10 @@ export async function MDX({ source }: Props) {
 						[
 							rehypeShiki,
 							{
-								theme: "github-dark-default",
+								themes: {
+									light: "github-light",
+									dark: "github-dark-default",
+								},
 								defaultColor: false,
 								transformers: [
 									transformerMetaHighlight(),

@@ -241,7 +241,10 @@ function ContentBase({ source }: ContentProps): JSX.Element {
 					[
 						rehypeShiki,
 						{
-							theme: "github-dark-default",
+							themes: {
+								light: "github-light",
+								dark: "github-dark-default",
+							},
 							defaultColor: false,
 							transformers: [
 								transformerNotationHighlight(),
