@@ -50,6 +50,7 @@
 	font-size: 0.875rem;
 	margin-top: 1.25rem;
 	margin-bottom: 0.5rem;
+	scroll-margin-top: 5rem;
 }
 
 .prose h2 + *,
