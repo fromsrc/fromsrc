@@ -30,9 +30,11 @@ export {
 export { type McpConfig, generateMcpManifest, createMcpHandler } from "./mcp"
 export { rehypeAnchors } from "./rehype"
 export { remarkAlerts } from "./remark"
+export { remarkTs2Js } from "./remarkts2js"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
 export { preloadPage, preloadSearch, preloadConfig } from "./preload"
 export { transformerCollapse } from "./collapse"
+export { transformerAnsi } from "./ansi"
 export { type DocManifest, type ManifestPage, generateManifest, generateManifestJson } from "./manifest"
 export { exportMarkdown, exportJson, exportCsv } from "./export"
 export {
