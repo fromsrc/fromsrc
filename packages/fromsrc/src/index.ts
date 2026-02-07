@@ -482,3 +482,5 @@ export {
 export { type DirectiveType, remarkDirective } from "./remarkdirective"
 export { remarkFileTree } from "./remarkfiletree"
 export { rehypeRaw } from "./rehyperaw"
+export { type Annotation, remarkAnnotation } from "./remarkannotation"
+export { type RemarkVideoOptions, remarkVideo } from "./remarkvideo"
