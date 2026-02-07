@@ -156,6 +156,15 @@
 		margin: -1px -4px;
 	}
 
+	.inline-code-highlight {
+		padding: 2px 6px;
+		background-color: #141414;
+		border: 1px solid #1c1c1c;
+		border-radius: 4px;
+		font-size: 12px;
+		font-family: var(--font-mono);
+	}
+
 	.twoslash-hover {
 		text-decoration: underline dotted;
 		text-decoration-color: var(--color-dim);
