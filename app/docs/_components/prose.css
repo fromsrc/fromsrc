@@ -229,6 +229,25 @@
 	contain-intrinsic-size: auto 500px;
 }
 
+.heading-anchor {
+	text-decoration: none;
+	color: inherit;
+}
+
+.heading-anchor-icon {
+	opacity: 0;
+	margin-left: 0.25rem;
+	color: var(--color-dim);
+	transition: opacity 0.15s;
+	font-weight: 400;
+}
+
+.prose h2:hover .heading-anchor-icon,
+.prose h3:hover .heading-anchor-icon,
+.prose h4:hover .heading-anchor-icon {
+	opacity: 1;
+}
+
 .prose kbd {
 	padding: 2px 6px;
 	background: var(--color-surface);

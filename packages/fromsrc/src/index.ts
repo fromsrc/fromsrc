@@ -28,5 +28,6 @@ export {
 	createRemoteSource,
 } from "./source"
 export { type McpConfig, generateMcpManifest, createMcpHandler } from "./mcp"
+export { rehypeAnchors } from "./rehype"
 export { remarkAlerts } from "./remark"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
