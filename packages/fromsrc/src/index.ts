@@ -496,3 +496,7 @@ export {
 } from "./contentdiff"
 export { remarkLinkCard } from "./remarklinkcard"
 export { remarkDetails } from "./remarkdetails"
+export { remarkToc } from "./remarktoc"
+export { remarkFootnote } from "./remarkfootnote"
+export { remarkBadge } from "./remarkbadge"
+export { remarkColumns } from "./remarkcolumns"
