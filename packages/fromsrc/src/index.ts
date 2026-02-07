@@ -494,3 +494,5 @@ export {
 	diffContent,
 	formatChangelog as formatContentDiff,
 } from "./contentdiff"
+export { remarkLinkCard } from "./remarklinkcard"
+export { remarkDetails } from "./remarkdetails"
