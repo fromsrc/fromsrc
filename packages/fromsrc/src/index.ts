@@ -34,3 +34,10 @@ export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
 export { preloadPage, preloadSearch, preloadConfig } from "./preload"
 export { type DocManifest, type ManifestPage, generateManifest, generateManifestJson } from "./manifest"
 export { exportMarkdown, exportJson, exportCsv } from "./export"
+export {
+	type SearchIndex,
+	type SearchIndexPage,
+	type SearchIndexResult,
+	generateSearchIndex,
+	searchFromIndex,
+} from "./searchindex"
