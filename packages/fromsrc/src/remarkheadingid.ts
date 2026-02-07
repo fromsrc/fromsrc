@@ -2,7 +2,7 @@ import type { Heading, PhrasingContent, Root, Text } from "mdast"
 import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
-const pattern = /\s*\{#([\w-]+)\}\s*$/
+const pattern = /\s*\{#([a-zA-Z0-9_-]+)\}\s*$/
 
 function findTrailingId(children: PhrasingContent[]): { index: number; id: string } | null {
 	for (let i = children.length - 1; i >= 0; i--) {
