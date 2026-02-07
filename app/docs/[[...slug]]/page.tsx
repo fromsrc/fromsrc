@@ -128,30 +128,33 @@ export default async function DocPage({ params }: Props) {
 						<Breadcrumb base="/docs" />
 					</div>
 					<h1 className="text-2xl font-medium mb-2 text-fg">{doc.title}</h1>
-					{doc.description && <p className="text-sm text-muted mb-3">{doc.description}</p>}
-					<span className="text-xs text-dim">{readTime} min read</span>
-					<a
-						href={`https://github.com/fromsrc/fromsrc/edit/main/docs/${doc.slug || "index"}.mdx`}
-						target="_blank"
-						rel="noopener noreferrer"
-						className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-fg transition-colors"
-					>
-						<svg
-							className="w-3 h-3"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-							aria-hidden="true"
+					{doc.description && <p className="text-sm text-muted mb-4">{doc.description}</p>}
+					<div className="flex items-center gap-3 text-xs text-dim">
+						<span>{readTime} min read</span>
+						<span aria-hidden="true">·</span>
+						<a
+							href={`https://github.com/fromsrc/fromsrc/edit/main/docs/${doc.slug || "index"}.mdx`}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-flex items-center gap-1.5 text-muted hover:text-fg transition-colors"
 						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={2}
-								d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-							/>
-						</svg>
-						edit
-					</a>
+							<svg
+								className="w-3 h-3"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+								/>
+							</svg>
+							edit
+						</a>
+					</div>
 				</header>
 				<div className="prose">
 					<MDX source={doc.content} />
