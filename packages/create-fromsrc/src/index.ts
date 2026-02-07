@@ -1,44 +1,23 @@
-import { execSync } from "node:child_process"
-import { cpSync, existsSync, mkdirSync, unlinkSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { generate } from "./generate"
+import { ask, close, select } from "./prompt"
 
-interface CreateOptions {
-	name: string
-	template: string
-	install: boolean
+const frameworks = ["next.js", "react-router", "vite"]
+
+async function main() {
+	console.log("\n  fromsrc\n")
+
+	const name = await ask("  project name", "my-docs")
+	const framework = await select("  framework", frameworks, 0)
+
+	close()
+
+	console.log()
+	generate({ name, framework })
+
+	console.log(`  created ${name}`)
+	console.log(`\n  cd ${name}`)
+	console.log("  bun install")
+	console.log("  bun dev\n")
 }
 
-export async function create(options: CreateOptions) {
-	const { name, template, install } = options
-	const cwd = process.cwd()
-	const target = join(cwd, name)
-
-	if (existsSync(target)) {
-		throw new Error(`directory ${name} already exists`)
-	}
-
-	mkdirSync(target, { recursive: true })
-
-	const __dirname = dirname(fileURLToPath(import.meta.url))
-	const templateDir = join(__dirname, "..", "template", template)
-
-	if (!existsSync(templateDir)) {
-		throw new Error(`template ${template} not found`)
-	}
-
-	cpSync(templateDir, target, { recursive: true })
-
-	const gitignorePath = join(target, "gitignore")
-	if (existsSync(gitignorePath)) {
-		const newPath = join(target, ".gitignore")
-		cpSync(gitignorePath, newPath)
-		unlinkSync(gitignorePath)
-	}
-
-	if (install) {
-		execSync("bun install", { cwd: target, stdio: "inherit" })
-	}
-
-	return target
-}
+main()
