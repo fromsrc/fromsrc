@@ -331,6 +331,52 @@
 	}
 }
 
+@media print {
+	nav,
+	aside,
+	[role="search"],
+	button,
+	.no-print {
+		display: none !important;
+	}
+
+	main {
+		width: 100% !important;
+		max-width: 100% !important;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	body {
+		background: white !important;
+		color: black !important;
+		font-size: 12pt !important;
+	}
+
+	.prose a {
+		text-decoration: underline !important;
+		color: black !important;
+	}
+
+	.prose a::after {
+		content: " (" attr(href) ")";
+		font-size: 0.8em;
+		color: #666;
+	}
+
+	pre {
+		max-height: none !important;
+		overflow: visible !important;
+		white-space: pre-wrap !important;
+		word-wrap: break-word !important;
+		page-break-inside: avoid;
+	}
+
+	.shiki, .shiki span {
+		color: black !important;
+	}
+}
+
 @media (prefers-contrast: more) {
 	:root {
 		--color-muted: #a3a3a3;
