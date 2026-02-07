@@ -1,3 +1,4 @@
+import { HeadingCopy } from "fromsrc/client"
 import type { ReactNode } from "react"
 import { KeyboardNav } from "./_components/keyboard"
 import { MobileNavigation } from "./_components/mobilenav"
@@ -13,6 +14,7 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
 			<MobileNavigation />
 			<SearchModal docs={searchDocs} />
 			<Shortcuts />
+			<HeadingCopy />
 			<div className="flex min-h-screen bg-bg">
 				<KeyboardNav docs={docs} />
 				<div className="hidden lg:block">
