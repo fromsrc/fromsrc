@@ -3,6 +3,7 @@ import {
 	transformerNotationDiff,
 	transformerNotationFocus,
 	transformerNotationHighlight,
+	transformerNotationWordHighlight,
 } from "@shikijs/transformers"
 import type { ShikiTransformerContext } from "@shikijs/types"
 import {
@@ -364,6 +365,7 @@ export async function MDX({ source }: Props) {
 									transformerNotationHighlight(),
 									transformerNotationDiff(),
 									transformerNotationFocus(),
+									transformerNotationWordHighlight(),
 									{
 										pre(
 											this: ShikiTransformerContext,
