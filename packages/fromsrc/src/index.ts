@@ -275,3 +275,26 @@ export {
 	processShortcodes,
 	builtinShortcodes,
 } from "./shortcodes"
+export { remarkTabs } from "./remarktabs"
+export { remarkCallout } from "./remarkcallout"
+export {
+	type ApiResponse,
+	type ApiError,
+	type CorsConfig,
+	json,
+	error,
+	cors,
+	withCors,
+	cache,
+	rateLimiter,
+} from "./api"
+export {
+	type ThemeColors,
+	type ThemeConfig,
+	type ThemePreset,
+	generateCss,
+	presets,
+	mergeTheme,
+	contrastRatio,
+	cssVariables,
+} from "./themeutil"
