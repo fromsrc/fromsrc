@@ -193,6 +193,46 @@
 		border-left: 2px solid #3772cf;
 		padding-left: 0.5rem;
 	}
+
+	.code-collapsed {
+		position: relative;
+		max-height: 300px;
+		overflow: hidden;
+	}
+
+	.code-collapsed::after {
+		content: "";
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 80px;
+		background: linear-gradient(transparent, var(--color-bg));
+		pointer-events: none;
+	}
+
+	.code-expanded {
+		max-height: none;
+	}
+
+	.code-expanded::after {
+		display: none;
+	}
+
+	.code-toggle {
+		display: flex;
+		justify-content: center;
+		padding: 6px 0;
+		font-size: 11px;
+		color: var(--color-dim);
+		cursor: pointer;
+		transition: color 0.15s;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.code-toggle:hover {
+		color: var(--color-muted);
+	}
 }
 
 @layer utilities {
