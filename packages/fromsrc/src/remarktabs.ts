@@ -1,53 +1,51 @@
-import type { Root } from "mdast"
+import type { Code, Root } from "mdast"
 import type { Plugin } from "unified"
-
-interface Node {
-	type: string
-	name?: string
-	children?: Node[]
-	attributes?: Record<string, string>
-	data?: any
-}
+import { visit } from "unist-util-visit"
 
 function attribute(name: string, value: string) {
 	return { type: "mdxJsxAttribute", name, value }
 }
 
-function walk(nodes: Node[]) {
-	for (let i = 0; i < nodes.length; i++) {
-		const node = nodes[i]!
-		if (node.type === "containerDirective" && node.name === "tabs") {
-			const tabs: any[] = []
-			for (const child of node.children ?? []) {
-				if (
-					(child.type === "containerDirective" || child.type === "leafDirective") &&
-					child.name === "tab"
-				) {
-					const label = child.attributes?.label ?? ""
-					tabs.push({
-						type: "mdxJsxFlowElement",
-						name: "Tab",
-						attributes: [attribute("label", label)],
-						children: child.children ?? [],
-						data: { _mdxExplicitJsx: true },
-					})
-				}
-			}
-			;(nodes as any)[i] = {
-				type: "mdxJsxFlowElement",
-				name: "Tabs",
-				attributes: [],
-				children: tabs,
-				data: { _mdxExplicitJsx: true },
-			}
-		} else if (node.children) {
-			walk(node.children)
-		}
-	}
+function skipped(node: Code): boolean {
+	return !!node.meta && (node.meta.includes("nogroup") || node.meta.includes("standalone"))
 }
 
 function transformer(tree: Root) {
-	walk((tree as unknown as Node).children ?? [])
+	visit(tree, "code", (_node: Code, index, parent) => {
+		if (!parent || index === undefined) return
+		if (skipped(_node)) return
+
+		const group: Code[] = [_node]
+		let next = index + 1
+
+		while (next < parent.children.length) {
+			const sibling = parent.children[next]
+			if (sibling?.type !== "code") break
+			if (skipped(sibling as Code)) break
+			group.push(sibling as Code)
+			next++
+		}
+
+		if (group.length < 2) return
+
+		const tabs = group.map((code) => ({
+			type: "mdxJsxFlowElement",
+			name: "CodeTab",
+			attributes: [attribute("label", code.lang ?? "text"), attribute("value", code.lang ?? "text")],
+			children: [code],
+			data: { _mdxExplicitJsx: true },
+		}))
+
+		const element = {
+			type: "mdxJsxFlowElement",
+			name: "CodeGroup",
+			attributes: [],
+			children: tabs,
+			data: { _mdxExplicitJsx: true },
+		}
+
+		parent.children.splice(index, group.length, element as any)
+	})
 }
 
 export const remarkTabs: Plugin<[], Root> = () => transformer

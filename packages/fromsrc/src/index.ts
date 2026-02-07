@@ -77,7 +77,7 @@ export {
 	generateEndpointSlug,
 } from "./openapi"
 export { remarkInstall } from "./remarkinstall"
-export { remarkInclude, type IncludeOptions } from "./include"
+export { remarkInclude, type IncludeOptions } from "./remarkinclude"
 export {
 	type TocHeading,
 	type TocNode,

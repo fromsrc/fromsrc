@@ -1,69 +1,95 @@
-import type { Blockquote, Root } from "mdast"
+import type { Root } from "mdast"
 import type { Plugin } from "unified"
-import { visit } from "unist-util-visit"
 
-type AstNode = {
+interface AstNode {
 	type: string
+	name?: string
 	children?: AstNode[]
 	value?: string
-	data?: any
-	name?: string
 	attributes?: any[]
+	data?: any
 }
 
-const pattern = /^\[!(\w+)\]\s*/
+const types = new Set(["note", "tip", "info", "warning", "danger", "caution", "important"])
 
-const types = new Set(["note", "tip", "warning", "important", "caution"])
+const openPattern = /^:::(\w+)(?:\s+(.+))?$/
+const closePattern = /^:::$/
 
-function extractType(node: Blockquote): string | null {
-	const first = node.children[0]
-	if (first?.type !== "paragraph") return null
-	const text = (first as AstNode).children?.[0]
-	if (text?.type !== "text" || !text.value) return null
-	const match = text.value.match(pattern)
+function extractText(node: AstNode): string {
+	if (node.value) return node.value
+	if (node.children) return node.children.map(extractText).join("")
+	return ""
+}
+
+function isOpen(node: AstNode): { kind: string; title?: string } | null {
+	if (node.type !== "paragraph") return null
+	const text = extractText(node).trim()
+	const match = text.match(openPattern)
 	if (!match) return null
 	const kind = match[1]!.toLowerCase()
-	return types.has(kind) ? kind : null
+	if (!types.has(kind)) return null
+	return { kind, title: match[2]?.trim() || undefined }
 }
 
-function stripMarker(node: Blockquote): AstNode[] {
-	const children = [...node.children]
-	const first = children[0]
-	if (first?.type !== "paragraph") return children as AstNode[]
-	const para = { ...first, children: [...(first as any).children] }
-	const text = para.children[0]
-	if (text?.type === "text" && text.value) {
-		const stripped = text.value.replace(pattern, "")
-		if (stripped) {
-			para.children[0] = { ...text, value: stripped }
-		} else {
-			para.children.shift()
+function isClose(node: AstNode): boolean {
+	if (node.type !== "paragraph") return false
+	return closePattern.test(extractText(node).trim())
+}
+
+function buildElement(kind: string, title: string | undefined, children: AstNode[]): AstNode {
+	const attrs: any[] = [{ type: "mdxJsxAttribute", name: "type", value: kind }]
+	if (title) {
+		attrs.push({ type: "mdxJsxAttribute", name: "title", value: title })
+	}
+	return {
+		type: "mdxJsxFlowElement",
+		name: "Callout",
+		attributes: attrs,
+		children,
+		data: { _mdxExplicitJsx: true },
+	}
+}
+
+function processChildren(nodes: AstNode[]): AstNode[] {
+	const result: AstNode[] = []
+	let i = 0
+
+	while (i < nodes.length) {
+		const node = nodes[i]!
+		const open = isOpen(node)
+
+		if (!open) {
+			if (node.children) {
+				node.children = processChildren(node.children)
+			}
+			result.push(node)
+			i++
+			continue
 		}
+
+		const inner: AstNode[] = []
+		i++
+
+		while (i < nodes.length && !isClose(nodes[i]!)) {
+			inner.push(nodes[i]!)
+			i++
+		}
+
+		if (i < nodes.length) {
+			i++
+		}
+
+		result.push(buildElement(open.kind, open.title, processChildren(inner)))
 	}
-	if (para.children.length === 0) {
-		children.shift()
-	} else {
-		children[0] = para
-	}
-	return children as AstNode[]
+
+	return result
 }
 
 function transformer(tree: Root) {
-	visit(tree, "blockquote", (node: Blockquote, index, parent) => {
-		if (!parent || index === undefined) return
-		const kind = extractType(node)
-		if (!kind) return
-		const element: AstNode = {
-			type: "mdxJsxFlowElement",
-			name: "Callout",
-			attributes: [
-				{ type: "mdxJsxAttribute" as const, name: "type", value: kind },
-			],
-			children: stripMarker(node),
-			data: { _mdxExplicitJsx: true },
-		}
-		;(parent.children as AstNode[])[index] = element
-	})
+	const root = tree as unknown as AstNode
+	if (root.children) {
+		root.children = processChildren(root.children)
+	}
 }
 
 export const remarkAdmonition: Plugin<[], Root> = () => transformer

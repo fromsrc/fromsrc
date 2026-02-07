@@ -2,41 +2,60 @@ import type { Code, Root } from "mdast"
 import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
-const languages = new Set(["npm", "package", "install"])
+function attribute(name: string, value: string) {
+	return { type: "mdxJsxAttribute", name, value }
+}
+
+function commands(pkg: string, dev: boolean) {
+	if (dev) {
+		return {
+			npm: `npm install -D ${pkg}`,
+			yarn: `yarn add -D ${pkg}`,
+			pnpm: `pnpm add -D ${pkg}`,
+			bun: `bun add -d ${pkg}`,
+		}
+	}
+	return {
+		npm: `npm install ${pkg}`,
+		yarn: `yarn add ${pkg}`,
+		pnpm: `pnpm add ${pkg}`,
+		bun: `bun add ${pkg}`,
+	}
+}
 
 function transformer(tree: Root) {
 	visit(tree, "code", (node: Code, index, parent) => {
 		if (!parent || index === undefined) return
-		if (!node.lang || !languages.has(node.lang)) return
 
-		const pkg = node.value
+		const isInstall =
+			node.lang === "install" || (node.meta && node.meta.includes("install"))
+		if (!isInstall) return
+
+		const raw = node.value.trim()
+		if (!raw) return
+
+		const dev =
+			raw.includes("--dev") || raw.includes("-D") || (node.meta?.includes("dev") ?? false)
+		const pkg = raw
 			.split(/\s+/)
-			.filter(Boolean)
-			.filter((w) => !w.startsWith("npm") && w !== "install" && w !== "i" && w !== "add")
+			.filter((w) => w !== "--dev" && w !== "-D")
 			.join(" ")
 
 		if (!pkg) return
 
-		const attributes: any[] = [
-			{
-				type: "mdxJsxAttribute",
-				name: "pkg",
-				value: pkg,
-			},
+		const cmds = commands(pkg, dev)
+		const attrs = [
+			attribute("packages", pkg),
+			attribute("npm", cmds.npm),
+			attribute("yarn", cmds.yarn),
+			attribute("pnpm", cmds.pnpm),
+			attribute("bun", cmds.bun),
 		]
-
-		if (node.meta?.includes("dev")) {
-			attributes.push({
-				type: "mdxJsxAttribute",
-				name: "dev",
-				value: null,
-			})
-		}
 
 		parent.children[index] = {
 			type: "mdxJsxFlowElement",
 			name: "Install",
-			attributes,
+			attributes: attrs,
 			children: [],
 			data: { _mdxExplicitJsx: true },
 		} as any
