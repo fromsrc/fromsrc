@@ -96,6 +96,7 @@ export {
 	createI18n,
 } from "./i18n"
 export { remarkMath } from "./remarkmath"
+export { remarkSteps } from "./remarksteps"
 export { rehypeSlug, generateSlug } from "./rehypeslug"
 export {
 	type WatcherConfig,
@@ -479,3 +480,5 @@ export {
 	remarkTwoslash,
 } from "./remarktwoslash"
 export { type DirectiveType, remarkDirective } from "./remarkdirective"
+export { remarkFileTree } from "./remarkfiletree"
+export { rehypeRaw } from "./rehyperaw"
