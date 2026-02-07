@@ -470,3 +470,4 @@ export {
 	optionalEnv,
 } from "./env"
 export { type TableWrapOptions, rehypeTableWrap } from "./rehypetablewrap"
+export { rehypeCopy } from "./rehypecopy"

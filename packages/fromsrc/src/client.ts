@@ -250,6 +250,7 @@ export {
 } from "./hooks/media"
 export { useScrollSpy, type ScrollSpyOptions } from "./hooks/scrollspy"
 export { useScrollLock } from "./hooks/scrolllock"
+export { useScrollDirection, type ScrollDirection } from "./hooks/scrolldirection"
 export { useIsScrollTop } from "./hooks/scrolltop"
 export { usePagination, type PageLink, type PaginationResult } from "./hooks/pagination"
 export { usePrevious } from "./hooks/previous"
