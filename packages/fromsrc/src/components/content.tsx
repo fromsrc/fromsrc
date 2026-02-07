@@ -61,6 +61,7 @@ type PreProps = ComponentPropsWithoutRef<"pre"> & {
 	children?: ReactNode
 	className?: string
 	"data-language"?: string
+	"data-title"?: string
 }
 
 /** props for blockquote elements */
@@ -154,8 +155,9 @@ const components = {
 	},
 	pre: (props: PreProps): JSX.Element => {
 		const lang = props["data-language"] || ""
+		const title = props["data-title"] || ""
 		return (
-			<CodeBlock lang={lang}>
+			<CodeBlock lang={lang} title={title || undefined}>
 				<pre
 					{...props}
 					style={{
@@ -229,8 +231,13 @@ function ContentBase({ source }: ContentProps): JSX.Element {
 			const { compile, run } = await import("@mdx-js/mdx")
 			const { default: remarkGfm } = await import("remark-gfm")
 			const { default: rehypeShiki } = await import("@shikijs/rehype")
-			const { transformerNotationHighlight, transformerNotationDiff, transformerNotationFocus } =
-				await import("@shikijs/transformers")
+			const {
+				transformerMetaHighlight,
+				transformerNotationHighlight,
+				transformerNotationDiff,
+				transformerNotationFocus,
+				transformerNotationWordHighlight,
+			} = await import("@shikijs/transformers")
 			const { transformerCollapse } = await import("../collapse")
 			const runtime = await import("react/jsx-runtime")
 
@@ -247,16 +254,25 @@ function ContentBase({ source }: ContentProps): JSX.Element {
 							},
 							defaultColor: false,
 							transformers: [
+								transformerMetaHighlight(),
 								transformerNotationHighlight(),
 								transformerNotationDiff(),
 								transformerNotationFocus(),
+								transformerNotationWordHighlight(),
 								transformerCollapse(),
 								{
 									pre(node: { properties: Record<string, string> }) {
-										const lang =
-											(this as unknown as { options: { lang?: string } }).options.lang || ""
+										const ctx = this as unknown as {
+											options: { lang?: string; meta?: { __raw?: string } }
+										}
+										const lang = ctx.options.lang || ""
 										if (lang) {
 											node.properties["data-language"] = lang
+										}
+										const meta = ctx.options.meta?.__raw || ""
+										const match = meta.match(/title="([^"]*)"/)
+										if (match) {
+											node.properties["data-title"] = match[1]!
 										}
 									},
 								},
