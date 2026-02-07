@@ -92,11 +92,28 @@ export default async function DocPage({ params }: Props) {
 		mainEntityOfPage: { "@type": "WebPage", "@id": `https://fromsrc.com/docs/${doc.slug}` },
 	}
 
+	const breadcrumbItems = [
+		{ "@type": "ListItem", position: 1, name: "Home", item: "https://fromsrc.com" },
+		{ "@type": "ListItem", position: 2, name: "Docs", item: "https://fromsrc.com/docs" },
+		...slug.map((segment, i) => ({
+			"@type": "ListItem",
+			position: i + 3,
+			name: segment,
+			item: `https://fromsrc.com/docs/${slug.slice(0, i + 1).join("/")}`,
+		})),
+	]
+
+	const breadcrumbLd = {
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		itemListElement: breadcrumbItems,
+	}
+
 	return (
 		<>
 			<script
 				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+				dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbLd]) }}
 			/>
 			<div className="flex w-full max-w-7xl mx-auto">
 			<article className="flex-1 min-w-0 py-12 px-8 lg:px-12">
