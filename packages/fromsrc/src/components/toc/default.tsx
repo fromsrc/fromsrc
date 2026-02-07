@@ -121,7 +121,7 @@ function TocDefaultBase({ headings, active, activeRange, zigzag }: Props): JSX.E
 						<a
 							href={`#${heading.id}`}
 							aria-current={isActive(heading.id) ? "location" : undefined}
-							className={`block text-xs py-1 transition-colors border-l -ml-px ${
+							className={`block text-xs py-1 transition-colors border-l-2 -ml-px ${
 								heading.level === 3 ? "pl-6" : "pl-4"
 							} ${
 								isActive(heading.id)
