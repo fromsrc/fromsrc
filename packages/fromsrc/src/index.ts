@@ -21,4 +21,5 @@ export {
 	localSearch,
 } from "./search"
 export { lastModified, lastModifiedAll } from "./lastmodified"
+export { type LlmsConfig, generateLlmsIndex, generateLlmsFull } from "./llms"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
