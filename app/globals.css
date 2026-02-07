@@ -143,6 +143,56 @@
 		padding: 1px 4px;
 		margin: -1px -4px;
 	}
+
+	.twoslash-hover {
+		text-decoration: underline dotted;
+		text-decoration-color: var(--color-dim);
+		text-underline-offset: 3px;
+		cursor: help;
+		position: relative;
+	}
+
+	.twoslash-popup-container {
+		position: absolute;
+		opacity: 0;
+		z-index: 10;
+		bottom: 100%;
+		left: 0;
+		padding: 6px 10px;
+		background: var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: 6px;
+		font-size: 12px;
+		white-space: pre-wrap;
+		max-width: 500px;
+		pointer-events: none;
+		transition: opacity 0.15s;
+	}
+
+	.twoslash-hover:hover .twoslash-popup-container {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.twoslash-query-line .twoslash-popup-container {
+		opacity: 1;
+		position: relative;
+		display: inline-block;
+		margin-top: 4px;
+		bottom: auto;
+	}
+
+	.twoslash-error-line {
+		background: rgba(248, 81, 73, 0.1);
+		border-left: 2px solid #f85149;
+		padding-left: 0.5rem;
+	}
+
+	.twoslash-tag-line {
+		background: rgba(55, 114, 207, 0.1);
+		border-left: 2px solid #3772cf;
+		padding-left: 0.5rem;
+	}
 }
 
 @layer utilities {
