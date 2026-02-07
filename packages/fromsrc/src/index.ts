@@ -111,3 +111,22 @@ export {
 	createRedirects,
 	parseRedirectsFile,
 } from "./redirects"
+export { rehypeCode } from "./rehypecode"
+export {
+	type ChangelogEntry,
+	type ChangelogItem,
+	type ChangelogConfig,
+	parseChangelog,
+	generateChangelogRss,
+	latestVersion,
+	filterByType,
+	hasBreaking,
+} from "./changelog"
+export {
+	type AnalyticsEvent,
+	type AnalyticsConfig,
+	createAnalytics,
+	generateScript,
+	aggregateEvents,
+} from "./analytics"
+export { type SeoConfig, type PageSeo, createSeo } from "./seo"
