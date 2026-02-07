@@ -233,6 +233,49 @@
 	.code-toggle:hover {
 		color: var(--color-muted);
 	}
+
+	.code-collapse {
+		all: unset;
+		display: block;
+	}
+
+	.code-collapse summary {
+		cursor: pointer;
+		padding: 6px 16px;
+		background: rgba(255, 255, 255, 0.03);
+		border-left: 2px solid var(--color-dim);
+		color: var(--color-dim);
+		font-size: 11px;
+		list-style: none;
+		user-select: none;
+		transition: all 0.2s;
+	}
+
+	.code-collapse summary:hover {
+		background: rgba(255, 255, 255, 0.06);
+		color: var(--color-muted);
+		border-left-color: var(--color-muted);
+	}
+
+	.code-collapse summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.code-collapse[open] summary {
+		background: transparent;
+		border-left-color: var(--color-line);
+		color: var(--color-muted);
+		padding-bottom: 0;
+	}
+
+	.code-collapse[open] .line {
+		border-left: 2px solid var(--color-line);
+		padding-left: 14px;
+	}
+
+	.code-collapse .line {
+		display: block;
+	}
 }
 
 @layer utilities {

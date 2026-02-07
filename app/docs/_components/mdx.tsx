@@ -7,6 +7,7 @@ import {
 	transformerNotationWordHighlight,
 } from "@shikijs/transformers"
 import type { ShikiTransformerContext } from "@shikijs/types"
+import { transformerCollapse } from "fromsrc"
 import {
 	Accordion,
 	AccordionItem,
@@ -372,6 +373,7 @@ export async function MDX({ source }: Props) {
 									transformerNotationDiff(),
 									transformerNotationFocus(),
 									transformerNotationWordHighlight(),
+									transformerCollapse(),
 									{
 										pre(
 											this: ShikiTransformerContext,

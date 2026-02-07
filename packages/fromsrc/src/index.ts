@@ -32,6 +32,7 @@ export { rehypeAnchors } from "./rehype"
 export { remarkAlerts } from "./remark"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
 export { preloadPage, preloadSearch, preloadConfig } from "./preload"
+export { transformerCollapse } from "./collapse"
 export { type DocManifest, type ManifestPage, generateManifest, generateManifestJson } from "./manifest"
 export { exportMarkdown, exportJson, exportCsv } from "./export"
 export {
