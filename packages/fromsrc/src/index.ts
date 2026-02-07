@@ -148,15 +148,14 @@ export { type SeoConfig, type PageSeo, createSeo } from "./seo"
 export { defineCollection, defineCollections } from "./collections"
 export { rehypeToc, type RehypeTocOptions, type TocEntry } from "./rehypetoc"
 export {
-	type Transformer,
+	type PipelineContext,
+	type Transform,
+	type Pipeline,
 	createPipeline,
-	stripFrontmatter,
-	stripImports,
-	stripExports,
-	stripJsx,
-	normalizeWhitespace,
-	addBaseUrl,
-	toPlaintext,
+	composeTransforms,
+	conditionalTransform,
+	mapContent,
+	mapFrontmatter,
 } from "./pipeline"
 export {
 	type NavNode,
@@ -394,3 +393,25 @@ export {
 	type CacheStats,
 	createCache,
 } from "./contentcache"
+export {
+	type GitSourceConfig,
+	type GitFile,
+	gitExec,
+	listFiles as gitListFiles,
+	readFile as gitReadFile,
+	getLastModified as gitLastModified,
+	getFileHash,
+	createGitSource,
+} from "./gitsource"
+export { remarkAdmonition } from "./remarkadmonition"
+export {
+	type NavItem,
+	type NavConfig,
+	type NavTree,
+	generateNav,
+	sortNav,
+	flattenNav,
+	findNavItem,
+	navToSidebar,
+	breadcrumbFromPath,
+} from "./navgen"

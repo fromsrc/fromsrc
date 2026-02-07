@@ -1,65 +1,64 @@
-type Transformer = (content: string, metadata: Record<string, unknown>) => string | Promise<string>
+export type PipelineContext = {
+	path: string
+	content: string
+	frontmatter: Record<string, unknown>
+	meta: Record<string, unknown>
+}
 
-export function createPipeline(...transformers: Transformer[]) {
-	const list = [...transformers]
+export type Transform = (ctx: PipelineContext) => PipelineContext | Promise<PipelineContext>
 
-	return {
-		async transform(content: string, metadata: Record<string, unknown> = {}): Promise<string> {
-			let result = content
+export type Pipeline = {
+	use(transform: Transform): Pipeline
+	process(ctx: PipelineContext): Promise<PipelineContext>
+	transforms(): Transform[]
+}
+
+export function createPipeline(...initial: Transform[]): Pipeline {
+	const list = [...initial]
+
+	const pipeline: Pipeline = {
+		use(transform) {
+			list.push(transform)
+			return pipeline
+		},
+		async process(ctx) {
+			let result = ctx
 			for (const t of list) {
-				result = await t(result, metadata)
+				result = await t(result)
 			}
 			return result
 		},
-		add(transformer: Transformer) {
-			list.push(transformer)
+		transforms() {
+			return [...list]
 		},
+	}
+
+	return pipeline
+}
+
+export function composeTransforms(...transforms: Transform[]): Transform {
+	return async (ctx) => {
+		let result = ctx
+		for (const t of transforms) {
+			result = await t(result)
+		}
+		return result
 	}
 }
 
-export function stripFrontmatter(): Transformer {
-	return (content) => content.replace(/^---\n[\s\S]*?\n---\n/, "")
+export function conditionalTransform(
+	predicate: (ctx: PipelineContext) => boolean,
+	transform: Transform,
+): Transform {
+	return (ctx) => (predicate(ctx) ? transform(ctx) : ctx)
 }
 
-export function stripImports(): Transformer {
-	return (content) => content.replace(/^import\s+.*?from\s+['"][^'"]+['"];?\n?/gm, "")
+export function mapContent(fn: (content: string) => string): Transform {
+	return (ctx) => ({ ...ctx, content: fn(ctx.content) })
 }
 
-export function stripExports(): Transformer {
-	return (content) => content.replace(/^export\s+.*?\n/gm, "")
+export function mapFrontmatter(
+	fn: (fm: Record<string, unknown>) => Record<string, unknown>,
+): Transform {
+	return (ctx) => ({ ...ctx, frontmatter: fn(ctx.frontmatter) })
 }
-
-export function stripJsx(): Transformer {
-	return (content) =>
-		content
-			.replace(/<[A-Z][^>]*>[\s\S]*?<\/[A-Z][^>]*>/g, "")
-			.replace(/<[A-Z][^>]*\/>/g, "")
-}
-
-export function normalizeWhitespace(): Transformer {
-	return (content) => content.replace(/\n{3,}/g, "\n\n")
-}
-
-export function addBaseUrl(base: string): Transformer {
-	const normalized = base.endsWith("/") ? base.slice(0, -1) : base
-	return (content) => content.replace(/\]\(\//g, `](${normalized}/`)
-}
-
-export function toPlaintext() {
-	return createPipeline(
-		stripFrontmatter(),
-		stripImports(),
-		stripExports(),
-		stripJsx(),
-		(content) =>
-			content
-				.replace(/^#{1,6}\s+/gm, "")
-				.replace(/\*\*([^*]+)\*\*/g, "$1")
-				.replace(/\*([^*]+)\*/g, "$1")
-				.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-				.replace(/`([^`]+)`/g, "$1"),
-		normalizeWhitespace(),
-	)
-}
-
-export type { Transformer }
