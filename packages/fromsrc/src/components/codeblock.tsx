@@ -176,7 +176,10 @@ export const CodeBlock = memo(function CodeBlock({
 			)}
 			<div
 				ref={codeRef}
-				className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+				tabIndex={0}
+				role="region"
+				aria-label={label ? `${label} code` : "code"}
+				className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] focus:outline-none focus:ring-1 focus:ring-dim"
 				style={{
 					padding: "14px 16px",
 					overflow: "auto",
