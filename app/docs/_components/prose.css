@@ -204,6 +204,12 @@
 	margin-top: 1.5rem;
 	margin-bottom: 1.5rem;
 	border-radius: 8px;
+	cursor: zoom-in;
+	transition: opacity 0.2s;
+}
+
+.prose img:hover {
+	opacity: 0.9;
 }
 
 .prose video {
@@ -277,4 +283,15 @@
 	font-size: 12px;
 	font-family: var(--font-mono), ui-monospace, monospace;
 	box-shadow: 0 1px 0 var(--color-line);
+}
+
+@media (max-width: 640px) {
+	nav[aria-label="Breadcrumb"] ol > li:not(:first-child):not(:last-child) {
+		display: none;
+	}
+
+	nav[aria-label="Breadcrumb"] ol > li:first-child::after {
+		content: " / ...";
+		color: var(--color-dim);
+	}
 }
