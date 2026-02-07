@@ -50,9 +50,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 	if (!doc) return { title: "not found" }
 
+	const ogParams = new URLSearchParams({ title: doc.title })
+	if (doc.description) ogParams.set("description", doc.description)
+
 	return {
 		title: doc.title,
 		description: doc.description,
+		openGraph: {
+			title: doc.title,
+			description: doc.description,
+			images: [{ url: `/api/og?${ogParams}`, width: 1200, height: 630 }],
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: doc.title,
+			description: doc.description,
+			images: [`/api/og?${ogParams}`],
+		},
 	}
 }
 
