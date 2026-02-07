@@ -130,3 +130,25 @@ export {
 	aggregateEvents,
 } from "./analytics"
 export { type SeoConfig, type PageSeo, createSeo } from "./seo"
+export { defineCollection, defineCollections } from "./collections"
+export { rehypeToc, type RehypeTocOptions, type TocEntry } from "./rehypetoc"
+export {
+	type Transformer,
+	createPipeline,
+	stripFrontmatter,
+	stripImports,
+	stripExports,
+	stripJsx,
+	normalizeWhitespace,
+	addBaseUrl,
+	toPlaintext,
+} from "./pipeline"
+export {
+	type NavNode,
+	type NavTreeConfig,
+	buildNavTree,
+	flattenNavTree,
+	findNavNode,
+	getNavBreadcrumbs,
+	getPrevNext,
+} from "./navtree"
