@@ -231,6 +231,7 @@ function ContentBase({ source }: ContentProps): JSX.Element {
 			const { default: rehypeShiki } = await import("@shikijs/rehype")
 			const { transformerNotationHighlight, transformerNotationDiff, transformerNotationFocus } =
 				await import("@shikijs/transformers")
+			const { transformerCollapse } = await import("../collapse")
 			const runtime = await import("react/jsx-runtime")
 
 			const code = await compile(source, {
@@ -246,6 +247,7 @@ function ContentBase({ source }: ContentProps): JSX.Element {
 								transformerNotationHighlight(),
 								transformerNotationDiff(),
 								transformerNotationFocus(),
+								transformerCollapse(),
 								{
 									pre(node: { properties: Record<string, string> }) {
 										const lang =
