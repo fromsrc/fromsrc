@@ -1,6 +1,14 @@
 import { readFileSync, writeFileSync } from "node:fs"
 import { defineConfig } from "tsup"
 
+function ignore(file: string, patterns: RegExp[]) {
+	let content = readFileSync(file, "utf-8")
+	for (const p of patterns) {
+		content = content.replace(p, (m) => m.replace("import(", "import(/* webpackIgnore: true */ "))
+	}
+	writeFileSync(file, content)
+}
+
 export default defineConfig([
 	{
 		entry: ["src/index.ts"],
@@ -8,6 +16,9 @@ export default defineConfig([
 		dts: true,
 		treeshake: true,
 		external: ["react", "next", "react/jsx-runtime"],
+		onSuccess: async () => {
+			ignore("dist/index.js", [/import\(join\(dir, name\)\)/g])
+		},
 	},
 	{
 		entry: ["src/client.ts"],
@@ -18,7 +29,11 @@ export default defineConfig([
 		external: ["react", "next", "react/jsx-runtime", "mermaid", "katex"],
 		onSuccess: async () => {
 			const path = "dist/client.js"
-			const content = readFileSync(path, "utf-8")
+			let content = readFileSync(path, "utf-8")
+			content = content.replace(
+				/import\(['"]mermaid['"]\)/g,
+				"import(/* webpackIgnore: true */ 'mermaid')",
+			)
 			writeFileSync(path, `"use client";\n${content}`)
 		},
 	},
