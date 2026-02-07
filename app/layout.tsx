@@ -47,7 +47,15 @@ export const viewport: Viewport = {
 export default function Layout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="en">
-			<body className={`${mono.variable} ${serif.variable}`}>{children}</body>
+			<body className={`${mono.variable} ${serif.variable}`}>
+				<a
+					href="#main"
+					className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-surface focus:text-fg focus:border focus:border-line focus:rounded-md focus:text-sm"
+				>
+					skip to content
+				</a>
+				{children}
+			</body>
 		</html>
 	)
 }

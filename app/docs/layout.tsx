@@ -16,7 +16,7 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
 				<div className="hidden lg:block">
 					<Sidebar />
 				</div>
-				<main className="flex-1 min-w-0">{children}</main>
+				<main id="main" className="flex-1 min-w-0">{children}</main>
 			</div>
 		</>
 	)
