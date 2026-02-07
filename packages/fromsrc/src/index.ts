@@ -12,6 +12,12 @@ export {
 	getNavigation,
 	getSearchDocs,
 } from "./content"
+export {
+	type FrontmatterResult,
+	type FrontmatterError,
+	parseFrontmatter,
+	validateAllFrontmatter,
+} from "./frontmatter"
 export { type MetaFile, type PageTreeItem, clearMetaCache, loadMeta, sortByMeta } from "./meta"
 export { baseSchema, defineSchema, extendSchema, type InferSchema, z } from "./schema"
 export {
