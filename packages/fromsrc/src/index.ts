@@ -95,3 +95,19 @@ export {
 	createWatcher,
 	clearAllCaches,
 } from "./watcher"
+export {
+	type SitemapConfig,
+	type SitemapEntry,
+	generateSitemap,
+	generateSitemapIndex,
+	entriesToRss,
+	docsToEntries,
+} from "./sitemap"
+export { remarkGfm } from "./remarkgfm"
+export { type VersionConfig, type VersionInfo, createVersioning } from "./versioning"
+export {
+	type Redirect,
+	type RedirectConfig,
+	createRedirects,
+	parseRedirectsFile,
+} from "./redirects"
