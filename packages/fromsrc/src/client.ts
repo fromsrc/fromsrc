@@ -227,6 +227,8 @@ export { useShare } from "./hooks/share"
 export { useEscapeKey } from "./hooks/escapekey"
 export { useEventListener } from "./hooks/eventlistener"
 export { useFocusTrap, FOCUSABLE_SELECTOR, type FocusTrapOptions } from "./hooks/focustrap"
+export { useHash } from "./hooks/hash"
+export { useInView, type InViewOptions } from "./hooks/inview"
 export { useKeyboardNav } from "./hooks/keyboard"
 export {
 	useIsDesktop,
