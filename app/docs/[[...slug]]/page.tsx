@@ -81,8 +81,24 @@ export default async function DocPage({ params }: Props) {
 	const prev = currentIndex > 0 ? allDocs[currentIndex - 1] : null
 	const next = currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null
 
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "TechArticle",
+		headline: doc.title,
+		description: doc.description,
+		url: `https://fromsrc.com/docs/${doc.slug}`,
+		author: { "@type": "Organization", name: "fromsrc" },
+		publisher: { "@type": "Organization", name: "fromsrc", url: "https://fromsrc.com" },
+		mainEntityOfPage: { "@type": "WebPage", "@id": `https://fromsrc.com/docs/${doc.slug}` },
+	}
+
 	return (
-		<div className="flex w-full max-w-7xl mx-auto">
+		<>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+			/>
+			<div className="flex w-full max-w-7xl mx-auto">
 			<article className="flex-1 min-w-0 py-12 px-8 lg:px-12">
 				<header className="mb-8 pb-6 border-b border-line">
 					<div className="mb-4">
@@ -154,5 +170,6 @@ export default async function DocPage({ params }: Props) {
 			</article>
 			<Toc variant="minimal" zigzag />
 		</div>
+		</>
 	)
 }
