@@ -27,4 +27,6 @@ export {
 	type RemoteSourceConfig,
 	createRemoteSource,
 } from "./source"
+export { type McpConfig, generateMcpManifest, createMcpHandler } from "./mcp"
+export { remarkAlerts } from "./remark"
 export { type LinkIssue, type ValidateOptions, validateLinks } from "./validate"
