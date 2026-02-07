@@ -24,11 +24,16 @@
 		padding: 0;
 		margin: 0;
 	}
-	*:focus {
+	*:focus:not(:focus-visible) {
 		outline: none;
+	}
+	*:focus-visible {
+		outline: 1px solid var(--color-muted);
+		outline-offset: 2px;
 	}
 	html {
 		scroll-behavior: smooth;
+		color-scheme: dark;
 	}
 	html,
 	body {
@@ -44,6 +49,7 @@
 		background: var(--color-bg);
 		font-family: var(--font-mono);
 		-webkit-font-smoothing: antialiased;
+		font-variant-numeric: tabular-nums;
 		font-size: 13px;
 		line-height: 1.7;
 	}
@@ -232,6 +238,14 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
+	}
+}
+
+@media (prefers-contrast: more) {
+	:root {
+		--color-muted: #a3a3a3;
+		--color-dim: #525252;
+		--color-line: #333333;
 	}
 }
 
