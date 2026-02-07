@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode, memo, useCallback, useId, useRef } from "react"
+import { type ReactNode, memo, useCallback, useId, useRef, useState } from "react"
 import { useCopy } from "../hooks/copy"
 import { LangIcon } from "./langicon"
 
@@ -67,6 +67,49 @@ const CopyBtn = memo(function CopyBtn({ codeRef }: CopyBtnProps): ReactNode {
 	)
 })
 
+interface WrapBtnProps {
+	wrap: boolean
+	onToggle: () => void
+}
+
+const WrapBtn = memo(function WrapBtn({ wrap, onToggle }: WrapBtnProps): ReactNode {
+	return (
+		<button
+			type="button"
+			onClick={onToggle}
+			aria-label="Toggle word wrap"
+			className="hover:text-neutral-50"
+			style={{
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+				padding: "6px",
+				color: wrap ? "#ef4444" : "#737373",
+				background: "transparent",
+				border: "none",
+				cursor: "pointer",
+				transition: "color 0.15s",
+				borderRadius: "4px",
+			}}
+		>
+			<svg
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="2"
+				style={{ width: 14, height: 14 }}
+				aria-hidden="true"
+			>
+				<path
+					d="M3 6h18M3 12h15a3 3 0 1 1 0 6H9m0 0 3-3m-3 3 3 3"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				/>
+			</svg>
+		</button>
+	)
+})
+
 export interface CodeBlockProps {
 	children: ReactNode
 	lang?: string
@@ -85,6 +128,11 @@ export const CodeBlock = memo(function CodeBlock({
 	const codeRef = useRef<HTMLDivElement>(null)
 	const labelId = useId()
 	const hasHeader = title || lang
+	const [wrap, setWrap] = useState(false)
+
+	const toggleWrap = useCallback((): void => {
+		setWrap((prev) => !prev)
+	}, [])
 
 	return (
 		<figure
@@ -126,7 +174,10 @@ export const CodeBlock = memo(function CodeBlock({
 							{title || lang}
 						</span>
 					</div>
-					<CopyBtn codeRef={codeRef} />
+					<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+						<WrapBtn wrap={wrap} onToggle={toggleWrap} />
+						<CopyBtn codeRef={codeRef} />
+					</div>
 				</div>
 			)}
 			<div
@@ -137,16 +188,28 @@ export const CodeBlock = memo(function CodeBlock({
 				className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] focus:outline-none focus:ring-1 focus:ring-dim"
 				style={{
 					padding: "14px 16px",
-					overflow: "auto",
+					overflow: wrap ? "visible" : "auto",
 					fontSize: "13px",
 					lineHeight: "1.6",
 					maxHeight: "500px",
+					whiteSpace: wrap ? "pre-wrap" : "pre",
+					wordBreak: wrap ? "break-all" : "normal",
 				}}
 			>
 				{children}
 			</div>
 			{!hasHeader && (
-				<div style={{ position: "absolute", top: "8px", right: "8px" }}>
+				<div
+					style={{
+						position: "absolute",
+						top: "8px",
+						right: "8px",
+						display: "flex",
+						alignItems: "center",
+						gap: "4px",
+					}}
+				>
+					<WrapBtn wrap={wrap} onToggle={toggleWrap} />
 					<CopyBtn codeRef={codeRef} />
 				</div>
 			)}
