@@ -436,3 +436,22 @@ export {
 	scopeFromImports,
 	listComponents,
 } from "./mdxscope"
+export { remarkEmbed } from "./remarkembed"
+export {
+	type ValidationIssue,
+	type ValidationRule,
+	type ValidationResult,
+	type ValidatorConfig,
+	createRule,
+	validate,
+	validateAll,
+	builtinRules,
+} from "./validator"
+export {
+	type Contributor,
+	type ContributorConfig,
+	getContributors,
+	getLastAuthor,
+	getEditHistory,
+	formatContributors,
+} from "./contributors"
