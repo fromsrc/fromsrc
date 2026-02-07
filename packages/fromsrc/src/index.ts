@@ -242,3 +242,36 @@ export {
 	mapFiles,
 	forEachDoc,
 } from "./batch"
+export {
+	type CodeLanguage,
+	type CodeSampleConfig,
+	type CodeSample,
+	generateSample,
+	generateSamples,
+} from "./codesample"
+export {
+	type DocsStats,
+	type PageStats,
+	analyzePage,
+	analyzeDocs,
+	formatStats,
+	compareStats,
+} from "./stats"
+export {
+	type ContentHash,
+	type HashManifest,
+	type Changes,
+	hashContent,
+	hashFile,
+	generateHashManifest,
+	detectChanges,
+	hashFrontmatter,
+} from "./hash"
+export {
+	type ShortcodeDefinition,
+	type ShortcodeConfig,
+	parseAttrs,
+	registerShortcode,
+	processShortcodes,
+	builtinShortcodes,
+} from "./shortcodes"
