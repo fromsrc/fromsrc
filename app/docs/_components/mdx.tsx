@@ -167,6 +167,7 @@ type CodeProps = ComponentPropsWithoutRef<"code"> & { children?: ReactNode }
 type PreProps = ComponentPropsWithoutRef<"pre"> & {
 	children?: ReactNode
 	"data-language"?: string
+	"data-title"?: string
 }
 
 function getId(children: ReactNode): string {
@@ -188,8 +189,9 @@ const components = {
 	},
 	pre: (props: PreProps) => {
 		const lang = props["data-language"] || ""
+		const title = props["data-title"] || ""
 		return (
-			<CodeBlock lang={lang}>
+			<CodeBlock lang={lang} title={title || undefined}>
 				<pre {...props} />
 			</CodeBlock>
 		)
@@ -376,6 +378,11 @@ export async function MDX({ source }: Props) {
 											const lang = this.options.lang || ""
 											if (lang) {
 												node.properties["data-language"] = lang
+											}
+											const meta = this.options.meta?.__raw || ""
+											const match = meta.match(/title="([^"]*)"/)
+											if (match) {
+												node.properties["data-title"] = match[1]!
 											}
 										},
 									},
