@@ -57,6 +57,8 @@ export type {
 	GlossaryProps,
 } from "./components/definition"
 export { Definition, DefinitionList, Glossary, GlossaryItem } from "./components/definition"
+export type { DiffViewProps } from "./components/diffview"
+export { DiffView } from "./components/diffview"
 export type { DividerProps } from "./components/divider"
 export { Divider } from "./components/divider"
 export type { DropdownItem, DropdownProps } from "./components/dropdown"
