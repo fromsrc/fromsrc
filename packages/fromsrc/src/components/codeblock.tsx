@@ -41,11 +41,7 @@ const icons: Record<string, string> = {
 	kotlin: "M0 24L12 12L24 24H0zM0 0h24L12 12L0 24V0zm12 12L24 0H12L0 12h12z",
 }
 
-/**
- * Props for the LanguageIcon component
- */
 interface LanguageIconProps {
-	/** Programming language identifier */
 	lang: string
 }
 
@@ -65,11 +61,7 @@ const LanguageIcon = memo(function LanguageIcon({ lang }: LanguageIconProps): Re
 	)
 })
 
-/**
- * Props for the CopyButton component
- */
 interface CopyButtonProps {
-	/** Ref to the element containing code to copy */
 	codeRef: React.RefObject<HTMLDivElement | null>
 }
 
@@ -128,22 +120,20 @@ const CopyButton = memo(function CopyButton({ codeRef }: CopyButtonProps): React
 	)
 })
 
-/**
- * Props for the CodeBlock component
- */
 export interface CodeBlockProps {
-	/** Content to display in the code block */
 	children: ReactNode
-	/** Programming language for syntax highlighting icon */
 	lang?: string
-	/** Title displayed in the header */
 	title?: string
+	lines?: boolean
 }
+
+const linenumberstyle = `[data-line-numbers] code{counter-reset:line}[data-line-numbers] .line::before{counter-increment:line;content:counter(line);display:inline-block;width:3ch;margin-right:1.5ch;text-align:right;color:#4a4a4a;user-select:none;-webkit-user-select:none;font-variant-numeric:tabular-nums}`
 
 export const CodeBlock = memo(function CodeBlock({
 	children,
 	lang,
 	title,
+	lines,
 }: CodeBlockProps): ReactNode {
 	const codeRef = useRef<HTMLDivElement>(null)
 	const labelId = useId()
@@ -153,6 +143,7 @@ export const CodeBlock = memo(function CodeBlock({
 		<figure
 			role="group"
 			aria-labelledby={label ? labelId : undefined}
+			data-line-numbers={lines || undefined}
 			style={{
 				position: "relative",
 				margin: "24px 0",
@@ -162,6 +153,7 @@ export const CodeBlock = memo(function CodeBlock({
 				overflow: "hidden",
 			}}
 		>
+			{lines && <style dangerouslySetInnerHTML={{ __html: linenumberstyle }} />}
 			{label && (
 				<div
 					style={{
