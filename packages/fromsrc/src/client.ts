@@ -75,6 +75,8 @@ export type { EndpointProps, Method, ParamProps, ResponseProps } from "./compone
 export { Endpoint, Param, Response } from "./components/endpoint"
 export type { ErrorMessageProps } from "./components/errormessage"
 export { ErrorMessage } from "./components/errormessage"
+export type { ExpandCodeProps } from "./components/expandcode"
+export { ExpandCode } from "./components/expandcode"
 export type { FeatureCardProps, FeatureProps, FeaturesProps } from "./components/feature"
 export { Feature, FeatureCard, Features } from "./components/feature"
 export type { FeedbackProps } from "./components/feedback"
