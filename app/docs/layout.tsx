@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import { KeyboardNav } from "./_components/keyboard"
-import { Progress } from "./_components/progress"
 import { MobileNavigation } from "./_components/mobilenav"
 import { SearchModal } from "./_components/search"
 import { Shortcuts } from "./_components/shortcuts"
@@ -11,7 +10,6 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
 	const [docs, searchDocs] = await Promise.all([getAllDocs(), getSearchDocs()])
 	return (
 		<>
-			<Progress />
 			<MobileNavigation />
 			<SearchModal docs={searchDocs} />
 			<Shortcuts />
