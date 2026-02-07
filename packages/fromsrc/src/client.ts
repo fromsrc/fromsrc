@@ -297,3 +297,7 @@ export type { ThemeMode, ThemeContextValue, ThemeProviderProps } from "./compone
 export { ThemeProvider, useTheme } from "./components/themeprovider"
 export type { InlineTocProps } from "./components/inlinetoc"
 export { InlineToc } from "./components/inlinetoc"
+export type { DocHeaderProps } from "./components/docheader"
+export { DocHeader } from "./components/docheader"
+export type { SearchDialogProps } from "./components/searchdialog"
+export { SearchDialog } from "./components/searchdialog"

@@ -424,3 +424,15 @@ export {
 } from "./navgen"
 export { type AutolinkOptions, rehypeAutolink } from "./rehypeautolink"
 export { type CodeMeta, parseMeta, remarkMeta } from "./remarkmeta"
+export { remarkCaption } from "./remarkcaption"
+export {
+	type MdxComponent,
+	type MdxScope,
+	type MdxScopeConfig,
+	createScope,
+	mergeScopes,
+	withDefaults,
+	filterScope,
+	scopeFromImports,
+	listComponents,
+} from "./mdxscope"
