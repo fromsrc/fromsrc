@@ -33,6 +33,7 @@ export {
 	type RemoteSourceConfig,
 	createRemoteSource,
 } from "./source"
+export { type GithubSourceConfig, createGithubSource } from "./github"
 export { type McpConfig, generateMcpManifest, createMcpHandler } from "./mcp"
 export { rehypeAnchors } from "./rehype"
 export { rehypeInlineCode } from "./rehypeinline"
@@ -70,3 +71,17 @@ export {
 	parseOpenApi,
 	generateEndpointSlug,
 } from "./openapi"
+export { remarkInstall } from "./remarkinstall"
+export {
+	type TocHeading,
+	type TocNode,
+	buildTocTree,
+	remarkStructure,
+} from "./remarkstructure"
+export {
+	type I18nConfig,
+	type LocaleInfo,
+	rtlLocales,
+	getDirection,
+	createI18n,
+} from "./i18n"
