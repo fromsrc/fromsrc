@@ -48,11 +48,16 @@ export { transformerAnsi } from "./ansi"
 export { type DocManifest, type ManifestPage, generateManifest, generateManifestJson } from "./manifest"
 export { exportMarkdown, exportJson, exportCsv } from "./export"
 export {
+	type SearchDocument,
 	type SearchIndex,
-	type SearchIndexPage,
-	type SearchIndexResult,
-	generateSearchIndex,
-	searchFromIndex,
+	type IndexConfig,
+	createIndex,
+	addDocument,
+	removeDocument,
+	search,
+	serializeIndex,
+	deserializeIndex,
+	tokenize,
 } from "./searchindex"
 export {
 	type TypeProperty,
@@ -342,7 +347,7 @@ export {
 	highlightMatches,
 	generateSnippet,
 	highlightHtml,
-	tokenize,
+	tokenize as highlightTokenize,
 	fuzzyHighlight,
 } from "./highlight"
 export {
@@ -415,3 +420,4 @@ export {
 	navToSidebar,
 	breadcrumbFromPath,
 } from "./navgen"
+export { type AutolinkOptions, rehypeAutolink } from "./rehypeautolink"

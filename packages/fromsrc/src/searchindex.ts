@@ -1,63 +1,101 @@
-import type { Heading, SearchDoc } from "./content"
-
-export interface SearchIndexPage {
-	slug: string
+export interface SearchDocument {
+	path: string
 	title: string
 	description?: string
-	headings?: Heading[]
+	headings: string[]
 	content: string
+	tags?: string[]
 }
 
 export interface SearchIndex {
-	version: 1
-	generated: string
-	pages: SearchIndexPage[]
+	documents: SearchDocument[]
+	terms: Map<string, number[]>
+	version: number
 }
 
-export interface SearchIndexResult {
-	page: SearchIndexPage
-	score: number
+export interface IndexConfig {
+	stemming?: boolean
+	stopWords?: string[]
+	minLength?: number
 }
 
-export function generateSearchIndex(docs: SearchDoc[]): SearchIndex {
-	return {
-		version: 1,
-		generated: new Date().toISOString(),
-		pages: docs.map((doc) => ({
-			slug: doc.slug,
-			title: doc.title,
-			description: doc.description,
-			headings: doc.headings,
-			content: doc.content.slice(0, 500),
-		})),
-	}
+const DEFAULT_STOPS = new Set([
+	"the", "a", "an", "is", "are", "was", "were", "in", "on", "at",
+	"to", "for", "of", "and", "or", "but", "not", "with", "this", "that",
+])
+
+export function tokenize(text: string, config?: IndexConfig): string[] {
+	const stops = config?.stopWords ? new Set(config.stopWords) : DEFAULT_STOPS
+	const min = config?.minLength ?? 2
+	return text
+		.toLowerCase()
+		.split(/[^a-z0-9]+/)
+		.filter((w) => w.length >= min && !stops.has(w))
 }
 
-export function searchFromIndex(index: SearchIndex, query: string): SearchIndexResult[] {
-	const q = query.trim().toLowerCase()
-	if (!q) return []
-
-	const results: SearchIndexResult[] = []
-
-	for (const page of index.pages) {
-		let score = 0
-		const title = page.title.toLowerCase()
-		const desc = (page.description ?? "").toLowerCase()
-		const content = page.content.toLowerCase()
-
-		if (title.includes(q)) score += 10
-		if (title.startsWith(q)) score += 5
-		if (desc.includes(q)) score += 3
-		if (content.includes(q)) score += 1
-
-		if (page.headings) {
-			for (const h of page.headings) {
-				if (h.text.toLowerCase().includes(q)) score += 4
-			}
+function indexDocument(index: SearchIndex, idx: number, doc: SearchDocument) {
+	const text = [doc.title, doc.description ?? "", ...doc.headings, doc.content].join(" ")
+	const tokens = tokenize(text)
+	for (const token of tokens) {
+		const existing = index.terms.get(token)
+		if (existing) {
+			if (!existing.includes(idx)) existing.push(idx)
+		} else {
+			index.terms.set(token, [idx])
 		}
-
-		if (score > 0) results.push({ page, score })
 	}
+}
 
-	return results.sort((a, b) => b.score - a.score)
+export function createIndex(config?: IndexConfig): SearchIndex {
+	return { documents: [], terms: new Map(), version: 1 }
+}
+
+export function addDocument(index: SearchIndex, doc: SearchDocument): void {
+	const idx = index.documents.length
+	index.documents.push(doc)
+	indexDocument(index, idx, doc)
+}
+
+export function removeDocument(index: SearchIndex, path: string): void {
+	const idx = index.documents.findIndex((d) => d.path === path)
+	if (idx === -1) return
+	index.documents.splice(idx, 1)
+	index.terms.clear()
+	for (let i = 0; i < index.documents.length; i++) {
+		indexDocument(index, i, index.documents[i]!)
+	}
+}
+
+export function search(index: SearchIndex, query: string, limit = 10): SearchDocument[] {
+	const tokens = tokenize(query)
+	if (tokens.length === 0) return []
+	const scores = new Map<number, number>()
+	for (const token of tokens) {
+		const indices = index.terms.get(token)
+		if (!indices) continue
+		for (const idx of indices) {
+			scores.set(idx, (scores.get(idx) ?? 0) + 1)
+		}
+	}
+	return [...scores.entries()]
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, limit)
+		.map(([idx]) => index.documents[idx]!)
+}
+
+export function serializeIndex(index: SearchIndex): string {
+	return JSON.stringify({
+		documents: index.documents,
+		terms: [...index.terms.entries()],
+		version: index.version,
+	})
+}
+
+export function deserializeIndex(data: string): SearchIndex {
+	const parsed = JSON.parse(data)
+	return {
+		documents: parsed.documents,
+		terms: new Map(parsed.terms),
+		version: parsed.version,
+	}
 }
