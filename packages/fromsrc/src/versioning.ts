@@ -1,71 +1,81 @@
-import { join, resolve } from "node:path"
-
-export interface VersionConfig {
-	versions: string[]
-	latest: string
-	docsDir: string
-	strategy?: "directory" | "branch"
-}
-
-export interface VersionInfo {
-	version: string
+export type DocVersion = {
 	label: string
 	path: string
-	isCurrent: boolean
+	isLatest?: boolean
+	isDefault?: boolean
 }
 
-export function createVersioning(config: VersionConfig) {
-	const { versions, latest, docsDir, strategy = "directory" } = config
+export type VersionConfig = {
+	versions: DocVersion[]
+	versionedPaths?: string[]
+}
 
-	const versionSet = new Set(versions)
+export type VersionedPage = {
+	version: DocVersion
+	path: string
+	alternateVersions: DocVersion[]
+}
 
-	const infos: VersionInfo[] = versions.map((v) => ({
-		version: v,
-		label: v === latest ? `${v} (latest)` : v,
-		path: v === latest ? "/" : `/${v}`,
-		isCurrent: v === latest,
-	}))
-
-	function getVersion(pathname: string): string {
-		const segment = pathname.split("/").filter(Boolean)[0]
-		if (segment && versionSet.has(segment)) return segment
-		return latest
-	}
-
-	function getVersionedPath(path: string, version: string): string {
-		if (version === latest) return path
-		const clean = path.startsWith("/") ? path : `/${path}`
-		return `/${version}${clean}`
-	}
-
-	function stripVersion(pathname: string): string {
-		const segment = pathname.split("/").filter(Boolean)[0]
-		if (segment && versionSet.has(segment)) {
-			return pathname.replace(`/${segment}`, "") || "/"
-		}
-		return pathname
-	}
-
-	function getDocsDir(version: string): string {
-		if (strategy === "branch") return version
-		return resolve(join(docsDir, version))
-	}
-
-	function getLatest(): string {
-		return latest
-	}
-
-	function isLatest(version: string): boolean {
-		return version === latest
-	}
-
+export function parseVersion(label: string): { major: number; minor: number; patch: number } {
+	const clean = label.replace(/^v/, "")
+	const parts = clean.split(".")
 	return {
-		versions: infos,
-		getVersion,
-		getVersionedPath,
-		stripVersion,
-		getDocsDir,
-		getLatest,
-		isLatest,
+		major: Number.parseInt(parts[0]!, 10) || 0,
+		minor: Number.parseInt(parts[1]!, 10) || 0,
+		patch: Number.parseInt(parts[2]!, 10) || 0,
+	}
+}
+
+export function compareVersions(a: string, b: string): number {
+	const va = parseVersion(a)
+	const vb = parseVersion(b)
+	if (va.major !== vb.major) return va.major > vb.major ? 1 : -1
+	if (va.minor !== vb.minor) return va.minor > vb.minor ? 1 : -1
+	if (va.patch !== vb.patch) return va.patch > vb.patch ? 1 : -1
+	return 0
+}
+
+export function sortVersions(versions: DocVersion[]): DocVersion[] {
+	return [...versions].sort((a, b) => compareVersions(b.label, a.label))
+}
+
+export function resolveVersion(path: string, config: VersionConfig): VersionedPage | null {
+	const segments = path.split("/").filter(Boolean)
+	const first = segments[0]
+	const match = config.versions.find((v) => v.path === `/${first}` || v.label === first)
+	if (!match) return null
+	const rest = segments.slice(1).join("/")
+	return {
+		version: match,
+		path: rest ? `/${rest}` : "/",
+		alternateVersions: config.versions.filter((v) => v.label !== match.label),
+	}
+}
+
+export function getLatestVersion(config: VersionConfig): DocVersion {
+	const latest = config.versions.find((v) => v.isLatest)
+	if (latest) return latest
+	return sortVersions(config.versions)[0]!
+}
+
+export function isVersionedPath(path: string, config: VersionConfig): boolean {
+	const segments = path.split("/").filter(Boolean)
+	const first = segments[0]
+	if (!first) return false
+	if (config.versionedPaths?.length) {
+		return config.versionedPaths.some((p) => path.startsWith(p))
+	}
+	return config.versions.some((v) => v.path === `/${first}` || v.label === first)
+}
+
+export function createVersionSwitcher(config: VersionConfig) {
+	return {
+		resolve: (path: string) => resolveVersion(path, config),
+		latest: () => getLatestVersion(config),
+		switchVersion: (path: string, target: DocVersion) => {
+			const resolved = resolveVersion(path, config)
+			const base = resolved ? resolved.path : path
+			return `${target.path}${base === "/" ? "" : base}`
+		},
 	}
 }

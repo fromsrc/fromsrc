@@ -81,9 +81,13 @@ export {
 } from "./remarkstructure"
 export {
 	type I18nConfig,
-	type LocaleInfo,
-	rtlLocales,
-	getDirection,
+	type LocalizedPath,
+	type I18nResult,
+	detectLocale,
+	localizePath,
+	delocalizePath,
+	resolveContent,
+	generateAlternates,
 	createI18n,
 } from "./i18n"
 export { remarkMath } from "./remarkmath"
@@ -104,7 +108,18 @@ export {
 	docsToEntries,
 } from "./sitemap"
 export { remarkGfm } from "./remarkgfm"
-export { type VersionConfig, type VersionInfo, createVersioning } from "./versioning"
+export {
+	type DocVersion,
+	type VersionConfig,
+	type VersionedPage,
+	parseVersion,
+	compareVersions,
+	sortVersions,
+	resolveVersion,
+	getLatestVersion,
+	isVersionedPath,
+	createVersionSwitcher,
+} from "./versioning"
 export {
 	type Redirect,
 	type RedirectConfig,
@@ -364,3 +379,18 @@ export {
 	filterEvents,
 	createWebhook,
 } from "./webhook"
+export {
+	type ChangelogEntry as ChangelogUtilEntry,
+	type ChangelogData,
+	parseChangelog as parseChangelogFile,
+	formatChangelog,
+	getLatestVersion as getLatestChangelog,
+	getVersionsBetween,
+	groupByType,
+} from "./changelogutil"
+export {
+	type CacheEntry,
+	type CacheConfig,
+	type CacheStats,
+	createCache,
+} from "./contentcache"

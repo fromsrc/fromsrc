@@ -1,91 +1,98 @@
 export interface I18nConfig {
-	locales: string[]
 	defaultLocale: string
-	strategy?: "subpath" | "domain"
+	locales: string[]
+	pathPrefix?: boolean
 }
 
-export interface LocaleInfo {
+export interface LocalizedPath {
 	locale: string
-	isDefault: boolean
-	dir: "ltr" | "rtl"
+	path: string
+	originalPath: string
 }
 
-export const rtlLocales = new Set(["ar", "he", "fa", "ur", "ps", "sd", "yi", "dv"])
+export interface I18nResult {
+	locale: string
+	path: string
+	alternates: { locale: string; path: string }[]
+}
 
-export function getDirection(locale: string): "ltr" | "rtl" {
-	const base = locale.split("-")[0] ?? locale
-	return rtlLocales.has(base) ? "rtl" : "ltr"
+export function detectLocale(acceptLanguage: string, locales: string[], fallback: string): string {
+	if (!acceptLanguage) return fallback
+	const set = new Set(locales)
+	const entries = acceptLanguage
+		.split(",")
+		.map((part) => {
+			const [lang, ...params] = part.trim().split(";")
+			const qp = params.find((p) => p.trim().startsWith("q="))
+			const q = qp ? Number.parseFloat(qp.trim().slice(2)) : 1
+			return { lang: (lang ?? "").trim().toLowerCase(), q: Number.isNaN(q) ? 0 : q }
+		})
+		.sort((a, b) => b.q - a.q)
+	for (const { lang } of entries) {
+		if (set.has(lang)) return lang
+		const base = lang.split("-")[0]!
+		if (set.has(base)) return base
+	}
+	return fallback
+}
+
+export function localizePath(path: string, locale: string, config: I18nConfig): string {
+	const clean = path.startsWith("/") ? path : `/${path}`
+	if (locale === config.defaultLocale && !config.pathPrefix) return clean
+	return `/${locale}${clean === "/" ? "" : clean}`
+}
+
+export function delocalizePath(path: string, config: I18nConfig): LocalizedPath {
+	const clean = path.startsWith("/") ? path : `/${path}`
+	const segments = clean.replace(/^\//, "").split("/")
+	const first = segments[0]!
+	if (config.locales.includes(first)) {
+		const rest = segments.slice(1).join("/")
+		return {
+			locale: first,
+			path: `/${rest}` || "/",
+			originalPath: clean,
+		}
+	}
+	return {
+		locale: config.defaultLocale,
+		path: clean,
+		originalPath: clean,
+	}
+}
+
+export function resolveContent(path: string, locale: string, config: I18nConfig): string[] {
+	const clean = path.startsWith("/") ? path.slice(1) : path
+	const paths: string[] = []
+	if (locale !== config.defaultLocale) {
+		paths.push(`${locale}/${clean}`)
+	}
+	paths.push(clean)
+	if (locale !== config.defaultLocale) {
+		paths.push(`${config.defaultLocale}/${clean}`)
+	}
+	return paths
+}
+
+export function generateAlternates(path: string, config: I18nConfig): I18nResult {
+	const { locale, path: stripped } = delocalizePath(path, config)
+	const alternates = config.locales
+		.filter((l) => l !== locale)
+		.map((l) => ({
+			locale: l,
+			path: localizePath(stripped, l, config),
+		}))
+	return {
+		locale,
+		path: localizePath(stripped, locale, config),
+		alternates,
+	}
 }
 
 export function createI18n(config: I18nConfig) {
-	const { locales, defaultLocale } = config
-	const localeSet = new Set(locales)
-
-	function getLocale(pathname: string): string {
-		const segments = pathname.replace(/^\//, "").split("/")
-		const first = segments[0]
-		if (first && localeSet.has(first)) return first
-		return defaultLocale
-	}
-
-	function getLocalizedPath(path: string, locale: string): string {
-		const clean = path.startsWith("/") ? path : `/${path}`
-		if (locale === defaultLocale) return clean
-		if (!localeSet.has(locale)) return clean
-		return `/${locale}${clean}`
-	}
-
-	function stripLocale(pathname: string): string {
-		const segments = pathname.replace(/^\//, "").split("/")
-		const first = segments[0]
-		if (first && localeSet.has(first) && first !== defaultLocale) {
-			const rest = segments.slice(1).join("/")
-			return `/${rest}`
-		}
-		if (first && first === defaultLocale) {
-			const rest = segments.slice(1).join("/")
-			return `/${rest}`
-		}
-		return pathname.startsWith("/") ? pathname : `/${pathname}`
-	}
-
-	function getLocaleInfo(locale: string): LocaleInfo {
-		return {
-			locale,
-			isDefault: locale === defaultLocale,
-			dir: getDirection(locale),
-		}
-	}
-
-	function detectLocale(acceptLanguage: string): string {
-		if (!acceptLanguage) return defaultLocale
-		const entries = acceptLanguage
-			.split(",")
-			.map((part) => {
-				const trimmed = part.trim()
-				const [lang, ...params] = trimmed.split(";")
-				const qParam = params.find((p) => p.trim().startsWith("q="))
-				const q = qParam ? Number.parseFloat(qParam.trim().slice(2)) : 1
-				return { lang: (lang ?? "").trim(), q: Number.isNaN(q) ? 0 : q }
-			})
-			.sort((a, b) => b.q - a.q)
-
-		for (const entry of entries) {
-			const lang = entry.lang ?? ""
-			if (localeSet.has(lang)) return lang
-			const prefix = lang.split("-")[0] ?? ""
-			if (prefix && localeSet.has(prefix)) return prefix
-		}
-		return defaultLocale
-	}
-
 	return {
-		locales,
-		defaultLocale,
-		getLocale,
-		getLocalizedPath,
-		stripLocale,
-		getLocaleInfo,
-		detectLocale,
+		resolve: (path: string, locale: string) => resolveContent(path, locale, config),
+		localize: (path: string, locale: string) => localizePath(path, locale, config),
+		delocalize: (path: string) => delocalizePath(path, config),
 	}
 }
