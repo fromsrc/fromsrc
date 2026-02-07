@@ -6,17 +6,10 @@ import { type ReactNode, useCallback, useEffect, useState } from "react"
 import { NavLink } from "./navlink"
 import type { SidebarFolder } from "./sidebar"
 
-/**
- * Props for the Folder component.
- */
 interface Props {
-	/** The folder data containing title, items, and optional icon/href. */
 	folder: SidebarFolder
-	/** Base path for constructing navigation URLs. */
 	basePath: string
-	/** Current nesting depth of this folder. */
 	depth?: number
-	/** How many levels deep folders should be open by default. */
 	defaultOpenLevel?: number
 }
 
@@ -41,16 +34,6 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 		setOpen((prev) => !prev)
 	}, [])
 
-	const handleKeyDown = useCallback(
-		(event: React.KeyboardEvent<HTMLButtonElement>): void => {
-			if (event.key === "Enter" || event.key === " ") {
-				event.preventDefault()
-				toggle()
-			}
-		},
-		[toggle],
-	)
-
 	return (
 		<li role="treeitem" aria-expanded={open}>
 			<div className="flex items-center">
@@ -59,8 +42,8 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 						href={folder.href}
 						prefetch
 						aria-current={isActive ? "page" : undefined}
-						className={`flex-1 flex items-center gap-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
-							isActive ? "text-fg bg-surface" : "text-muted hover:text-fg"
+						className={`flex-1 flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg transition-colors [transition-duration:150ms] hover:[transition-duration:0ms] ${
+							isActive ? "text-fg bg-surface/80 font-medium" : "text-muted hover:text-fg hover:bg-surface/50"
 						}`}
 					>
 						{folder.icon && (
@@ -74,10 +57,9 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 					<button
 						type="button"
 						onClick={toggle}
-						onKeyDown={handleKeyDown}
 						aria-expanded={open}
 						aria-controls={`folder-${folder.title}`}
-						className="flex-1 flex items-center gap-2 px-2 py-1.5 text-xs text-muted hover:text-fg rounded-md transition-colors"
+						className="flex-1 flex items-center gap-2 px-2 py-1.5 text-sm text-muted hover:text-fg rounded-lg hover:bg-surface/50 transition-colors [transition-duration:150ms] hover:[transition-duration:0ms]"
 					>
 						{folder.icon && (
 							<span className="w-4 h-4 shrink-0" aria-hidden="true">
@@ -90,14 +72,13 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 				<button
 					type="button"
 					onClick={toggle}
-					onKeyDown={handleKeyDown}
 					aria-expanded={open}
 					aria-label={open ? `collapse ${folder.title}` : `expand ${folder.title}`}
 					aria-controls={`folder-${folder.title}`}
-					className="p-1 text-muted hover:text-fg transition-colors"
+					className="p-1 text-muted hover:text-fg transition-colors rounded"
 				>
 					<svg
-						className={`w-3.5 h-3.5 transition-transform ${open ? "" : "-rotate-90"}`}
+						className={`w-3.5 h-3.5 transition-transform duration-150 ${open ? "" : "-rotate-90"}`}
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke="currentColor"
@@ -111,7 +92,7 @@ export function Folder({ folder, basePath, depth = 1, defaultOpenLevel = 0 }: Pr
 				<ul
 					id={`folder-${folder.title}`}
 					role="group"
-					className="mt-0.5 ml-2 pl-2 border-l border-line space-y-0.5"
+					className="mt-0.5 ml-2 pl-2.5 border-l border-line/50 space-y-px"
 				>
 					{folder.items.map((item) => {
 						if (item.type === "folder") {

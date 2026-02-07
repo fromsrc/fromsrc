@@ -83,12 +83,12 @@ export function Sidebar({
 		window.dispatchEvent(event)
 	}, [])
 
-	const sidebarWidth = collapsed && !hovered ? "w-16" : "w-60"
+	const sidebarWidth = collapsed && !hovered ? "w-16" : "w-[268px]"
 	const sidebarShadow = collapsed && hovered ? "shadow-lg" : ""
 
 	return (
 		<>
-			<div className="shrink-0 w-60" />
+			<div className="shrink-0 w-[268px]" />
 			<aside
 				onMouseEnter={handleEnter}
 				onMouseLeave={handleLeave}
@@ -96,7 +96,7 @@ export function Sidebar({
 				aria-expanded={showExpanded}
 				className={`${sidebarWidth} ${sidebarShadow} fixed left-0 top-0 z-40 border-r border-line h-screen flex flex-col bg-bg transition-[width,box-shadow] duration-200 ease-out overflow-hidden`}
 			>
-				<div className="px-3 h-14 flex items-center">
+				<div className="px-4 h-14 flex items-center">
 					{collapsible && (
 						<button
 							type="button"
@@ -111,20 +111,20 @@ export function Sidebar({
 					{showExpanded && (
 						<Link
 							href="/"
-							className="flex items-center text-sm text-fg hover:text-accent transition-colors"
+							className="flex items-center gap-2 text-sm font-medium text-fg hover:text-accent transition-colors"
 						>
-							<div className="w-10 h-10 flex items-center justify-center shrink-0 text-muted">
+							<div className="w-8 h-8 flex items-center justify-center shrink-0">
 								{logo}
 							</div>
 							<span className="whitespace-nowrap">{title}</span>
 						</Link>
 					)}
 				</div>
-				<div className="px-3 h-12 flex items-center">
+				<div className="px-4 pb-2 flex items-center">
 					<button
 						type="button"
 						onClick={openSearch}
-						className={`h-8 flex items-center rounded-md border border-line bg-surface/50 text-muted hover:text-fg hover:bg-surface transition-colors ${showExpanded ? "w-full px-2.5 gap-2" : "w-10 justify-center"}`}
+						className={`h-9 flex items-center rounded-lg border border-line bg-surface/40 text-muted hover:text-fg hover:bg-surface/80 transition-colors ${showExpanded ? "w-full px-3 gap-2" : "w-10 justify-center"}`}
 						aria-label="open search"
 						aria-keyshortcuts="Meta+K"
 					>
@@ -143,12 +143,12 @@ export function Sidebar({
 							/>
 						</svg>
 						<span
-							className={`text-xs transition-opacity duration-200 ${showExpanded ? "block" : "hidden"}`}
+							className={`text-sm transition-opacity duration-200 ${showExpanded ? "block" : "hidden"}`}
 						>
 							search...
 						</span>
 						<kbd
-							className={`ml-auto text-[10px] font-mono text-muted/60 transition-opacity duration-200 ${showExpanded ? "block" : "hidden"}`}
+							className={`ml-auto text-[10px] font-mono text-muted/50 transition-opacity duration-200 ${showExpanded ? "block" : "hidden"}`}
 						>
 							⌘K
 						</kbd>
@@ -156,7 +156,7 @@ export function Sidebar({
 				</div>
 				<nav
 					aria-label="documentation"
-					className="px-3 pt-2 pb-6 flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+					className="px-4 pt-2 pb-8 flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
 				>
 					{!showExpanded ? (
 						<div className="flex flex-col items-center">
@@ -175,7 +175,7 @@ export function Sidebar({
 										<Link
 											key={`${section.title}-${i}`}
 											href={href}
-											className="w-10 h-8 flex items-center justify-center my-0.5 rounded-md text-muted hover:text-fg hover:bg-surface/50 transition-colors [&>svg]:w-4 [&>svg]:h-4"
+											className="w-10 h-9 flex items-center justify-center my-0.5 rounded-lg text-muted hover:text-fg hover:bg-surface/50 transition-colors [&>svg]:w-4 [&>svg]:h-4"
 											title={item.title}
 											aria-label={item.title}
 										>
@@ -192,11 +192,11 @@ export function Sidebar({
 							<section key={section.title} className="mb-6" aria-labelledby={`section-${section.title}`}>
 								<h3
 									id={`section-${section.title}`}
-									className="px-2 mb-2 text-[11px] text-muted uppercase tracking-wider whitespace-nowrap"
+									className="px-2 mb-2 text-xs font-medium text-muted/70 whitespace-nowrap"
 								>
 									{section.title}
 								</h3>
-								<ul role="list" className="space-y-0.5">
+								<ul role="list" className="space-y-px">
 									{section.items.map((item, i) => {
 										if (!("type" in item)) {
 											return (
@@ -232,13 +232,13 @@ export function Sidebar({
 					)}
 				</nav>
 				{github && (
-					<div className="px-3 h-12 border-t border-line bg-bg shrink-0 flex items-center">
+					<div className="px-4 h-12 border-t border-line bg-bg shrink-0 flex items-center">
 						<a
 							href={github}
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="view on github"
-							className="w-10 h-8 flex items-center justify-center text-muted hover:text-fg transition-colors"
+							className="w-9 h-9 flex items-center justify-center rounded-lg text-muted hover:text-fg hover:bg-surface/50 transition-colors"
 						>
 							<svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 								<path
