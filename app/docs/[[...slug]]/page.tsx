@@ -1,4 +1,5 @@
 import type { DocMeta } from "fromsrc"
+import { calcReadTime, lastModified } from "fromsrc"
 import { Breadcrumb, Toc } from "fromsrc/client"
 import type { Metadata } from "next"
 import Link from "next/link"
@@ -77,6 +78,10 @@ export default async function DocPage({ params }: Props) {
 
 	if (!doc) notFound()
 
+	const readTime = calcReadTime(doc.content)
+	const modified = lastModified(
+		`${process.cwd()}/docs/${doc.slug || "index"}.mdx`,
+	)
 	const currentIndex = allDocs.findIndex((d) => d.slug === doc.slug)
 	const prev = currentIndex > 0 ? allDocs[currentIndex - 1] : null
 	const next = currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null
@@ -89,6 +94,7 @@ export default async function DocPage({ params }: Props) {
 		url: `https://fromsrc.com/docs/${doc.slug}`,
 		author: { "@type": "Organization", name: "fromsrc" },
 		publisher: { "@type": "Organization", name: "fromsrc", url: "https://fromsrc.com" },
+		...(modified && { dateModified: modified.toISOString() }),
 		mainEntityOfPage: { "@type": "WebPage", "@id": `https://fromsrc.com/docs/${doc.slug}` },
 	}
 
@@ -122,7 +128,8 @@ export default async function DocPage({ params }: Props) {
 						<Breadcrumb base="/docs" />
 					</div>
 					<h1 className="text-2xl font-medium mb-2 text-fg">{doc.title}</h1>
-					{doc.description && <p className="text-sm text-muted mb-4">{doc.description}</p>}
+					{doc.description && <p className="text-sm text-muted mb-3">{doc.description}</p>}
+					<span className="text-xs text-dim">{readTime} min read</span>
 					<a
 						href={`https://github.com/fromsrc/fromsrc/edit/main/docs/${doc.slug || "index"}.mdx`}
 						target="_blank"
