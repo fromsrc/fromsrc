@@ -1,66 +1,63 @@
-import { readdir, readFile } from "node:fs/promises"
-import { join } from "node:path"
+import { readFile, readdir, access } from "node:fs/promises"
+import { dirname, join, resolve } from "node:path"
 
-export interface LinkCheckConfig {
+export type LinkCheckResult = {
+	source: string
+	href: string
+	type: "internal" | "anchor" | "external"
+	status: "ok" | "broken" | "unknown"
+}
+
+export type LinkCheckConfig = {
 	dir: string
+	extensions?: string[]
 	baseUrl?: string
-	checkExternal?: boolean
-	concurrency?: number
-	timeout?: number
 }
 
-export interface CheckedLink {
-	url: string
-	line: number
-	status: "ok" | "broken" | "redirect" | "timeout" | "skipped"
-	statusCode?: number
-	redirectTo?: string
+export type LinkCheckReport = {
+	total: number
+	broken: number
+	results: LinkCheckResult[]
 }
 
-export interface LinkCheckResult {
-	file: string
-	links: CheckedLink[]
-	errors: number
-}
-
-function execAll(regex: RegExp, text: string): RegExpExecArray[] {
-	const matches: RegExpExecArray[] = []
-	regex.lastIndex = 0
-	for (let m = regex.exec(text); m !== null; m = regex.exec(text)) {
-		matches.push(m)
+export function isInternalLink(href: string): boolean {
+	if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:")) {
+		return false
 	}
-	return matches
+	return href.startsWith("/") || href.startsWith("./") || href.startsWith("../") || href.startsWith("#")
 }
 
-export function extractLinks(content: string): { url: string; line: number }[] {
-	const results: { url: string; line: number }[] = []
-	const lines = content.split("\n")
-	const mdLink = /\[([^\]]*)\]\(([^)]+)\)/g
-	const hrefLink = /href=["']([^"']+)["']/g
-	const rawUrl = /(?<!\(|"|')https?:\/\/[^\s<>"')\]]+/g
+export function resolveLink(source: string, href: string): string {
+	if (href.startsWith("/")) return href
+	return resolve(dirname(source), href)
+}
 
-	for (let i = 0; i < lines.length; i++) {
-		const line = lines[i]!
-		const seen = new Set<string>()
+export function extractLinks(
+	content: string,
+	source: string,
+): { href: string; type: "internal" | "anchor" | "external" }[] {
+	const results: { href: string; type: "internal" | "anchor" | "external" }[] = []
+	const seen = new Set<string>()
+	const inline = /\[([^\]]*)\]\(([^)]+)\)/g
+	const reference = /\[([^\]]*)\]\[([^\]]+)\]/g
 
-		for (const m of execAll(mdLink, line)) {
-			if (!seen.has(m[2]!)) {
-				seen.add(m[2]!)
-				results.push({ url: m[2]!, line: i + 1 })
-			}
+	for (const m of content.matchAll(inline)) {
+		const href = m[2]!.split(/\s/)[0]!
+		if (!seen.has(href)) {
+			seen.add(href)
+			results.push({ href, type: linktype(href) })
 		}
+	}
 
-		for (const m of execAll(hrefLink, line)) {
-			if (!seen.has(m[1]!)) {
-				seen.add(m[1]!)
-				results.push({ url: m[1]!, line: i + 1 })
-			}
-		}
-
-		for (const m of execAll(rawUrl, line)) {
-			if (!seen.has(m[0])) {
-				seen.add(m[0])
-				results.push({ url: m[0], line: i + 1 })
+	for (const m of content.matchAll(reference)) {
+		const ref = m[2]!
+		const pattern = new RegExp(`\\[${ref.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\]:\\s*(.+)`)
+		const def = content.match(pattern)
+		if (def) {
+			const href = def[1]!.trim()
+			if (!seen.has(href)) {
+				seen.add(href)
+				results.push({ href, type: linktype(href) })
 			}
 		}
 	}
@@ -68,152 +65,77 @@ export function extractLinks(content: string): { url: string; line: number }[] {
 	return results
 }
 
-async function collectSlugs(dir: string, prefix = ""): Promise<Set<string>> {
-	const slugs = new Set<string>()
-	const entries = await readdir(dir, { withFileTypes: true })
-
-	for (const entry of entries) {
-		if (entry.isDirectory()) {
-			const nested = await collectSlugs(join(dir, entry.name), `${prefix}${entry.name}/`)
-			nested.forEach((s) => slugs.add(s))
-		} else if (entry.name.endsWith(".mdx")) {
-			const slug =
-				entry.name === "index.mdx"
-					? prefix.replace(/\/$/, "")
-					: `${prefix}${entry.name.replace(".mdx", "")}`
-			slugs.add(slug || "/")
-		}
+function linktype(href: string): "internal" | "anchor" | "external" {
+	if (href.startsWith("#")) return "anchor"
+	if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:")) {
+		return "external"
 	}
-
-	return slugs
+	return "internal"
 }
 
-async function checkExternal(
-	url: string,
-	timeout: number,
-): Promise<Pick<CheckedLink, "status" | "statusCode" | "redirectTo">> {
+async function exists(filepath: string): Promise<boolean> {
 	try {
-		const res = await fetch(url, {
-			method: "HEAD",
-			redirect: "manual",
-			signal: AbortSignal.timeout(timeout),
-		})
-		if (res.status >= 300 && res.status < 400) {
-			return {
-				status: "redirect",
-				statusCode: res.status,
-				redirectTo: res.headers.get("location") ?? undefined,
-			}
-		}
-		return { status: res.ok ? "ok" : "broken", statusCode: res.status }
-	} catch (e) {
-		if (e instanceof DOMException && e.name === "TimeoutError") return { status: "timeout" }
-		return { status: "broken" }
+		await access(filepath)
+		return true
+	} catch {
+		return false
 	}
 }
 
-function semaphore(limit: number) {
-	let active = 0
-	const queue: (() => void)[] = []
-	return async <T>(fn: () => Promise<T>): Promise<T> => {
-		if (active >= limit) await new Promise<void>((r) => queue.push(r))
-		active++
-		try {
-			return await fn()
-		} finally {
-			active--
-			queue.shift()?.()
+async function gather(dir: string, exts: string[]): Promise<string[]> {
+	const files: string[] = []
+	const entries = await readdir(dir, { withFileTypes: true })
+	for (const entry of entries) {
+		const full = join(dir, entry.name)
+		if (entry.isDirectory()) {
+			files.push(...(await gather(full, exts)))
+		} else if (exts.some((e) => entry.name.endsWith(e))) {
+			files.push(full)
 		}
 	}
+	return files
 }
 
-export async function checkLinks(config: LinkCheckConfig): Promise<LinkCheckResult[]> {
-	const {
-		dir,
-		baseUrl = "/docs",
-		checkExternal: external = false,
-		concurrency = 5,
-		timeout = 5000,
-	} = config
-	const slugs = await collectSlugs(dir)
+export async function checkInternalLinks(config: LinkCheckConfig): Promise<LinkCheckReport> {
+	const exts = config.extensions ?? [".md", ".mdx"]
+	const files = await gather(config.dir, exts)
 	const results: LinkCheckResult[] = []
-	const lock = semaphore(concurrency)
 
-	async function scan(filepath: string, relative: string) {
+	for (const filepath of files) {
 		const content = await readFile(filepath, "utf-8")
-		const extracted = extractLinks(content)
-		const links: CheckedLink[] = []
+		const links = extractLinks(content, filepath)
 
-		const tasks = extracted.map(({ url, line }) =>
-			lock(async () => {
-				if (url.startsWith("#") || url.startsWith("mailto:") || url.startsWith("tel:")) {
-					return
-				}
-
-				if (url.startsWith("http://") || url.startsWith("https://")) {
-					if (!external) {
-						links.push({ url, line, status: "skipped" })
-						return
-					}
-					const result = await checkExternal(url, timeout)
-					links.push({ url, line, ...result })
-					return
-				}
-
-				const clean = url.split("#")[0]!.split("?")[0]!
-				const normalized = clean.startsWith(baseUrl)
-					? clean.slice(baseUrl.length).replace(/^\//, "")
-					: clean.replace(/^\//, "")
-				const found =
-					slugs.has(normalized) ||
-					slugs.has(`${normalized}/`) ||
-					slugs.has(normalized.replace(/\/$/, ""))
-				links.push({ url, line, status: found ? "ok" : "broken" })
-			}),
-		)
-
-		await Promise.all(tasks)
-		results.push({
-			file: relative,
-			links,
-			errors: links.filter((l) => l.status === "broken").length,
-		})
-	}
-
-	async function walk(d: string, prefix = "") {
-		const entries = await readdir(d, { withFileTypes: true })
-		for (const entry of entries) {
-			if (entry.isDirectory()) await walk(join(d, entry.name), `${prefix}${entry.name}/`)
-			else if (entry.name.endsWith(".mdx"))
-				await scan(join(d, entry.name), `${prefix}${entry.name}`)
+		for (const link of links) {
+			if (link.type === "external") {
+				results.push({ source: filepath, href: link.href, type: "external", status: "unknown" })
+				continue
+			}
+			if (link.type === "anchor") {
+				const slug = link.href.slice(1)
+				const heading = new RegExp(`^#{1,6}\\s+.*${slug.replace(/-/g, "[\\s-]")}`, "im")
+				const status = heading.test(content) ? "ok" : "broken"
+				results.push({ source: filepath, href: link.href, type: "anchor", status })
+				continue
+			}
+			const clean = link.href.split("#")[0]!.split("?")[0]!
+			const resolved = resolveLink(filepath, clean)
+			const found =
+				(await exists(resolved)) ||
+				(await exists(`${resolved}.md`)) ||
+				(await exists(`${resolved}.mdx`)) ||
+				(await exists(join(resolved, "index.md"))) ||
+				(await exists(join(resolved, "index.mdx")))
+			results.push({ source: filepath, href: link.href, type: "internal", status: found ? "ok" : "broken" })
 		}
 	}
 
-	await walk(dir)
-	return results
+	return { total: results.length, broken: results.filter((r) => r.status === "broken").length, results }
 }
 
-export function formatResults(results: LinkCheckResult[]): string {
-	const lines: string[] = []
-	let total = 0
-	let broken = 0
-	let redirects = 0
-
-	for (const result of results) {
-		const bad = result.links.filter((l) => l.status !== "ok" && l.status !== "skipped")
-		if (bad.length > 0) {
-			lines.push(`\n${result.file}`)
-			for (const link of bad) {
-				const code = link.statusCode ? ` [${link.statusCode}]` : ""
-				const redir = link.redirectTo ? ` -> ${link.redirectTo}` : ""
-				lines.push(`  line ${link.line}: ${link.status}${code} ${link.url}${redir}`)
-			}
-		}
-		total += result.links.length
-		broken += result.links.filter((l) => l.status === "broken").length
-		redirects += result.links.filter((l) => l.status === "redirect").length
+export function formatReport(report: LinkCheckReport): string {
+	const lines = [`${report.total} links, ${report.broken} broken`]
+	for (const r of report.results.filter((r) => r.status === "broken")) {
+		lines.push(`  ${r.type} ${r.source}: ${r.href}`)
 	}
-
-	lines.push(`\n${total} links, ${broken} broken, ${redirects} redirects`)
 	return lines.join("\n")
 }

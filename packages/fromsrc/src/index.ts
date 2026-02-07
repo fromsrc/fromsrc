@@ -181,12 +181,14 @@ export {
 } from "./snippets"
 export { type TypegenConfig, inferType, generateTypes, writeTypes } from "./typegen"
 export {
-	type LinkCheckConfig,
 	type LinkCheckResult,
-	type CheckedLink,
+	type LinkCheckConfig,
+	type LinkCheckReport,
 	extractLinks,
-	checkLinks,
-	formatResults,
+	checkInternalLinks,
+	formatReport,
+	isInternalLink,
+	resolveLink,
 } from "./linkcheck"
 export {
 	type OgImageConfig,
@@ -421,3 +423,4 @@ export {
 	breadcrumbFromPath,
 } from "./navgen"
 export { type AutolinkOptions, rehypeAutolink } from "./rehypeautolink"
+export { type CodeMeta, parseMeta, remarkMeta } from "./remarkmeta"
