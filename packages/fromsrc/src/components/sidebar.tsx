@@ -163,7 +163,7 @@ export function Sidebar({
 			</div>
 			<nav
 				aria-label="documentation"
-				className="px-3 pt-2 pb-4 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+				className="px-3 pt-2 pb-6 flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
 			>
 				{!showExpanded ? (
 					<div className="flex flex-col items-center">

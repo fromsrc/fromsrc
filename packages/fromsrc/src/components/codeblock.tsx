@@ -157,7 +157,7 @@ export const CodeBlock = memo(function CodeBlock({
 						justifyContent: "space-between",
 						padding: "0 16px",
 						height: "40px",
-						backgroundColor: "#161b22",
+						backgroundColor: "#141414",
 						borderBottom: "1px solid #1c1c1c",
 					}}
 				>

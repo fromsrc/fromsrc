@@ -62,9 +62,14 @@ export function Search({
 	useEffect(() => {
 		if (open) {
 			inputRef.current?.focus()
+			document.body.style.overflow = "hidden"
 		} else {
 			setQuery("")
 			setSelected(0)
+			document.body.style.overflow = ""
+		}
+		return () => {
+			document.body.style.overflow = ""
 		}
 	}, [open])
 
