@@ -471,3 +471,11 @@ export {
 } from "./env"
 export { type TableWrapOptions, rehypeTableWrap } from "./rehypetablewrap"
 export { rehypeCopy } from "./rehypecopy"
+export {
+	type TwoslashAnnotation,
+	type TwoslashResult,
+	parseannotations,
+	serialize as serializeTwoslash,
+	remarkTwoslash,
+} from "./remarktwoslash"
+export { type DirectiveType, remarkDirective } from "./remarkdirective"
