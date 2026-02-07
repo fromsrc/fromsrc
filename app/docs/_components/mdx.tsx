@@ -1,5 +1,6 @@
 import rehypeShiki from "@shikijs/rehype"
 import {
+	transformerMetaHighlight,
 	transformerNotationDiff,
 	transformerNotationFocus,
 	transformerNotationHighlight,
@@ -366,6 +367,7 @@ export async function MDX({ source }: Props) {
 								theme: "github-dark-default",
 								defaultColor: false,
 								transformers: [
+									transformerMetaHighlight(),
 									transformerNotationHighlight(),
 									transformerNotationDiff(),
 									transformerNotationFocus(),
