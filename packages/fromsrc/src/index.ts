@@ -152,3 +152,20 @@ export {
 	getNavBreadcrumbs,
 	getPrevNext,
 } from "./navtree"
+export {
+	type SnippetConfig,
+	type Snippet,
+	extractSnippets,
+	getSnippet,
+	generateSnippetMap,
+	extractFileSnippet,
+} from "./snippets"
+export { type TypegenConfig, inferType, generateTypes, writeTypes } from "./typegen"
+export {
+	type LinkCheckConfig,
+	type LinkCheckResult,
+	type CheckedLink,
+	extractLinks,
+	checkLinks,
+	formatResults,
+} from "./linkcheck"
