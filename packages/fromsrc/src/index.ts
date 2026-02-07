@@ -206,3 +206,39 @@ export {
 	isDraft,
 	scheduledDraft,
 } from "./draft"
+export {
+	type AuditConfig,
+	type AuditIssue,
+	type AuditResult,
+	audit,
+	formatAudit,
+} from "./audit"
+export {
+	type TestCase,
+	type TestResult,
+	type TestSuite,
+	createTestSuite,
+	assertFrontmatter,
+	assertHeadings,
+	assertLinks,
+	assertLength,
+	formatTestSuite,
+} from "./testing"
+export {
+	type DiffLine,
+	type DiffResult,
+	type DiffOptions,
+	diffLines,
+	diffFrontmatter,
+	formatDiff,
+	summarizeDiff,
+} from "./diff"
+export {
+	type BatchConfig,
+	type BatchResult,
+	type BatchError,
+	batch,
+	batchFiles,
+	mapFiles,
+	forEachDoc,
+} from "./batch"
