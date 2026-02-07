@@ -1,3 +1,4 @@
+import type { Doc } from "fromsrc"
 import { generateLlmsFull } from "fromsrc"
 import { getAllDocs, getDoc } from "@/app/docs/_lib/content"
 
@@ -9,9 +10,8 @@ const config = {
 
 export async function GET() {
 	const metas = await getAllDocs()
-	const docs = (
-		await Promise.all(metas.map((m) => getDoc(m.slug ? m.slug.split("/") : [])))
-	).filter(Boolean)
+	const results = await Promise.all(metas.map((m) => getDoc(m.slug ? m.slug.split("/") : [])))
+	const docs = results.filter((d): d is Doc => d !== null)
 
 	const content = generateLlmsFull(config, docs)
 
