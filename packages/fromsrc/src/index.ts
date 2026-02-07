@@ -331,3 +331,36 @@ export {
 	tokenize,
 	fuzzyHighlight,
 } from "./highlight"
+export {
+	type TocItem,
+	type TocOptions,
+	extractToc,
+	generateTocMarkdown,
+	removeToc,
+	injectToc,
+} from "./mdtoc"
+export {
+	type RankableItem,
+	type RankResult,
+	type RankOptions,
+	rank,
+	bm25,
+	boostRecent,
+} from "./ranking"
+export {
+	type AccessRule,
+	type AccessConfig,
+	type AccessResult,
+	matchPattern,
+	mergeRoles,
+	createAccess,
+} from "./access"
+export {
+	type WebhookEvent,
+	type WebhookConfig,
+	type WebhookResult,
+	verifySignature,
+	createEventFromChange,
+	filterEvents,
+	createWebhook,
+} from "./webhook"
