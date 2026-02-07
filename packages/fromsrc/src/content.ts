@@ -38,6 +38,9 @@ export interface ContentConfig<T extends SchemaType = typeof baseSchema> {
 const fileCache = new Map<string, string>()
 const metaCache = new Map<string, DocMeta[]>()
 
+const isProduction = () => process.env.NODE_ENV === "production"
+const isDraft = (data: Record<string, unknown>) => data.draft === true
+
 async function readCached(filepath: string): Promise<string> {
 	const cached = fileCache.get(filepath)
 	if (cached) return cached
@@ -78,6 +81,8 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			const { data, content } = matter(source)
 			const parsed = schema.parse(data) as z.infer<T>
 
+			if (isProduction() && isDraft(data)) return null
+
 			return {
 				slug: actualPath,
 				...parsed,
@@ -110,6 +115,9 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 					const source = await readCached(filepath)
 					const { data } = matter(source)
 					const parsed = schema.parse(data) as z.infer<T>
+
+					if (isProduction() && isDraft(data)) continue
+
 					const slug = `${prefix}${entry.name.replace(".mdx", "")}`
 
 					docs.push({
@@ -179,6 +187,9 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 					const source = await readCached(filepath)
 					const { data, content } = matter(source)
 					const parsed = schema.parse(data) as z.infer<T>
+
+					if (isProduction() && isDraft(data)) continue
+
 					const slug = `${prefix}${entry.name.replace(".mdx", "")}`
 					const headings = extractHeadings(content)
 
@@ -282,6 +293,8 @@ export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | nul
 		const { data, content } = matter(source)
 		const parsed = baseSchema.parse(data)
 
+		if (isProduction() && isDraft(data)) return null
+
 		return {
 			slug: actualPath,
 			title: parsed.title,
@@ -321,6 +334,9 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 				const source = await readCached(filepath)
 				const { data } = matter(source)
 				const parsed = baseSchema.parse(data)
+
+				if (isProduction() && isDraft(data)) continue
+
 				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
 
 				docs.push({
@@ -400,6 +416,9 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 				const source = await readCached(filepath)
 				const { data, content } = matter(source)
 				const parsed = baseSchema.parse(data)
+
+				if (isProduction() && isDraft(data)) continue
+
 				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
 				const headings = extractHeadings(content)
 

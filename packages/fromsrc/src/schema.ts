@@ -4,6 +4,7 @@ export const baseSchema = z.object({
 	title: z.string(),
 	description: z.string().optional(),
 	order: z.number().optional(),
+	draft: z.boolean().optional(),
 })
 
 export type InferSchema<T extends z.ZodType> = z.infer<T>
