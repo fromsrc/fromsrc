@@ -11,11 +11,20 @@ const schema = z.object({
 
 interface entry {
 	at: number
-	value: unknown
+	value: row[]
+}
+
+interface row {
+	slug: string
+	title: string
+	description?: string
+	snippet?: string
+	anchor?: string
+	score: number
 }
 
 const cache = new Map<string, entry>()
-const inflight = new Map<string, Promise<unknown>>()
+const inflight = new Map<string, Promise<row[]>>()
 const ttl = 1000 * 60 * 5
 const max = 200
 const headers = { "cache-control": "public, max-age=60, s-maxage=300" }
@@ -24,7 +33,7 @@ function normalize(text: string | undefined): string {
 	return text?.toLowerCase().replace(/\s+/g, " ").trim() ?? ""
 }
 
-function get(key: string): unknown | null {
+function get(key: string): row[] | null {
 	const item = cache.get(key)
 	if (!item) return null
 	if (Date.now() - item.at > ttl) {
@@ -34,7 +43,7 @@ function get(key: string): unknown | null {
 	return item.value
 }
 
-function set(key: string, value: unknown): unknown {
+function set(key: string, value: row[]): row[] {
 	if (cache.size >= max) {
 		const oldest = cache.keys().next().value
 		if (oldest) cache.delete(oldest)
@@ -43,7 +52,7 @@ function set(key: string, value: unknown): unknown {
 	return value
 }
 
-async function compute(query: string | undefined, limit: number): Promise<unknown> {
+async function compute(query: string | undefined, limit: number): Promise<row[]> {
 	if (!query) {
 		const docs = await getAllDocs()
 		return docs.slice(0, limit).map((doc) => ({

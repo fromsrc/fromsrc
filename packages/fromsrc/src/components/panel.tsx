@@ -42,14 +42,23 @@ export function Panel({
 	const dialog = useRef<HTMLDivElement>(null)
 	const onTab = useCallback((event: KeyEvent<HTMLDivElement>): void => {
 		if (event.key !== "Tab" || !dialog.current) return
-		const active = document.activeElement
-		if (!(active instanceof HTMLElement) || !dialog.current.contains(active)) return
 		const nodes = dialog.current.querySelectorAll<HTMLElement>(
 			'button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])',
 		)
 		const items = Array.from(nodes).filter((item) => !item.hasAttribute("aria-hidden"))
 		if (items.length === 0) return
+		const active = document.activeElement
+		if (!(active instanceof HTMLElement) || !dialog.current.contains(active)) {
+			event.preventDefault()
+			items[0]?.focus()
+			return
+		}
 		const index = items.findIndex((item) => item === active)
+		if (index < 0) {
+			event.preventDefault()
+			items[0]?.focus()
+			return
+		}
 		if (event.shiftKey) {
 			if (index <= 0) {
 				event.preventDefault()
