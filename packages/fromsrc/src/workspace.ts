@@ -25,6 +25,23 @@ export interface WorkspaceNavItem {
 	children?: WorkspaceNavItem[]
 }
 
+type jsonrecord = Record<string, unknown>
+
+function isrecord(value: unknown): value is jsonrecord {
+	return typeof value === "object" && value !== null
+}
+
+function parsename(raw: string): string | null {
+	try {
+		const parsed: unknown = JSON.parse(raw)
+		if (!isrecord(parsed)) return null
+		const name = parsed.name
+		return typeof name === "string" && name.length > 0 ? name : null
+	} catch {
+		return null
+	}
+}
+
 async function matchGlob(root: string, pattern: string): Promise<string[]> {
 	const parts = pattern.split("/")
 	let dirs = [root]
@@ -62,8 +79,7 @@ export async function discoverPackages(config: WorkspaceConfig): Promise<Workspa
 			const pkgPath = join(dir, "package.json")
 			const raw = await readFile(pkgPath, "utf-8").catch(() => null)
 			if (!raw) continue
-			const pkg = JSON.parse(raw) as { name?: string }
-			const name = pkg.name ?? basename(dir)
+			const name = parsename(raw) ?? basename(dir)
 			const docs = join(dir, docsDir)
 			const exists = await stat(docs).catch(() => null)
 			if (!exists?.isDirectory()) continue
