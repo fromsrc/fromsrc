@@ -30,8 +30,8 @@ const list = [
 	{
 		name: "openapi",
 		code: "import { parseOpenApi } from 'fromsrc/openapi'; export default parseOpenApi('{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"a\",\"version\":\"1\"},\"paths\":{}}');",
-		max: 70000,
-		maxgzip: 18000,
+		max: 6500,
+		maxgzip: 2500,
 	},
 	{
 		name: "algolia",
