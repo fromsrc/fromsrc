@@ -21,6 +21,7 @@ interface cacheentry {
 }
 
 const ttl = 1000 * 60 * 5
+const max = 200
 const store = new Map<string, cacheentry>()
 const inflight = new Map<string, Promise<SearchResult[]>>()
 
@@ -40,6 +41,14 @@ function convert(rows: z.infer<typeof schema>): SearchResult[] {
 		anchor: row.anchor,
 		score: row.score,
 	}))
+}
+
+function save(key: string, value: SearchResult[]): void {
+	if (store.size >= max) {
+		const oldest = store.keys().next().value
+		if (oldest) store.delete(oldest)
+	}
+	store.set(key, { at: Date.now(), results: value })
 }
 
 async function load(endpoint: string, query: string, limit: number): Promise<SearchResult[]> {
@@ -78,7 +87,7 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 		request
 			.then((value) => {
 				if (!active) return
-				store.set(cachekey, { at: Date.now(), results: value })
+				save(cachekey, value)
 				setResults(value)
 				setLoading(false)
 			})

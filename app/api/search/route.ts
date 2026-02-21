@@ -13,6 +13,7 @@ interface entry {
 
 const cache = new Map<string, entry>()
 const ttl = 1000 * 60 * 5
+const max = 200
 
 function get(key: string): unknown | null {
 	const item = cache.get(key)
@@ -25,6 +26,10 @@ function get(key: string): unknown | null {
 }
 
 function set(key: string, value: unknown): unknown {
+	if (cache.size >= max) {
+		const oldest = cache.keys().next().value
+		if (oldest) cache.delete(oldest)
+	}
 	cache.set(key, { at: Date.now(), value })
 	return value
 }
