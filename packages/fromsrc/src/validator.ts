@@ -47,7 +47,8 @@ function scan(
 	const issues: ValidationIssue[] = []
 	const lines = content.split("\n")
 	for (let i = 0; i < lines.length; i++) {
-		if (test(lines[i]!)) issues.push({ rule, message, line: i + 1, severity })
+		const line = lines[i]
+		if (line !== undefined && test(line)) issues.push({ rule, message, line: i + 1, severity })
 	}
 	return issues
 }

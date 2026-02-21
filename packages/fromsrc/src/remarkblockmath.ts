@@ -46,7 +46,8 @@ function splitInline(text: string): AstNode[] {
 		if (match.index > 0) {
 			nodes.push({ type: "text", value: remaining.slice(0, match.index) })
 		}
-		nodes.push(inlineElement(match[1]!))
+		const inline = match[1]
+		if (inline) nodes.push(inlineElement(inline))
 		remaining = remaining.slice(match.index + match[0].length)
 	}
 	return nodes

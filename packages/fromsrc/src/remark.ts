@@ -24,7 +24,9 @@ function transformer(tree: Root) {
 		const match = text.value.match(pattern)
 		if (!match) return
 
-		const calloutType = types[match[1]!]
+		const key = match[1]
+		if (!key) return
+		const calloutType = types[key]
 		text.value = text.value.replace(pattern, "")
 
 		if (!text.value && first.children.length === 1) {

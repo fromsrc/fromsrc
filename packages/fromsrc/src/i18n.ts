@@ -30,7 +30,8 @@ export function detectLocale(acceptLanguage: string, locales: string[], fallback
 		.sort((a, b) => b.q - a.q)
 	for (const { lang } of entries) {
 		if (set.has(lang)) return lang
-		const base = lang.split("-")[0]!
+		const base = lang.split("-")[0]
+		if (!base) continue
 		if (set.has(base)) return base
 	}
 	return fallback
@@ -45,8 +46,8 @@ export function localizePath(path: string, locale: string, config: I18nConfig): 
 export function delocalizePath(path: string, config: I18nConfig): LocalizedPath {
 	const clean = path.startsWith("/") ? path : `/${path}`
 	const segments = clean.replace(/^\//, "").split("/")
-	const first = segments[0]!
-	if (config.locales.includes(first)) {
+	const first = segments[0]
+	if (first && config.locales.includes(first)) {
 		const rest = segments.slice(1).join("/")
 		return {
 			locale: first,

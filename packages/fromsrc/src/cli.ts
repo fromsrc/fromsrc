@@ -18,7 +18,8 @@ export function parseArgs(argv: string[]): ParsedArgs {
 	let command = ""
 
 	for (let i = 0; i < argv.length; i++) {
-		const arg = argv[i]!
+		const arg = argv[i]
+		if (!arg) continue
 		if (arg.startsWith("--")) {
 			const eq = arg.indexOf("=")
 			if (eq !== -1) {
