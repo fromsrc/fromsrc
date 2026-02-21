@@ -1,17 +1,21 @@
 import type { NextRequest } from "next/server"
+import { z } from "zod"
+import { send } from "@/app/api/_lib/text"
 import { getAllDocs, getDoc } from "@/app/docs/_lib/content"
 
-const headers = {
-	"Content-Type": "text/plain; charset=utf-8",
-	"Cache-Control": "public, max-age=3600, s-maxage=86400",
-}
+const cache = "public, max-age=600, s-maxage=86400, stale-while-revalidate=604800"
+const schema = z.object({ slug: z.array(z.string().min(1)).min(1) })
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
-	const { slug } = await params
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
+	const parsed = schema.safeParse(await params)
+	if (!parsed.success) {
+		return send(request, "bad request", cache, 400)
+	}
+	const { slug } = parsed.data
 	const [doc, docs] = await Promise.all([getDoc(slug), getAllDocs()])
 
 	if (!doc) {
-		return new Response("not found", { status: 404, headers })
+		return send(request, "not found", cache, 404)
 	}
 
 	const path = slug.join("/")
@@ -34,5 +38,5 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
 		`\n## Navigation\n\n${nav}`,
 	]
 
-	return new Response(parts.filter(Boolean).join("\n"), { headers })
+	return send(request, parts.filter(Boolean).join("\n"), cache)
 }
