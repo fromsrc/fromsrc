@@ -92,7 +92,7 @@ function maphit(entry: hit, index: number, total: number): SearchResult | null {
 	}
 }
 
-export function createoramaadapter(config: OramaConfig): SearchAdapter {
+export function createOramaAdapter(config: OramaConfig): SearchAdapter {
 	return {
 		async search(query: string, docs: SearchDoc[], limit = 8): Promise<SearchResult[]> {
 			const value = query.trim()
@@ -123,3 +123,5 @@ export function createoramaadapter(config: OramaConfig): SearchAdapter {
 		},
 	}
 }
+
+export const createoramaadapter = createOramaAdapter

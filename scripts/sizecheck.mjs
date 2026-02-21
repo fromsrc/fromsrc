@@ -35,13 +35,13 @@ const list = [
 	},
 	{
 		name: "algolia",
-		code: "import { createalgoliaadapter } from 'fromsrc/algolia'; export default createalgoliaadapter;",
+		code: "import { createAlgoliaAdapter } from 'fromsrc/algolia'; export default createAlgoliaAdapter;",
 		max: 3200,
 		maxgzip: 1200,
 	},
 	{
 		name: "orama",
-		code: "import { createoramaadapter } from 'fromsrc/orama'; export default createoramaadapter;",
+		code: "import { createOramaAdapter } from 'fromsrc/orama'; export default createOramaAdapter;",
 		max: 3200,
 		maxgzip: 1200,
 	},

@@ -67,7 +67,7 @@ function maphit(hit: Record<string, unknown>, index: number, total: number): Sea
 	}
 }
 
-export function createalgoliaadapter(config: AlgoliaConfig): SearchAdapter {
+export function createAlgoliaAdapter(config: AlgoliaConfig): SearchAdapter {
 	const body = {
 		attributesToRetrieve: config.attributes ?? ["slug", "path", "title", "description", "content", "anchor", "heading"],
 		attributesToSnippet: ["content:24", "description:18", "heading:18"],
@@ -98,3 +98,5 @@ export function createalgoliaadapter(config: AlgoliaConfig): SearchAdapter {
 		},
 	}
 }
+
+export const createalgoliaadapter = createAlgoliaAdapter
