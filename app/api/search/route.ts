@@ -20,6 +20,10 @@ const ttl = 1000 * 60 * 5
 const max = 200
 const headers = { "cache-control": "public, max-age=60, s-maxage=300" }
 
+function normalize(text: string | undefined): string {
+	return text?.toLowerCase().replace(/\s+/g, " ").trim() ?? ""
+}
+
 function get(key: string): unknown | null {
 	const item = cache.get(key)
 	if (!item) return null
@@ -68,7 +72,7 @@ export async function GET(request: Request) {
 		q: url.searchParams.get("q") ?? undefined,
 		limit: url.searchParams.get("limit") ?? undefined,
 	})
-	const query = values.q?.toLowerCase() ?? ""
+	const query = normalize(values.q)
 	const key = `${query}::${values.limit}`
 	const cached = get(key)
 	if (cached) return Response.json(cached, { headers })

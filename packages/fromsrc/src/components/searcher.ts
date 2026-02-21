@@ -25,8 +25,12 @@ const max = 200
 const store = new Map<string, cacheentry>()
 const inflight = new Map<string, Promise<SearchResult[]>>()
 
+function normalize(query: string): string {
+	return query.toLowerCase().replace(/\s+/g, " ").trim()
+}
+
 function key(endpoint: string, query: string, limit: number): string {
-	return `${endpoint}::${query}::${limit}`
+	return `${endpoint}::${normalize(query)}::${limit}`
 }
 
 function convert(rows: z.infer<typeof schema>): SearchResult[] {
