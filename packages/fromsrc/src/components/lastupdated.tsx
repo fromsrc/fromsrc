@@ -1,6 +1,6 @@
 "use client"
 
-import { memo } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 
 type LastUpdatedProps = {
 	date: string | Date
@@ -32,15 +32,21 @@ export const LastUpdated = memo(function LastUpdated({
 	className,
 	prefix = "Last updated",
 }: LastUpdatedProps) {
-	const parsed = typeof date === "string" ? new Date(date) : date
+	const parsed = useMemo(() => (typeof date === "string" ? new Date(date) : date), [date])
 	const iso = parsed.toISOString()
-	const abs = parsed.toLocaleDateString()
-	const rel = relative(parsed)
-	const label = format === "absolute" ? abs : rel
+	const abs = useMemo(() => parsed.toLocaleDateString(), [parsed])
+	const [rel, setRel] = useState<string>("")
+
+	useEffect(() => {
+		if (format === "absolute") return
+		setRel(relative(parsed))
+	}, [format, parsed])
+
+	const label = format === "absolute" ? abs : rel || abs
 	const title = format === "both" ? abs : undefined
 
 	return (
-		<time dateTime={iso} className={className} title={title}>
+		<time dateTime={iso} className={className} title={title} suppressHydrationWarning>
 			{prefix} {label}
 		</time>
 	)

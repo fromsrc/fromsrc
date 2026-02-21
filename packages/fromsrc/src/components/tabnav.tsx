@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { type KeyboardEvent, type ReactNode, useCallback, useRef, useState } from "react"
+import { type KeyboardEvent, type ReactNode, useCallback, useId, useRef, useState } from "react"
 import { getNextIndex } from "../hooks/arrownav"
 import { IconChevronDown } from "./icons"
 
@@ -102,7 +102,7 @@ export function TabNavDropdown({ tabs, label = "Navigation" }: TabNavDropdownPro
 	const containerRef = useRef<HTMLDivElement>(null)
 	const buttonRef = useRef<HTMLButtonElement>(null)
 	const optionRefs = useRef<(HTMLAnchorElement | null)[]>([])
-	const listId = useRef(`tabnav-${Math.random().toString(36).slice(2, 9)}`).current
+	const listId = useId()
 
 	const isActive = useCallback(
 		(tab: NavTab): boolean => {
