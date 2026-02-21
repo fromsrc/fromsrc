@@ -12,8 +12,9 @@ function oneedit(left: string, right: string): boolean {
 		}
 		if (diffs.length === 1) return true
 		if (diffs.length !== 2) return false
-		const first = diffs[0]!
-		const second = diffs[1]!
+		const first = diffs[0]
+		const second = diffs[1]
+		if (first === undefined || second === undefined) return false
 		if (second !== first + 1) return false
 		return left[first] === right[second] && left[second] === right[first]
 	}

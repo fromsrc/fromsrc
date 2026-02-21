@@ -84,19 +84,22 @@ export function bm25(items: RankableItem[], query: string): RankResult[] {
 	const n = docs.length
 	const results: RankResult[] = []
 	for (let i = 0; i < items.length; i++) {
+		const item = items[i]
+		const doc = docs[i]
+		if (!item || !doc) continue
 		let s = 0
-		const dl = docs[i]!.length
+		const dl = doc.length
 		for (const term of terms) {
-			const tf = docs[i]!.filter((w) => w === term).length
+			const tf = doc.filter((w) => w === term).length
 			const d = df.get(term) ?? 0
 			const idf = Math.log((n - d + 0.5) / (d + 0.5) + 1)
 			s += idf * ((tf * 2.2) / (tf + 1.2 * (1 - 0.75 + 0.75 * (dl / avgdl))))
 		}
-		if (items[i]!.weight) s *= items[i]!.weight!
-		const mp = positions([items[i]!.title, items[i]!.content].join(" "), query)
+		if (item.weight) s *= item.weight
+		const mp = positions([item.title, item.content].join(" "), query)
 		if (s > 0) {
 			const matches = mp.length ? [{ field: "content" as const, positions: mp }] : []
-			results.push({ item: items[i]!, score: s, matches })
+			results.push({ item, score: s, matches })
 		}
 	}
 	return results.sort((a, b) => b.score - a.score)

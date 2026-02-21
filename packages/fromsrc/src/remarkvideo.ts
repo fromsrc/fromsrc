@@ -57,7 +57,8 @@ function resolve(url: string, providers: Provider[]): VideoNode | null {
 
 function extractUrl(node: Paragraph): string | null {
 	if (node.children.length !== 1) return null
-	const child = node.children[0]!
+	const child = node.children[0]
+	if (!child) return null
 	if (child.type === "text") return (child as Text).value.trim()
 	if (child.type === "link") return (child as Link).url
 	return null

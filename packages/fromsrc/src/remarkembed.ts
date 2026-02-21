@@ -54,6 +54,8 @@ function matchProvider(url: string): EmbedNode | null {
 	for (const provider of providers) {
 		const match = url.match(provider.pattern)
 		if (!match) continue
+		const id = match[provider.group]
+		if (!id) continue
 		return {
 			type: "mdxJsxFlowElement",
 			name: provider.name,
@@ -61,7 +63,7 @@ function matchProvider(url: string): EmbedNode | null {
 				{
 					type: "mdxJsxAttribute",
 					name: "id",
-					value: match[provider.group]!,
+					value: id,
 				},
 			],
 			children: [] as never[],
@@ -75,7 +77,8 @@ function transformer(tree: Root) {
 	visit(tree, "paragraph", (node: Paragraph, index, parent) => {
 		if (!parent || index === undefined) return
 		if (node.children.length !== 1) return
-		const child = node.children[0]!
+		const child = node.children[0]
+		if (!child) return
 		if (child.type !== "text") return
 		const text = (child as Text).value.trim()
 		if (!isUrl(text)) return

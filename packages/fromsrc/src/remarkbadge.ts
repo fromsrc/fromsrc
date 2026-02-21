@@ -31,7 +31,8 @@ export const remarkBadge: Plugin<[], Root> = () => (tree) => {
 				parts.push({ type: "text", value: before })
 			}
 
-			const text = match[1]!
+			const text = match[1]
+			if (!text) continue
 			const variant = match[2] || "default"
 
 			parts.push({

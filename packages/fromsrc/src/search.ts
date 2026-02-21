@@ -158,9 +158,13 @@ function push(results: SearchResult[], result: SearchResult, limit: number): voi
 	}
 	let min = 0
 	for (let i = 1; i < results.length; i++) {
-		if (results[i]!.score < results[min]!.score) min = i
+		const candidate = results[i]
+		const current = results[min]
+		if (!candidate || !current) continue
+		if (candidate.score < current.score) min = i
 	}
-	if (result.score <= results[min]!.score) return
+	const minEntry = results[min]
+	if (minEntry && result.score <= minEntry.score) return
 	results[min] = result
 }
 
