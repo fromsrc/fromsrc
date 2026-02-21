@@ -9,7 +9,7 @@
 		"dev": "next dev",
 		"build": "bun run build:pkg && next build",
 		"build:pkg": "cd packages/fromsrc && bun run build",
-		"check:shake": "bun scripts/sizecheck.mjs",
+		"check:shake": "bun run build:pkg && bun scripts/sizecheck.mjs",
 		"check:security": "bun audit",
 		"start": "next start",
 		"prepare": "husky"

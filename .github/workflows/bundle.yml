@@ -22,8 +22,8 @@ jobs:
       - name: security
         run: bun run check:security
 
-      - name: treeshake
-        run: bun run check:shake
-
       - name: build
         run: bun run build
+
+      - name: treeshake
+        run: bun run check:shake

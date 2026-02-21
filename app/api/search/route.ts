@@ -106,6 +106,7 @@ async function compute(query: string | undefined, limit: number): Promise<row[]>
 
 export async function GET(request: Request) {
 	const started = performance.now()
+	const docsCacheBefore = docsvalid()
 	const url = new URL(request.url)
 	const parsed = schema.safeParse({
 		q: url.searchParams.get("q") ?? undefined,
@@ -122,13 +123,13 @@ export async function GET(request: Request) {
 			request,
 			cached,
 			cachecontrol,
-			{
-				"Server-Timing": `search;dur=${duration.toFixed(2)}`,
-				"X-Search-Cache": "hit",
-				"X-Search-Docs-Cache": docsvalid() ? "hit" : "miss",
-				"X-Search-Result-Count": String(cached.length),
-			},
-		)
+				{
+					"Server-Timing": `search;dur=${duration.toFixed(2)}`,
+					"X-Search-Cache": "hit",
+					"X-Search-Docs-Cache": docsCacheBefore ? "hit" : "miss",
+					"X-Search-Result-Count": String(cached.length),
+				},
+			)
 	}
 
 	const pending = inflight.get(key) ?? compute(values.q, values.limit)
@@ -144,7 +145,7 @@ export async function GET(request: Request) {
 		{
 			"Server-Timing": `search;dur=${duration.toFixed(2)}`,
 			"X-Search-Cache": "miss",
-			"X-Search-Docs-Cache": docsvalid() ? "hit" : "miss",
+			"X-Search-Docs-Cache": docsCacheBefore ? "hit" : "miss",
 			"X-Search-Result-Count": String(results.length),
 		},
 	)
