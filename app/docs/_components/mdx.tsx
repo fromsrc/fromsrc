@@ -359,6 +359,8 @@ export async function MDX({ source }: Props) {
 			source={source}
 			components={components}
 			options={{
+				blockJS: false,
+				blockDangerousJS: true,
 				mdxOptions: {
 					remarkPlugins: [remarkGfm, remarkAlerts],
 					rehypePlugins: [
