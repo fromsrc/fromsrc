@@ -9,9 +9,17 @@ export interface ViewTransitionResult {
 	supported: boolean
 }
 
+interface transition {
+	finished: Promise<void>
+}
+
+type transitiondocument = Document & { startViewTransition?: (action: () => void) => transition }
+
 export function useViewTransition(): ViewTransitionResult {
 	const [isTransitioning, setIsTransitioning] = useState(false)
-	const supported = typeof document !== "undefined" && "startViewTransition" in document
+	const supported =
+		typeof document !== "undefined" &&
+		typeof (document as transitiondocument).startViewTransition === "function"
 
 	const startTransition = useCallback(
 		(callback: () => void) => {
@@ -20,7 +28,11 @@ export function useViewTransition(): ViewTransitionResult {
 				return
 			}
 			setIsTransitioning(true)
-			const transition = (document as any).startViewTransition(callback)
+			const transition = (document as transitiondocument).startViewTransition?.(callback)
+			if (!transition) {
+				setIsTransitioning(false)
+				return
+			}
 			transition.finished.finally(() => setIsTransitioning(false))
 		},
 		[supported],
@@ -32,11 +44,13 @@ export function useViewTransition(): ViewTransitionResult {
 export function usePageTransition(): void {
 	const pathname = usePathname()
 	const previous = useRef(pathname)
-	const supported = typeof document !== "undefined" && "startViewTransition" in document
+	const supported =
+		typeof document !== "undefined" &&
+		typeof (document as transitiondocument).startViewTransition === "function"
 
 	useEffect(() => {
 		if (!supported || pathname === previous.current) return
 		previous.current = pathname
-		;(document as any).startViewTransition(() => {})
+		;(document as transitiondocument).startViewTransition?.(() => {})
 	}, [pathname, supported])
 }

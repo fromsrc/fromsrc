@@ -2,20 +2,22 @@
 
 import { useCallback, useState } from "react"
 
-export interface FormState<T extends Record<string, any>> {
+type changeevent = { target: { value: unknown } }
+
+export interface FormState<T extends Record<string, unknown>> {
 	values: T
 	errors: Partial<Record<keyof T, string>>
 	touched: Partial<Record<keyof T, boolean>>
 	dirty: boolean
 	valid: boolean
-	set: (field: keyof T, value: any) => void
+	set: <K extends keyof T>(field: K, value: T[K]) => void
 	setError: (field: keyof T, error: string | undefined) => void
 	reset: () => void
-	handleChange: (field: keyof T) => (e: { target: { value: any } }) => void
+	handleChange: <K extends keyof T>(field: K) => (e: changeevent) => void
 	handleBlur: (field: keyof T) => () => void
 }
 
-export function useForm<T extends Record<string, any>>(
+export function useForm<T extends Record<string, unknown>>(
 	initial: T,
 	validate?: (values: T) => Partial<Record<keyof T, string>>,
 ): FormState<T> {
@@ -27,9 +29,9 @@ export function useForm<T extends Record<string, any>>(
 	const valid = Object.values(errors).every((e) => !e)
 
 	const set = useCallback(
-		(field: keyof T, value: any) => {
+		<K extends keyof T>(field: K, value: T[K]) => {
 			setValues((prev) => {
-				const next = { ...prev, [field]: value }
+				const next = { ...prev, [field]: value } as T
 				if (validate) setErrors(validate(next))
 				return next
 			})
@@ -48,9 +50,9 @@ export function useForm<T extends Record<string, any>>(
 	}, [initial])
 
 	const handleChange = useCallback(
-		(field: keyof T) =>
-			(e: { target: { value: any } }) =>
-				set(field, e.target.value),
+		<K extends keyof T>(field: K) =>
+			(e: changeevent) =>
+				set(field, e.target.value as T[K]),
 		[set],
 	)
 

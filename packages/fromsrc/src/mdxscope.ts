@@ -1,6 +1,6 @@
 import type { ComponentType } from "react"
 
-export type MdxComponent = ComponentType<any>
+export type MdxComponent = ComponentType<unknown>
 
 export type MdxScope = Record<string, MdxComponent>
 
@@ -58,7 +58,7 @@ export function filterScope(scope: MdxScope, allowed: string[]): MdxScope {
 	return result
 }
 
-export function scopeFromImports(imports: Record<string, any>): MdxScope {
+export function scopeFromImports(imports: Record<string, unknown>): MdxScope {
 	const result: MdxScope = {}
 	for (const [key, value] of Object.entries(imports)) {
 		if (/^[A-Z]/.test(key) && typeof value === "function") {

@@ -9,13 +9,41 @@ function titleize(s: string): string {
 	return s.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-async function readMeta(dir: string): Promise<Record<string, any>> {
+type metaentry = { title?: string; order?: number; icon?: string }
+
+function isrecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null
+}
+
+function ismetaentry(value: unknown): value is metaentry {
+	if (!isrecord(value)) return false
+	const title = value.title
+	const order = value.order
+	const icon = value.icon
+	if (title !== undefined && typeof title !== "string") return false
+	if (order !== undefined && typeof order !== "number") return false
+	if (icon !== undefined && typeof icon !== "string") return false
+	return true
+}
+
+async function readMeta(dir: string): Promise<Record<string, string | metaentry>> {
 	for (const name of ["_meta.json", "_meta.ts"]) {
 		try {
 			const raw = await readFile(join(dir, name), "utf-8")
-			if (name.endsWith(".json")) return JSON.parse(raw)
-			const m = raw.match(/export\s+default\s+({[\s\S]*})/)
-			if (m) return JSON.parse(m[1]!)
+			const parsed = name.endsWith(".json")
+				? JSON.parse(raw)
+				: (() => {
+						const m = raw.match(/export\s+default\s+({[\s\S]*})/)
+						return m ? JSON.parse(m[1]!) : {}
+					})()
+			if (!isrecord(parsed)) return {}
+			const result: Record<string, string | metaentry> = {}
+			for (const [key, value] of Object.entries(parsed)) {
+				if (typeof value === "string" || ismetaentry(value)) {
+					result[key] = value
+				}
+			}
+			return result
 		} catch {}
 	}
 	return {}
@@ -28,11 +56,11 @@ async function extractTitle(file: string): Promise<string | null> {
 	} catch { return null }
 }
 
-function resolveMeta(meta: Record<string, any>, key: string, fallback: string) {
+function resolveMeta(meta: Record<string, string | metaentry>, key: string, fallback: string) {
 	const e = meta[key]
 	const title = typeof e === "string" ? e : e?.title ?? fallback
-	const order = typeof e === "object" ? e?.order : undefined
-	const icon = typeof e === "object" ? e?.icon : undefined
+	const order = typeof e === "string" ? undefined : e?.order
+	const icon = typeof e === "string" ? undefined : e?.icon
 	return { title, order, icon }
 }
 

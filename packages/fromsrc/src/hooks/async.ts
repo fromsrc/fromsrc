@@ -2,20 +2,20 @@
 
 import { useCallback, useState } from "react"
 
-export interface AsyncState<T> {
+export interface AsyncState<T, Args extends unknown[]> {
 	data: T | null
 	error: Error | null
 	loading: boolean
-	execute: (...args: any[]) => Promise<T | null>
+	execute: (...args: Args) => Promise<T | null>
 }
 
-export function useAsync<T>(fn: (...args: any[]) => Promise<T>): AsyncState<T> {
+export function useAsync<T, Args extends unknown[]>(fn: (...args: Args) => Promise<T>): AsyncState<T, Args> {
 	const [data, setData] = useState<T | null>(null)
 	const [error, setError] = useState<Error | null>(null)
 	const [loading, setLoading] = useState(false)
 
 	const execute = useCallback(
-		async (...args: any[]) => {
+		async (...args: Args) => {
 			setLoading(true)
 			setError(null)
 			try {

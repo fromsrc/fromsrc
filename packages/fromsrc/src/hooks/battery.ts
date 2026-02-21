@@ -8,6 +8,17 @@ export interface BatteryState {
 	supported: boolean
 }
 
+type batteryevent = "chargingchange" | "levelchange"
+
+interface batterymanager {
+	charging: boolean
+	level: number
+	addEventListener: (type: batteryevent, listener: () => void) => void
+	removeEventListener: (type: batteryevent, listener: () => void) => void
+}
+
+type batterynavigator = Navigator & { getBattery?: () => Promise<batterymanager> }
+
 export function useBattery(): BatteryState {
 	const [state, setState] = useState<BatteryState>({
 		charging: false,
@@ -16,15 +27,17 @@ export function useBattery(): BatteryState {
 	})
 
 	useEffect(() => {
-		if (typeof navigator === "undefined" || !("getBattery" in navigator)) return
+		const nav = navigator as batterynavigator
+		if (typeof navigator === "undefined" || typeof nav.getBattery !== "function") return
 
-		let battery: any
+		let battery: batterymanager | null = null
+		const update = () => {
+			if (!battery) return
+			setState({ charging: battery.charging, level: battery.level, supported: true })
+		}
 
-		;(navigator as any).getBattery().then((b: any) => {
+		nav.getBattery().then((b) => {
 			battery = b
-			const update = () => {
-				setState({ charging: b.charging, level: b.level, supported: true })
-			}
 			update()
 			b.addEventListener("chargingchange", update)
 			b.addEventListener("levelchange", update)
@@ -32,8 +45,8 @@ export function useBattery(): BatteryState {
 
 		return () => {
 			if (battery) {
-				battery.removeEventListener("chargingchange", () => {})
-				battery.removeEventListener("levelchange", () => {})
+				battery.removeEventListener("chargingchange", update)
+				battery.removeEventListener("levelchange", update)
 			}
 		}
 	}, [])
