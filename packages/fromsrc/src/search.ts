@@ -1,4 +1,5 @@
 import type { SearchDoc } from "./content"
+import { typomatch } from "./searchtypo"
 
 export interface SearchResult {
 	doc: SearchDoc
@@ -33,6 +34,10 @@ interface SearchIndexDoc {
 	contentraw: string
 	slug: string
 	headings: { id: string; text: string; level: number; normalized: string }[]
+	titlewords: string[]
+	descriptionwords: string[]
+	slugwords: string[]
+	headingwords: string[]
 }
 
 const indexCache = new WeakMap<SearchDoc[], SearchIndexDoc[]>()
@@ -72,6 +77,10 @@ function split(query: string): string[] {
 	return normalize(query).split(" ").filter(Boolean)
 }
 
+function words(text: string): string[] {
+	return text.split(/[^a-z0-9]+/).filter(Boolean)
+}
+
 function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
 	const cached = indexCache.get(docs)
 	if (cached) return cached
@@ -88,6 +97,10 @@ function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
 			level: heading.level,
 			normalized: normalize(heading.text),
 		})),
+		titlewords: words(normalize(doc.title)),
+		descriptionwords: words(normalize(doc.description)),
+		slugwords: words(normalize(doc.slug)),
+		headingwords: words((doc.headings ?? []).map((heading) => normalize(heading.text)).join(" ")),
 	}))
 	indexCache.set(docs, indexed)
 	return indexed
@@ -170,8 +183,12 @@ export const localSearch: SearchAdapter = {
 			const contentResult = searchContent(item.content, item.contentraw, normalized, terms)
 			const termScore = terms.reduce((score, term) => {
 				if (item.title.includes(term)) return score + 9
+				if (typomatch(term, item.titlewords)) return score + 5
 				if (item.slug.includes(term)) return score + 7
+				if (typomatch(term, item.slugwords)) return score + 4
 				if (item.description.includes(term)) return score + 4
+				if (typomatch(term, item.descriptionwords)) return score + 2
+				if (typomatch(term, item.headingwords)) return score + 2
 				if (item.content.includes(term)) return score + 2
 				return score
 			}, 0)
