@@ -1,11 +1,12 @@
 import { generateLlmsIndex } from "fromsrc"
 import { send } from "@/app/api/_lib/text"
+import { siteurl } from "@/app/_lib/site"
 import { getAllDocs } from "@/app/docs/_lib/content"
 
 const config = {
 	title: "fromsrc documentation",
 	description: "documentation framework for developers",
-	baseUrl: "https://fromsrc.com",
+	baseUrl: siteurl(),
 }
 
 export async function GET(request: Request) {

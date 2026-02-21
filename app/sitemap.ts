@@ -1,8 +1,9 @@
 import { getAllDocs, lastModifiedAll } from "fromsrc"
 import type { MetadataRoute } from "next"
 import { join } from "node:path"
+import { siteurl } from "./_lib/site"
 
-const base = "https://fromsrc.com"
+const base = siteurl()
 const docsDir = join(process.cwd(), "docs")
 
 function filepath(slug: string): string {

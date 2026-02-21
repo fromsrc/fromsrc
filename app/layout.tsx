@@ -3,6 +3,7 @@ import { Instrument_Serif, JetBrains_Mono } from "next/font/google"
 import type { ReactNode } from "react"
 import "katex/dist/katex.min.css"
 import "./globals.css"
+import { siteurl } from "./_lib/site"
 
 const mono = JetBrains_Mono({
 	subsets: ["latin"],
@@ -17,14 +18,16 @@ const serif = Instrument_Serif({
 	display: "swap",
 })
 
+const site = siteurl()
+
 export const metadata: Metadata = {
 	title: { default: "fromsrc", template: "%s | fromsrc" },
 	description: "MDX docs framework. AI-native. Open source.",
-	metadataBase: new URL("https://fromsrc.com"),
+	metadataBase: new URL(site),
 	openGraph: {
 		type: "website",
 		locale: "en_US",
-		url: "https://fromsrc.com",
+		url: site,
 		siteName: "fromsrc",
 		title: "fromsrc",
 		description: "MDX docs framework. AI-native. Open source.",

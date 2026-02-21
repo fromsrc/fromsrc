@@ -5,12 +5,15 @@ import type { Metadata } from "next"
 import { unstable_noStore as noStore } from "next/cache"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { siteurl } from "@/app/_lib/site"
 import { MDX } from "../_components/mdx"
 import { getAllDocs, getDoc } from "../_lib/content"
 
 type Props = {
 	params: Promise<{ slug?: string[] }>
 }
+
+const site = siteurl()
 
 function sortDocs(docs: DocMeta[]): DocMeta[] {
 	const intro: DocMeta[] = []
@@ -98,21 +101,21 @@ export default async function DocPage({ params }: Props) {
 		"@type": "TechArticle",
 		headline: doc.title,
 		description: doc.description,
-		url: `https://fromsrc.com/docs/${doc.slug}`,
+		url: `${site}/docs/${doc.slug}`,
 		author: { "@type": "Organization", name: "fromsrc" },
-		publisher: { "@type": "Organization", name: "fromsrc", url: "https://fromsrc.com" },
+		publisher: { "@type": "Organization", name: "fromsrc", url: site },
 		...(modified && { dateModified: modified.toISOString() }),
-		mainEntityOfPage: { "@type": "WebPage", "@id": `https://fromsrc.com/docs/${doc.slug}` },
+		mainEntityOfPage: { "@type": "WebPage", "@id": `${site}/docs/${doc.slug}` },
 	}
 
 	const breadcrumbItems = [
-		{ "@type": "ListItem", position: 1, name: "Home", item: "https://fromsrc.com" },
-		{ "@type": "ListItem", position: 2, name: "Docs", item: "https://fromsrc.com/docs" },
+		{ "@type": "ListItem", position: 1, name: "Home", item: site },
+		{ "@type": "ListItem", position: 2, name: "Docs", item: `${site}/docs` },
 		...slug.map((segment, i) => ({
 			"@type": "ListItem",
 			position: i + 3,
 			name: segment,
-			item: `https://fromsrc.com/docs/${slug.slice(0, i + 1).join("/")}`,
+			item: `${site}/docs/${slug.slice(0, i + 1).join("/")}`,
 		})),
 	]
 

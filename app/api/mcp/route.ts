@@ -1,11 +1,12 @@
 import { type ContentSource, createMcpHandler, generateMcpManifest, z } from "fromsrc"
+import { siteurl } from "@/app/_lib/site"
 import { sendjson } from "@/app/api/_lib/json"
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content"
 
 const config = {
 	name: "fromsrc",
 	version: "1.0.0",
-	baseUrl: "https://fromsrc.com",
+	baseUrl: siteurl(),
 }
 
 const source: ContentSource = {
