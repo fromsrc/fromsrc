@@ -1,23 +1,24 @@
 "use client"
 
-import { type ReactNode, createElement } from "react"
-import type { FrameworkAdapter } from "./adapter"
+import { createElement } from "react"
+import type { FrameworkAdapter, fromsrcimageprops, fromsrclinkprops } from "./adapter"
 import { back, push, usepath } from "./browser"
 
 function link({
 	href,
 	children,
-}: { href: string; children: ReactNode; prefetch?: boolean }) {
-	return createElement("a", { href }, children)
+	prefetch: _prefetch,
+	...rest
+}: fromsrclinkprops) {
+	return createElement("a", { href, ...rest }, children)
 }
 
 function image({
 	src,
 	alt,
-	width,
-	height,
-}: { src: string; alt: string; width?: number; height?: number }) {
-	return createElement("img", { src, alt, width, height })
+	...rest
+}: fromsrcimageprops) {
+	return createElement("img", { src, alt, ...rest })
 }
 
 function pathname(): string {

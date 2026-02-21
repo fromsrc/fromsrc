@@ -1,27 +1,28 @@
 "use client"
 
-import { type ReactNode, createElement } from "react"
+import { createElement } from "react"
 import {
 	Link as RouterLink,
 	useNavigate,
 	useRouterState,
 } from "@tanstack/react-router"
-import type { FrameworkAdapter } from "./adapter"
+import type { FrameworkAdapter, fromsrcimageprops, fromsrclinkprops } from "./adapter"
 
 function Link({
 	href,
 	children,
-}: { href: string; children: ReactNode; prefetch?: boolean }) {
-	return createElement(RouterLink, { to: href }, children)
+	prefetch: _prefetch,
+	...rest
+}: fromsrclinkprops) {
+	return createElement(RouterLink, { to: href, ...rest }, children)
 }
 
 function Image({
 	src,
 	alt,
-	width,
-	height,
-}: { src: string; alt: string; width?: number; height?: number }) {
-	return createElement("img", { src, alt, width, height })
+	...rest
+}: fromsrcimageprops) {
+	return createElement("img", { src, alt, ...rest })
 }
 
 function useTanstackPathname(): string {

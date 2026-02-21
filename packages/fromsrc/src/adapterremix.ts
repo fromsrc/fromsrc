@@ -1,24 +1,28 @@
 "use client"
 
-import { type ReactNode, createElement } from "react"
+import { createElement } from "react"
 import { Link as RemixLink, useLocation, useNavigate } from "@remix-run/react"
-import type { FrameworkAdapter } from "./adapter"
+import type { FrameworkAdapter, fromsrcimageprops, fromsrclinkprops } from "./adapter"
 
 function Link({
 	href,
 	children,
 	prefetch,
-}: { href: string; children: ReactNode; prefetch?: boolean }) {
-	return createElement(RemixLink, { to: href, prefetch: prefetch ? "intent" : "none" }, children)
+	...rest
+}: fromsrclinkprops) {
+	return createElement(
+		RemixLink,
+		{ to: href, prefetch: prefetch ? "intent" : "none", ...rest },
+		children,
+	)
 }
 
 function Image({
 	src,
 	alt,
-	width,
-	height,
-}: { src: string; alt: string; width?: number; height?: number }) {
-	return createElement("img", { src, alt, width, height })
+	...rest
+}: fromsrcimageprops) {
+	return createElement("img", { src, alt, ...rest })
 }
 
 function useRemixPathname(): string {
