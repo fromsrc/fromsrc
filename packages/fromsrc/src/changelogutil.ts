@@ -21,7 +21,8 @@ export function parseChangelog(content: string): ChangelogData {
 	for (const line of lines) {
 		const h1 = line.match(/^# (.+)/)
 		if (h1) {
-			title = h1[1]!.trim()
+			const heading = h1[1]
+			if (heading) title = heading.trim()
 			continue
 		}
 
@@ -29,20 +30,26 @@ export function parseChangelog(content: string): ChangelogData {
 		if (h2) {
 			if (current) entries.push(current)
 			section = null
-			current = { version: h2[1]!.trim(), date: h2[2]!.trim(), changes: [] }
+			const version = h2[1]
+			const date = h2[2]
+			if (!version || !date) continue
+			current = { version: version.trim(), date: date.trim(), changes: [] }
 			continue
 		}
 
 		const h3 = line.match(/^### (.+)/)
 		if (h3 && current) {
-			section = { type: h3[1]!.trim(), items: [] }
+			const type = h3[1]
+			if (!type) continue
+			section = { type: type.trim(), items: [] }
 			current.changes.push(section)
 			continue
 		}
 
 		const item = line.match(/^- (.+)/)
 		if (item && section) {
-			section.items.push(item[1]!.trim())
+			const value = item[1]
+			if (value) section.items.push(value.trim())
 			continue
 		}
 
@@ -93,8 +100,9 @@ export function groupByType(entries: ChangelogEntry[]): Record<string, string[]>
 	const result: Record<string, string[]> = {}
 	for (const entry of entries) {
 		for (const change of entry.changes) {
-			if (!result[change.type]) result[change.type] = []
-			result[change.type]!.push(...change.items)
+			const list = result[change.type] ?? []
+			list.push(...change.items)
+			result[change.type] = list
 		}
 	}
 	return result

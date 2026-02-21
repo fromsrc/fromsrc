@@ -18,10 +18,16 @@ function lcs(a: string[], b: string[], ignore: boolean): number[][] {
 	const table: number[][] = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0))
 	for (let i = 1; i <= a.length; i++) {
 		for (let j = 1; j <= b.length; j++) {
-			const ai = ignore ? a[i - 1]!.trim() : a[i - 1]!
-			const bj = ignore ? b[j - 1]!.trim() : b[j - 1]!
-			table[i]![j] =
-				ai === bj ? table[i - 1]![j - 1]! + 1 : Math.max(table[i - 1]![j]!, table[i]![j - 1]!)
+			const aiRaw = a[i - 1] ?? ""
+			const bjRaw = b[j - 1] ?? ""
+			const ai = ignore ? aiRaw.trim() : aiRaw
+			const bj = ignore ? bjRaw.trim() : bjRaw
+			const upLeft = table[i - 1]?.[j - 1] ?? 0
+			const up = table[i - 1]?.[j] ?? 0
+			const left = table[i]?.[j - 1] ?? 0
+			const row = table[i]
+			if (!row) continue
+			row[j] = ai === bj ? upLeft + 1 : Math.max(up, left)
 		}
 	}
 	return table
@@ -32,17 +38,19 @@ function backtrack(table: number[][], a: string[], b: string[], ignore: boolean)
 	let i = a.length
 	let j = b.length
 	while (i > 0 || j > 0) {
-		const ai = i > 0 ? (ignore ? a[i - 1]!.trim() : a[i - 1]!) : ""
-		const bj = j > 0 ? (ignore ? b[j - 1]!.trim() : b[j - 1]!) : ""
+		const aiRaw = i > 0 ? (a[i - 1] ?? "") : ""
+		const bjRaw = j > 0 ? (b[j - 1] ?? "") : ""
+		const ai = ignore ? aiRaw.trim() : aiRaw
+		const bj = ignore ? bjRaw.trim() : bjRaw
 		if (i > 0 && j > 0 && ai === bj) {
-			result.push({ type: "same", content: a[i - 1]!, oldLine: i, newLine: j })
+			result.push({ type: "same", content: aiRaw, oldLine: i, newLine: j })
 			i--
 			j--
-		} else if (j > 0 && (i === 0 || table[i]![j - 1]! >= table[i - 1]![j]!)) {
-			result.push({ type: "add", content: b[j - 1]!, newLine: j })
+		} else if (j > 0 && (i === 0 || (table[i]?.[j - 1] ?? 0) >= (table[i - 1]?.[j] ?? 0))) {
+			result.push({ type: "add", content: bjRaw, newLine: j })
 			j--
 		} else {
-			result.push({ type: "remove", content: a[i - 1]!, oldLine: i })
+			result.push({ type: "remove", content: aiRaw, oldLine: i })
 			i--
 		}
 	}
@@ -52,7 +60,8 @@ function backtrack(table: number[][], a: string[], b: string[], ignore: boolean)
 function applyContext(lines: DiffLine[], ctx: number): DiffLine[] {
 	const changed = new Set<number>()
 	for (let i = 0; i < lines.length; i++) {
-		if (lines[i]!.type !== "same") changed.add(i)
+		const line = lines[i]
+		if (line && line.type !== "same") changed.add(i)
 	}
 	const visible = new Set<number>()
 	for (const idx of changed) {
@@ -90,8 +99,10 @@ export function diffFrontmatter(
 	const parse = (text: string): Record<string, string> => {
 		const match = text.match(/^---\n([\s\S]*?)\n---/)
 		if (!match) return {}
+		const body = match[1]
+		if (!body) return {}
 		const fields: Record<string, string> = {}
-		for (const line of match[1]!.split("\n")) {
+		for (const line of body.split("\n")) {
 			const idx = line.indexOf(":")
 			if (idx > 0) fields[line.slice(0, idx).trim()] = line.slice(idx + 1).trim()
 		}

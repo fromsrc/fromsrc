@@ -44,14 +44,19 @@ function parse(content: string, filepath: string): Snippet[] {
 	const open = new Map<string, number>()
 	const results: Snippet[] = []
 	for (let i = 0; i < lines.length; i++) {
-		const start = lines[i]!.match(regionRe)
-		if (start) { open.set(start[1]!, i); continue }
-		const end = lines[i]!.match(endRe)
-		if (end && open.has(end[1]!)) {
-			const s = open.get(end[1]!)!
-			open.delete(end[1]!)
+		const line = lines[i]
+		if (!line) continue
+		const start = line.match(regionRe)
+		const startId = start?.[1]
+		if (startId) { open.set(startId, i); continue }
+		const end = line.match(endRe)
+		const endId = end?.[1]
+		if (endId && open.has(endId)) {
+			const s = open.get(endId)
+			if (s === undefined) continue
+			open.delete(endId)
 			results.push({
-				id: `${relative(process.cwd(), filepath)}:${end[1]!}`,
+				id: `${relative(process.cwd(), filepath)}:${endId}`,
 				file: filepath, code: lines.slice(s + 1, i).join("\n"),
 				lang, startLine: s + 2, endLine: i,
 			})

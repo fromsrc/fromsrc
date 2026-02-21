@@ -42,7 +42,10 @@ export function extractLinks(
 	const reference = /\[([^\]]*)\]\[([^\]]+)\]/g
 
 	for (const m of content.matchAll(inline)) {
-		const href = m[2]!.split(/\s/)[0]!
+		const raw = m[2]
+		if (!raw) continue
+		const href = raw.split(/\s/)[0]
+		if (!href) continue
 		if (!seen.has(href)) {
 			seen.add(href)
 			results.push({ href, type: linktype(href) })
@@ -50,11 +53,14 @@ export function extractLinks(
 	}
 
 	for (const m of content.matchAll(reference)) {
-		const ref = m[2]!
+		const ref = m[2]
+		if (!ref) continue
 		const pattern = new RegExp(`\\[${ref.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\]:\\s*(.+)`)
 		const def = content.match(pattern)
 		if (def) {
-			const href = def[1]!.trim()
+			const raw = def[1]
+			if (!raw) continue
+			const href = raw.trim()
 			if (!seen.has(href)) {
 				seen.add(href)
 				results.push({ href, type: linktype(href) })
@@ -117,7 +123,11 @@ export async function checkInternalLinks(config: LinkCheckConfig): Promise<LinkC
 				results.push({ source: filepath, href: link.href, type: "anchor", status })
 				continue
 			}
-			const clean = link.href.split("#")[0]!.split("?")[0]!
+			const clean = link.href.split("#")[0]?.split("?")[0] ?? ""
+			if (!clean) {
+				results.push({ source: filepath, href: link.href, type: "internal", status: "broken" })
+				continue
+			}
 			const resolved = resolveLink(filepath, clean)
 			const found =
 				(await exists(resolved)) ||

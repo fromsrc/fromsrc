@@ -47,7 +47,9 @@ export function createTestSuite(name: string) {
 export function assertFrontmatter(content: string, fields: string[]) {
 	const match = content.match(/^---\n([\s\S]*?)\n---/)
 	if (!match) throw new Error("missing frontmatter")
-	const lines = match[1]!.split("\n")
+	const body = match[1]
+	if (!body) throw new Error("invalid frontmatter")
+	const lines = body.split("\n")
 	const keys = lines.map((l) => (l.split(":")[0] ?? "").trim()).filter(Boolean)
 	for (const field of fields) {
 		if (!keys.includes(field)) throw new Error(`missing field: ${field}`)
@@ -58,7 +60,9 @@ export function assertHeadings(
 	content: string,
 	options?: { minCount?: number; maxDepth?: number; sequential?: boolean },
 ) {
-	const headings = [...content.matchAll(/^(#{1,6})\s+/gm)].map((m) => m[1]!.length)
+	const headings = [...content.matchAll(/^(#{1,6})\s+/gm)]
+		.map((m) => m[1]?.length ?? 0)
+		.filter((level) => level > 0)
 	if (options?.minCount && headings.length < options.minCount) {
 		throw new Error(`expected at least ${options.minCount} headings, found ${headings.length}`)
 	}
@@ -71,7 +75,10 @@ export function assertHeadings(
 	}
 	if (options?.sequential) {
 		for (let i = 1; i < headings.length; i++) {
-			if (headings[i]! > headings[i - 1]! + 1) {
+			const current = headings[i]
+			const previous = headings[i - 1]
+			if (!current || !previous) continue
+			if (current > previous + 1) {
 				throw new Error(`heading h${headings[i]} skips level after h${headings[i - 1]}`)
 			}
 		}
