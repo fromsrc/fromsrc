@@ -18,6 +18,19 @@ export default function Page({ source }: { source: string }) {
 
 pass raw mdx content as a string. the component compiles and renders it client-side.
 
+## import style
+
+for smallest bundles, prefer direct subpath imports when you only need specific utilities:
+
+```ts
+import { calcReadTime } from "fromsrc/readtime"
+import { scoreSearch } from "fromsrc/searchscore"
+import { createIndex } from "fromsrc/searchindex"
+import { generateLlmsIndex } from "fromsrc/llms"
+```
+
+use `fromsrc/client` for ui components like `Content`.
+
 ## how it works
 
 content uses [@mdx-js/mdx](https://mdxjs.com) to compile mdx at runtime. it includes:
