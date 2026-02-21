@@ -33,9 +33,11 @@ export function extractToc(content: string): TocItem[] {
 
 		const match = line.match(/^(#{1,6})\s+(.+)$/)
 		if (!match) continue
-
-		const level = match[1]!.length
-		const text = match[2]!.trim()
+		const hashes = match[1]
+		const heading = match[2]
+		if (!hashes || !heading) continue
+		const level = hashes.length
+		const text = heading.trim()
 		items.push({ level, text, slug: slugify(text) })
 	}
 

@@ -42,14 +42,17 @@ function buildTree(headings: { id: string; text: string; level: number }[]): Toc
 	for (const heading of headings) {
 		const node: TocEntry = { ...heading, children: [] }
 
-		while (stack.length > 0 && stack[stack.length - 1]!.level >= heading.level) {
+		while (stack.length > 0) {
+			const last = stack[stack.length - 1]
+			if (!last || last.level < heading.level) break
 			stack.pop()
 		}
 
 		if (stack.length === 0) {
 			root.push(node)
 		} else {
-			stack[stack.length - 1]!.children.push(node)
+			const parent = stack[stack.length - 1]
+			if (parent) parent.children.push(node)
 		}
 
 		stack.push(node)
@@ -69,7 +72,8 @@ export const rehypeToc: Plugin<[RehypeTocOptions?], Root> = (options) => {
 			const level = levelMap[node.tagName]
 			if (!level || level < min || level > max) return
 
-			const id = (node.properties?.id as string) ?? ""
+			const raw = node.properties?.id
+			const id = typeof raw === "string" ? raw : ""
 			const text = extractText(node)
 			if (!id || !text) return
 

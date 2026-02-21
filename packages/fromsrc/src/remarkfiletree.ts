@@ -35,11 +35,15 @@ function parse(content: string): TreeNode[] {
 
 		const node: TreeNode = { name, folder, children: [] }
 
-		while (stack.length > 1 && stack[stack.length - 1]!.depth >= depth) {
+		while (stack.length > 1) {
+			const last = stack[stack.length - 1]
+			if (!last || last.depth < depth) break
 			stack.pop()
 		}
 
-		stack[stack.length - 1]!.children.push(node)
+		const parent = stack[stack.length - 1]
+		if (!parent) continue
+		parent.children.push(node)
 
 		if (folder) {
 			stack.push({ depth, children: node.children })

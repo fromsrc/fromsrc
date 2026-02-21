@@ -24,7 +24,8 @@ function isOpen(node: AstNode): string | null {
 	const text = extractText(node).trim()
 	const match = text.match(openPattern)
 	if (!match) return null
-	return match[1]!.trim()
+	const title = match[1]
+	return title ? title.trim() : null
 }
 
 function isClose(node: AstNode): boolean {
@@ -47,7 +48,8 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 	let i = 0
 
 	while (i < nodes.length) {
-		const node = nodes[i]!
+		const node = nodes[i]
+		if (!node) break
 		const title = isOpen(node)
 
 		if (!title) {
@@ -59,8 +61,10 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 
 		const inner: AstNode[] = []
 		i++
-		while (i < nodes.length && !isClose(nodes[i]!)) {
-			inner.push(nodes[i]!)
+		while (i < nodes.length) {
+			const current = nodes[i]
+			if (!current || isClose(current)) break
+			inner.push(current)
 			i++
 		}
 		if (i < nodes.length) i++
