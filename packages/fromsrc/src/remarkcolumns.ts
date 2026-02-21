@@ -6,8 +6,14 @@ interface AstNode {
 	name?: string
 	children?: AstNode[]
 	value?: string
-	attributes?: any[]
-	data?: any
+	attributes?: AstAttr[]
+	data?: Record<string, unknown>
+}
+
+type AstAttr = {
+	type: "mdxJsxAttribute"
+	name: string
+	value?: string
 }
 
 function text(n: AstNode): string {
@@ -26,7 +32,7 @@ const isColumnsOpen = (n: AstNode) => {
 const isColumnOpen = (n: AstNode) => !!para(n, /^:::\s*column$/)
 const isClose = (n: AstNode) => !!para(n, /^:::$/)
 
-function mdx(name: string, attrs: any[], children: AstNode[]): AstNode {
+function mdx(name: string, attrs: AstAttr[], children: AstNode[]): AstNode {
 	return {
 		type: "mdxJsxFlowElement",
 		name,
@@ -50,7 +56,7 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 			continue
 		}
 
-		const attrs: any[] = []
+		const attrs: AstAttr[] = []
 		if (open.count) {
 			attrs.push({ type: "mdxJsxAttribute", name: "count", value: open.count })
 		}

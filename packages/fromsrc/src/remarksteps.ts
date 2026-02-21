@@ -2,6 +2,8 @@ import type { List, ListItem, Paragraph, Root } from "mdast"
 import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
+type textnode = { value?: string }
+
 function isStepsList(node: List): boolean {
 	if (!node.ordered) return false
 	return node.children.every((item: ListItem) => {
@@ -11,8 +13,11 @@ function isStepsList(node: List): boolean {
 	})
 }
 
-function extractTitle(strong: any): string {
-	return strong.children.map((c: any) => c.value ?? "").join("")
+function extractTitle(strong: Paragraph["children"][number] | undefined): string {
+	if (!strong || !("children" in strong) || !Array.isArray(strong.children)) return ""
+	return strong.children
+		.map((child) => ("value" in child ? ((child as textnode).value ?? "") : ""))
+		.join("")
 }
 
 function makeStep(item: ListItem) {
@@ -27,7 +32,7 @@ function makeStep(item: ListItem) {
 			? [{ ...first, value: first.value.slice(1) }, ...remaining.slice(1)]
 			: remaining
 
-	const children: any[] = []
+	const children: unknown[] = []
 
 	if (trimmed.length > 0) {
 		children.push({
@@ -62,7 +67,7 @@ function transformer(tree: Root) {
 			attributes: [],
 			children: steps,
 			data: { _mdxExplicitJsx: true },
-		} as any
+		} as unknown as Root["children"][number]
 	})
 }
 
