@@ -38,6 +38,7 @@ const ToastContext = createContext<ToastContextValue | null>(null)
 export function ToastProvider({ children }: { children: ReactNode }): JSX.Element {
 	const [toasts, setToasts] = useState<Toast[]>([])
 	const timers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
+	const counter = useRef(0)
 
 	const remove = useCallback((id: string) => {
 		const timer = timers.current.get(id)
@@ -49,7 +50,8 @@ export function ToastProvider({ children }: { children: ReactNode }): JSX.Elemen
 	}, [])
 
 	const add = useCallback((toast: Omit<Toast, "id">) => {
-		const id = Math.random().toString(36).slice(2)
+		counter.current += 1
+		const id = `toast-${counter.current}`
 		setToasts((t) => [...t, { ...toast, id }])
 
 		const duration = toast.duration ?? 5000

@@ -15,7 +15,9 @@ export function Shortcuts() {
 	useEffect(() => {
 		if (!open) return
 		function handler(e: MouseEvent) {
-			if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+			const target = e.target
+			if (!(target instanceof Node)) return
+			if (ref.current && !ref.current.contains(target)) setOpen(false)
 		}
 		document.addEventListener("mousedown", handler)
 		return () => document.removeEventListener("mousedown", handler)
