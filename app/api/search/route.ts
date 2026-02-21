@@ -25,8 +25,16 @@ interface row {
 	score: number
 }
 
+interface docentry {
+	at: number
+	all: Awaited<ReturnType<typeof getAllDocs>>
+	search: Awaited<ReturnType<typeof getSearchDocs>>
+}
+
 const cache = new Map<string, entry>()
 const inflight = new Map<string, Promise<row[]>>()
+let docsCache: docentry | null = null
+let docsInflight: Promise<docentry> | null = null
 const ttl = 1000 * 60 * 5
 const max = 200
 const cachecontrol = "public, max-age=60, s-maxage=300, stale-while-revalidate=86400"
@@ -54,10 +62,29 @@ function set(key: string, value: row[]): row[] {
 	return value
 }
 
+function docsvalid(): boolean {
+	return Boolean(docsCache && Date.now() - docsCache.at <= ttl)
+}
+
+async function loaddocs(): Promise<docentry> {
+	if (docsvalid()) return docsCache as docentry
+	const pending = docsInflight ?? (async () => ({
+		at: Date.now(),
+		all: await getAllDocs(),
+		search: await getSearchDocs(),
+	}))()
+	if (!docsInflight) docsInflight = pending
+	const value = await pending.finally(() => {
+		if (docsInflight === pending) docsInflight = null
+	})
+	docsCache = value
+	return value
+}
+
 async function compute(query: string | undefined, limit: number): Promise<row[]> {
+	const docs = await loaddocs()
 	if (!query) {
-		const docs = await getAllDocs()
-		return docs.slice(0, limit).map((doc) => ({
+		return docs.all.slice(0, limit).map((doc) => ({
 			slug: doc.slug,
 			title: doc.title,
 			description: doc.description,
@@ -66,8 +93,7 @@ async function compute(query: string | undefined, limit: number): Promise<row[]>
 			score: 0,
 		}))
 	}
-	const docs = await getSearchDocs()
-	return localSearch.search(query, docs, limit).map((result) => ({
+	return localSearch.search(query, docs.search, limit).map((result) => ({
 		slug: result.doc.slug,
 		title: result.doc.title,
 		description: result.doc.description,
@@ -99,6 +125,7 @@ export async function GET(request: Request) {
 			{
 				"Server-Timing": `search;dur=${duration.toFixed(2)}`,
 				"X-Search-Cache": "hit",
+				"X-Search-Docs-Cache": docsvalid() ? "hit" : "miss",
 				"X-Search-Result-Count": String(cached.length),
 			},
 		)
@@ -117,6 +144,7 @@ export async function GET(request: Request) {
 		{
 			"Server-Timing": `search;dur=${duration.toFixed(2)}`,
 			"X-Search-Cache": "miss",
+			"X-Search-Docs-Cache": docsvalid() ? "hit" : "miss",
 			"X-Search-Result-Count": String(results.length),
 		},
 	)

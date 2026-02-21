@@ -74,6 +74,7 @@ try {
 		await writeFile(file, item.code, "utf8");
 		const res = await Bun.build({
 			entrypoints: [file],
+			root: process.cwd(),
 			format: "esm",
 			target: "browser",
 			minify: true,
