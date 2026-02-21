@@ -119,7 +119,7 @@ export const localSearch: SearchAdapter = {
 
 		const q = query?.trim() ?? ""
 		if (!q) {
-			return docs.slice(0, 8).map((doc) => ({ doc, score: 0 }))
+			return docs.map((doc) => ({ doc, score: 0 }))
 		}
 
 		const terms = split(q)
@@ -159,7 +159,7 @@ export const localSearch: SearchAdapter = {
 		}
 
 		results.sort((a, b) => b.score - a.score)
-		return results.slice(0, 8)
+		return results
 	},
 }
 
