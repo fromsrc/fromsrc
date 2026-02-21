@@ -40,6 +40,20 @@ export function Panel({
 	onNavigate,
 }: PanelProps): JSX.Element {
 	const dialog = useRef<HTMLDivElement>(null)
+	const hasQuery = value.trim().length > 0
+	const showRecent = !hasQuery && recent.length > 0
+	const showResults = hasQuery && !loading && results.length > 0
+	const listId = showRecent ? "search-recent-listbox" : "search-results-listbox"
+	const resultStatus = loading
+		? "loading results"
+		: !hasQuery
+			? recent.length > 0
+				? `${recent.length} recent searches`
+				: "no recent searches"
+			: results.length === 0
+				? "no results"
+				: `${results.length} results`
+
 	const onTab = useCallback((event: KeyEvent<HTMLDivElement>): void => {
 		if (event.key !== "Tab" || !dialog.current) return
 		const nodes = dialog.current.querySelectorAll<HTMLElement>(
@@ -79,11 +93,14 @@ export function Panel({
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
 						<IconSearch className="w-4 h-4 text-muted" size={16} />
-						<input ref={input} type="text" value={query} onChange={(event) => onChange(event.target.value)} onKeyDown={onKey} placeholder="search documentation..." className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={results.length > 0} aria-haspopup="listbox" aria-controls="search-listbox" aria-activedescendant={safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
+						<input ref={input} type="text" value={query} onChange={(event) => onChange(event.target.value)} onKeyDown={onKey} placeholder="search documentation..." className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={showRecent || showResults} aria-haspopup="listbox" aria-controls={listId} aria-activedescendant={showResults && safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
+						<span className="sr-only" role="status" aria-live="polite">
+							{resultStatus}
+						</span>
 						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">esc</kbd>
 					</div>
 					<div className="max-h-80 overflow-y-auto" aria-busy={loading}>
-						{!value.trim() && recent.length > 0 ? <Recent items={recent} onSelect={onSelect} /> : loading ? <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">loading</div> : results.length === 0 ? <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">no results</div> : <Results results={results} selected={safe} query={value} listRef={list} onResultClick={onNavigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && onNavigate(slug, anchor)} />}
+						{showRecent ? <Recent listId={listId} items={recent} onSelect={onSelect} /> : loading ? <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">loading</div> : showResults ? <Results listId={listId} results={results} selected={safe} query={value} listRef={list} onResultClick={onNavigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && onNavigate(slug, anchor)} /> : <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">no results</div>}
 					</div>
 					<Hints />
 				</div>

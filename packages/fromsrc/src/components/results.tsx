@@ -44,6 +44,7 @@ function groupResults(results: SearchResult[]): Map<string, SearchResult[]> {
 }
 
 interface ResultsProps {
+	listId: string
 	results: SearchResult[]
 	selected: number
 	query: string
@@ -53,6 +54,7 @@ interface ResultsProps {
 }
 
 export function Results({
+	listId,
 	results,
 	selected,
 	query,
@@ -65,7 +67,7 @@ export function Results({
 	let idx = 0
 
 	return (
-		<ul ref={listRef} id="search-listbox" role="listbox" className="p-2">
+		<ul ref={listRef} id={listId} role="listbox" className="p-2">
 			{Array.from(grouped.entries()).map(([category, items]) => (
 				<li key={category} role="presentation">
 					<div className="px-3 pt-2 pb-1 text-[10px] font-medium text-dim uppercase tracking-wider">
