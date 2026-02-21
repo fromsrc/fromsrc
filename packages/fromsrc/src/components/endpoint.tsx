@@ -3,7 +3,7 @@ import { type ReactNode, type JSX, memo } from "react"
 /**
  * HTTP methods supported by the endpoint component
  */
-export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+export type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS" | "TRACE"
 
 const methodColors: Record<Method, string> = {
 	GET: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
@@ -11,6 +11,9 @@ const methodColors: Record<Method, string> = {
 	PUT: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 	PATCH: "bg-orange-500/10 text-orange-400 border-orange-500/20",
 	DELETE: "bg-red-500/10 text-red-400 border-red-500/20",
+	HEAD: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+	OPTIONS: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+	TRACE: "bg-pink-500/10 text-pink-400 border-pink-500/20",
 }
 
 /**
@@ -187,7 +190,7 @@ type HttpStatus =
  */
 export interface ResponseProps {
 	/** HTTP status code */
-	status: HttpStatus
+	status: HttpStatus | string
 	/** Description of the response */
 	description?: string
 	/** Response body content */
@@ -195,8 +198,9 @@ export interface ResponseProps {
 }
 
 function ResponseBase({ status, description, children }: ResponseProps): JSX.Element {
-	const isSuccess = status >= 200 && status < 300
-	const isError = status >= 400
+	const number = typeof status === "string" ? Number(status) : status
+	const isSuccess = Number.isFinite(number) && number >= 200 && number < 300
+	const isError = Number.isFinite(number) && number >= 400
 	const statusLabel = isSuccess ? "success" : isError ? "error" : "redirect"
 
 	return (

@@ -1,5 +1,6 @@
 import {
 	type OpenApiEndpoint,
+	type OpenApiMethod,
 	type OpenApiParameter,
 	type OpenApiRequestBody,
 	type OpenApiResponse,
@@ -14,6 +15,7 @@ import {
 
 export type {
 	OpenApiEndpoint,
+	OpenApiMethod,
 	OpenApiParameter,
 	OpenApiRequestBody,
 	OpenApiResponse,
@@ -23,7 +25,7 @@ export type {
 }
 export { generateEndpointSlug }
 
-const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options", "trace"]
+const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options", "trace"] as const
 
 function extractParameters(root: any, raw: any[]): OpenApiParameter[] {
 	if (!raw) return []
@@ -86,7 +88,7 @@ function extractEndpoints(root: any): OpenApiEndpoint[] {
 			const params = [...shared, ...(op.parameters || [])]
 
 			endpoints.push({
-				method: method.toUpperCase(),
+				method: method.toUpperCase() as OpenApiMethod,
 				path,
 				operationId: op.operationId || undefined,
 				summary: op.summary || undefined,

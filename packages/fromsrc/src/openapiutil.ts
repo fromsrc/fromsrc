@@ -1,3 +1,5 @@
+export type OpenApiMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS" | "TRACE"
+
 export interface OpenApiSchema {
 	type?: string
 	format?: string
@@ -35,7 +37,7 @@ export interface OpenApiResponse {
 }
 
 export interface OpenApiEndpoint {
-	method: string
+	method: OpenApiMethod
 	path: string
 	operationId?: string
 	summary?: string
