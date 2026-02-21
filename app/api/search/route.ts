@@ -68,7 +68,7 @@ export async function GET(request: Request) {
 	}
 
 	const docs = await getSearchDocs()
-	const results = localSearch.search(values.q, docs).slice(0, values.limit)
+	const results = localSearch.search(values.q, docs, values.limit)
 	return Response.json(
 		set(
 			key,

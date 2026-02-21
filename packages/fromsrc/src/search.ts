@@ -8,7 +8,7 @@ export interface SearchResult {
 }
 
 export interface SearchAdapter {
-	search(query: string, docs: SearchDoc[]): SearchResult[]
+	search(query: string, docs: SearchDoc[], limit?: number): SearchResult[]
 	index?(docs: SearchDoc[]): void | Promise<void>
 }
 
@@ -114,12 +114,12 @@ function searchHeadings(doc: SearchDoc, query: string, terms: string[]): Heading
 }
 
 export const localSearch: SearchAdapter = {
-	search(query: string, docs: SearchDoc[]): SearchResult[] {
+	search(query: string, docs: SearchDoc[], limit = Number.POSITIVE_INFINITY): SearchResult[] {
 		if (!docs || docs.length === 0) return []
 
 		const q = query?.trim() ?? ""
 		if (!q) {
-			return docs.map((doc) => ({ doc, score: 0 }))
+			return docs.slice(0, limit).map((doc) => ({ doc, score: 0 }))
 		}
 
 		const terms = split(q)
@@ -159,7 +159,7 @@ export const localSearch: SearchAdapter = {
 		}
 
 		results.sort((a, b) => b.score - a.score)
-		return results
+		return results.slice(0, limit)
 	},
 }
 

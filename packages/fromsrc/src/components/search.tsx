@@ -58,7 +58,7 @@ export function Search({
 	const searchdocs = useMemo(() => docs.map(tosearchdoc), [docs])
 	const value = useDebounce(query, debounce)
 	const local = useMemo(
-		() => (endpoint ? [] : adapter.search(value, searchdocs).slice(0, limit)),
+		() => (endpoint ? [] : adapter.search(value, searchdocs, limit)),
 		[adapter, endpoint, limit, searchdocs, value],
 	)
 	const remote = useSearcher(endpoint, value, limit)
