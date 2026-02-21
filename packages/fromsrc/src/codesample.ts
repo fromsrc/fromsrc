@@ -77,7 +77,8 @@ function go(c: CodeSampleConfig): string {
 function ruby(c: CodeSampleConfig): string {
 	const h = merged(c)
 	const uri = new URL(c.url)
-	const cap = c.method[0]!.toUpperCase() + c.method.slice(1).toLowerCase()
+	const first = c.method[0]?.toUpperCase() ?? "G"
+	const cap = first + c.method.slice(1).toLowerCase()
 	const lines = [
 		'require "net/http"', 'require "json"', "",
 		`uri = URI("${c.url}")`,
