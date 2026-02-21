@@ -74,7 +74,7 @@ function LanguageSwitchBase({ current, locales, onChange }: LanguageSwitchProps)
 					break
 				}
 				case "Enter":
-					onChange?.(locales[index]!.code)
+					onChange?.(locales[index]?.code ?? current)
 					setOpen(false)
 					break
 			}

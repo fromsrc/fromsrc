@@ -23,7 +23,8 @@ function parseannotations(code: string): TwoslashResult {
 	let offset = 0
 
 	for (let i = 0; i < lines.length; i++) {
-		const line = lines[i]!
+		const line = lines[i]
+		if (line === undefined) continue
 		const trimmed = line.trim()
 
 		if (trimmed === "// @noErrors") {
@@ -39,7 +40,9 @@ function parseannotations(code: string): TwoslashResult {
 
 		const query = line.match(/^(\s*)\/\/\s*\^(\?)(.*)$/)
 		if (query) {
-			const col = query[1]!.length
+			const indent = query[1]
+			if (indent === undefined) continue
+			const col = indent.length
 			const text = query[3]?.trim() || undefined
 			annotations.push({
 				type: "query",
@@ -53,7 +56,9 @@ function parseannotations(code: string): TwoslashResult {
 
 		const completion = line.match(/^(\s*)\/\/\s*\^(\|)(.*)$/)
 		if (completion) {
-			const col = completion[1]!.length
+			const indent = completion[1]
+			if (indent === undefined) continue
+			const col = indent.length
 			const text = completion[3]?.trim() || undefined
 			annotations.push({
 				type: "completion",
