@@ -46,11 +46,13 @@ export function useKeyboardNav(docs: DocMeta[], basePath = "/docs"): void {
 
 			if (e.key === "ArrowRight" && current < paths.length - 1) {
 				e.preventDefault()
-				router.push(paths[current + 1]!)
+				const next = paths[current + 1]
+				if (next) router.push(next)
 			}
 			if (e.key === "ArrowLeft" && current > 0) {
 				e.preventDefault()
-				router.push(paths[current - 1]!)
+				const prev = paths[current - 1]
+				if (prev) router.push(prev)
 			}
 		}
 

@@ -32,7 +32,8 @@ export async function batch<TItem, TResult>(
 	async function next(): Promise<void> {
 		while (cursor < items.length) {
 			const i = cursor++
-			const item = items[i]!
+			const item = items[i]
+			if (item === undefined) continue
 			try {
 				results[i] = await fn(item, i)
 			} catch (e) {

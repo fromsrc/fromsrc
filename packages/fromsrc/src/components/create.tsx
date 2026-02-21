@@ -50,7 +50,8 @@ function CreateBase({ package: pkg = "fromsrc" }: CreateProps): ReactNode {
 			}
 
 			e.preventDefault()
-			setActive(managers[nextIndex]!)
+			const next = managers[nextIndex]
+			if (next) setActive(next)
 			const tabs = tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
 			tabs?.[nextIndex]?.focus()
 		},

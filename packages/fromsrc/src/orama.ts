@@ -116,7 +116,9 @@ export function createOramaAdapter(config: OramaConfig): SearchAdapter {
 			const hits = parsehits(json)
 			const result: SearchResult[] = []
 			for (let i = 0; i < hits.length; i++) {
-				const item = maphit(hits[i]!, i, hits.length)
+				const hit = hits[i]
+				if (!hit) continue
+				const item = maphit(hit, i, hits.length)
 				if (item) result.push(item)
 			}
 			return result

@@ -18,7 +18,8 @@ type titleelement = {
 function parse(meta: string): { title: string; cleaned: string } | null {
 	const match = meta.match(pattern)
 	if (!match) return null
-	const title = match[1] || match[2]!
+	const title = match[1] || match[2]
+	if (!title) return null
 	const cleaned = meta.replace(pattern, "").trim()
 	return { title, cleaned }
 }

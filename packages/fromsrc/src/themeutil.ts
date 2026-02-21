@@ -78,7 +78,10 @@ function luminance(hex: string): number {
 		const c = Number.parseInt(hex.slice(i, i + 2), 16) / 255
 		return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
 	})
-	return 0.2126 * rgb[0]! + 0.7152 * rgb[1]! + 0.0722 * rgb[2]!
+	const red = rgb[0] ?? 0
+	const green = rgb[1] ?? 0
+	const blue = rgb[2] ?? 0
+	return 0.2126 * red + 0.7152 * green + 0.0722 * blue
 }
 
 export function contrastRatio(hex1: string, hex2: string): number {

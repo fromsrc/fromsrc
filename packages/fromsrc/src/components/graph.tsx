@@ -101,7 +101,8 @@ export function Graph({
 		}
 
 		for (let i = 0; i < nodes.length; i++) {
-			const node = nodes[i]!
+			const node = nodes[i]
+			if (!node) continue
 			const pos = positions.get(node.id)
 			if (!pos) continue
 
@@ -224,7 +225,8 @@ export function Graph({
 				case " ": {
 					if (focused >= 0 && onNodeClick) {
 						e.preventDefault()
-						onNodeClick(nodes[focused]!)
+						const node = nodes[focused]
+						if (node) onNodeClick(node)
 					}
 					break
 				}
