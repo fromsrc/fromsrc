@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 const items = [
-	{ keys: ["\u2318K"], label: "search" },
+	{ keys: ["\u2318K", "/"], label: "search" },
 	{ keys: ["\u2190", "\u2192"], label: "prev / next page" },
 	{ keys: ["\u2191", "\u2193"], label: "scroll" },
 ]

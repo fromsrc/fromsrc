@@ -27,6 +27,12 @@ function tosearchdoc(doc: DocMeta | SearchDoc): SearchDoc {
 	return { ...doc, content: "" }
 }
 
+function iseditable(target: EventTarget | null): boolean {
+	if (!(target instanceof HTMLElement)) return false
+	const tag = target.tagName
+	return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable
+}
+
 export function Search({
 	basePath = "/docs",
 	docs = [],
@@ -63,6 +69,11 @@ export function Search({
 	useEffect(() => {
 		const handler = (event: KeyboardEvent): void => {
 			if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+				event.preventDefault()
+				setOpen(true)
+			}
+			const slash = event.key === "/" || event.code === "Slash"
+			if (slash && !event.metaKey && !event.ctrlKey && !event.altKey && !iseditable(event.target)) {
 				event.preventDefault()
 				setOpen(true)
 			}
