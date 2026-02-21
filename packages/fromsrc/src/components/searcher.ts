@@ -1,44 +1,52 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { z } from "zod"
 import type { SearchResult } from "../search"
 
-interface row {
-	slug: string
-	title: string
-	description?: string
-	snippet?: string
-	anchor?: string
-	score: number
+const schema = z.array(
+	z.object({
+		slug: z.string(),
+		title: z.string(),
+		description: z.string().optional(),
+		snippet: z.string().optional(),
+		anchor: z.string().optional(),
+		score: z.number(),
+	}),
+)
+
+interface cacheentry {
+	at: number
+	results: SearchResult[]
 }
 
-const store = new Map<string, SearchResult[]>()
+const ttl = 1000 * 60 * 5
+const store = new Map<string, cacheentry>()
+const inflight = new Map<string, Promise<SearchResult[]>>()
 
 function key(endpoint: string, query: string, limit: number): string {
 	return `${endpoint}::${query}::${limit}`
 }
 
-function parse(value: unknown): SearchResult[] {
-	if (!Array.isArray(value)) return []
-	const result: SearchResult[] = []
-	for (const item of value) {
-		if (!item || typeof item !== "object") continue
-		const row = item as row
-		if (typeof row.slug !== "string" || typeof row.title !== "string") continue
-		if (typeof row.score !== "number") continue
-		result.push({
-			doc: {
-				slug: row.slug,
-				title: row.title,
-				description: typeof row.description === "string" ? row.description : undefined,
-				content: "",
-			},
-			snippet: typeof row.snippet === "string" ? row.snippet : undefined,
-			anchor: typeof row.anchor === "string" ? row.anchor : undefined,
-			score: row.score,
-		})
-	}
-	return result
+function convert(rows: z.infer<typeof schema>): SearchResult[] {
+	return rows.map((row) => ({
+		doc: {
+			slug: row.slug,
+			title: row.title,
+			description: row.description,
+			content: "",
+		},
+		snippet: row.snippet,
+		anchor: row.anchor,
+		score: row.score,
+	}))
+}
+
+async function load(endpoint: string, query: string, limit: number, signal: AbortSignal): Promise<SearchResult[]> {
+	const params = new URLSearchParams({ q: query, limit: String(limit) })
+	const response = await fetch(`${endpoint}?${params}`, { signal })
+	const json: unknown = await response.json()
+	return convert(schema.parse(json))
 }
 
 export function useSearcher(endpoint: string | undefined, query: string, limit: number) {
@@ -55,23 +63,23 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 
 		const cachekey = key(endpoint, text, limit)
 		const cached = store.get(cachekey)
-		if (cached) {
-			setResults(cached)
+		if (cached && Date.now() - cached.at < ttl) {
+			setResults(cached.results)
 			setLoading(false)
 			return
 		}
 
 		const controller = new AbortController()
 		setLoading(true)
-		const params = new URLSearchParams({ q: text, limit: String(limit) })
 
-		fetch(`${endpoint}?${params}`, { signal: controller.signal })
-			.then((response) => response.json())
+		const request = inflight.get(cachekey) ?? load(endpoint, text, limit, controller.signal)
+		if (!inflight.has(cachekey)) inflight.set(cachekey, request)
+
+		request
 			.then((value) => {
 				if (controller.signal.aborted) return
-				const parsed = parse(value)
-				store.set(cachekey, parsed)
-				setResults(parsed)
+				store.set(cachekey, { at: Date.now(), results: value })
+				setResults(value)
 				setLoading(false)
 			})
 			.catch(() => {
@@ -79,10 +87,12 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 				setResults([])
 				setLoading(false)
 			})
+			.finally(() => {
+				if (inflight.get(cachekey) === request) inflight.delete(cachekey)
+			})
 
 		return () => controller.abort()
 	}, [endpoint, query, limit])
 
 	return { results, loading }
 }
-
