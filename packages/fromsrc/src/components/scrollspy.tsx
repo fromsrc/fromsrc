@@ -22,7 +22,7 @@ function ScrollSpy({
 	useEffect(() => {
 		const elements = items
 			.map((item) => document.getElementById(item.id))
-			.filter(Boolean) as HTMLElement[]
+			.filter((item): item is HTMLElement => item instanceof HTMLElement)
 
 		if (elements.length === 0) return
 
@@ -32,8 +32,9 @@ function ScrollSpy({
 					.filter((e) => e.isIntersecting)
 					.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
 
-				if (visible.length > 0) {
-					setActiveId(visible[0]!.target.id)
+				const first = visible[0]
+				if (first?.target instanceof HTMLElement) {
+					setActiveId(first.target.id)
 				}
 			},
 			{
