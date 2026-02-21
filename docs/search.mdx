@@ -101,6 +101,22 @@ const adapter = createAlgoliaAdapter({
 <Search docs={docs} adapter={adapter} />
 ```
 
+## search api
+
+fromsrc includes a typed search route for remote ui and custom clients:
+
+```bash
+/api/search?q=future+adapters&limit=8
+```
+
+response fields:
+- `slug`
+- `title`
+- `description`
+- `snippet`
+- `anchor`
+- `score`
+
 ## keyboard shortcuts
 
 | shortcut | action |
