@@ -1,5 +1,5 @@
 import { addDocument, createIndex, serializeIndex, type SearchIndex } from "fromsrc"
-import { sendjson } from "@/app/api/_lib/json"
+import { sendjsonwithheaders } from "@/app/api/_lib/json"
 import { getSearchDocs } from "@/app/docs/_lib/content"
 
 interface entry {
@@ -39,5 +39,17 @@ async function load(): Promise<SearchIndex> {
 }
 
 export async function GET(request: Request) {
-	return sendjson(request, await load(), cachecontrol)
+	const started = performance.now()
+	const hit = Boolean(cached && Date.now() - cached.at < ttl)
+	const value = await load()
+	const duration = performance.now() - started
+	return sendjsonwithheaders(
+		request,
+		value,
+		cachecontrol,
+		{
+			"Server-Timing": `index;dur=${duration.toFixed(2)}`,
+			"X-Search-Index-Cache": hit ? "hit" : "miss",
+		},
+	)
 }
