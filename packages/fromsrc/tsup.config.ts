@@ -120,6 +120,7 @@ export default defineConfig([
 	{
 		entry: ["src/next.ts", "src/reactrouter.ts", "src/vite.ts", "src/tanstack.ts", "src/remix.ts", "src/astro.ts"],
 		format: ["esm"],
+		bundle: false,
 		dts: true,
 		treeshake: true,
 		splitting: false,
