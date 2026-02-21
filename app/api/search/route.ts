@@ -15,6 +15,7 @@ interface entry {
 }
 
 const cache = new Map<string, entry>()
+const inflight = new Map<string, Promise<unknown>>()
 const ttl = 1000 * 60 * 5
 const max = 200
 const headers = { "cache-control": "public, max-age=60, s-maxage=300" }
@@ -38,6 +39,29 @@ function set(key: string, value: unknown): unknown {
 	return value
 }
 
+async function compute(query: string | undefined, limit: number): Promise<unknown> {
+	if (!query) {
+		const docs = await getAllDocs()
+		return docs.slice(0, limit).map((doc) => ({
+			slug: doc.slug,
+			title: doc.title,
+			description: doc.description,
+			snippet: undefined,
+			anchor: undefined,
+			score: 0,
+		}))
+	}
+	const docs = await getSearchDocs()
+	return localSearch.search(query, docs, limit).map((result) => ({
+		slug: result.doc.slug,
+		title: result.doc.title,
+		description: result.doc.description,
+		snippet: result.snippet,
+		anchor: result.anchor,
+		score: result.score,
+	}))
+}
+
 export async function GET(request: Request) {
 	const url = new URL(request.url)
 	const values = schema.parse({
@@ -49,38 +73,13 @@ export async function GET(request: Request) {
 	const cached = get(key)
 	if (cached) return Response.json(cached, { headers })
 
-	if (!values.q) {
-		const docs = await getAllDocs()
-		return Response.json(
-			set(
-				key,
-				docs.slice(0, values.limit).map((doc) => ({
-					slug: doc.slug,
-					title: doc.title,
-					description: doc.description,
-					snippet: undefined,
-					anchor: undefined,
-					score: 0,
-				})),
-			),
-			{ headers },
-		)
-	}
-
-	const docs = await getSearchDocs()
-	const results = localSearch.search(values.q, docs, values.limit)
+	const pending = inflight.get(key) ?? compute(values.q, values.limit)
+	if (!inflight.has(key)) inflight.set(key, pending)
+	const results = await pending.finally(() => {
+		if (inflight.get(key) === pending) inflight.delete(key)
+	})
 	return Response.json(
-		set(
-			key,
-			results.map((result) => ({
-				slug: result.doc.slug,
-				title: result.doc.title,
-				description: result.doc.description,
-				snippet: result.snippet,
-				anchor: result.anchor,
-				score: result.score,
-			})),
-		),
+		set(key, results),
 		{ headers },
 	)
 }
