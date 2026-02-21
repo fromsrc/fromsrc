@@ -8,6 +8,7 @@ import {
 	useContext,
 	useEffect,
 	useId,
+	useMemo,
 	useRef,
 	useState,
 } from "react"
@@ -55,8 +56,13 @@ export function CodeGroup({
 	const [active, rawset] = useState(defaultValue ?? "")
 	const [list, setlist] = useState<string[]>([])
 	const groupid = group?.trim() || "global"
-	const storekey = `${key}:${groupid}`
-	const eventkey = `${storekey}:event`
+	const basekey = `${key}:${groupid}`
+	const signature = useMemo(
+		() => (list.length === 0 ? "default" : list.map((value) => safe(value)).join("|")),
+		[list],
+	)
+	const storekey = `${basekey}:${signature}`
+	const eventkey = `${basekey}:event`
 	const uid = useId().replace(/[:]/g, "")
 
 	const add = useCallback((value: string): void => {
@@ -69,21 +75,24 @@ export function CodeGroup({
 
 	useEffect(() => {
 		if (list.length === 0) return
+		if (persist) {
+			try {
+				const stored = localStorage.getItem(storekey)
+				if (stored && list.includes(stored)) {
+					if (stored !== active) rawset(stored)
+					return
+				}
+				const fallback = localStorage.getItem(basekey)
+				if (fallback && list.includes(fallback)) {
+					if (fallback !== active) rawset(fallback)
+					return
+				}
+			} catch {}
+		}
 		if (active && list.includes(active)) return
 		const first = list[0] ?? ""
-		if (!persist) {
-			rawset(defaultValue && list.includes(defaultValue) ? defaultValue : first)
-			return
-		}
-		try {
-			const stored = localStorage.getItem(storekey)
-			if (stored && list.includes(stored)) {
-				rawset(stored)
-				return
-			}
-		} catch {}
 		rawset(defaultValue && list.includes(defaultValue) ? defaultValue : first)
-	}, [active, defaultValue, list, persist, storekey])
+	}, [active, basekey, defaultValue, list, persist, storekey])
 
 	useEffect(() => {
 		if (!persist) return
@@ -100,11 +109,12 @@ export function CodeGroup({
 			rawset(value)
 			if (!persist) return
 			try {
+				localStorage.setItem(basekey, value)
 				localStorage.setItem(storekey, value)
 			} catch {}
 			window.dispatchEvent(new CustomEvent(eventkey, { detail: value }))
 		},
-		[eventkey, persist, storekey],
+		[basekey, eventkey, persist, storekey],
 	)
 
 	return (
@@ -117,11 +127,13 @@ export function CodeGroup({
 export function CodeTab({ value, label, children }: CodeTabProps): ReactNode {
 	const ctx = useContext(context)
 	if (!ctx) return null
+	const add = ctx.add
+	const remove = ctx.remove
 
 	useEffect(() => {
-		ctx.add(value)
-		return () => ctx.remove(value)
-	}, [ctx, value])
+		add(value)
+		return () => remove(value)
+	}, [add, remove, value])
 
 	const isactive = ctx.active === value || (!ctx.active && ctx.list[0] === value)
 	const tabid = `${ctx.prefix}-tab-${safe(value)}`
