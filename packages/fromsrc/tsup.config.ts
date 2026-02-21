@@ -93,7 +93,7 @@ export default defineConfig([
 		bundle: false,
 		treeshake: true,
 		dts: false,
-		clean: true,
+		clean: false,
 		external,
 		onSuccess: async () => {
 			finish()
