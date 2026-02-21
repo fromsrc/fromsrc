@@ -109,6 +109,12 @@ fromsrc includes a typed search route for remote ui and custom clients:
 /api/search?q=future+adapters&limit=8
 ```
 
+```tsx
+import { Search } from "fromsrc/client"
+
+<Search basePath="/docs" endpoint="/api/search" />
+```
+
 response fields:
 - `slug`
 - `title`

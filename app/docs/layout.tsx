@@ -5,14 +5,14 @@ import { MobileNavigation } from "./_components/mobilenav"
 import { SearchModal } from "./_components/search"
 import { Shortcuts } from "./_components/shortcuts"
 import { Sidebar } from "./_components/sidebar"
-import { getAllDocs, getSearchDocs } from "./_lib/content"
+import { getAllDocs } from "./_lib/content"
 
 export default async function DocsLayout({ children }: { children: ReactNode }) {
-	const [docs, searchDocs] = await Promise.all([getAllDocs(), getSearchDocs()])
+	const docs = await getAllDocs()
 	return (
 		<>
 			<MobileNavigation />
-			<SearchModal docs={searchDocs} />
+			<SearchModal />
 			<Shortcuts />
 			<HeadingCopy />
 			<div className="flex min-h-screen bg-bg">
