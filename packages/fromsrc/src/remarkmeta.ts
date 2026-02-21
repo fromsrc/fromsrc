@@ -17,8 +17,8 @@ function parseRange(raw: string): number[] {
 		const trimmed = part.trim()
 		if (trimmed.includes("-")) {
 			const [start, end] = trimmed.split("-")
-			const a = Number.parseInt(start!, 10)
-			const b = Number.parseInt(end!, 10)
+			const a = Number.parseInt(start ?? "", 10)
+			const b = Number.parseInt(end ?? "", 10)
 			if (!Number.isNaN(a) && !Number.isNaN(b)) {
 				for (let i = a; i <= b; i++) result.push(i)
 			}
@@ -47,17 +47,18 @@ export function parseMeta(meta: string): CodeMeta {
 
 	while ((match = pattern.exec(meta)) !== null) {
 		if (match[1] && match[2]) {
-			const key = match[1]!
-			const val = match[2]!
+			const key = match[1]
+			const val = match[2]
+			if (!key || !val) continue
 			if (val.startsWith('"') || val.startsWith("'")) {
 				result[key] = val.slice(1, -1)
 			} else {
 				result[key] = parseBrace(val)
 			}
 		} else if (match[3]) {
-			result.highlight = parseRange(match[3]!.slice(1, -1))
+			result.highlight = parseRange(match[3].slice(1, -1))
 		} else if (match[4]) {
-			result[match[4]!] = true
+			result[match[4]] = true
 		}
 	}
 	return result

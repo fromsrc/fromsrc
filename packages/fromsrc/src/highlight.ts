@@ -32,11 +32,12 @@ export function generateSnippet(text: string, query: string, options?: SnippetOp
 	let charCount = 0
 	let matchWord = 0
 	for (let i = 0; i < words.length; i++) {
-		if (charCount + words[i]!.length > idx) {
+		const word = words[i] ?? ""
+		if (charCount + word.length > idx) {
 			matchWord = i
 			break
 		}
-		charCount += words[i]!.length
+		charCount += word.length
 	}
 	const startWord = Math.max(0, matchWord - surrounding * 2)
 	const endWord = Math.min(words.length, matchWord + surrounding * 2 + 1)
@@ -71,7 +72,9 @@ export function tokenize(query: string): string[] {
 	const regex = /"([^"]+)"|(\S+)/g
 	let match: RegExpExecArray | null
 	while ((match = regex.exec(query)) !== null) {
-		terms.push(match[1] ?? match[2]!)
+		const term = match[1] ?? match[2]
+		if (!term) continue
+		terms.push(term)
 	}
 	return terms
 }

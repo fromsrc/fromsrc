@@ -1,4 +1,4 @@
-import type { Heading, PhrasingContent, Root, Text } from "mdast"
+import type { Heading, PhrasingContent, Root } from "mdast"
 import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
@@ -6,17 +6,20 @@ const pattern = /\s*\{#([a-zA-Z0-9_-]+)\}\s*$/
 
 function findTrailingId(children: PhrasingContent[]): { index: number; id: string } | null {
 	for (let i = children.length - 1; i >= 0; i--) {
-		const child = children[i]!
+		const child = children[i]
+		if (!child) continue
 		if (child.type === "text") {
 			const match = child.value.match(pattern)
-			if (match) return { index: i, id: match[1]! }
+			const id = match?.[1]
+			if (id) return { index: i, id }
 		}
 	}
 	return null
 }
 
 function stripId(node: Heading, index: number) {
-	const child = node.children[index]! as Text
+	const child = node.children[index]
+	if (!child || child.type !== "text") return
 	const stripped = child.value.replace(pattern, "")
 	if (stripped) {
 		node.children[index] = { ...child, value: stripped }

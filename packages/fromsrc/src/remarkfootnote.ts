@@ -29,7 +29,10 @@ export const remarkFootnote: Plugin<[], Root> = () => (tree) => {
 		if (text?.type !== "text" || !text.value) return true
 		const match = text.value.match(defPattern)
 		if (!match) return true
-		definitions.set(match[1]!, match[2]!)
+		const id = match[1]
+		const value = match[2]
+		if (!id || value === undefined) return true
+		definitions.set(id, value)
 		return false
 	})
 
@@ -47,7 +50,8 @@ export const remarkFootnote: Plugin<[], Root> = () => (tree) => {
 			if (match.index > last) {
 				parts.push({ type: "text", value: text.slice(last, match.index) })
 			}
-			const id = match[1]!
+			const id = match[1]
+			if (!id) continue
 			if (!seen.includes(id)) seen.push(id)
 			parts.push({
 				type: "mdxJsxTextElement",
