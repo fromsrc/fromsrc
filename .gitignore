@@ -1,5 +1,6 @@
 *.tsbuildinfo
 search-*.png
+*-1920.png
 node_modules
 .DS_Store
 .vercel
