@@ -55,8 +55,12 @@ export async function generateTypes(config: TypegenConfig): Promise<string> {
 		total++
 		for (const [key, value] of Object.entries(data)) {
 			const type = inferType(value)
-			if (!fieldTypes.has(key)) fieldTypes.set(key, new Set())
-			fieldTypes.get(key)!.add(type)
+			let field = fieldTypes.get(key)
+			if (!field) {
+				field = new Set()
+				fieldTypes.set(key, field)
+			}
+			field.add(type)
 			fieldCounts.set(key, (fieldCounts.get(key) ?? 0) + 1)
 		}
 	}

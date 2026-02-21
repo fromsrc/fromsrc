@@ -26,7 +26,9 @@ function isOpen(node: AstNode): { kind: string; title?: string } | null {
 	const text = extractText(node).trim()
 	const match = text.match(openPattern)
 	if (!match) return null
-	const kind = match[1]!.toLowerCase()
+	const raw = match[1]
+	if (!raw) return null
+	const kind = raw.toLowerCase()
 	if (!types.has(kind)) return null
 	return { kind, title: match[2]?.trim() || undefined }
 }
@@ -55,7 +57,11 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 	let i = 0
 
 	while (i < nodes.length) {
-		const node = nodes[i]!
+		const node = nodes[i]
+		if (!node) {
+			i++
+			continue
+		}
 		const open = isOpen(node)
 
 		if (!open) {
@@ -70,8 +76,10 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 		const inner: AstNode[] = []
 		i++
 
-		while (i < nodes.length && !isClose(nodes[i]!)) {
-			inner.push(nodes[i]!)
+		while (i < nodes.length) {
+			const child = nodes[i]
+			if (!child || isClose(child)) break
+			inner.push(child)
 			i++
 		}
 

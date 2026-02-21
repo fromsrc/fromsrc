@@ -62,7 +62,8 @@ async function readMeta(dir: string): Promise<Record<string, string | metaentry>
 async function extractTitle(file: string): Promise<string | null> {
 	try {
 		const m = (await readFile(file, "utf-8")).match(/^#\s+(.+)$/m)
-		return m ? m[1]!.trim() : null
+		const title = m?.[1]
+		return title ? title.trim() : null
 	} catch { return null }
 }
 

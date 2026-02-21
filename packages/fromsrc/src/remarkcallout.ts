@@ -28,7 +28,8 @@ function extractType(node: Blockquote): string | null {
 	if (text?.type !== "text" || !text.value) return null
 	const match = text.value.match(pattern)
 	if (!match) return null
-	return match[1]!.toLowerCase()
+	const raw = match[1]
+	return raw ? raw.toLowerCase() : null
 }
 
 function stripPrefix(node: Blockquote): AstNode[] {

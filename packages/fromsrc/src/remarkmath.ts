@@ -35,7 +35,9 @@ function transformer(tree: Root) {
 		if (child?.type !== "text") return
 		const match = child.value.trim().match(blockPattern)
 		if (!match) return
-		parent.children[index] = makeBlock(match[1]!.trim())
+		const block = match[1]
+		if (block === undefined) return
+		parent.children[index] = makeBlock(block.trim())
 	})
 
 	visit(tree, "paragraph", (node: Paragraph) => {
@@ -60,7 +62,8 @@ function transformer(tree: Root) {
 						value: child.value.slice(cursor, match.index),
 					} as paragraphchild)
 				}
-				next.push(makeInline(match[1]!))
+				const inline = match[1]
+				if (inline !== undefined) next.push(makeInline(inline))
 				cursor = match.index + match[0].length
 			}
 
