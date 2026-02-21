@@ -8,7 +8,7 @@ add fast full-text search to your documentation.
 
 ## basic setup
 
-fromsrc includes orama search by default:
+fromsrc includes a built-in local search adapter by default:
 
 ```tsx
 import { Search } from "fromsrc/client"
@@ -138,9 +138,24 @@ export function SearchDialog({ onClose }: Props) {
 }
 ```
 
+## orama integration
+
+use the built-in orama adapter for hosted search:
+
+```tsx
+import { createoramaadapter } from "fromsrc"
+
+const adapter = createoramaadapter({
+  endpoint: process.env.NEXT_PUBLIC_ORAMA_ENDPOINT!,
+  key: process.env.ORAMA_API_KEY,
+})
+
+<Search docs={docs} adapter={adapter} />
+```
+
 ## algolia integration
 
-use algolia instead of orama:
+use the built-in algolia adapter:
 
 ```tsx
 import algoliasearch from "algoliasearch"

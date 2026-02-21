@@ -63,6 +63,22 @@ const myAdapter = createSearchAdapter({
 
 ## hosted adapters
 
+### orama
+
+use the built-in orama adapter for hosted search endpoints:
+
+```tsx
+import { Search } from "fromsrc/client"
+import { createoramaadapter } from "fromsrc"
+
+const adapter = createoramaadapter({
+  endpoint: "https://your-orama-endpoint/search",
+  key: "your-api-key"
+})
+
+<Search docs={docs} adapter={adapter} />
+```
+
 ### algolia
 
 use the built-in algolia adapter for remote hosted search:
