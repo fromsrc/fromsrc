@@ -7,10 +7,9 @@ import { useDebounce } from "../hooks/debounce"
 import { useLocalStorage } from "../hooks/storage"
 import type { SearchAdapter } from "../search"
 import { localSearch } from "../search"
-import { IconSearch } from "./icons"
-import { Hints } from "./hints"
-import { Recent } from "./recent"
-import { Results, getOptionId } from "./results"
+import { getOptionId } from "./results"
+import { Panel } from "./panel"
+import { Trigger } from "./trigger"
 import { useSearcher } from "./searcher"
 
 export interface SearchProps {
@@ -69,7 +68,7 @@ export function Search({
 		return remote.results
 	}, [endpoint, remote.results, value])
 	const results = endpoint ? remoteResults : local
-	const loading = endpoint && remote.loading
+	const loading = Boolean(endpoint) && remote.loading
 	const safe = results.length === 0 ? -1 : Math.min(selected, results.length - 1)
 	const openmodal = useCallback((): void => {
 		const active = document.activeElement
@@ -174,36 +173,24 @@ export function Search({
 
 	if (!open) {
 		if (hidden) return null
-		return (
-			<button type="button" onClick={openmodal} className="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted bg-surface border border-line rounded-lg hover:border-dim transition-colors">
-				<IconSearch className="w-3.5 h-3.5" size={14} />
-				<span className="flex-1 text-left">search</span>
-				<kbd className="px-1.5 py-0.5 text-[10px] bg-bg border border-line rounded">⌘K</kbd>
-			</button>
-		)
+		return <Trigger onOpen={openmodal} />
 	}
 
 	return (
-		<div className="fixed inset-0 z-[100]">
-			<button type="button" className="fixed inset-0 bg-bg/80 backdrop-blur-sm cursor-default" onClick={() => setOpen(false)} aria-label="close search" />
-			<div
-				className="relative z-10 max-w-lg mx-auto mt-[20vh]"
-				role="dialog"
-				aria-modal="true"
-				aria-label="search documentation"
-			>
-				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
-					<div className="flex items-center gap-3 px-4 border-b border-line">
-						<IconSearch className="w-4 h-4 text-muted" size={16} />
-						<input ref={input} type="text" value={query} onChange={(event) => updatequery(event.target.value)} onKeyDown={onkey} placeholder="search documentation..." className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={results.length > 0} aria-haspopup="listbox" aria-controls="search-listbox" aria-activedescendant={safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
-						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">esc</kbd>
-					</div>
-					<div className="max-h-80 overflow-y-auto">
-						{!value.trim() && recent.length > 0 ? <Recent items={recent} onSelect={updatequery} /> : loading ? <div className="p-8 text-center text-muted text-sm">loading</div> : results.length === 0 ? <div className="p-8 text-center text-muted text-sm">no results</div> : <Results results={results} selected={safe} query={value} listRef={list} onResultClick={navigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && navigate(slug, anchor)} />}
-					</div>
-					<Hints />
-				</div>
-			</div>
-		</div>
+		<Panel
+			query={query}
+			value={value}
+			safe={safe}
+			recent={recent}
+			loading={loading}
+			results={results}
+			input={input}
+			list={list}
+			onClose={() => setOpen(false)}
+			onChange={updatequery}
+			onKey={onkey}
+			onSelect={updatequery}
+			onNavigate={navigate}
+		/>
 	)
 }
