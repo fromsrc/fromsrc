@@ -1,18 +1,24 @@
-import { addDocument, createIndex, serializeIndex, type SearchIndex } from "fromsrc"
+import { addDocument, createIndex, deserializeIndex, serializeIndex, type SearchIndex } from "fromsrc"
 import { sendjsonwithheaders } from "@/app/api/_lib/json"
 import { getSearchDocs } from "@/app/docs/_lib/content"
 
 interface entry {
 	at: number
-	value: SearchIndex
+	value: indexpayload
+}
+
+interface indexpayload {
+	documents: SearchIndex["documents"]
+	terms: [string, number[]][]
+	version: number
 }
 
 const ttl = 1000 * 60 * 5
 const cachecontrol = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
 let cached: entry | null = null
-let inflight: Promise<SearchIndex> | null = null
+let inflight: Promise<indexpayload> | null = null
 
-async function build(): Promise<SearchIndex> {
+async function build(): Promise<indexpayload> {
 	const docs = await getSearchDocs()
 	const index = createIndex()
 	for (const doc of docs) {
@@ -24,10 +30,15 @@ async function build(): Promise<SearchIndex> {
 			content: doc.content,
 		})
 	}
-	return JSON.parse(serializeIndex(index)) as SearchIndex
+	const validated = deserializeIndex(serializeIndex(index))
+	return {
+		documents: validated.documents,
+		terms: [...validated.terms.entries()],
+		version: validated.version,
+	}
 }
 
-async function load(): Promise<SearchIndex> {
+async function load(): Promise<indexpayload> {
 	if (cached && Date.now() - cached.at < ttl) return cached.value
 	const pending = inflight ?? build()
 	if (!inflight) inflight = pending
