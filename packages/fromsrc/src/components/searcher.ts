@@ -35,6 +35,18 @@ function key(endpoint: string, query: string, limit: number): string {
 	return `${endpoint}::${normalize(query)}::${limit}`
 }
 
+function getCache(key: string): cacheentry | null {
+	const value = store.get(key)
+	if (!value) return null
+	if (Date.now() - value.at >= ttl) {
+		store.delete(key)
+		return null
+	}
+	store.delete(key)
+	store.set(key, value)
+	return value
+}
+
 function convert(rows: z.infer<typeof schema>): SearchResult[] {
 	return rows.map((row) => ({
 		doc: {
@@ -51,6 +63,9 @@ function convert(rows: z.infer<typeof schema>): SearchResult[] {
 }
 
 function saveWithEtag(key: string, value: SearchResult[], etag?: string): void {
+	if (store.has(key)) {
+		store.delete(key)
+	}
 	if (store.size >= max) {
 		const oldest = store.keys().next().value
 		if (oldest) store.delete(oldest)
@@ -94,18 +109,23 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 		}
 
 		const cachekey = key(endpoint, text, limit)
-		const cached = store.get(cachekey)
-		if (cached && Date.now() - cached.at < ttl) {
+		const cached = getCache(cachekey)
+		if (cached) {
 			setResults(cached.results)
 			setLoading(false)
 			return
+		}
+
+		const stale = store.get(cachekey)
+		if (stale) {
+			setResults(stale.results)
 		}
 
 		let active = true
 		const controller = new AbortController()
 		setLoading(true)
 
-		const request = inflight.get(cachekey) ?? load(endpoint, text, limit, cached, controller.signal)
+		const request = inflight.get(cachekey) ?? load(endpoint, text, limit, stale, controller.signal)
 		if (!inflight.has(cachekey)) inflight.set(cachekey, request)
 
 		request
