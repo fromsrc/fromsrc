@@ -76,4 +76,17 @@ export default defineConfig([
 			writeFileSync(path, `"use client";\n${content}`)
 		},
 	},
+	{
+		entry: ["src/tanstack.ts"],
+		format: ["esm"],
+		dts: true,
+		treeshake: true,
+		splitting: false,
+		external: ["react", "react/jsx-runtime", "@tanstack/react-router"],
+		onSuccess: async () => {
+			const path = "dist/tanstack.js"
+			const content = readFileSync(path, "utf-8")
+			writeFileSync(path, `"use client";\n${content}`)
+		},
+	},
 ])

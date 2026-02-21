@@ -25,6 +25,10 @@
 			"types": "./dist/vite.d.ts",
 			"import": "./dist/vite.js"
 		},
+		"./tanstack": {
+			"types": "./dist/tanstack.d.ts",
+			"import": "./dist/tanstack.js"
+		},
 		"./styles/reset.css": "./styles/reset.css"
 	},
 	"files": [
@@ -47,6 +51,7 @@
 		"zod": "^3.24.0"
 	},
 	"devDependencies": {
+		"@tanstack/react-router": "^1.133.42",
 		"@types/hast": "^3.0.4",
 		"@types/mdast": "^4.0.4",
 		"@types/node": "^22.0.0",
@@ -60,10 +65,14 @@
 		"mermaid": ">=10.0.0",
 		"next": ">=14.0.0",
 		"react": ">=18.0.0",
+		"@tanstack/react-router": ">=1.0.0",
 		"react-router-dom": ">=7.0.0"
 	},
 	"peerDependenciesMeta": {
 		"mermaid": {
+			"optional": true
+		},
+		"@tanstack/react-router": {
 			"optional": true
 		},
 		"react-router-dom": {
