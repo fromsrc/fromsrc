@@ -1,56 +1,73 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { gzipSync } from "node:zlib";
 
 const list = [
 	{
 		name: "readtime",
 		code: "import { calcReadTime } from 'fromsrc/readtime'; export default calcReadTime('a b c');",
 		max: 250,
+		maxgzip: 170,
 	},
 	{
 		name: "searchscore",
 		code: "import { scoreterms, termindex } from 'fromsrc/searchscore'; const data={title:'intro',slug:'/intro',description:'d',content:'text',titleindex:termindex(['intro']),slugindex:termindex(['intro']),descriptionindex:termindex(['d']),headingindex:termindex(['intro']),contentindex:termindex(['text'])}; export default scoreterms(['intro'],data);",
 		max: 1400,
+		maxgzip: 740,
 	},
 	{
 		name: "searchindex",
 		code: "import { addDocument, createIndex, search } from 'fromsrc/searchindex'; const index=createIndex(); addDocument(index,{path:'/a',title:'a',headings:['h'],content:'body'}); export default search(index,'a');",
 		max: 1400,
+		maxgzip: 620,
 	},
 	{
 		name: "llms",
 		code: "import { generateLlmsIndex } from 'fromsrc/llms'; export default generateLlmsIndex({title:'a',description:'b',baseUrl:'https://x.y'},[{title:'t',slug:'s'}]);",
 		max: 600,
+		maxgzip: 340,
 	},
 	{
 		name: "next",
 		code: "import { nextAdapter } from 'fromsrc/next'; export default nextAdapter;",
 		max: 650,
+		maxgzip: 360,
+		block: ["react-router-dom", "@tanstack/react-router", "@remix-run/react"],
 	},
 	{
 		name: "reactrouter",
 		code: "import { reactRouterAdapter } from 'fromsrc/react-router'; export default reactRouterAdapter;",
 		max: 600,
+		maxgzip: 320,
+		block: ["next/link", "next/image", "next/navigation", "@tanstack/react-router", "@remix-run/react"],
 	},
 	{
 		name: "tanstack",
 		code: "import { tanstackAdapter } from 'fromsrc/tanstack'; export default tanstackAdapter;",
 		max: 650,
+		maxgzip: 350,
+		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@remix-run/react"],
 	},
 	{
 		name: "remix",
 		code: "import { remixAdapter } from 'fromsrc/remix'; export default remixAdapter;",
 		max: 650,
+		maxgzip: 340,
+		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@tanstack/react-router"],
 	},
 	{
 		name: "astro",
 		code: "import { astroAdapter } from 'fromsrc/astro'; export default astroAdapter;",
 		max: 1250,
+		maxgzip: 660,
+		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@tanstack/react-router", "@remix-run/react"],
 	},
 	{
 		name: "vite",
 		code: "import { viteAdapter } from 'fromsrc/vite'; export default viteAdapter;",
 		max: 1250,
+		maxgzip: 660,
+		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@tanstack/react-router", "@remix-run/react"],
 	},
 ];
 
@@ -96,12 +113,22 @@ try {
 		}
 
 		const size = out.size;
-		const line = `${item.name}: ${size}b (max ${item.max}b)`;
-		if (size > item.max) {
+		const text = await out.text();
+		const gzipsize = gzipSync(Buffer.from(text, "utf8")).byteLength;
+		const line = `${item.name}: ${size}b gzip:${gzipsize}b (max ${item.max}b / ${item.maxgzip}b)`;
+		if (size > item.max || gzipsize > item.maxgzip) {
 			fail = true;
 			console.error(`x ${line}`);
 		} else {
 			console.log(`o ${line}`);
+		}
+		if (item.block) {
+			for (const token of item.block) {
+				if (text.includes(token)) {
+					fail = true;
+					console.error(`x ${item.name}: leaked token "${token}"`);
+				}
+			}
 		}
 	}
 } finally {
