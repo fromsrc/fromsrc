@@ -16,7 +16,8 @@ export function createCache<T>(config?: CacheConfig) {
 	}
 
 	function evictOldest() {
-		const oldest = store.keys().next().value!
+		const oldest = store.keys().next().value
+		if (!oldest) return
 		store.delete(oldest)
 		evictions++
 		onEvict?.(oldest)

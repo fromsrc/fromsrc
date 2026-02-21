@@ -269,13 +269,14 @@ function ContentBase({ source }: ContentProps): JSX.Element {
 										if (lang) {
 											node.properties["data-language"] = lang
 										}
-										const meta = this.options.meta?.__raw || ""
-										const match = meta.match(/title="([^"]*)"/)
-										if (match) {
-											node.properties["data-title"] = match[1]!
-										}
+											const meta = this.options.meta?.__raw || ""
+											const match = meta.match(/title="([^"]*)"/)
+											if (match) {
+												const title = match[1]
+												if (title) node.properties["data-title"] = title
+											}
+										},
 									},
-								},
 							],
 						},
 					],

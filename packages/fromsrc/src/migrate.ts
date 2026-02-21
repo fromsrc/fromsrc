@@ -31,15 +31,16 @@ function convertAdmonitions(content: string): string {
 		} else if (/^:::warning\s*$/.test(line)) {
 			stack.push("Callout")
 			result.push('<Callout type="warning">')
-		} else if (/^:::danger\s*$/.test(line)) {
-			stack.push("Callout")
-			result.push('<Callout type="danger">')
-		} else if (/^:::\s*$/.test(line) && stack.length > 0) {
-			const tag = stack.pop()!
-			result.push(`</${tag}>`)
-		} else {
-			result.push(line)
-		}
+			} else if (/^:::danger\s*$/.test(line)) {
+				stack.push("Callout")
+				result.push('<Callout type="danger">')
+			} else if (/^:::\s*$/.test(line) && stack.length > 0) {
+				const tag = stack.pop()
+				if (!tag) continue
+				result.push(`</${tag}>`)
+			} else {
+				result.push(line)
+			}
 	}
 
 	return result.join("\n")
