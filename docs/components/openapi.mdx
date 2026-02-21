@@ -1,0 +1,58 @@
+---
+title: openapi
+description: openapi spec renderer
+order: 22
+---
+
+render grouped endpoint docs from an openapi spec.
+
+## usage
+
+```mdx
+<Openapi spec={spec} />
+```
+
+## props
+
+| prop | type | default | description |
+|------|------|---------|-------------|
+| spec | string \| object | required | json string or object spec |
+| tag | string | - | exact tag filter |
+| method | string | - | exact method filter |
+| path | string | - | path substring filter |
+
+## schema renderer
+
+`Openapischema` renders nested request/response shapes.
+
+```mdx
+<Openapischema schema={{
+  type: "object",
+  required: ["id"],
+  properties: {
+    id: { type: "string" },
+    total: { type: "number" },
+  },
+}} />
+```
+
+<Openapischema
+  schema={{
+    type: "object",
+    required: ["id"],
+    properties: {
+      id: { type: "string", description: "invoice id" },
+      total: { type: "number", description: "total amount" },
+      lines: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            label: { type: "string" },
+            quantity: { type: "number" },
+          },
+        },
+      },
+    },
+  }}
+/>

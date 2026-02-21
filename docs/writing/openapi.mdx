@@ -1,29 +1,73 @@
 ---
 title: openapi
-description: generate api docs from openapi specs
-order: 1
+description: render endpoint docs from openapi specs
+order: 12
 ---
 
-generate api reference documentation from openapi specifications.
+render api reference pages directly from openapi specifications.
 
-<Callout type="info">
-openapi integration is coming soon.
-</Callout>
+## quick usage
 
-## planned features
+```mdx
+<Openapi spec={spec} />
+```
 
-- automatic endpoint documentation from openapi/swagger specs
-- interactive api playground
-- request/response examples
-- authentication handling
-- schema type generation
+<Openapi
+  spec={{
+    openapi: "3.1.0",
+    info: {
+      title: "billing api",
+      version: "1.0.0",
+      description: "billing endpoints",
+    },
+    paths: {
+      "/invoices": {
+        get: {
+          summary: "list invoices",
+          tags: ["billing"],
+          responses: {
+            "200": {
+              description: "ok",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        amount: { type: "number" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  }}
+/>
 
-## workaround
+## filter endpoints
 
-for now, use the [Endpoint](/docs/components/endpoint) component to manually document api endpoints:
+filter by tag, method, or path substring:
+
+```mdx
+<Openapi spec={spec} tag="billing" />
+<Openapi spec={spec} method="GET" />
+<Openapi spec={spec} path="/invoices" />
+```
+
+## import from json
+
+for larger specs, load json and pass it to `Openapi`:
 
 ```tsx
-<Endpoint method="GET" path="/api/users/:id">
-  fetch a user by id
-</Endpoint>
+import spec from "./openapi.json"
+
+export default function Page() {
+  return <Openapi spec={spec} />
+}
 ```
