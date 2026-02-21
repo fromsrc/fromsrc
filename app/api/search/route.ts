@@ -17,6 +17,7 @@ interface entry {
 const cache = new Map<string, entry>()
 const ttl = 1000 * 60 * 5
 const max = 200
+const headers = { "cache-control": "public, max-age=60, s-maxage=300" }
 
 function get(key: string): unknown | null {
 	const item = cache.get(key)
@@ -46,7 +47,7 @@ export async function GET(request: Request) {
 	const query = values.q?.toLowerCase() ?? ""
 	const key = `${query}::${values.limit}`
 	const cached = get(key)
-	if (cached) return Response.json(cached)
+	if (cached) return Response.json(cached, { headers })
 
 	if (!values.q) {
 		const docs = await getAllDocs()
@@ -62,6 +63,7 @@ export async function GET(request: Request) {
 					score: 0,
 				})),
 			),
+			{ headers },
 		)
 	}
 
@@ -79,5 +81,6 @@ export async function GET(request: Request) {
 				score: result.score,
 			})),
 		),
+		{ headers },
 	)
 }
