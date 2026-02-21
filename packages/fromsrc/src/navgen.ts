@@ -4,6 +4,7 @@ import { basename, extname, join, relative } from "node:path"
 export type NavItem = { title: string; path: string; children?: NavItem[]; order?: number; icon?: string }
 export type NavConfig = { dir: string; extensions?: string[]; orderFile?: string; titleFromFile?: boolean }
 export type NavTree = { items: NavItem[]; flat: NavItem[] }
+export type SidebarItem = { title: string; href: string; icon?: string; items?: SidebarItem[] }
 
 function titleize(s: string): string {
 	return s.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
@@ -129,7 +130,7 @@ export function findNavItem(items: NavItem[], path: string): NavItem | undefined
 	return undefined
 }
 
-export function navToSidebar(items: NavItem[]): object[] {
+export function navToSidebar(items: NavItem[]): SidebarItem[] {
 	return items.map((i) => ({
 		title: i.title, href: i.path, icon: i.icon,
 		...(i.children?.length ? { items: navToSidebar(i.children) } : {}),
