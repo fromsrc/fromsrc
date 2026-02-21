@@ -51,7 +51,7 @@ function transformer(tree: Root) {
 			],
 			children,
 			data: { _mdxExplicitJsx: true },
-		} as unknown as Root["children"][number]
+		} as Root["children"][number]
 	})
 }
 

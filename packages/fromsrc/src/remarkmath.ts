@@ -14,7 +14,7 @@ function makeInline(math: string): paragraphchild {
 		attributes: [{ type: "mdxJsxAttribute" as const, name: "math", value: math }],
 		children: [],
 		data: { _mdxExplicitJsx: true },
-	} as unknown as paragraphchild
+	} as paragraphchild
 }
 
 function makeBlock(math: string): rootchild {
@@ -24,7 +24,7 @@ function makeBlock(math: string): rootchild {
 		attributes: [{ type: "mdxJsxAttribute" as const, name: "math", value: math }],
 		children: [],
 		data: { _mdxExplicitJsx: true },
-	} as unknown as rootchild
+	} as rootchild
 }
 
 function transformer(tree: Root) {

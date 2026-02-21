@@ -67,7 +67,7 @@ function transformer(tree: Root) {
 			attributes: [],
 			children: steps,
 			data: { _mdxExplicitJsx: true },
-		} as unknown as Root["children"][number]
+		} as Root["children"][number]
 	})
 }
 

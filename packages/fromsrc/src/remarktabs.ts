@@ -60,7 +60,7 @@ function transformer(tree: Root) {
 			data: { _mdxExplicitJsx: true },
 		}
 
-		parent.children.splice(index, group.length, element as unknown as Root["children"][number])
+		parent.children.splice(index, group.length, element as Root["children"][number])
 	})
 }
 

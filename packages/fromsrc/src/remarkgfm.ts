@@ -12,7 +12,7 @@ function makeDel(content: string): paragraphchild {
 		attributes: [],
 		children: [{ type: "text" as const, value: content }],
 		data: { _mdxExplicitJsx: true },
-	} as unknown as paragraphchild
+	} as paragraphchild
 }
 
 function makeLink(url: string): paragraphchild {
@@ -22,7 +22,7 @@ function makeLink(url: string): paragraphchild {
 		attributes: [{ type: "mdxJsxAttribute" as const, name: "href", value: url }],
 		children: [{ type: "text" as const, value: url }],
 		data: { _mdxExplicitJsx: true },
-	} as unknown as paragraphchild
+	} as paragraphchild
 }
 
 function transformer(tree: Root) {
