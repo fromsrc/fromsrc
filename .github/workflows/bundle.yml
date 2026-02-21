@@ -1,0 +1,29 @@
+name: bundle
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: install
+        run: bun install --frozen-lockfile
+
+      - name: security
+        run: bun run check:security
+
+      - name: treeshake
+        run: bun run check:shake
+
+      - name: build
+        run: bun run build
