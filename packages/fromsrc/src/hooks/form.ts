@@ -4,6 +4,14 @@ import { useCallback, useState } from "react"
 
 type changeevent = { target: { value: unknown } }
 
+function update<T extends Record<string, unknown>, K extends keyof T>(
+	values: T,
+	field: K,
+	value: T[K],
+): T {
+	return { ...values, [field]: value }
+}
+
 export interface FormState<T extends Record<string, unknown>> {
 	values: T
 	errors: Partial<Record<keyof T, string>>
@@ -31,7 +39,7 @@ export function useForm<T extends Record<string, unknown>>(
 	const set = useCallback(
 		<K extends keyof T>(field: K, value: T[K]) => {
 			setValues((prev) => {
-				const next = { ...prev, [field]: value } as T
+				const next = update(prev, field, value)
 				if (validate) setErrors(validate(next))
 				return next
 			})
