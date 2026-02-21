@@ -4,7 +4,6 @@ import type { JSX, KeyboardEvent as KeyEvent, RefObject } from "react"
 import { useCallback, useRef } from "react"
 import type { SearchResult } from "../search"
 import { IconSearch } from "./icons"
-import { Hints } from "./hints"
 import { Recent } from "./recent"
 import { Results, getOptionId } from "./results"
 
@@ -93,7 +92,7 @@ export function Panel({
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
 						<IconSearch className="w-4 h-4 text-muted" size={16} />
-						<input ref={input} type="text" value={query} onChange={(event) => onChange(event.target.value)} onKeyDown={onKey} placeholder="search documentation..." className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={showRecent || showResults} aria-haspopup="listbox" aria-controls={listId} aria-activedescendant={showResults && safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
+						<input ref={input} type="text" value={query} onChange={(event) => onChange(event.target.value)} onKeyDown={onKey} placeholder="search" className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={showRecent || showResults} aria-haspopup="listbox" aria-controls={listId} aria-activedescendant={showResults && safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
 						<span className="sr-only" role="status" aria-live="polite">
 							{resultStatus}
 						</span>
@@ -102,7 +101,6 @@ export function Panel({
 					<div className="max-h-80 overflow-y-auto" aria-busy={loading}>
 						{showRecent ? <Recent listId={listId} items={recent} onSelect={onSelect} /> : loading ? <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">loading</div> : showResults ? <Results listId={listId} results={results} selected={safe} query={value} listRef={list} onResultClick={onNavigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && onNavigate(slug, anchor)} /> : <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">no results</div>}
 					</div>
-					<Hints />
 				</div>
 			</div>
 		</div>
