@@ -261,15 +261,15 @@ function ContentBase({ source }: ContentProps): JSX.Element {
 								transformerNotationWordHighlight(),
 								transformerCollapse(),
 								{
-									pre(node: { properties: Record<string, string> }) {
-										const ctx = this as unknown as {
-											options: { lang?: string; meta?: { __raw?: string } }
-										}
-										const lang = ctx.options.lang || ""
+									pre(
+										this: { options: { lang?: string; meta?: { __raw?: string } } },
+										node: { properties: Record<string, string> },
+									) {
+										const lang = this.options.lang || ""
 										if (lang) {
 											node.properties["data-language"] = lang
 										}
-										const meta = ctx.options.meta?.__raw || ""
+										const meta = this.options.meta?.__raw || ""
 										const match = meta.match(/title="([^"]*)"/)
 										if (match) {
 											node.properties["data-title"] = match[1]!
