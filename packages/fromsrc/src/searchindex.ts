@@ -19,6 +19,8 @@ export interface IndexConfig {
 	minLength?: number
 }
 
+type jsonrecord = Record<string, unknown>
+
 const DEFAULT_STOPS = new Set([
 	"the", "a", "an", "is", "are", "was", "were", "in", "on", "at",
 	"to", "for", "of", "and", "or", "but", "not", "with", "this", "that",
@@ -91,11 +93,52 @@ export function serializeIndex(index: SearchIndex): string {
 	})
 }
 
+function isrecord(value: unknown): value is jsonrecord {
+	return typeof value === "object" && value !== null
+}
+
+function issearchdocument(value: unknown): value is SearchDocument {
+	if (!isrecord(value)) return false
+	if (typeof value.path !== "string") return false
+	if (typeof value.title !== "string") return false
+	if (typeof value.content !== "string") return false
+	if (!Array.isArray(value.headings) || value.headings.some((item) => typeof item !== "string")) return false
+	if (value.description !== undefined && typeof value.description !== "string") return false
+	if (value.tags !== undefined && (!Array.isArray(value.tags) || value.tags.some((item) => typeof item !== "string"))) {
+		return false
+	}
+	return true
+}
+
+function istermentry(value: unknown): value is [string, number[]] {
+	if (!Array.isArray(value) || value.length !== 2) return false
+	if (typeof value[0] !== "string") return false
+	if (!Array.isArray(value[1]) || value[1].some((item) => typeof item !== "number" || !Number.isInteger(item))) {
+		return false
+	}
+	return true
+}
+
 export function deserializeIndex(data: string): SearchIndex {
-	const parsed = JSON.parse(data)
+	const parsed: unknown = JSON.parse(data)
+	if (!isrecord(parsed)) {
+		throw new Error("invalid search index")
+	}
+	const documents = Array.isArray(parsed.documents) ? parsed.documents : null
+	if (!documents || documents.some((item) => !issearchdocument(item))) {
+		throw new Error("invalid search index documents")
+	}
+	const termsraw = Array.isArray(parsed.terms) ? parsed.terms : null
+	if (!termsraw || termsraw.some((item) => !istermentry(item))) {
+		throw new Error("invalid search index terms")
+	}
+	const version = parsed.version
+	if (typeof version !== "number" || !Number.isInteger(version)) {
+		throw new Error("invalid search index version")
+	}
 	return {
-		documents: parsed.documents,
-		terms: new Map(parsed.terms),
-		version: parsed.version,
+		documents,
+		terms: new Map(termsraw),
+		version,
 	}
 }
