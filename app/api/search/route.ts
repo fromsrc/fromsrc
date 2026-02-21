@@ -99,6 +99,7 @@ export async function GET(request: Request) {
 			{
 				"Server-Timing": `search;dur=${duration.toFixed(2)}`,
 				"X-Search-Cache": "hit",
+				"X-Search-Result-Count": String(cached.length),
 			},
 		)
 	}
@@ -116,6 +117,7 @@ export async function GET(request: Request) {
 		{
 			"Server-Timing": `search;dur=${duration.toFixed(2)}`,
 			"X-Search-Cache": "miss",
+			"X-Search-Result-Count": String(results.length),
 		},
 	)
 }

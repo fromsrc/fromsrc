@@ -50,6 +50,7 @@ export async function GET(request: Request) {
 		{
 			"Server-Timing": `index;dur=${duration.toFixed(2)}`,
 			"X-Search-Index-Cache": hit ? "hit" : "miss",
+			"X-Search-Index-Count": String(value.documents.length),
 		},
 	)
 }
