@@ -2,11 +2,19 @@ import type { Code, Root } from "mdast"
 import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
+type mermaidelement = {
+	type: "mdxJsxFlowElement"
+	name: "Mermaid"
+	attributes: [{ type: "mdxJsxAttribute"; name: "chart"; value: string }]
+	children: []
+	data: { _mdxExplicitJsx: true }
+}
+
 function transformer(tree: Root) {
 	visit(tree, "code", (node: Code, index, parent) => {
 		if (!parent || index === undefined) return
 		if (node.lang !== "mermaid") return
-		const element = {
+		const element: mermaidelement = {
 			type: "mdxJsxFlowElement",
 			name: "Mermaid",
 			attributes: [
@@ -15,7 +23,7 @@ function transformer(tree: Root) {
 			children: [],
 			data: { _mdxExplicitJsx: true },
 		}
-		;(parent.children as any[])[index] = element
+		parent.children[index] = element as unknown as Root["children"][number]
 	})
 }
 

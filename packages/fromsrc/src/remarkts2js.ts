@@ -2,6 +2,8 @@ import type { Root, Code } from "mdast"
 import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
+type codegroup = Root["children"][number]
+
 function stripTypes(code: string): string {
 	let result = code
 
@@ -40,7 +42,7 @@ function stripTypes(code: string): string {
 	return result.trim()
 }
 
-function createCodeGroup(tsCode: string, jsCode: string, lang: string): any {
+function createCodeGroup(tsCode: string, jsCode: string, lang: string): codegroup {
 	const jsLang = lang === "tsx" ? "jsx" : "javascript"
 
 	return {
@@ -87,7 +89,7 @@ function createCodeGroup(tsCode: string, jsCode: string, lang: string): any {
 				],
 			},
 		],
-	}
+	} as unknown as codegroup
 }
 
 export const remarkTs2Js: Plugin<[], Root> = () => {

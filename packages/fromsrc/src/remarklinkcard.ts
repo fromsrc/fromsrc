@@ -18,7 +18,7 @@ function extract(node: Paragraph): { href: string; title: string } | null {
 	if (!link.url.startsWith("https://")) return null
 	const text = link.children[0]
 	if (!text || text.type !== "text") return null
-	const raw = (text as any).value as string
+	const raw = text.value
 	if (!raw.startsWith("card")) return null
 	const title = raw.startsWith("card:")
 		? raw.slice(5).trim()

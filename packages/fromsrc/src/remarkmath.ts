@@ -4,25 +4,27 @@ import { visit } from "unist-util-visit"
 
 const blockPattern = /^\$\$([\s\S]*)\$\$$/
 const inlinePattern = /\$([^$]+)\$/g
+type paragraphchild = Paragraph["children"][number]
+type rootchild = Root["children"][number]
 
-function makeInline(math: string) {
+function makeInline(math: string): paragraphchild {
 	return {
 		type: "mdxJsxTextElement" as const,
 		name: "InlineMath",
 		attributes: [{ type: "mdxJsxAttribute" as const, name: "math", value: math }],
 		children: [],
 		data: { _mdxExplicitJsx: true },
-	}
+	} as unknown as paragraphchild
 }
 
-function makeBlock(math: string) {
+function makeBlock(math: string): rootchild {
 	return {
 		type: "mdxJsxFlowElement" as const,
 		name: "BlockMath",
 		attributes: [{ type: "mdxJsxAttribute" as const, name: "math", value: math }],
 		children: [],
 		data: { _mdxExplicitJsx: true },
-	}
+	} as unknown as rootchild
 }
 
 function transformer(tree: Root) {
@@ -33,11 +35,11 @@ function transformer(tree: Root) {
 		if (child?.type !== "text") return
 		const match = child.value.trim().match(blockPattern)
 		if (!match) return
-		parent.children[index] = makeBlock(match[1]!.trim()) as any
+		parent.children[index] = makeBlock(match[1]!.trim())
 	})
 
 	visit(tree, "paragraph", (node: Paragraph) => {
-		const next: any[] = []
+		const next: paragraphchild[] = []
 		let changed = false
 
 		for (const child of node.children) {
@@ -53,14 +55,17 @@ function transformer(tree: Root) {
 
 			while ((match = inlinePattern.exec(child.value)) !== null) {
 				if (match.index > cursor) {
-					next.push({ type: "text", value: child.value.slice(cursor, match.index) })
+					next.push({
+						type: "text",
+						value: child.value.slice(cursor, match.index),
+					} as paragraphchild)
 				}
 				next.push(makeInline(match[1]!))
 				cursor = match.index + match[0].length
 			}
 
 			if (cursor < child.value.length) {
-				next.push({ type: "text", value: child.value.slice(cursor) })
+				next.push({ type: "text", value: child.value.slice(cursor) } as paragraphchild)
 			}
 		}
 

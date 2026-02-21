@@ -3,30 +3,31 @@ import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
 const combined = /~~([^~]+)~~|https?:\/\/[^\s<>)}\]]+/g
+type paragraphchild = Paragraph["children"][number]
 
-function makeDel(content: string) {
+function makeDel(content: string): paragraphchild {
 	return {
 		type: "mdxJsxTextElement" as const,
 		name: "del",
 		attributes: [],
 		children: [{ type: "text" as const, value: content }],
 		data: { _mdxExplicitJsx: true },
-	}
+	} as unknown as paragraphchild
 }
 
-function makeLink(url: string) {
+function makeLink(url: string): paragraphchild {
 	return {
 		type: "mdxJsxTextElement" as const,
 		name: "a",
 		attributes: [{ type: "mdxJsxAttribute" as const, name: "href", value: url }],
 		children: [{ type: "text" as const, value: url }],
 		data: { _mdxExplicitJsx: true },
-	}
+	} as unknown as paragraphchild
 }
 
 function transformer(tree: Root) {
 	visit(tree, "paragraph", (node: Paragraph) => {
-		const next: any[] = []
+		const next: paragraphchild[] = []
 		let changed = false
 
 		for (const child of node.children) {
@@ -42,7 +43,10 @@ function transformer(tree: Root) {
 
 			while ((match = combined.exec(child.value)) !== null) {
 				if (match.index > cursor) {
-					next.push({ type: "text", value: child.value.slice(cursor, match.index) })
+					next.push({
+						type: "text",
+						value: child.value.slice(cursor, match.index),
+					} as paragraphchild)
 				}
 				if (match[1] !== undefined) {
 					next.push(makeDel(match[1]))
@@ -53,7 +57,7 @@ function transformer(tree: Root) {
 			}
 
 			if (cursor < child.value.length) {
-				next.push({ type: "text", value: child.value.slice(cursor) })
+				next.push({ type: "text", value: child.value.slice(cursor) } as paragraphchild)
 			}
 		}
 
