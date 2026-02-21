@@ -7,8 +7,9 @@ import type { FrameworkAdapter } from "./adapter"
 function Link({
 	href,
 	children,
+	prefetch,
 }: { href: string; children: ReactNode; prefetch?: boolean }) {
-	return createElement(RemixLink, { to: href }, children)
+	return createElement(RemixLink, { to: href, prefetch: prefetch ? "intent" : "none" }, children)
 }
 
 function Image({
@@ -38,4 +39,3 @@ export const remixAdapter: FrameworkAdapter = {
 	usePathname: useRemixPathname,
 	useRouter: useRemixRouter,
 }
-

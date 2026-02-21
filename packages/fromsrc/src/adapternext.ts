@@ -20,7 +20,10 @@ function Image({
 	width,
 	height,
 }: { src: string; alt: string; width?: number; height?: number }) {
-	return createElement(NextImage, { src, alt, width: width ?? 0, height: height ?? 0 })
+	if (typeof width === "number" && typeof height === "number") {
+		return createElement(NextImage, { src, alt, width, height })
+	}
+	return createElement("img", { src, alt, width, height })
 }
 
 function useNextPathname(): string {

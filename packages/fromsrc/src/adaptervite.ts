@@ -1,6 +1,7 @@
 "use client"
 
 import { type ReactNode, createElement } from "react"
+import { back, push, usepath } from "./browser"
 import type { FrameworkAdapter } from "./adapter"
 
 function Link({
@@ -20,27 +21,13 @@ function Image({
 }
 
 function useVitePathname(): string {
-	if (typeof window === "undefined") {
-		return "/"
-	}
-	return window.location.pathname
+	return usepath()
 }
 
 function useViteRouter() {
 	return {
-		push: (url: string) => {
-			if (typeof window === "undefined") {
-				return
-			}
-			window.history.pushState({}, "", url)
-			window.dispatchEvent(new PopStateEvent("popstate"))
-		},
-		back: () => {
-			if (typeof window === "undefined") {
-				return
-			}
-			window.history.back()
-		},
+		push,
+		back,
 	}
 }
 

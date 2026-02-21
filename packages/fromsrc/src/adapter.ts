@@ -7,6 +7,7 @@ import {
 	createElement,
 	useContext,
 } from "react"
+import { usepath } from "./browser"
 
 export interface FrameworkAdapter {
 	Link: ComponentType<{ href: string; children: ReactNode; prefetch?: boolean }>
@@ -33,10 +34,7 @@ function defaultImage({
 }
 
 function defaultUsePathname(): string {
-	if (typeof window !== "undefined") {
-		return window.location.pathname
-	}
-	return "/"
+	return usepath()
 }
 
 function defaultUseRouter() {
