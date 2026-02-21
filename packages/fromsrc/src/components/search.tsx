@@ -6,6 +6,7 @@ import type { DocMeta, SearchDoc } from "../content"
 import { useDebounce } from "../hooks/debounce"
 import { useLocalStorage } from "../hooks/storage"
 import { useScrollLock } from "../hooks/scrolllock"
+import type { SearchResult } from "../search"
 import type { SearchAdapter } from "../search"
 import { localSearch } from "../search"
 import { getOptionId } from "./results"
@@ -47,9 +48,12 @@ export function Search({
 	const [query, setQuery] = useState("")
 	const [selected, setSelected] = useState(0)
 	const [recent, setRecent] = useLocalStorage<string[]>("fromsrc-recent-searches", [])
+	const [local, setLocal] = useState<SearchResult[]>([])
+	const [adapterloading, setAdapterLoading] = useState(false)
 	const input = useRef<HTMLInputElement>(null)
 	const list = useRef<HTMLUListElement>(null)
 	const queryref = useRef("")
+	const requestref = useRef(0)
 	const lastfocus = useRef<HTMLElement | null>(null)
 	const updatequery = useCallback((next: string): void => {
 		queryref.current = next
@@ -58,10 +62,6 @@ export function Search({
 	const router = useRouter()
 	const searchdocs = useMemo(() => docs.map(tosearchdoc), [docs])
 	const value = useDebounce(query, debounce)
-	const local = useMemo(
-		() => (endpoint ? [] : adapter.search(value, searchdocs, limit)),
-		[adapter, endpoint, limit, searchdocs, value],
-	)
 	const remote = useSearcher(endpoint, value, limit)
 	const remoteResults = useMemo(() => {
 		if (!endpoint) return []
@@ -69,7 +69,7 @@ export function Search({
 		return remote.results
 	}, [endpoint, remote.results, value])
 	const results = endpoint ? remoteResults : local
-	const loading = Boolean(endpoint) && remote.loading
+	const loading = endpoint ? remote.loading : adapterloading
 	const safe = results.length === 0 ? -1 : Math.min(selected, results.length - 1)
 	useScrollLock(open)
 	const openmodal = useCallback((): void => {
@@ -106,6 +106,28 @@ export function Search({
 	}, [open, updatequery])
 
 	useEffect(() => setSelected(0), [value])
+
+	useEffect(() => {
+		if (endpoint) return
+		const id = requestref.current + 1
+		requestref.current = id
+		const result = adapter.search(value, searchdocs, limit)
+		if (result instanceof Promise) {
+			setAdapterLoading(true)
+			void result.then((next) => {
+				if (requestref.current !== id) return
+				setLocal(next)
+				setAdapterLoading(false)
+			}).catch(() => {
+				if (requestref.current !== id) return
+				setLocal([])
+				setAdapterLoading(false)
+			})
+			return
+		}
+		setLocal(result)
+		setAdapterLoading(false)
+	}, [adapter, endpoint, limit, searchdocs, value])
 
 	useEffect(() => {
 		if (safe < 0 || !list.current) return

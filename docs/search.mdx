@@ -39,7 +39,7 @@ fromsrc uses a pluggable adapter pattern for search:
 import type { SearchAdapter, SearchResult } from "fromsrc"
 
 interface SearchAdapter {
-  search(query: string, docs: SearchDoc[]): SearchResult[]
+  search(query: string, docs: SearchDoc[]): SearchResult[] | Promise<SearchResult[]>
   index?(docs: SearchDoc[]): void | Promise<void>
 }
 ```
@@ -61,46 +61,26 @@ const myAdapter = createSearchAdapter({
 <Search docs={docs} adapter={myAdapter} />
 ```
 
-## future adapters
+## hosted adapters
 
-### @fromsrc/orama
+### algolia
 
-fast, open-source search with vector support:
-
-```bash
-bun add @fromsrc/orama
-```
+use the built-in algolia adapter for remote hosted search:
 
 ```tsx
-import { createOramaAdapter } from "@fromsrc/orama"
+import { Search } from "fromsrc/client"
+import { createalgoliaadapter } from "fromsrc"
 
-const adapter = createOramaAdapter({
-  endpoint: "https://cloud.orama.run/v1/indexes/...",
-  apiKey: "your-api-key"
+const adapter = createalgoliaadapter({
+  appid: "your-app-id",
+  key: "your-search-key",
+  index: "docs"
 })
 
 <Search docs={docs} adapter={adapter} />
 ```
 
-### @fromsrc/algolia
-
-industry-standard hosted search:
-
-```bash
-bun add @fromsrc/algolia
-```
-
-```tsx
-import { createAlgoliaAdapter } from "@fromsrc/algolia"
-
-const adapter = createAlgoliaAdapter({
-  appId: "your-app-id",
-  apiKey: "your-search-key",
-  indexName: "docs"
-})
-
-<Search docs={docs} adapter={adapter} />
-```
+for hosted adapters, pass lightweight docs metadata to the component and let the provider return ranked results.
 
 ## search api
 

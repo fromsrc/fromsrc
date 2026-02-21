@@ -10,7 +10,7 @@ export interface SearchResult {
 }
 
 export interface SearchAdapter {
-	search(query: string, docs: SearchDoc[], limit?: number): SearchResult[]
+	search(query: string, docs: SearchDoc[], limit?: number): SearchResult[] | Promise<SearchResult[]>
 	index?(docs: SearchDoc[]): void | Promise<void>
 }
 

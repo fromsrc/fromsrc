@@ -80,7 +80,7 @@ create custom search adapters for external services or advanced search.
 
 ```ts
 interface SearchAdapter {
-  search(query: string, docs: SearchDoc[]): SearchResult[]
+  search(query: string, docs: SearchDoc[]): SearchResult[] | Promise<SearchResult[]>
   index?(docs: SearchDoc[]): void | Promise<void>
 }
 
@@ -147,7 +147,7 @@ search uses semantic color variables that adapt to your theme:
 
 search is optimized for docs sites up to thousands of pages:
 
-- client-side execution (no server requests)
+- local or hosted adapter support
 - debounced input handling
 - virtual scrolling for large result sets
 - minimal bundle size

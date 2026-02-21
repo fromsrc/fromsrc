@@ -93,7 +93,8 @@ async function compute(query: string | undefined, limit: number): Promise<row[]>
 			score: 0,
 		}))
 	}
-	return localSearch.search(query, docs.search, limit).map((result) => ({
+	const results = await localSearch.search(query, docs.search, limit)
+	return results.map((result) => ({
 		slug: result.doc.slug,
 		title: result.doc.title,
 		description: result.doc.description,
