@@ -19,14 +19,5 @@ jobs:
       - name: install
         run: bun install --frozen-lockfile
 
-      - name: security
-        run: bun run check:security
-
-      - name: types
-        run: bun run check:types
-
-      - name: build
-        run: bun run build
-
-      - name: treeshake
-        run: bun run check:shake
+      - name: verify
+        run: bun run check:ci
