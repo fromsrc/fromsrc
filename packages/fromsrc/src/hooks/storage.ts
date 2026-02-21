@@ -6,11 +6,25 @@ type StorageSetter<T> = (value: T | ((prev: T) => T)) => void
 const local = (): Storage => localStorage
 const session = (): Storage => sessionStorage
 
-/**
- * Factory function to create storage hooks for different storage backends.
- * @param getStorage - Function that returns the storage object (localStorage or sessionStorage)
- * @returns A hook function for persisting state to the specified storage
- */
+function issamekind<T>(value: unknown, sample: T): value is T {
+	if (sample === null) return value === null
+	if (Array.isArray(sample)) return Array.isArray(value)
+	const kind = typeof sample
+	if (kind === "object") {
+		return typeof value === "object" && value !== null && !Array.isArray(value)
+	}
+	return typeof value === kind
+}
+
+function parsestored<T>(raw: string, fallback: T): T | null {
+	try {
+		const parsed: unknown = JSON.parse(raw)
+		return issamekind(parsed, fallback) ? parsed : null
+	} catch {
+		return null
+	}
+}
+
 function useStorage<T>(
 	getStorage: () => Storage,
 	key: string,
@@ -22,10 +36,11 @@ function useStorage<T>(
 		try {
 			const stored: string | null = getStorage().getItem(key)
 			if (stored !== null) {
-				setValue(JSON.parse(stored) as T)
+				const parsed = parsestored(stored, defaultValue)
+				if (parsed !== null) setValue(parsed)
 			}
 		} catch {
-					}
+		}
 	}, [getStorage, key])
 
 	const setStoredValue: StorageSetter<T> = useCallback(
@@ -35,7 +50,7 @@ function useStorage<T>(
 				try {
 					getStorage().setItem(key, JSON.stringify(resolved))
 				} catch {
-									}
+				}
 				return resolved
 			})
 		},
@@ -45,22 +60,10 @@ function useStorage<T>(
 	return [value, setStoredValue]
 }
 
-/**
- * Persist state to localStorage with automatic JSON serialization.
- * @param key - Storage key to use
- * @param defaultValue - Initial value if no stored value exists
- * @returns Tuple of current value and setter function
- */
 export function useLocalStorage<T>(key: string, defaultValue: T): [T, StorageSetter<T>] {
 	return useStorage<T>(local, key, defaultValue)
 }
 
-/**
- * Persist state to sessionStorage with automatic JSON serialization.
- * @param key - Storage key to use
- * @param defaultValue - Initial value if no stored value exists
- * @returns Tuple of current value and setter function
- */
 export function useSessionStorage<T>(key: string, defaultValue: T): [T, StorageSetter<T>] {
 	return useStorage<T>(session, key, defaultValue)
 }
