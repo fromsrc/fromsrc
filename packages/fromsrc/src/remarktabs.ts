@@ -6,6 +6,22 @@ function attribute(name: string, value: string) {
 	return { type: "mdxJsxAttribute", name, value }
 }
 
+type codenode = Code
+type tabelement = {
+	type: "mdxJsxFlowElement"
+	name: "CodeTab"
+	attributes: ReturnType<typeof attribute>[]
+	children: [codenode]
+	data: { _mdxExplicitJsx: true }
+}
+type groupelement = {
+	type: "mdxJsxFlowElement"
+	name: "CodeGroup"
+	attributes: []
+	children: tabelement[]
+	data: { _mdxExplicitJsx: true }
+}
+
 function skipped(node: Code): boolean {
 	return !!node.meta && (node.meta.includes("nogroup") || node.meta.includes("standalone"))
 }
@@ -28,7 +44,7 @@ function transformer(tree: Root) {
 
 		if (group.length < 2) return
 
-		const tabs = group.map((code) => ({
+		const tabs: tabelement[] = group.map((code) => ({
 			type: "mdxJsxFlowElement",
 			name: "CodeTab",
 			attributes: [attribute("label", code.lang ?? "text"), attribute("value", code.lang ?? "text")],
@@ -36,7 +52,7 @@ function transformer(tree: Root) {
 			data: { _mdxExplicitJsx: true },
 		}))
 
-		const element = {
+		const element: groupelement = {
 			type: "mdxJsxFlowElement",
 			name: "CodeGroup",
 			attributes: [],
@@ -44,7 +60,7 @@ function transformer(tree: Root) {
 			data: { _mdxExplicitJsx: true },
 		}
 
-		parent.children.splice(index, group.length, element as any)
+		parent.children.splice(index, group.length, element as unknown as Root["children"][number])
 	})
 }
 

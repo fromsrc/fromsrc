@@ -62,10 +62,13 @@ function transformer(tree: Root) {
 
 		node.value = cleaned.join("\n")
 
-		const data: any = node.data || {}
+		const data = (node.data ?? {}) as Code["data"] & {
+			annotations?: Annotation[]
+			hProperties?: Record<string, unknown>
+		}
 		data.annotations = annotations
 
-		const hProperties = (data.hProperties as Record<string, unknown>) || {}
+		const hProperties = data.hProperties ?? {}
 		for (const t of types) {
 			hProperties[`data-line-${t}`] = true
 		}

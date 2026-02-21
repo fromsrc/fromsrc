@@ -7,14 +7,14 @@ type AstNode = {
 	children?: AstNode[]
 	value?: string
 	name?: string
-	attributes?: any[]
-	data?: any
+	attributes?: unknown[]
+	data?: Record<string, unknown>
 }
 
 const refPattern = /\[\^([^\]]+)\]/g
 const defPattern = /^\[\^([^\]]+)\]:\s*(.+)$/
 
-const attr = (name: string, value: any) => ({ type: "mdxJsxAttribute", name, value })
+const attr = (name: string, value: unknown) => ({ type: "mdxJsxAttribute", name, value })
 const expr = (v: string) => ({ type: "mdxJsxAttributeValueExpression", value: v })
 
 export const remarkFootnote: Plugin<[], Root> = () => (tree) => {
@@ -33,9 +33,9 @@ export const remarkFootnote: Plugin<[], Root> = () => (tree) => {
 		return false
 	})
 
-	visit(tree, "text", (node: any, index, parent) => {
+	visit(tree, "text", (node: { value: string }, index, parent) => {
 		if (!parent || index === undefined) return
-		const text = node.value as string
+		const text = node.value
 		if (!refPattern.test(text)) return
 		refPattern.lastIndex = 0
 

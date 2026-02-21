@@ -6,6 +6,14 @@ function attribute(name: string, value: string) {
 	return { type: "mdxJsxAttribute", name, value }
 }
 
+type installelement = {
+	type: "mdxJsxFlowElement"
+	name: "Install"
+	attributes: ReturnType<typeof attribute>[]
+	children: []
+	data: { _mdxExplicitJsx: true }
+}
+
 function commands(pkg: string, dev: boolean) {
 	if (dev) {
 		return {
@@ -52,13 +60,14 @@ function transformer(tree: Root) {
 			attribute("bun", cmds.bun),
 		]
 
-		parent.children[index] = {
+		const element: installelement = {
 			type: "mdxJsxFlowElement",
 			name: "Install",
 			attributes: attrs,
 			children: [],
 			data: { _mdxExplicitJsx: true },
-		} as any
+		}
+		parent.children[index] = element as unknown as Root["children"][number]
 	})
 }
 
