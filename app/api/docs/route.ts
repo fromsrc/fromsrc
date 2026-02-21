@@ -1,10 +1,26 @@
 import { getAllDocs } from "@/app/docs/_lib/content"
+import { z } from "zod"
+
+const query = z.object({
+	page: z.coerce.number().int().min(1).default(1),
+	limit: z.coerce.number().int().min(1).max(100).default(20),
+	category: z.preprocess(
+		(value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+		z.string().trim().min(1).optional(),
+	),
+})
 
 export async function GET(request: Request) {
 	const url = new URL(request.url)
-	const page = Math.max(1, Number(url.searchParams.get("page") ?? 1))
-	const limit = Math.max(1, Math.min(100, Number(url.searchParams.get("limit") ?? 20)))
-	const category = url.searchParams.get("category")
+	const parsed = query.safeParse({
+		page: url.searchParams.get("page") ?? undefined,
+		limit: url.searchParams.get("limit") ?? undefined,
+		category: url.searchParams.get("category") ?? undefined,
+	})
+	if (!parsed.success) {
+		return Response.json({ data: [], total: 0, page: 1, pages: 0 }, { status: 400 })
+	}
+	const { page, limit, category } = parsed.data
 
 	let docs = await getAllDocs()
 
