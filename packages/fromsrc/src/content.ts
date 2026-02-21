@@ -82,7 +82,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 		try {
 			const { data, content } = matter(source)
-			const parsed = schema.parse(data) as z.infer<T>
+			const parsed = schema.parse(data)
 
 			if (isProduction() && isDraft(data)) return null
 
@@ -117,7 +117,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 					const filepath = join(dir, entry.name)
 					const source = await readCached(filepath)
 					const { data } = matter(source)
-					const parsed = schema.parse(data) as z.infer<T>
+					const parsed = schema.parse(data)
 
 					if (isProduction() && isDraft(data)) continue
 
@@ -152,22 +152,21 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 		const docs = await getAllDocs()
 
-		const sections: { title: string; items: Meta[] }[] = [
-			{ title: "introduction", items: [] },
-			{ title: "components", items: [] },
-			{ title: "api", items: [] },
-			{ title: "examples", items: [] },
-		]
+		const intro: { title: string; items: Meta[] } = { title: "introduction", items: [] }
+		const components: { title: string; items: Meta[] } = { title: "components", items: [] }
+		const apis: { title: string; items: Meta[] } = { title: "api", items: [] }
+		const examples: { title: string; items: Meta[] } = { title: "examples", items: [] }
+		const sections = [intro, components, apis, examples]
 
 		for (const doc of docs) {
 			if (doc.slug.startsWith("components/")) {
-				sections[1]!.items.push(doc)
+				components.items.push(doc)
 			} else if (doc.slug.startsWith("api/")) {
-				sections[2]!.items.push(doc)
+				apis.items.push(doc)
 			} else if (doc.slug.startsWith("examples/")) {
-				sections[3]!.items.push(doc)
+				examples.items.push(doc)
 			} else {
-				sections[0]!.items.push(doc)
+				intro.items.push(doc)
 			}
 		}
 
@@ -195,7 +194,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 					const filepath = join(dir, entry.name)
 					const source = await readCached(filepath)
 					const { data, content } = matter(source)
-					const parsed = schema.parse(data) as z.infer<T>
+					const parsed = schema.parse(data)
 
 					if (isProduction() && isDraft(data)) continue
 
@@ -263,9 +262,11 @@ export function extractHeadings(content: string): Heading[] {
 	for (const line of lines) {
 		const match = line.match(/^(#{2,4})\s+(.+)$/)
 		if (!match) continue
-
-		const level = match[1]!.length
-		const raw = stripHeadingFormatting(match[2]!)
+		const hashes = match[1]
+		const heading = match[2]
+		if (!hashes || !heading) continue
+		const level = hashes.length
+		const raw = stripHeadingFormatting(heading)
 		const base = headingId(raw)
 		if (!base) continue
 		const count = seen.get(base) ?? 0
@@ -401,22 +402,21 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 export async function getNavigation(docsDir: string): Promise<{ title: string; items: DocMeta[] }[]> {
 	const docs = await getAllDocs(docsDir)
 
-	const sections: { title: string; items: DocMeta[] }[] = [
-		{ title: "introduction", items: [] },
-		{ title: "components", items: [] },
-		{ title: "api", items: [] },
-		{ title: "examples", items: [] },
-	]
+	const intro: { title: string; items: DocMeta[] } = { title: "introduction", items: [] }
+	const components: { title: string; items: DocMeta[] } = { title: "components", items: [] }
+	const apis: { title: string; items: DocMeta[] } = { title: "api", items: [] }
+	const examples: { title: string; items: DocMeta[] } = { title: "examples", items: [] }
+	const sections = [intro, components, apis, examples]
 
 	for (const doc of docs) {
 		if (doc.slug.startsWith("components/")) {
-			sections[1]!.items.push(doc)
+			components.items.push(doc)
 		} else if (doc.slug.startsWith("api/")) {
-			sections[2]!.items.push(doc)
+			apis.items.push(doc)
 		} else if (doc.slug.startsWith("examples/")) {
-			sections[3]!.items.push(doc)
+			examples.items.push(doc)
 		} else {
-			sections[0]!.items.push(doc)
+			intro.items.push(doc)
 		}
 	}
 

@@ -4,17 +4,17 @@ import { calcReadTime } from "fromsrc"
 export async function GET() {
 	const metas = await getAllDocs()
 	const docs = await Promise.all(metas.map((m) => getDoc(m.slug ? m.slug.split("/") : [])))
-	const valid = docs.filter(Boolean)
+	const valid = docs.filter((doc): doc is NonNullable<(typeof docs)[number]> => doc !== null)
 
 	let words = 0
 	let readTime = 0
 	const categories: Record<string, number> = {}
 
 	for (const doc of valid) {
-		const count = doc!.content.split(/\s+/).filter(Boolean).length
+		const count = doc.content.split(/\s+/).filter(Boolean).length
 		words += count
-		readTime += calcReadTime(doc!.content)
-		const category = doc!.slug.split("/")[0] || "root"
+		readTime += calcReadTime(doc.content)
+		const category = doc.slug.split("/")[0] || "root"
 		categories[category] = (categories[category] || 0) + 1
 	}
 
