@@ -91,9 +91,9 @@ export function Sidebar({
 
 	return (
 		<>
-			<div className="shrink-0 w-[268px]" />
+			<div className="hidden lg:block shrink-0 w-[268px]" />
 			<div
-				className="fixed left-0 top-0 z-40 h-screen w-[268px] pointer-events-none"
+				className="hidden lg:block fixed left-0 top-0 z-40 h-screen w-[268px] pointer-events-none"
 				onMouseEnter={handleEnter}
 				onMouseLeave={handleLeave}
 			>
@@ -125,7 +125,7 @@ export function Sidebar({
 				</aside>
 			</div>
 			{collapsed && !hovered && (
-				<div className="fixed left-0 top-0 z-50 flex flex-col gap-1 p-3 pointer-events-auto">
+				<div className="hidden lg:flex fixed left-0 top-0 z-50 flex-col gap-1 p-3 pointer-events-auto">
 					<button
 						type="button"
 						onClick={toggle}

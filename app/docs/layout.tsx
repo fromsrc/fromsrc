@@ -14,14 +14,12 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
 			<MobileNavigation />
 			<SearchModal />
 			<Shortcuts />
-			<HeadingCopy />
-			<div className="flex min-h-screen bg-bg">
-				<KeyboardNav docs={docs} />
-				<div className="hidden lg:contents">
+				<HeadingCopy />
+				<div className="flex min-h-screen bg-bg">
+					<KeyboardNav docs={docs} />
 					<Sidebar />
+					<main id="main" className="flex-1 min-w-0">{children}</main>
 				</div>
-				<main id="main" className="flex-1 min-w-0">{children}</main>
-			</div>
-		</>
-	)
+			</>
+		)
 }
