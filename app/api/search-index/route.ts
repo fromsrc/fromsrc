@@ -1,8 +1,18 @@
-import { createIndex, addDocument, serializeIndex } from "fromsrc"
-import { NextResponse } from "next/server"
+import { addDocument, createIndex, serializeIndex, type SearchIndex } from "fromsrc"
+import { sendjson } from "@/app/api/_lib/json"
 import { getSearchDocs } from "@/app/docs/_lib/content"
 
-export async function GET() {
+interface entry {
+	at: number
+	value: SearchIndex
+}
+
+const ttl = 1000 * 60 * 5
+const cachecontrol = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+let cached: entry | null = null
+let inflight: Promise<SearchIndex> | null = null
+
+async function build(): Promise<SearchIndex> {
 	const docs = await getSearchDocs()
 	const index = createIndex()
 	for (const doc of docs) {
@@ -14,10 +24,20 @@ export async function GET() {
 			content: doc.content,
 		})
 	}
+	return JSON.parse(serializeIndex(index)) as SearchIndex
+}
 
-	return NextResponse.json(JSON.parse(serializeIndex(index)), {
-		headers: {
-			"Cache-Control": "public, max-age=3600, s-maxage=86400",
-		},
+async function load(): Promise<SearchIndex> {
+	if (cached && Date.now() - cached.at < ttl) return cached.value
+	const pending = inflight ?? build()
+	if (!inflight) inflight = pending
+	const value = await pending.finally(() => {
+		if (inflight === pending) inflight = null
 	})
+	cached = { at: Date.now(), value }
+	return value
+}
+
+export async function GET(request: Request) {
+	return sendjson(request, await load(), cachecontrol)
 }
