@@ -26,16 +26,26 @@ function ismetaentry(value: unknown): value is metaentry {
 	return true
 }
 
+function parsejson(raw: string): unknown {
+	try {
+		return JSON.parse(raw)
+	} catch {
+		return null
+	}
+}
+
+function parsemetats(raw: string): unknown {
+	const match = raw.match(/export\s+default\s+({[\s\S]*})/)
+	if (!match) return null
+	const body = match[1]
+	return body ? parsejson(body) : null
+}
+
 async function readMeta(dir: string): Promise<Record<string, string | metaentry>> {
 	for (const name of ["_meta.json", "_meta.ts"]) {
 		try {
 			const raw = await readFile(join(dir, name), "utf-8")
-			const parsed = name.endsWith(".json")
-				? JSON.parse(raw)
-				: (() => {
-						const m = raw.match(/export\s+default\s+({[\s\S]*})/)
-						return m ? JSON.parse(m[1]!) : {}
-					})()
+			const parsed = name.endsWith(".json") ? parsejson(raw) : parsemetats(raw)
 			if (!isrecord(parsed)) return {}
 			const result: Record<string, string | metaentry> = {}
 			for (const [key, value] of Object.entries(parsed)) {
