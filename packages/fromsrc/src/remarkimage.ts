@@ -66,7 +66,7 @@ function wrapInFigure(imageNode: Root["children"][number], alt: string): Root["c
 		attributes: [],
 		children,
 	}
-	return figure as unknown as Root["children"][number]
+	return figure as Root["children"][number]
 }
 
 export const remarkImage: Plugin<[RemarkImageOptions?], Root> = (options = {}) => {
@@ -91,7 +91,7 @@ export const remarkImage: Plugin<[RemarkImageOptions?], Root> = (options = {}) =
 			node.data = data
 
 			if (figure) {
-				parent.children[index] = wrapInFigure(node as unknown as Root["children"][number], parsed.alt)
+				parent.children[index] = wrapInFigure(node as Root["children"][number], parsed.alt)
 			}
 		})
 

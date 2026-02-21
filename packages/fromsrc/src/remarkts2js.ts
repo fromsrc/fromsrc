@@ -89,7 +89,7 @@ function createCodeGroup(tsCode: string, jsCode: string, lang: string): codegrou
 				],
 			},
 		],
-	} as unknown as codegroup
+	} as codegroup
 }
 
 export const remarkTs2Js: Plugin<[], Root> = () => {

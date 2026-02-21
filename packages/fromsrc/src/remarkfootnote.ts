@@ -20,7 +20,7 @@ const expr = (v: string) => ({ type: "mdxJsxAttributeValueExpression", value: v 
 export const remarkFootnote: Plugin<[], Root> = () => (tree) => {
 	const definitions = new Map<string, string>()
 	const seen: string[] = []
-	const root = tree as unknown as AstNode
+	const root = tree as AstNode
 	if (!root.children) return
 
 	root.children = root.children.filter((node) => {

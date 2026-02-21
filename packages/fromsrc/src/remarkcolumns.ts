@@ -90,6 +90,6 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 }
 
 export const remarkColumns: Plugin<[], Root> = () => (tree) => {
-	const root = tree as unknown as AstNode
+	const root = tree as AstNode
 	if (root.children) root.children = processChildren(root.children)
 }
