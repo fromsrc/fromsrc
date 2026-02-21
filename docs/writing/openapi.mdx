@@ -72,3 +72,13 @@ export default function Page() {
   return <Openapi spec={spec} />
 }
 ```
+
+## parser import
+
+for parse-only flows, import the parser from the dedicated subpath:
+
+```ts
+import { parseOpenApi } from "fromsrc/openapi"
+
+const parsed = parseOpenApi(spec)
+```
