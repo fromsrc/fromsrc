@@ -1,1 +1,1 @@
-cd packages/fromsrc && bun run build && cd ../.. && bun run check:shake && bun run build
+cd packages/fromsrc && bun run build && cd ../.. && bun run check:security && bun run check:shake && bun run build
