@@ -126,4 +126,18 @@ export default defineConfig([
 		clean: false,
 		external,
 	},
+	{
+		entry: [
+			"src/components/readtime.tsx",
+			"src/searchscore.ts",
+			"src/searchindex.ts",
+			"src/llms.ts",
+		],
+		format: ["esm"],
+		bundle: false,
+		treeshake: true,
+		dts: true,
+		clean: false,
+		external,
+	},
 ])

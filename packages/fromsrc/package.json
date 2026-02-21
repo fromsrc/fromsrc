@@ -37,6 +37,22 @@
 			"types": "./dist/astro.d.ts",
 			"import": "./dist/astro.js"
 		},
+		"./readtime": {
+			"types": "./dist/components/readtime.d.ts",
+			"import": "./dist/components/readtime.js"
+		},
+		"./searchscore": {
+			"types": "./dist/searchscore.d.ts",
+			"import": "./dist/searchscore.js"
+		},
+		"./searchindex": {
+			"types": "./dist/searchindex.d.ts",
+			"import": "./dist/searchindex.js"
+		},
+		"./llms": {
+			"types": "./dist/llms.d.ts",
+			"import": "./dist/llms.js"
+		},
 		"./styles/reset.css": "./styles/reset.css"
 	},
 	"files": [
