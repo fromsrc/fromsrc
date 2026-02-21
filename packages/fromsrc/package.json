@@ -17,6 +17,10 @@
 			"types": "./dist/next.d.ts",
 			"import": "./dist/next.js"
 		},
+		"./react-router": {
+			"types": "./dist/reactrouter.d.ts",
+			"import": "./dist/reactrouter.js"
+		},
 		"./styles/reset.css": "./styles/reset.css"
 	},
 	"files": [
@@ -43,6 +47,7 @@
 		"@types/mdast": "^4.0.4",
 		"@types/node": "^22.0.0",
 		"@types/react": "^19.0.0",
+		"react-router-dom": "^7.9.5",
 		"tsup": "^8.5.0",
 		"typescript": "^5.9.0",
 		"unified": "^11.0.5"
@@ -50,10 +55,14 @@
 	"peerDependencies": {
 		"mermaid": ">=10.0.0",
 		"next": ">=14.0.0",
-		"react": ">=18.0.0"
+		"react": ">=18.0.0",
+		"react-router-dom": ">=7.0.0"
 	},
 	"peerDependenciesMeta": {
 		"mermaid": {
+			"optional": true
+		},
+		"react-router-dom": {
 			"optional": true
 		}
 	}

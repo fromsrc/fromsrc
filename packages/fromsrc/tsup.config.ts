@@ -50,4 +50,17 @@ export default defineConfig([
 			writeFileSync(path, `"use client";\n${content}`)
 		},
 	},
+	{
+		entry: ["src/reactrouter.ts"],
+		format: ["esm"],
+		dts: true,
+		treeshake: true,
+		splitting: false,
+		external: ["react", "react/jsx-runtime", "react-router-dom"],
+		onSuccess: async () => {
+			const path = "dist/reactrouter.js"
+			const content = readFileSync(path, "utf-8")
+			writeFileSync(path, `"use client";\n${content}`)
+		},
+	},
 ])
