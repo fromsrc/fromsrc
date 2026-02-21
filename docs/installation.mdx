@@ -106,6 +106,30 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
+## remix adapter
+
+use the remix adapter for remix routes and navigation:
+
+```tsx
+import { AdapterProvider, remixAdapter } from "fromsrc/remix"
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <AdapterProvider adapter={remixAdapter}>{children}</AdapterProvider>
+}
+```
+
+## astro adapter
+
+use the astro adapter for astro integrations with client-rendered docs surfaces:
+
+```tsx
+import { AdapterProvider, astroAdapter } from "fromsrc/astro"
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>
+}
+```
+
 ## project structure
 
 <Files>
@@ -143,6 +167,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     import { reactRouterAdapter } from "fromsrc/react-router"
     import { viteAdapter } from "fromsrc/vite"
     import { tanstackAdapter } from "fromsrc/tanstack"
+    import { remixAdapter } from "fromsrc/remix"
+    import { astroAdapter } from "fromsrc/astro"
     ```
   </AccordionItem>
   <AccordionItem title="search not working">

@@ -76,17 +76,43 @@ export default defineConfig([
 			writeFileSync(path, `"use client";\n${content}`)
 		},
 	},
-	{
-		entry: ["src/tanstack.ts"],
+		{
+			entry: ["src/tanstack.ts"],
 		format: ["esm"],
 		dts: true,
 		treeshake: true,
 		splitting: false,
 		external: ["react", "react/jsx-runtime", "@tanstack/react-router"],
-		onSuccess: async () => {
-			const path = "dist/tanstack.js"
-			const content = readFileSync(path, "utf-8")
-			writeFileSync(path, `"use client";\n${content}`)
+			onSuccess: async () => {
+				const path = "dist/tanstack.js"
+				const content = readFileSync(path, "utf-8")
+				writeFileSync(path, `"use client";\n${content}`)
+			},
 		},
-	},
-])
+		{
+			entry: ["src/remix.ts"],
+			format: ["esm"],
+			dts: true,
+			treeshake: true,
+			splitting: false,
+			external: ["react", "react/jsx-runtime", "@remix-run/react"],
+			onSuccess: async () => {
+				const path = "dist/remix.js"
+				const content = readFileSync(path, "utf-8")
+				writeFileSync(path, `"use client";\n${content}`)
+			},
+		},
+		{
+			entry: ["src/astro.ts"],
+			format: ["esm"],
+			dts: true,
+			treeshake: true,
+			splitting: false,
+			external: ["react", "react/jsx-runtime"],
+			onSuccess: async () => {
+				const path = "dist/astro.js"
+				const content = readFileSync(path, "utf-8")
+				writeFileSync(path, `"use client";\n${content}`)
+			},
+		},
+	])
