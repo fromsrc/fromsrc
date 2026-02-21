@@ -1,4 +1,5 @@
 import { localSearch, z } from "fromsrc"
+import { sendjson } from "@/app/api/_lib/json"
 import { getAllDocs, getSearchDocs } from "@/app/docs/_lib/content"
 
 const schema = z.object({
@@ -28,7 +29,7 @@ const cache = new Map<string, entry>()
 const inflight = new Map<string, Promise<row[]>>()
 const ttl = 1000 * 60 * 5
 const max = 200
-const headers = { "cache-control": "public, max-age=60, s-maxage=300" }
+const cachecontrol = "public, max-age=60, s-maxage=300, stale-while-revalidate=86400"
 
 function normalize(text: string | undefined): string {
 	return text?.toLowerCase().replace(/\s+/g, " ").trim() ?? ""
@@ -83,20 +84,17 @@ export async function GET(request: Request) {
 		q: url.searchParams.get("q") ?? undefined,
 		limit: url.searchParams.get("limit") ?? undefined,
 	})
-	if (!parsed.success) return Response.json([], { status: 400, headers })
+	if (!parsed.success) return sendjson(request, [], cachecontrol, 400)
 	const values = parsed.data
 	const query = normalize(values.q)
 	const key = `${query}::${values.limit}`
 	const cached = get(key)
-	if (cached) return Response.json(cached, { headers })
+	if (cached) return sendjson(request, cached, cachecontrol)
 
 	const pending = inflight.get(key) ?? compute(values.q, values.limit)
 	if (!inflight.has(key)) inflight.set(key, pending)
 	const results = await pending.finally(() => {
 		if (inflight.get(key) === pending) inflight.delete(key)
 	})
-	return Response.json(
-		set(key, results),
-		{ headers },
-	)
+	return sendjson(request, set(key, results), cachecontrol)
 }
