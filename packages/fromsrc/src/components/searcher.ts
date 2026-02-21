@@ -42,9 +42,9 @@ function convert(rows: z.infer<typeof schema>): SearchResult[] {
 	}))
 }
 
-async function load(endpoint: string, query: string, limit: number, signal: AbortSignal): Promise<SearchResult[]> {
+async function load(endpoint: string, query: string, limit: number): Promise<SearchResult[]> {
 	const params = new URLSearchParams({ q: query, limit: String(limit) })
-	const response = await fetch(`${endpoint}?${params}`, { signal })
+	const response = await fetch(`${endpoint}?${params}`)
 	const json: unknown = await response.json()
 	return convert(schema.parse(json))
 }
@@ -69,21 +69,21 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 			return
 		}
 
-		const controller = new AbortController()
+		let active = true
 		setLoading(true)
 
-		const request = inflight.get(cachekey) ?? load(endpoint, text, limit, controller.signal)
+		const request = inflight.get(cachekey) ?? load(endpoint, text, limit)
 		if (!inflight.has(cachekey)) inflight.set(cachekey, request)
 
 		request
 			.then((value) => {
-				if (controller.signal.aborted) return
+				if (!active) return
 				store.set(cachekey, { at: Date.now(), results: value })
 				setResults(value)
 				setLoading(false)
 			})
 			.catch(() => {
-				if (controller.signal.aborted) return
+				if (!active) return
 				setResults([])
 				setLoading(false)
 			})
@@ -91,7 +91,9 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 				if (inflight.get(cachekey) === request) inflight.delete(cachekey)
 			})
 
-		return () => controller.abort()
+		return () => {
+			active = false
+		}
 	}, [endpoint, query, limit])
 
 	return { results, loading }
