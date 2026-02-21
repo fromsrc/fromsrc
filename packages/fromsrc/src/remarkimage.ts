@@ -13,7 +13,11 @@ const dimensionPattern = /^(.+)\|(\d+)x(\d+)$/
 function parseDimensions(alt: string): { alt: string; width?: number; height?: number } {
 	const match = alt.match(dimensionPattern)
 	if (!match) return { alt }
-	return { alt: match[1]!, width: Number(match[2]), height: Number(match[3]) }
+	const text = match[1]
+	const width = match[2]
+	const height = match[3]
+	if (!text || !width || !height) return { alt }
+	return { alt: text, width: Number(width), height: Number(height) }
 }
 
 function resolveUrl(url: string, basePath?: string): string {

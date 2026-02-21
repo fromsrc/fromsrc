@@ -39,8 +39,9 @@ function parseLlmsIndex(text: string, baseUrl: string): DocMeta[] {
 		const match = line.match(/^- \[(.+?)\]\((.+?)\)(?:: (.+))?$/)
 		if (!match) continue
 
-		const title = match[1]!
-		const url = match[2]!
+		const title = match[1]
+		const url = match[2]
+		if (!title || !url) continue
 		const description = match[3]?.trim()
 		const slug = url.replace(`${baseUrl}/docs/`, "").replace("/docs/", "").replace("/docs", "")
 

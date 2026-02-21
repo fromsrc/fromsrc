@@ -24,7 +24,9 @@ function expand(tree: Root, baseDir: string, maxDepth: number, depth: number) {
 		const match = child.value.trim().match(pattern)
 		if (!match) return
 
-		const filepath = resolve(baseDir, match[1]!)
+		const includePath = match[1]
+		if (!includePath) return
+		const filepath = resolve(baseDir, includePath)
 		let content: string
 
 		try {

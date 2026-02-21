@@ -14,7 +14,10 @@ export function parseAttrs(tag: string): Record<string, string> {
 	const pattern = /(\w+)="([^"]*)"/g
 	let match: RegExpExecArray | null
 	while ((match = pattern.exec(tag)) !== null) {
-		attrs[match[1]!] = match[2]!
+		const key = match[1]
+		const value = match[2]
+		if (!key || value === undefined) continue
+		attrs[key] = value
 	}
 	return attrs
 }

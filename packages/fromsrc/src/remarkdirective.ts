@@ -22,7 +22,10 @@ function parseAttributes(raw: string): Record<string, string> {
 	const regex = /(\w+)="([^"]*?)"/g
 	let match: RegExpExecArray | null
 	while ((match = regex.exec(raw)) !== null) {
-		attrs[match[1]!] = match[2]!
+		const key = match[1]
+		const value = match[2]
+		if (!key || value === undefined) continue
+		attrs[key] = value
 	}
 	return attrs
 }
@@ -38,7 +41,9 @@ function isOpen(node: AstNode): { type: DirectiveType; attrs: Record<string, str
 	const text = extractText(node).trim()
 	const match = text.match(openPattern)
 	if (!match) return null
-	const name = match[1]!.toLowerCase()
+	const raw = match[1]
+	if (!raw) return null
+	const name = raw.toLowerCase()
 	if (!directives.has(name)) return null
 	const attrs = match[2] ? parseAttributes(match[2]) : {}
 	return { type: name as DirectiveType, attrs }
@@ -84,7 +89,8 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 	let i = 0
 
 	while (i < nodes.length) {
-		const node = nodes[i]!
+		const node = nodes[i]
+		if (!node) break
 		const open = isOpen(node)
 
 		if (!open) {
@@ -99,8 +105,10 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 		const inner: AstNode[] = []
 		i++
 
-		while (i < nodes.length && !isClose(nodes[i]!)) {
-			inner.push(nodes[i]!)
+		while (i < nodes.length) {
+			const current = nodes[i]
+			if (!current || isClose(current)) break
+			inner.push(current)
 			i++
 		}
 

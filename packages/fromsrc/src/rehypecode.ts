@@ -8,17 +8,24 @@ function parse(meta: string): Record<string, string> {
 	let cleaned = meta
 
 	for (const match of meta.matchAll(/(\w+)="([^"]*)"/g)) {
-		attrs[match[1]!] = match[2]!
+		const key = match[1]
+		const value = match[2]
+		if (!key || value === undefined) continue
+		attrs[key] = value
 		cleaned = cleaned.replace(match[0], "")
 	}
 
 	for (const match of meta.matchAll(/\{([^}]*)\}/g)) {
-		attrs.lines = match[1]!
+		const lines = match[1]
+		if (!lines) continue
+		attrs.lines = lines
 		cleaned = cleaned.replace(match[0], "")
 	}
 
 	for (const match of meta.matchAll(/\/([^/]+)\//g)) {
-		attrs.word = match[1]!
+		const word = match[1]
+		if (!word) continue
+		attrs.word = word
 		cleaned = cleaned.replace(match[0], "")
 	}
 
