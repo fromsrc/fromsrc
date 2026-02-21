@@ -49,6 +49,7 @@ export function Search({
 	const input = useRef<HTMLInputElement>(null)
 	const list = useRef<HTMLUListElement>(null)
 	const queryref = useRef("")
+	const lastfocus = useRef<HTMLElement | null>(null)
 	const updatequery = useCallback((next: string): void => {
 		queryref.current = next
 		setQuery(next)
@@ -69,23 +70,28 @@ export function Search({
 	const results = endpoint ? remoteResults : local
 	const loading = endpoint && remote.loading
 	const safe = results.length === 0 ? -1 : Math.min(selected, results.length - 1)
+	const openmodal = useCallback((): void => {
+		const active = document.activeElement
+		lastfocus.current = active instanceof HTMLElement ? active : null
+		setOpen(true)
+	}, [])
 
 	useEffect(() => {
 		const handler = (event: KeyboardEvent): void => {
 			if ((event.metaKey || event.ctrlKey) && event.key === "k") {
 				event.preventDefault()
-				setOpen(true)
+				openmodal()
 			}
 			const slash = event.key === "/" || event.code === "Slash"
 			if (slash && !event.metaKey && !event.ctrlKey && !event.altKey && !iseditable(event.target)) {
 				event.preventDefault()
-				setOpen(true)
+				openmodal()
 			}
 			if (event.key === "Escape") setOpen(false)
 		}
 		window.addEventListener("keydown", handler)
 		return () => window.removeEventListener("keydown", handler)
-	}, [])
+	}, [openmodal])
 
 	useEffect(() => {
 		if (open) {
@@ -96,6 +102,7 @@ export function Search({
 		updatequery("")
 		setSelected(0)
 		document.body.style.overflow = ""
+		lastfocus.current?.focus()
 		return () => {
 			document.body.style.overflow = ""
 		}
@@ -167,7 +174,7 @@ export function Search({
 	if (!open) {
 		if (hidden) return null
 		return (
-			<button type="button" onClick={() => setOpen(true)} className="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted bg-surface border border-line rounded-lg hover:border-dim transition-colors">
+			<button type="button" onClick={openmodal} className="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted bg-surface border border-line rounded-lg hover:border-dim transition-colors">
 				<IconSearch className="w-3.5 h-3.5" size={14} />
 				<span className="flex-1 text-left">search</span>
 				<kbd className="px-1.5 py-0.5 text-[10px] bg-bg border border-line rounded">⌘K</kbd>
