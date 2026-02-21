@@ -113,6 +113,19 @@ function searchHeadings(doc: SearchDoc, query: string, terms: string[]): Heading
 	return best
 }
 
+function push(results: SearchResult[], result: SearchResult, limit: number): void {
+	if (!Number.isFinite(limit) || results.length < limit) {
+		results.push(result)
+		return
+	}
+	let min = 0
+	for (let i = 1; i < results.length; i++) {
+		if (results[i]!.score < results[min]!.score) min = i
+	}
+	if (result.score <= results[min]!.score) return
+	results[min] = result
+}
+
 export const localSearch: SearchAdapter = {
 	search(query: string, docs: SearchDoc[], limit = Number.POSITIVE_INFINITY): SearchResult[] {
 		if (!docs || docs.length === 0) return []
@@ -149,17 +162,17 @@ export const localSearch: SearchAdapter = {
 				(contentResult?.score ?? 0)
 
 			if (score > 0) {
-				results.push({
+				push(results, {
 					doc: item.doc,
 					score,
 					snippet: headingResult?.snippet ?? contentResult?.snippet,
 					anchor: headingResult?.anchor,
-				})
+				}, limit)
 			}
 		}
 
 		results.sort((a, b) => b.score - a.score)
-		return results.slice(0, limit)
+		return results
 	},
 }
 
