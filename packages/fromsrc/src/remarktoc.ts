@@ -65,6 +65,6 @@ export const remarkToc: Plugin<[], Root> = () => (tree) => {
 			data: { _mdxExplicitJsx: true },
 		}
 
-		parent.children[index] = element as unknown as Root["children"][number]
+		parent.children[index] = element as Root["children"][number]
 	})
 }

@@ -72,7 +72,7 @@ function transformer(tree: Root) {
 			children: stripPrefix(node),
 			data: { _mdxExplicitJsx: true },
 		}
-		parent.children[index] = element as unknown as Root["children"][number]
+		parent.children[index] = element as Root["children"][number]
 	})
 }
 
