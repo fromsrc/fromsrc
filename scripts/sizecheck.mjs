@@ -22,10 +22,51 @@ const list = [
 		code: "import { generateLlmsIndex } from 'fromsrc/llms'; export default generateLlmsIndex({title:'a',description:'b',baseUrl:'https://x.y'},[{title:'t',slug:'s'}]);",
 		max: 1000,
 	},
+	{
+		name: "next",
+		code: "import { nextAdapter } from 'fromsrc/next'; export default nextAdapter;",
+		max: 800,
+	},
+	{
+		name: "reactrouter",
+		code: "import { reactRouterAdapter } from 'fromsrc/react-router'; export default reactRouterAdapter;",
+		max: 800,
+	},
+	{
+		name: "tanstack",
+		code: "import { tanstackAdapter } from 'fromsrc/tanstack'; export default tanstackAdapter;",
+		max: 800,
+	},
+	{
+		name: "remix",
+		code: "import { remixAdapter } from 'fromsrc/remix'; export default remixAdapter;",
+		max: 800,
+	},
+	{
+		name: "astro",
+		code: "import { astroAdapter } from 'fromsrc/astro'; export default astroAdapter;",
+		max: 1300,
+	},
+	{
+		name: "vite",
+		code: "import { viteAdapter } from 'fromsrc/vite'; export default viteAdapter;",
+		max: 1300,
+	},
 ];
 
 const root = await mkdtemp(join(process.cwd(), ".size-"));
 let fail = false;
+const external = [
+	"react",
+	"react/jsx-runtime",
+	"next",
+	"next/image",
+	"next/link",
+	"next/navigation",
+	"react-router-dom",
+	"@tanstack/react-router",
+	"@remix-run/react",
+];
 
 try {
 	for (const item of list) {
@@ -37,6 +78,7 @@ try {
 			target: "browser",
 			minify: true,
 			treeShaking: true,
+			external,
 			write: false,
 		});
 
