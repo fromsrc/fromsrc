@@ -49,6 +49,10 @@ export function Search({
 	const input = useRef<HTMLInputElement>(null)
 	const list = useRef<HTMLUListElement>(null)
 	const queryref = useRef("")
+	const updatequery = useCallback((next: string): void => {
+		queryref.current = next
+		setQuery(next)
+	}, [])
 	const router = useRouter()
 	const searchdocs = useMemo(() => docs.map(tosearchdoc), [docs])
 	const value = useDebounce(query, debounce)
@@ -89,13 +93,13 @@ export function Search({
 			document.body.style.overflow = "hidden"
 			return
 		}
-		setQuery("")
+		updatequery("")
 		setSelected(0)
 		document.body.style.overflow = ""
 		return () => {
 			document.body.style.overflow = ""
 		}
-	}, [open])
+	}, [open, updatequery])
 
 	useEffect(() => setSelected(0), [value])
 
@@ -149,7 +153,7 @@ export function Search({
 			}
 			if (event.key === "Tab" && results[0]) {
 				event.preventDefault()
-				setQuery(results[0].doc.title)
+				updatequery(results[0].doc.title)
 				setSelected(0)
 				return
 			}
@@ -157,7 +161,7 @@ export function Search({
 				navigate(results[safe].doc.slug, results[safe].anchor)
 			}
 		},
-		[navigate, results, safe],
+		[navigate, results, safe, updatequery],
 	)
 
 	if (!open) {
@@ -178,11 +182,11 @@ export function Search({
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
 						<IconSearch className="w-4 h-4 text-muted" size={16} />
-						<input ref={input} type="text" value={query} onChange={(event) => { queryref.current = event.target.value; setQuery(event.target.value) }} onKeyDown={onkey} placeholder="search documentation..." className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={results.length > 0} aria-haspopup="listbox" aria-controls="search-listbox" aria-activedescendant={safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
+						<input ref={input} type="text" value={query} onChange={(event) => updatequery(event.target.value)} onKeyDown={onkey} placeholder="search documentation..." className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={results.length > 0} aria-haspopup="listbox" aria-controls="search-listbox" aria-activedescendant={safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
 						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">esc</kbd>
 					</div>
 					<div className="max-h-80 overflow-y-auto">
-						{!value.trim() && recent.length > 0 ? <Recent items={recent} onSelect={setQuery} /> : loading ? <div className="p-8 text-center text-muted text-sm">loading</div> : results.length === 0 ? <div className="p-8 text-center text-muted text-sm">no results</div> : <Results results={results} selected={safe} query={value} listRef={list} onResultClick={navigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && navigate(slug, anchor)} />}
+						{!value.trim() && recent.length > 0 ? <Recent items={recent} onSelect={updatequery} /> : loading ? <div className="p-8 text-center text-muted text-sm">loading</div> : results.length === 0 ? <div className="p-8 text-center text-muted text-sm">no results</div> : <Results results={results} selected={safe} query={value} listRef={list} onResultClick={navigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && navigate(slug, anchor)} />}
 					</div>
 					<div className="flex items-center justify-center gap-4 px-4 py-2 border-t border-line text-[10px] text-dim">
 						<span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↑</kbd><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↓</kbd>navigate</span>
