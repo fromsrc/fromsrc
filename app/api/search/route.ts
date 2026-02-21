@@ -1,5 +1,5 @@
 import { localSearch, z } from "fromsrc"
-import { sendjson } from "@/app/api/_lib/json"
+import { sendjson, sendjsonwithheaders } from "@/app/api/_lib/json"
 import { getAllDocs, getSearchDocs } from "@/app/docs/_lib/content"
 
 const schema = z.object({
@@ -79,6 +79,7 @@ async function compute(query: string | undefined, limit: number): Promise<row[]>
 }
 
 export async function GET(request: Request) {
+	const started = performance.now()
 	const url = new URL(request.url)
 	const parsed = schema.safeParse({
 		q: url.searchParams.get("q") ?? undefined,
@@ -89,12 +90,32 @@ export async function GET(request: Request) {
 	const query = normalize(values.q)
 	const key = `${query}::${values.limit}`
 	const cached = get(key)
-	if (cached) return sendjson(request, cached, cachecontrol)
+	if (cached) {
+		const duration = performance.now() - started
+		return sendjsonwithheaders(
+			request,
+			cached,
+			cachecontrol,
+			{
+				"Server-Timing": `search;dur=${duration.toFixed(2)}`,
+				"X-Search-Cache": "hit",
+			},
+		)
+	}
 
 	const pending = inflight.get(key) ?? compute(values.q, values.limit)
 	if (!inflight.has(key)) inflight.set(key, pending)
 	const results = await pending.finally(() => {
 		if (inflight.get(key) === pending) inflight.delete(key)
 	})
-	return sendjson(request, set(key, results), cachecontrol)
+	const duration = performance.now() - started
+	return sendjsonwithheaders(
+		request,
+		set(key, results),
+		cachecontrol,
+		{
+			"Server-Timing": `search;dur=${duration.toFixed(2)}`,
+			"X-Search-Cache": "miss",
+		},
+	)
 }

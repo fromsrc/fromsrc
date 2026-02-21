@@ -20,3 +20,17 @@ export function sendjson(request: Request, value: unknown, cache: string, status
 	}
 	return new Response(content, { status, headers })
 }
+
+export function sendjsonwithheaders(
+	request: Request,
+	value: unknown,
+	cache: string,
+	extra: HeadersInit,
+	status = 200,
+): Response {
+	const response = sendjson(request, value, cache, status)
+	for (const [key, val] of new Headers(extra).entries()) {
+		response.headers.set(key, val)
+	}
+	return response
+}

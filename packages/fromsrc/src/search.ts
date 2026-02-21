@@ -30,7 +30,9 @@ interface SearchIndexDoc {
 	title: string
 	description: string
 	content: string
+	contentraw: string
 	slug: string
+	headings: { id: string; text: string; level: number; normalized: string }[]
 }
 
 const indexCache = new WeakMap<SearchDoc[], SearchIndexDoc[]>()
@@ -77,40 +79,55 @@ function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
 		doc,
 		title: normalize(doc.title),
 		description: normalize(doc.description),
-		content: normalize(doc.content),
+		content: doc.content.toLowerCase(),
+		contentraw: doc.content,
 		slug: normalize(doc.slug),
+		headings: (doc.headings ?? []).map((heading) => ({
+			id: heading.id,
+			text: heading.text,
+			level: heading.level,
+			normalized: normalize(heading.text),
+		})),
 	}))
 	indexCache.set(docs, indexed)
 	return indexed
 }
 
-function searchContent(content: string | undefined, query: string, terms: string[]): ContentMatch | null {
+function searchContent(
+	content: string | undefined,
+	contentraw: string | undefined,
+	query: string,
+	terms: string[],
+): ContentMatch | null {
 	if (!content || !query) return null
 
-	const lower = content.toLowerCase()
-	const positions = [lower.indexOf(query.toLowerCase()), ...terms.map((term) => lower.indexOf(term))]
+	const positions = [content.indexOf(query), ...terms.map((term) => content.indexOf(term))]
 	const idx = positions.filter((value) => value >= 0).sort((a, b) => a - b)[0] ?? -1
 	if (idx === -1) return null
-	const termScore = terms.reduce((score, term) => score + (lower.includes(term) ? 1 : 0), 0)
+	const termScore = terms.reduce((score, term) => score + (content.includes(term) ? 1 : 0), 0)
 
 	const start = Math.max(0, idx - 40)
-	const end = Math.min(content.length, idx + query.length + 60)
+	const source = contentraw ?? content
+	const end = Math.min(source.length, idx + query.length + 60)
 	const prefix = start > 0 ? "..." : ""
-	const suffix = end < content.length ? "..." : ""
+	const suffix = end < source.length ? "..." : ""
 
-	return { score: 5 + termScore, snippet: prefix + content.slice(start, end).trim() + suffix }
+	return { score: 5 + termScore, snippet: prefix + source.slice(start, end).trim() + suffix }
 }
 
-function searchHeadings(doc: SearchDoc, query: string, terms: string[]): HeadingMatch | null {
-	if (!doc.headings || !query) return null
+function searchHeadings(
+	headings: { id: string; text: string; level: number; normalized: string }[],
+	query: string,
+	terms: string[],
+): HeadingMatch | null {
+	if (headings.length === 0 || !query) return null
 
 	let best: HeadingMatch | null = null
 
-	for (const heading of doc.headings) {
-		const text = normalize(heading.text)
-		const termScore = terms.reduce((score, term) => score + (text.includes(term) ? 3 : 0), 0)
+	for (const heading of headings) {
+		const termScore = terms.reduce((score, term) => score + (heading.normalized.includes(term) ? 3 : 0), 0)
 		const levelBoost = heading.level === 2 ? 8 : heading.level === 3 ? 5 : 3
-		const score = fuzzy(text, query) * 2 + termScore + levelBoost
+		const score = fuzzy(heading.normalized, query) * 2 + termScore + levelBoost
 		if (score > 0 && (!best || score > best.score)) {
 			best = { score, anchor: heading.id, heading: heading.text, snippet: heading.text }
 		}
@@ -149,8 +166,8 @@ export const localSearch: SearchAdapter = {
 		for (const item of indexed) {
 			const titleScore = fuzzy(item.title, normalized) * 3
 			const descScore = fuzzy(item.description, normalized)
-			const headingResult = searchHeadings(item.doc, normalized, terms)
-			const contentResult = searchContent(item.doc.content, normalized, terms)
+			const headingResult = searchHeadings(item.headings, normalized, terms)
+			const contentResult = searchContent(item.content, item.contentraw, normalized, terms)
 			const termScore = terms.reduce((score, term) => {
 				if (item.title.includes(term)) return score + 9
 				if (item.slug.includes(term)) return score + 7
