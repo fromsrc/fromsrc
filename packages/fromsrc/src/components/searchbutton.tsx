@@ -16,7 +16,9 @@ export const SearchButton = memo(function SearchButton({
 	const [modifier, setModifier] = useState("Ctrl")
 
 	useEffect(() => {
-		const ua = (navigator as any).userAgentData
+		type userdata = { platform?: string }
+		type usernavigator = Navigator & { userAgentData?: userdata }
+		const ua = (navigator as usernavigator).userAgentData
 		const platform = ua?.platform ?? navigator.platform ?? ""
 		if (/mac/i.test(platform)) setModifier("\u2318")
 	}, [])

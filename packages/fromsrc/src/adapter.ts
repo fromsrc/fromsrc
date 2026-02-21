@@ -14,7 +14,7 @@ export interface FrameworkAdapter {
 	Image?: ComponentType<{ src: string; alt: string; width?: number; height?: number }>
 	usePathname: () => string
 	useRouter: () => { push: (url: string) => void; back: () => void }
-	compileMdx?: (source: string, options?: any) => Promise<any>
+	compileMdx?: (source: string, options?: unknown) => Promise<unknown>
 }
 
 function defaultLink({

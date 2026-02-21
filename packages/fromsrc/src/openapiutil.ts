@@ -12,8 +12,8 @@ export interface OpenApiSchema {
 	anyOf?: OpenApiSchema[]
 	allOf?: OpenApiSchema[]
 	nullable?: boolean
-	default?: any
-	example?: any
+	default?: unknown
+	example?: unknown
 }
 
 export interface OpenApiParameter {
@@ -66,32 +66,41 @@ export function generateEndpointSlug(method: string, path: string): string {
 	return `${method.toLowerCase()}-${path.replace(/^\//, "").replace(/[/{}}]/g, "-").replace(/-+/g, "-").replace(/-$/, "")}`
 }
 
-export function resolveRef(root: any, ref: string): any {
+type jsonrecord = Record<string, unknown>
+
+function isrecord(value: unknown): value is jsonrecord {
+	return typeof value === "object" && value !== null
+}
+
+export function resolveRef(root: unknown, ref: string): unknown {
 	if (!ref.startsWith("#/")) return {}
 	const parts = ref.slice(2).split("/")
-	let current = root
+	let current: unknown = root
 	for (const part of parts) {
-		current = current?.[part]
+		if (!isrecord(current)) return {}
+		current = current[part]
 		if (current === undefined) return {}
 	}
 	return current
 }
 
-export function resolveSchema(root: any, raw: any): OpenApiSchema {
-	if (!raw) return {}
-	if (raw.$ref) return resolveSchema(root, resolveRef(root, raw.$ref))
+export function resolveSchema(root: unknown, raw: unknown): OpenApiSchema {
+	if (!isrecord(raw)) return {}
+	if (typeof raw.$ref === "string") return resolveSchema(root, resolveRef(root, raw.$ref))
 
 	const schema: OpenApiSchema = {}
-	if (raw.type) schema.type = raw.type
-	if (raw.format) schema.format = raw.format
-	if (raw.description) schema.description = raw.description
-	if (raw.nullable) schema.nullable = raw.nullable
+	if (typeof raw.type === "string") schema.type = raw.type
+	if (typeof raw.format === "string") schema.format = raw.format
+	if (typeof raw.description === "string") schema.description = raw.description
+	if (typeof raw.nullable === "boolean") schema.nullable = raw.nullable
 	if (raw.default !== undefined) schema.default = raw.default
 	if (raw.example !== undefined) schema.example = raw.example
-	if (raw.enum) schema.enum = raw.enum
-	if (raw.required) schema.required = raw.required
+	if (Array.isArray(raw.enum)) schema.enum = raw.enum.filter((item): item is string => typeof item === "string")
+	if (Array.isArray(raw.required)) {
+		schema.required = raw.required.filter((item): item is string => typeof item === "string")
+	}
 
-	if (raw.properties) {
+	if (isrecord(raw.properties)) {
 		schema.properties = {}
 		for (const [key, val] of Object.entries(raw.properties)) {
 			schema.properties[key] = resolveSchema(root, val)
@@ -99,21 +108,22 @@ export function resolveSchema(root: any, raw: any): OpenApiSchema {
 	}
 
 	if (raw.items) schema.items = resolveSchema(root, raw.items)
-	if (raw.oneOf) schema.oneOf = raw.oneOf.map((s: any) => resolveSchema(root, s))
-	if (raw.anyOf) schema.anyOf = raw.anyOf.map((s: any) => resolveSchema(root, s))
-	if (raw.allOf) schema.allOf = raw.allOf.map((s: any) => resolveSchema(root, s))
+	if (Array.isArray(raw.oneOf)) schema.oneOf = raw.oneOf.map((schemaitem) => resolveSchema(root, schemaitem))
+	if (Array.isArray(raw.anyOf)) schema.anyOf = raw.anyOf.map((schemaitem) => resolveSchema(root, schemaitem))
+	if (Array.isArray(raw.allOf)) schema.allOf = raw.allOf.map((schemaitem) => resolveSchema(root, schemaitem))
 
 	return schema
 }
 
 export function resolveContent(
-	root: any,
-	raw: Record<string, any> | undefined,
+	root: unknown,
+	raw: unknown,
 ): Record<string, { schema: OpenApiSchema }> | undefined {
-	if (!raw) return undefined
+	if (!isrecord(raw)) return undefined
 	const result: Record<string, { schema: OpenApiSchema }> = {}
 	for (const [mediaType, val] of Object.entries(raw)) {
-		result[mediaType] = { schema: resolveSchema(root, val?.schema) }
+		const value = isrecord(val) ? val.schema : undefined
+		result[mediaType] = { schema: resolveSchema(root, value) }
 	}
 	return result
 }
