@@ -1,4 +1,5 @@
-import { type ContentSource, createMcpHandler, generateMcpManifest } from "fromsrc"
+import { type ContentSource, createMcpHandler, generateMcpManifest, z } from "fromsrc"
+import { sendjson } from "@/app/api/_lib/json"
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content"
 
 const config = {
@@ -22,35 +23,58 @@ const source: ContentSource = {
 }
 
 const handler = createMcpHandler(config, source)
+const method = z.object({ method: z.enum(["search_docs", "get_page", "list_pages"]) })
+const search = z.object({ query: z.string().trim().min(1).max(200) })
+const page = z.object({ slug: z.string().trim().min(1).max(300) })
 
 const cors = {
 	"Access-Control-Allow-Origin": "*",
 	"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 	"Access-Control-Allow-Headers": "Content-Type",
 }
+const cachecontrol = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
 
 export async function OPTIONS() {
 	return new Response(null, { status: 204, headers: cors })
 }
 
-export async function GET() {
+export async function GET(request: Request) {
 	const manifest = generateMcpManifest(config)
-	return Response.json(manifest, { headers: cors })
+	const response = sendjson(request, manifest, cachecontrol)
+	for (const [key, value] of Object.entries(cors)) response.headers.set(key, value)
+	return response
 }
 
 export async function POST(request: Request) {
-	const body = await request.json()
-	const { method, params } = body
+	let body: unknown
+	try {
+		body = await request.json()
+	} catch {
+		return Response.json({ error: "invalid json" }, { status: 400, headers: cors })
+	}
+	const parsed = method.safeParse(body)
+	if (!parsed.success) {
+		return Response.json({ error: "invalid method" }, { status: 400, headers: cors })
+	}
+	const params = (body as { params?: unknown }).params
 
-	switch (method) {
+	switch (parsed.data.method) {
 		case "search_docs": {
-			const results = await handler.search(params.query)
+			const query = search.safeParse(params)
+			if (!query.success) {
+				return Response.json({ error: "invalid params" }, { status: 400, headers: cors })
+			}
+			const results = await handler.search(query.data.query)
 			return Response.json(results, { headers: cors })
 		}
 		case "get_page": {
-			const page = await handler.getPage(params.slug)
-			if (!page) return Response.json({ error: "not found" }, { status: 404, headers: cors })
-			return Response.json({ content: page }, { headers: cors })
+			const slug = page.safeParse(params)
+			if (!slug.success) {
+				return Response.json({ error: "invalid params" }, { status: 400, headers: cors })
+			}
+			const content = await handler.getPage(slug.data.slug)
+			if (!content) return Response.json({ error: "not found" }, { status: 404, headers: cors })
+			return Response.json({ content }, { headers: cors })
 		}
 		case "list_pages": {
 			const pages = await handler.listPages()
