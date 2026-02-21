@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react"
 
 type StorageSetter<T> = (value: T | ((prev: T) => T)) => void
+const local = (): Storage => localStorage
+const session = (): Storage => sessionStorage
 
 /**
  * Factory function to create storage hooks for different storage backends.
@@ -50,7 +52,7 @@ function useStorage<T>(
  * @returns Tuple of current value and setter function
  */
 export function useLocalStorage<T>(key: string, defaultValue: T): [T, StorageSetter<T>] {
-	return useStorage<T>(() => localStorage, key, defaultValue)
+	return useStorage<T>(local, key, defaultValue)
 }
 
 /**
@@ -60,5 +62,5 @@ export function useLocalStorage<T>(key: string, defaultValue: T): [T, StorageSet
  * @returns Tuple of current value and setter function
  */
 export function useSessionStorage<T>(key: string, defaultValue: T): [T, StorageSetter<T>] {
-	return useStorage<T>(() => sessionStorage, key, defaultValue)
+	return useStorage<T>(session, key, defaultValue)
 }
