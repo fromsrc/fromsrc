@@ -90,7 +90,11 @@ export function Results({
 									}`}
 								>
 									<div className="text-sm">{highlightMatch(result.doc.title, query)}</div>
-									{result.anchor && <div className="text-[11px] text-dim">#{result.anchor}</div>}
+									{result.heading && (
+										<div className="text-[11px] text-dim">
+											{highlightMatch(result.heading, query)}
+										</div>
+									)}
 									{result.snippet ? (
 										<div className="text-xs text-dim truncate">
 											{highlightMatch(result.snippet, query)}

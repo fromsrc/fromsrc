@@ -5,6 +5,7 @@ export interface SearchResult {
 	score: number
 	snippet?: string
 	anchor?: string
+	heading?: string
 }
 
 export interface SearchAdapter {
@@ -20,6 +21,7 @@ interface ContentMatch {
 interface HeadingMatch {
 	score: number
 	anchor: string
+	heading: string
 	snippet: string
 }
 
@@ -82,18 +84,21 @@ function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
 	return indexed
 }
 
-function searchContent(content: string | undefined, query: string): ContentMatch | null {
+function searchContent(content: string | undefined, query: string, terms: string[]): ContentMatch | null {
 	if (!content || !query) return null
 
-	const idx = content.toLowerCase().indexOf(query.toLowerCase())
+	const lower = content.toLowerCase()
+	const positions = [lower.indexOf(query.toLowerCase()), ...terms.map((term) => lower.indexOf(term))]
+	const idx = positions.filter((value) => value >= 0).sort((a, b) => a - b)[0] ?? -1
 	if (idx === -1) return null
+	const termScore = terms.reduce((score, term) => score + (lower.includes(term) ? 1 : 0), 0)
 
 	const start = Math.max(0, idx - 40)
 	const end = Math.min(content.length, idx + query.length + 60)
 	const prefix = start > 0 ? "..." : ""
 	const suffix = end < content.length ? "..." : ""
 
-	return { score: 5, snippet: prefix + content.slice(start, end).trim() + suffix }
+	return { score: 5 + termScore, snippet: prefix + content.slice(start, end).trim() + suffix }
 }
 
 function searchHeadings(doc: SearchDoc, query: string, terms: string[]): HeadingMatch | null {
@@ -104,9 +109,10 @@ function searchHeadings(doc: SearchDoc, query: string, terms: string[]): Heading
 	for (const heading of doc.headings) {
 		const text = normalize(heading.text)
 		const termScore = terms.reduce((score, term) => score + (text.includes(term) ? 3 : 0), 0)
-		const score = fuzzy(text, query) * 2 + termScore
+		const levelBoost = heading.level === 2 ? 8 : heading.level === 3 ? 5 : 3
+		const score = fuzzy(text, query) * 2 + termScore + levelBoost
 		if (score > 0 && (!best || score > best.score)) {
-			best = { score, anchor: heading.id, snippet: heading.text }
+			best = { score, anchor: heading.id, heading: heading.text, snippet: heading.text }
 		}
 	}
 
@@ -144,7 +150,7 @@ export const localSearch: SearchAdapter = {
 			const titleScore = fuzzy(item.title, normalized) * 3
 			const descScore = fuzzy(item.description, normalized)
 			const headingResult = searchHeadings(item.doc, normalized, terms)
-			const contentResult = searchContent(item.doc.content, terms[0] ?? normalized)
+			const contentResult = searchContent(item.doc.content, normalized, terms)
 			const termScore = terms.reduce((score, term) => {
 				if (item.title.includes(term)) return score + 9
 				if (item.slug.includes(term)) return score + 7
@@ -167,6 +173,7 @@ export const localSearch: SearchAdapter = {
 					score,
 					snippet: headingResult?.snippet ?? contentResult?.snippet,
 					anchor: headingResult?.anchor,
+					heading: headingResult?.heading,
 				}, limit)
 			}
 		}

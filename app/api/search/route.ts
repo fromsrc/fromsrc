@@ -20,6 +20,7 @@ interface row {
 	description?: string
 	snippet?: string
 	anchor?: string
+	heading?: string
 	score: number
 }
 
@@ -71,6 +72,7 @@ async function compute(query: string | undefined, limit: number): Promise<row[]>
 		description: result.doc.description,
 		snippet: result.snippet,
 		anchor: result.anchor,
+		heading: result.heading,
 		score: result.score,
 	}))
 }

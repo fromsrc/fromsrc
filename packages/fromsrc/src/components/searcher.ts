@@ -11,6 +11,7 @@ const schema = z.array(
 		description: z.string().optional(),
 		snippet: z.string().optional(),
 		anchor: z.string().optional(),
+		heading: z.string().optional(),
 		score: z.number(),
 	}),
 )
@@ -43,6 +44,7 @@ function convert(rows: z.infer<typeof schema>): SearchResult[] {
 		},
 		snippet: row.snippet,
 		anchor: row.anchor,
+		heading: row.heading,
 		score: row.score,
 	}))
 }
