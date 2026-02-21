@@ -9,9 +9,9 @@
 		"dev": "next dev",
 		"build": "bun run build:pkg && next build",
 		"build:pkg": "cd packages/fromsrc && bun run build",
-		"check:types": "tsc --noEmit",
+		"check:types": "bun run build:pkg && tsc --noEmit",
 		"check:shake": "bun run build:pkg && bun scripts/sizecheck.mjs",
-		"check:security": "bun audit",
+		"check:security": "bun audit && bun scripts/securitycheck.mjs",
 		"start": "next start",
 		"prepare": "husky"
 	},
