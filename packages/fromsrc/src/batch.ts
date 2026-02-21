@@ -17,14 +17,14 @@ async function collect(dir: string): Promise<string[]> {
 		.map((e) => join(e.parentPath ?? e.path, e.name))
 }
 
-export async function batch<T>(
-	items: unknown[],
-	fn: (item: any, index: number) => Promise<T>,
+export async function batch<TItem, TResult>(
+	items: TItem[],
+	fn: (item: TItem, index: number) => Promise<TResult>,
 	config?: BatchConfig,
-): Promise<BatchResult<T>> {
+): Promise<BatchResult<TResult>> {
 	const limit = config?.concurrency ?? 4
 	const start = performance.now()
-	const results: T[] = new Array(items.length)
+	const results: TResult[] = new Array(items.length)
 	const errors: BatchError[] = []
 	let cursor = 0
 	let done = 0
@@ -32,8 +32,9 @@ export async function batch<T>(
 	async function next(): Promise<void> {
 		while (cursor < items.length) {
 			const i = cursor++
+			const item = items[i]!
 			try {
-				results[i] = await fn(items[i], i)
+				results[i] = await fn(item, i)
 			} catch (e) {
 				errors.push({ index: i, error: e instanceof Error ? e.message : String(e) })
 			}
@@ -52,7 +53,7 @@ export async function batchFiles<T>(
 	config?: BatchConfig,
 ): Promise<BatchResult<T>> {
 	const paths = await collect(dir)
-	return batch(
+	return batch<string, T>(
 		paths,
 		async (p: string) => {
 			const content = await readFile(p, "utf-8")
@@ -69,7 +70,7 @@ export async function mapFiles(
 ): Promise<{ modified: number; total: number }> {
 	const paths = await collect(dir)
 	let modified = 0
-	await batch(
+	await batch<string, void>(
 		paths,
 		async (p: string) => {
 			const original = await readFile(p, "utf-8")

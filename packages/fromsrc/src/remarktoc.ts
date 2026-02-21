@@ -3,10 +3,21 @@ import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
 type Item = { text: string; slug: string; depth: number }
+type textnode = { type: "text"; value: string }
+type markernode = { type: "paragraph"; children?: { type: string; value?: string }[] }
+type parentnode = { children: Root["children"] }
+type mdxattribute = { type: "mdxJsxAttribute"; name: string; value: string }
+type mdxelement = {
+	type: "mdxJsxFlowElement"
+	name: string
+	attributes: mdxattribute[]
+	children: []
+	data: { _mdxExplicitJsx: true }
+}
 
 function textContent(node: Heading): string {
 	const parts: string[] = []
-	visit(node, "text", (t: any) => {
+	visit(node, "text", (t: textnode) => {
 		parts.push(t.value)
 	})
 	return parts.join("")
@@ -19,7 +30,7 @@ function slugify(text: string): string {
 		.replace(/[^a-z0-9-]/g, "")
 }
 
-function isTocMarker(node: any): boolean {
+function isTocMarker(node: markernode): boolean {
 	if (node.type !== "paragraph") return false
 	if (node.children?.length !== 1) return false
 	const child = node.children[0]
@@ -36,11 +47,11 @@ export const remarkToc: Plugin<[], Root> = () => (tree) => {
 		items.push({ text, slug: slugify(text), depth: node.depth })
 	})
 
-	visit(tree, "paragraph", (node, index, parent) => {
+	visit(tree, "paragraph", (node: markernode, index, parent: parentnode | undefined) => {
 		if (!parent || index === undefined) return
 		if (!isTocMarker(node)) return
 
-		parent.children[index] = {
+		const element: mdxelement = {
 			type: "mdxJsxFlowElement",
 			name: "TableOfContents",
 			attributes: [
@@ -52,6 +63,8 @@ export const remarkToc: Plugin<[], Root> = () => (tree) => {
 			],
 			children: [],
 			data: { _mdxExplicitJsx: true },
-		} as any
+		}
+
+		parent.children[index] = element as unknown as Root["children"][number]
 	})
 }

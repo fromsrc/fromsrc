@@ -61,7 +61,9 @@ export function buildTocTree(headings: TocHeading[]): TocNode[] {
 	return root
 }
 
-function transformer(tree: Root, file: any) {
+type filedata = { data: Record<string, unknown> }
+
+function transformer(tree: Root, file: filedata) {
 	const headings: TocHeading[] = []
 
 	visit(tree, "heading", (node: Heading) => {

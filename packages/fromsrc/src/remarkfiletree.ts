@@ -8,6 +8,15 @@ interface TreeNode {
 	children: TreeNode[]
 }
 
+type mdxattribute = { type: "mdxJsxAttribute"; name: string; value: string }
+type mdxelement = {
+	type: "mdxJsxFlowElement"
+	name: string
+	attributes: mdxattribute[]
+	children: mdxelement[]
+	data: { _mdxExplicitJsx: true }
+}
+
 function attribute(name: string, value: string) {
 	return { type: "mdxJsxAttribute" as const, name, value }
 }
@@ -40,7 +49,7 @@ function parse(content: string): TreeNode[] {
 	return root
 }
 
-function toElement(node: TreeNode): any {
+function toElement(node: TreeNode): mdxelement {
 	if (node.folder) {
 		return {
 			type: "mdxJsxFlowElement",
@@ -66,7 +75,7 @@ function transformer(tree: Root) {
 		if (!isFiletree) return
 
 		const nodes = parse(node.value)
-		const element = {
+		const element: mdxelement = {
 			type: "mdxJsxFlowElement" as const,
 			name: "Files",
 			attributes: [],
@@ -74,7 +83,7 @@ function transformer(tree: Root) {
 			data: { _mdxExplicitJsx: true },
 		}
 
-		parent.children[index] = element as any
+		parent.children[index] = element as unknown as Root["children"][number]
 	})
 }
 

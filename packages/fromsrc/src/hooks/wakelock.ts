@@ -9,15 +9,28 @@ export interface WakeLockResult {
 	release: () => Promise<void>
 }
 
+interface wakesentinel {
+	release: () => Promise<void>
+	addEventListener: (type: "release", listener: () => void) => void
+}
+
+type wakelockapi = {
+	request: (type: "screen") => Promise<wakesentinel>
+}
+
+type wakelocknavigator = Navigator & { wakeLock?: wakelockapi }
+
 export function useWakeLock(): WakeLockResult {
 	const [active, setActive] = useState(false)
 	const supported = typeof navigator !== "undefined" && "wakeLock" in navigator
-	const sentinelRef = useRef<any>(null)
+	const sentinelRef = useRef<wakesentinel | null>(null)
 
 	const request = useCallback(async () => {
 		if (!supported) return
 		try {
-			sentinelRef.current = await navigator.wakeLock.request("screen")
+			const lock = (navigator as wakelocknavigator).wakeLock
+			if (!lock) return
+			sentinelRef.current = await lock.request("screen")
 			sentinelRef.current.addEventListener("release", () => setActive(false))
 			setActive(true)
 		} catch {}

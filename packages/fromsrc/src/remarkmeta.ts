@@ -67,7 +67,9 @@ function transformer(tree: Root) {
 	visit(tree, "code", (node: Code) => {
 		if (!node.meta) return
 		const meta = parseMeta(node.meta)
-		;(node as any).data = { ...node.data, meta }
+		const data = (node.data ?? {}) as Code["data"] & { meta?: CodeMeta }
+		data.meta = meta
+		node.data = data
 	})
 }
 

@@ -12,6 +12,8 @@ export type PermissionName =
 
 export type PermissionState = "granted" | "denied" | "prompt" | "unknown"
 
+type permissionquery = { query: (options: { name: string }) => Promise<PermissionStatus> }
+
 export function usePermission(name: PermissionName): PermissionState {
 	const [state, setState] = useState<PermissionState>("unknown")
 
@@ -22,8 +24,8 @@ export function usePermission(name: PermissionName): PermissionState {
 
 		let mounted = true
 
-		navigator.permissions
-			.query({ name: name as any })
+		;(navigator.permissions as unknown as permissionquery)
+			.query({ name })
 			.then((status) => {
 				if (!mounted) return
 				setState(status.state as PermissionState)

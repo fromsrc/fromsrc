@@ -2,9 +2,18 @@ import type { Element, Root } from "hast"
 import type { Plugin } from "unified"
 import { visit } from "unist-util-visit"
 
-function extractText(node: any): string {
-	if (node.type === "text") return node.value
-	if (node.children) return node.children.map(extractText).join("")
+type textnode = { type: "text"; value: string }
+type parentnode = { children?: unknown[] }
+
+function istext(node: unknown): node is textnode {
+	return typeof node === "object" && node !== null && (node as textnode).type === "text"
+}
+
+function extractText(node: unknown): string {
+	if (istext(node)) return node.value
+	if (typeof node === "object" && node !== null && Array.isArray((node as parentnode).children)) {
+		return (node as parentnode).children?.map(extractText).join("") ?? ""
+	}
 	return ""
 }
 

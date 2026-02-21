@@ -30,9 +30,12 @@ function transformer(tree: Root) {
 		if (node.children.length === 0) return
 		const result = findTrailingId(node.children)
 		if (!result) return
-		const data = (node.data || {}) as any
+		const data = (node.data ?? {}) as Heading["data"] & {
+			id?: string
+			hProperties?: Record<string, unknown>
+		}
 		data.id = result.id
-		data.hProperties = { ...(data.hProperties as object), id: result.id }
+		data.hProperties = { ...(data.hProperties ?? {}), id: result.id }
 		node.data = data
 		stripId(node, result.index)
 	})

@@ -62,7 +62,7 @@ export const rehypeToc: Plugin<[RehypeTocOptions?], Root> = (options) => {
 	const min = options?.minLevel ?? 2
 	const max = options?.maxLevel ?? 4
 
-	return (tree: Root, file: any) => {
+	return (tree: Root, file: { data: Record<string, unknown> }) => {
 		const headings: { id: string; text: string; level: number }[] = []
 
 		visit(tree, "element", (node: Element) => {
@@ -76,7 +76,7 @@ export const rehypeToc: Plugin<[RehypeTocOptions?], Root> = (options) => {
 			headings.push({ id, text, level })
 		})
 
-		file.data.headings = headings
-		file.data.toc = buildTree(headings)
+		file.data["headings"] = headings
+		file.data["toc"] = buildTree(headings)
 	}
 }
