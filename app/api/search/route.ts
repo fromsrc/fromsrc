@@ -77,10 +77,12 @@ async function compute(query: string | undefined, limit: number): Promise<row[]>
 
 export async function GET(request: Request) {
 	const url = new URL(request.url)
-	const values = schema.parse({
+	const parsed = schema.safeParse({
 		q: url.searchParams.get("q") ?? undefined,
 		limit: url.searchParams.get("limit") ?? undefined,
 	})
+	if (!parsed.success) return Response.json([], { status: 400, headers })
+	const values = parsed.data
 	const query = normalize(values.q)
 	const key = `${query}::${values.limit}`
 	const cached = get(key)

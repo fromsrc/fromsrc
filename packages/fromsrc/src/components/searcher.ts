@@ -58,6 +58,10 @@ function save(key: string, value: SearchResult[]): void {
 async function load(endpoint: string, query: string, limit: number): Promise<SearchResult[]> {
 	const params = new URLSearchParams({ q: query, limit: String(limit) })
 	const response = await fetch(`${endpoint}?${params}`)
+	if (!response.ok) {
+		if (response.status === 400) return []
+		throw new Error("search request failed")
+	}
 	const json: unknown = await response.json()
 	return convert(schema.parse(json))
 }
