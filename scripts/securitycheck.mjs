@@ -46,6 +46,8 @@ try {
 	const mdx = await readFile(mdxPath, "utf8");
 	const hasDangerous = /blockDangerousJS:\s*true/.test(mdx);
 	const hasBlockJsOff = /blockJS:\s*false/.test(mdx);
+	const hasSlugImport = /rehypeSlug/.test(mdx);
+	const hasSlugPlugin = /rehypePlugins:\s*\[[\s\S]*rehypeSlug/.test(mdx);
 	if (!hasDangerous) {
 		console.error("x blockDangerousJS is not set to true in docs mdx renderer");
 		fail = true;
@@ -57,6 +59,12 @@ try {
 		fail = true;
 	} else {
 		console.log("o blockJS remains false for trusted local docs");
+	}
+	if (!hasSlugImport || !hasSlugPlugin) {
+		console.error("x rehypeSlug is missing from docs mdx pipeline");
+		fail = true;
+	} else {
+		console.log("o rehypeSlug remains enabled for unique heading ids");
 	}
 } catch {
 	console.error("x docs mdx renderer file missing");
