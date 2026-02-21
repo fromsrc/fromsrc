@@ -82,8 +82,8 @@ export function Panel({
 						<input ref={input} type="text" value={query} onChange={(event) => onChange(event.target.value)} onKeyDown={onKey} placeholder="search documentation..." className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none" role="combobox" aria-expanded={results.length > 0} aria-haspopup="listbox" aria-controls="search-listbox" aria-activedescendant={safe >= 0 ? getOptionId(safe) : undefined} aria-autocomplete="list" />
 						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">esc</kbd>
 					</div>
-					<div className="max-h-80 overflow-y-auto">
-						{!value.trim() && recent.length > 0 ? <Recent items={recent} onSelect={onSelect} /> : loading ? <div className="p-8 text-center text-muted text-sm">loading</div> : results.length === 0 ? <div className="p-8 text-center text-muted text-sm">no results</div> : <Results results={results} selected={safe} query={value} listRef={list} onResultClick={onNavigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && onNavigate(slug, anchor)} />}
+					<div className="max-h-80 overflow-y-auto" aria-busy={loading}>
+						{!value.trim() && recent.length > 0 ? <Recent items={recent} onSelect={onSelect} /> : loading ? <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">loading</div> : results.length === 0 ? <div className="p-8 text-center text-muted text-sm" role="status" aria-live="polite">no results</div> : <Results results={results} selected={safe} query={value} listRef={list} onResultClick={onNavigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && onNavigate(slug, anchor)} />}
 					</div>
 					<Hints />
 				</div>
