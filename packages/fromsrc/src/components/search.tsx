@@ -178,7 +178,12 @@ export function Search({
 	return (
 		<div className="fixed inset-0 z-[100]">
 			<button type="button" className="fixed inset-0 bg-bg/80 backdrop-blur-sm cursor-default" onClick={() => setOpen(false)} aria-label="close search" />
-			<div className="relative z-10 max-w-lg mx-auto mt-[20vh]">
+			<div
+				className="relative z-10 max-w-lg mx-auto mt-[20vh]"
+				role="dialog"
+				aria-modal="true"
+				aria-label="search documentation"
+			>
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
 						<IconSearch className="w-4 h-4 text-muted" size={16} />
