@@ -18,6 +18,7 @@ const schema = z.array(
 
 interface cacheentry {
 	at: number
+	etag?: string
 	results: SearchResult[]
 }
 
@@ -49,23 +50,35 @@ function convert(rows: z.infer<typeof schema>): SearchResult[] {
 	}))
 }
 
-function save(key: string, value: SearchResult[]): void {
+function saveWithEtag(key: string, value: SearchResult[], etag?: string): void {
 	if (store.size >= max) {
 		const oldest = store.keys().next().value
 		if (oldest) store.delete(oldest)
 	}
-	store.set(key, { at: Date.now(), results: value })
+	store.set(key, { at: Date.now(), results: value, etag })
 }
 
-async function load(endpoint: string, query: string, limit: number): Promise<SearchResult[]> {
+async function load(
+	endpoint: string,
+	query: string,
+	limit: number,
+	stale?: cacheentry,
+	signal?: AbortSignal,
+): Promise<SearchResult[]> {
 	const params = new URLSearchParams({ q: query, limit: String(limit) })
-	const response = await fetch(`${endpoint}?${params}`)
+	const response = await fetch(`${endpoint}?${params}`, {
+		signal,
+		headers: stale?.etag ? { "If-None-Match": stale.etag } : undefined,
+	})
+	if (response.status === 304) return stale?.results ?? []
 	if (!response.ok) {
 		if (response.status === 400) return []
 		throw new Error("search request failed")
 	}
 	const json: unknown = await response.json()
-	return convert(schema.parse(json))
+	const value = convert(schema.parse(json))
+	saveWithEtag(key(endpoint, query, limit), value, response.headers.get("etag") ?? undefined)
+	return value
 }
 
 export function useSearcher(endpoint: string | undefined, query: string, limit: number) {
@@ -89,20 +102,21 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 		}
 
 		let active = true
+		const controller = new AbortController()
 		setLoading(true)
 
-		const request = inflight.get(cachekey) ?? load(endpoint, text, limit)
+		const request = inflight.get(cachekey) ?? load(endpoint, text, limit, cached, controller.signal)
 		if (!inflight.has(cachekey)) inflight.set(cachekey, request)
 
 		request
 			.then((value) => {
 				if (!active) return
-				save(cachekey, value)
 				setResults(value)
 				setLoading(false)
 			})
-			.catch(() => {
+			.catch((error: unknown) => {
 				if (!active) return
+				if (error instanceof DOMException && error.name === "AbortError") return
 				setResults([])
 				setLoading(false)
 			})
@@ -112,6 +126,7 @@ export function useSearcher(endpoint: string | undefined, query: string, limit: 
 
 		return () => {
 			active = false
+			controller.abort()
 		}
 	}, [endpoint, query, limit])
 
