@@ -26,8 +26,6 @@ interface Collection<T> {
 
 type InferCollection<T extends z.ZodRawShape> = z.infer<z.ZodObject<T>>
 
-const cache = new Map<string, CollectionItem<unknown>[]>()
-
 async function scan<T extends z.ZodRawShape>(
 	dir: string,
 	schema: z.ZodObject<T>,
@@ -43,7 +41,7 @@ async function scan<T extends z.ZodRawShape>(
 				const filepath = join(current, entry.name)
 				const source = await readFile(filepath, "utf-8")
 				const { data, content } = matter(source)
-				const parsed = schema.parse(data) as InferCollection<T>
+				const parsed = schema.parse(data)
 				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
 				items.push({ slug, content, data: parsed })
 			}
@@ -58,12 +56,12 @@ export function defineCollection<T extends z.ZodRawShape>(
 	config: CollectionConfig<T>,
 ): Collection<InferCollection<T>> {
 	type Item = CollectionItem<InferCollection<T>>
+	let cached: Item[] | null = null
 
 	async function load(): Promise<Item[]> {
-		const cached = cache.get(config.name)
-		if (cached) return cached as Item[]
+		if (cached) return cached
 		const items = await scan(config.dir, config.schema)
-		cache.set(config.name, items as CollectionItem<unknown>[])
+		cached = items
 		return items
 	}
 
