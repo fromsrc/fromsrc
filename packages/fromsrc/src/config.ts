@@ -44,6 +44,14 @@ const defaults: Omit<ResolvedConfig, "title"> = {
 	draft: false,
 }
 
+function isrecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function parseconfig(value: unknown): FromsrcConfig | null {
+	return isrecord(value) ? (value as FromsrcConfig) : null
+}
+
 export function defineConfig(config: FromsrcConfig): FromsrcConfig {
 	return config
 }
@@ -59,12 +67,14 @@ export async function loadConfig(dir: string): Promise<FromsrcConfig> {
 	for (const name of ["fromsrc.config.ts", "fromsrc.config.js"]) {
 		try {
 			const mod = await import(join(dir, name))
-			return mod.default ?? mod
+			const parsed = parseconfig(mod.default ?? mod)
+			if (parsed) return parsed
 		} catch {}
 	}
 	try {
 		const raw = await readFile(join(dir, "fromsrc.config.json"), "utf-8")
-		return JSON.parse(raw)
+		const parsed = parseconfig(JSON.parse(raw) as unknown)
+		if (parsed) return parsed
 	} catch {}
 	throw new Error("no config found")
 }
