@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { DocMeta, SearchDoc } from "../content"
 import { useDebounce } from "../hooks/debounce"
 import { useLocalStorage } from "../hooks/storage"
+import { useScrollLock } from "../hooks/scrolllock"
 import type { SearchAdapter } from "../search"
 import { localSearch } from "../search"
 import { getOptionId } from "./results"
@@ -70,6 +71,7 @@ export function Search({
 	const results = endpoint ? remoteResults : local
 	const loading = Boolean(endpoint) && remote.loading
 	const safe = results.length === 0 ? -1 : Math.min(selected, results.length - 1)
+	useScrollLock(open)
 	const openmodal = useCallback((): void => {
 		const active = document.activeElement
 		lastfocus.current = active instanceof HTMLElement ? active : null
@@ -96,15 +98,10 @@ export function Search({
 	useEffect(() => {
 		if (open) {
 			input.current?.focus()
-			document.body.style.overflow = "hidden"
 		} else {
 			updatequery("")
 			setSelected(0)
-			document.body.style.overflow = ""
 			lastfocus.current?.focus()
-		}
-		return () => {
-			document.body.style.overflow = ""
 		}
 	}, [open, updatequery])
 

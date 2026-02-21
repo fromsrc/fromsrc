@@ -2,19 +2,31 @@
 
 import { useEffect } from "react"
 
-/**
- * Locks page scrolling by setting body overflow to hidden
- * @param locked - Whether scrolling should be locked
- */
+let count = 0
+let saved = ""
+
+function lock(): void {
+	if (count === 0) {
+		saved = document.body.style.overflow
+		document.body.style.overflow = "hidden"
+	}
+	count += 1
+}
+
+function unlock(): void {
+	if (count === 0) return
+	count -= 1
+	if (count === 0) {
+		document.body.style.overflow = saved
+		saved = ""
+	}
+}
+
 export function useScrollLock(locked: boolean): void {
 	useEffect(() => {
 		if (!locked) return
 
-		const prev = document.body.style.overflow
-		document.body.style.overflow = "hidden"
-
-		return () => {
-			document.body.style.overflow = prev
-		}
+		lock()
+		return () => unlock()
 	}, [locked])
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { type JSX, memo, useCallback, useEffect, useRef, useState } from "react"
+import { useScrollLock } from "../hooks/scrolllock"
 
 export interface SearchDialogProps {
 	open: boolean
@@ -17,6 +18,7 @@ export const SearchDialog = memo(function SearchDialog({
 }: SearchDialogProps): JSX.Element | null {
 	const [query, setQuery] = useState("")
 	const inputRef = useRef<HTMLInputElement>(null)
+	useScrollLock(open)
 
 	useEffect(() => {
 		if (!open) {
@@ -26,11 +28,9 @@ export const SearchDialog = memo(function SearchDialog({
 		const handler = (e: KeyboardEvent): void => {
 			if (e.key === "Escape") onClose()
 		}
-		document.body.style.overflow = "hidden"
 		window.addEventListener("keydown", handler)
 		requestAnimationFrame(() => inputRef.current?.focus())
 		return () => {
-			document.body.style.overflow = ""
 			window.removeEventListener("keydown", handler)
 		}
 	}, [open, onClose])
