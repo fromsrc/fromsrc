@@ -13,7 +13,7 @@ export function Recent({ items, onSelect }: RecentProps): JSX.Element | null {
 	return (
 		<div className="p-2">
 			<div className="px-3 py-1.5 text-[10px] uppercase tracking-wider text-dim">recent</div>
-			<ul role="listbox">
+			<ul id="search-listbox" role="listbox">
 				{items.map((item) => (
 					<li key={item} role="option" aria-selected={false}>
 						<button

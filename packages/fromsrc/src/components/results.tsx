@@ -76,7 +76,7 @@ export function Results({
 							const i = idx++
 							return (
 								<li
-									key={result.doc.slug || "index"}
+									key={`${result.doc.slug || "index"}::${result.anchor || "page"}::${i}`}
 									id={getOptionId(i)}
 									role="option"
 									aria-selected={i === selected}
