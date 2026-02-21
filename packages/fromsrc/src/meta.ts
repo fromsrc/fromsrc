@@ -18,9 +18,13 @@ export interface PageTreeItem {
 const metaCache = new Map<string, MetaFile | null>()
 const isProduction = () => process.env.NODE_ENV === "production"
 
+function isrecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null
+}
+
 function isMetaFile(data: unknown): data is MetaFile {
-	if (typeof data !== "object" || data === null) return false
-	const obj = data as Record<string, unknown>
+	if (!isrecord(data)) return false
+	const obj = data
 	if (obj.title !== undefined && typeof obj.title !== "string") return false
 	if (obj.icon !== undefined && typeof obj.icon !== "string") return false
 	if (obj.pages !== undefined && !Array.isArray(obj.pages)) return false
