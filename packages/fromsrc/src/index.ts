@@ -27,8 +27,6 @@ export {
 	createSearchAdapter,
 	localSearch,
 } from "./search"
-export { type AlgoliaConfig, createalgoliaadapter } from "./algolia"
-export { type OramaConfig, createoramaadapter } from "./orama"
 export { lastModified, lastModifiedAll } from "./lastmodified"
 export { type LlmsConfig, generateLlmsIndex, generateLlmsFull } from "./llms"
 export {

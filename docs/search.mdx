@@ -69,7 +69,7 @@ use the built-in orama adapter for hosted search endpoints:
 
 ```tsx
 import { Search } from "fromsrc/client"
-import { createoramaadapter } from "fromsrc"
+import { createoramaadapter } from "fromsrc/orama"
 
 const adapter = createoramaadapter({
   endpoint: "https://your-orama-endpoint/search",
@@ -85,7 +85,7 @@ use the built-in algolia adapter for remote hosted search:
 
 ```tsx
 import { Search } from "fromsrc/client"
-import { createalgoliaadapter } from "fromsrc"
+import { createalgoliaadapter } from "fromsrc/algolia"
 
 const adapter = createalgoliaadapter({
   appid: "your-app-id",

@@ -1,6 +1,5 @@
 import type { SearchDoc } from "./content"
 import type { SearchAdapter, SearchResult } from "./search"
-import { z } from "./schema"
 
 export interface OramaConfig {
 	endpoint: string
@@ -9,34 +8,55 @@ export interface OramaConfig {
 	headers?: Record<string, string>
 }
 
-const hitschema = z.object({
-	slug: z.string().optional(),
-	path: z.string().optional(),
-	title: z.string().optional(),
-	description: z.string().optional(),
-	content: z.string().optional(),
-	anchor: z.string().optional(),
-	heading: z.string().optional(),
-	snippet: z.string().optional(),
-	score: z.number().optional(),
-	document: z.object({
-		slug: z.string().optional(),
-		path: z.string().optional(),
-		title: z.string().optional(),
-		description: z.string().optional(),
-		content: z.string().optional(),
-		anchor: z.string().optional(),
-		heading: z.string().optional(),
-		snippet: z.string().optional(),
-		score: z.number().optional(),
-	}).optional(),
-})
+type hit = {
+	slug?: string
+	path?: string
+	title?: string
+	description?: string
+	content?: string
+	anchor?: string
+	heading?: string
+	snippet?: string
+	score?: number
+	document?: hit
+}
 
-const responseschema = z.union([
-	z.object({ hits: z.array(hitschema) }),
-	z.object({ results: z.array(hitschema) }),
-	z.array(hitschema),
-])
+function isrecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null
+}
+
+function getstring(value: unknown): string | undefined {
+	return typeof value === "string" ? value : undefined
+}
+
+function getnumber(value: unknown): number | undefined {
+	return typeof value === "number" ? value : undefined
+}
+
+function parsehit(value: unknown): hit | null {
+	if (!isrecord(value)) return null
+	const nested = isrecord(value.document) ? parsehit(value.document) : null
+	const document = nested ?? undefined
+	return {
+		slug: getstring(value.slug),
+		path: getstring(value.path),
+		title: getstring(value.title),
+		description: getstring(value.description),
+		content: getstring(value.content),
+		anchor: getstring(value.anchor),
+		heading: getstring(value.heading),
+		snippet: getstring(value.snippet),
+		score: getnumber(value.score),
+		document,
+	}
+}
+
+function parsehits(value: unknown): hit[] {
+	if (Array.isArray(value)) return value.map(parsehit).filter((item): item is hit => item !== null)
+	if (!isrecord(value)) return []
+	const hits = Array.isArray(value.hits) ? value.hits : Array.isArray(value.results) ? value.results : []
+	return hits.map(parsehit).filter((item): item is hit => item !== null)
+}
 
 function normalize(doc: SearchDoc): SearchDoc {
 	return {
@@ -53,14 +73,8 @@ function fallback(query: string, docs: SearchDoc[], limit: number): SearchResult
 	return []
 }
 
-function extract(payload: z.infer<typeof responseschema>): z.infer<typeof hitschema>[] {
-	if (Array.isArray(payload)) return payload
-	if ("hits" in payload) return payload.hits
-	return payload.results
-}
-
-function maphit(hit: z.infer<typeof hitschema>, index: number, total: number): SearchResult | null {
-	const source = hit.document ?? hit
+function maphit(entry: hit, index: number, total: number): SearchResult | null {
+	const source = entry.document ?? entry
 	const slug = source.slug ?? source.path
 	const title = source.title ?? source.heading ?? slug
 	if (!slug || !title) return null
@@ -99,9 +113,7 @@ export function createoramaadapter(config: OramaConfig): SearchAdapter {
 			})
 			if (!response.ok) return []
 			const json = await response.json()
-			const parsed = responseschema.safeParse(json)
-			if (!parsed.success) return []
-			const hits = extract(parsed.data)
+			const hits = parsehits(json)
 			const result: SearchResult[] = []
 			for (let i = 0; i < hits.length; i++) {
 				const item = maphit(hits[i]!, i, hits.length)

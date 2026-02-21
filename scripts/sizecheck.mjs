@@ -28,6 +28,18 @@ const list = [
 		maxgzip: 340,
 	},
 	{
+		name: "algolia",
+		code: "import { createalgoliaadapter } from 'fromsrc/algolia'; export default createalgoliaadapter;",
+		max: 3200,
+		maxgzip: 1200,
+	},
+	{
+		name: "orama",
+		code: "import { createoramaadapter } from 'fromsrc/orama'; export default createoramaadapter;",
+		max: 3200,
+		maxgzip: 1200,
+	},
+	{
 		name: "next",
 		code: "import { nextAdapter } from 'fromsrc/next'; export default nextAdapter;",
 		max: 650,

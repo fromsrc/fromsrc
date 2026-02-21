@@ -53,6 +53,14 @@
 			"types": "./dist/llms.d.ts",
 			"import": "./dist/llms.js"
 		},
+		"./algolia": {
+			"types": "./dist/algolia.d.ts",
+			"import": "./dist/algolia.js"
+		},
+		"./orama": {
+			"types": "./dist/orama.d.ts",
+			"import": "./dist/orama.js"
+		},
 		"./styles/reset.css": "./styles/reset.css"
 	},
 	"files": [

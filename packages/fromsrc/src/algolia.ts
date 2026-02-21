@@ -1,6 +1,5 @@
 import type { SearchDoc } from "./content"
 import type { SearchAdapter, SearchResult } from "./search"
-import { z } from "./schema"
 
 export interface AlgoliaConfig {
 	appid: string
@@ -9,28 +8,13 @@ export interface AlgoliaConfig {
 	attributes?: string[]
 }
 
-const snippetschema = z.object({
-	value: z.string().optional(),
-})
+function isrecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null
+}
 
-const hitschema = z.object({
-	slug: z.string().optional(),
-	path: z.string().optional(),
-	title: z.string().optional(),
-	description: z.string().optional(),
-	content: z.string().optional(),
-	anchor: z.string().optional(),
-	heading: z.string().optional(),
-	_snippetResult: z.object({
-		content: snippetschema.optional(),
-		description: snippetschema.optional(),
-		heading: snippetschema.optional(),
-	}).optional(),
-})
-
-const responseschema = z.object({
-	hits: z.array(hitschema),
-})
+function getstring(value: unknown): string | undefined {
+	return typeof value === "string" ? value : undefined
+}
 
 function normalize(doc: SearchDoc): SearchDoc {
 	return {
@@ -47,27 +31,39 @@ function fallback(query: string, docs: SearchDoc[], limit: number): SearchResult
 	return []
 }
 
-function maphit(hit: z.infer<typeof hitschema>, index: number, total: number): SearchResult | null {
-	const slug = hit.slug ?? hit.path
-	const title = hit.title ?? hit.heading ?? slug
+function parsehits(value: unknown): Record<string, unknown>[] {
+	if (!isrecord(value)) return []
+	const hits = value.hits
+	if (!Array.isArray(hits)) return []
+	return hits.filter(isrecord)
+}
+
+function maphit(hit: Record<string, unknown>, index: number, total: number): SearchResult | null {
+	const snippetresult = isrecord(hit._snippetResult) ? hit._snippetResult : null
+	const contentmeta = snippetresult && isrecord(snippetresult.content) ? snippetresult.content : null
+	const descriptionmeta = snippetresult && isrecord(snippetresult.description) ? snippetresult.description : null
+	const headingmeta = snippetresult && isrecord(snippetresult.heading) ? snippetresult.heading : null
+	const slug = getstring(hit.slug) ?? getstring(hit.path)
+	const heading = getstring(hit.heading)
+	const title = getstring(hit.title) ?? heading ?? slug
 	if (!slug || !title) return null
 	const snippet =
-		hit._snippetResult?.content?.value ??
-		hit._snippetResult?.description?.value ??
-		hit._snippetResult?.heading?.value ??
-		hit.description ??
-		hit.content
+		getstring(contentmeta?.value) ??
+		getstring(descriptionmeta?.value) ??
+		getstring(headingmeta?.value) ??
+		getstring(hit.description) ??
+		getstring(hit.content)
 	return {
 		doc: normalize({
 			slug,
 			title,
-			description: hit.description,
-			content: hit.content ?? "",
+			description: getstring(hit.description),
+			content: getstring(hit.content) ?? "",
 		}),
 		score: Math.max(1, total - index),
 		snippet,
-		anchor: hit.anchor,
-		heading: hit.heading,
+		anchor: getstring(hit.anchor),
+		heading,
 	}
 }
 
@@ -92,11 +88,10 @@ export function createalgoliaadapter(config: AlgoliaConfig): SearchAdapter {
 			})
 			if (!response.ok) return []
 			const json = await response.json()
-			const parsed = responseschema.safeParse(json)
-			if (!parsed.success) return []
+			const hits = parsehits(json)
 			const result: SearchResult[] = []
-			for (let i = 0; i < parsed.data.hits.length; i++) {
-				const item = maphit(parsed.data.hits[i]!, i, parsed.data.hits.length)
+			for (let i = 0; i < hits.length; i++) {
+				const item = maphit(hits[i]!, i, hits.length)
 				if (item) result.push(item)
 			}
 			return result
