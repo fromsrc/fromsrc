@@ -38,8 +38,8 @@
 			"import": "./dist/astro.js"
 		},
 		"./readtime": {
-			"types": "./dist/components/readtime.d.ts",
-			"import": "./dist/components/readtime.js"
+			"types": "./dist/readtime.d.ts",
+			"import": "./dist/readtime.js"
 		},
 		"./searchscore": {
 			"types": "./dist/searchscore.d.ts",

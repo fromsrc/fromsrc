@@ -1,4 +1,5 @@
 import { memo, type JSX } from "react"
+import { calcReadTime } from "../readtime"
 
 /**
  * Props for the ReadTime component
@@ -17,8 +18,7 @@ export const ReadTime = memo(function ReadTime({
 	wpm = 200,
 	className,
 }: Props): JSX.Element {
-	const words = content.trim().split(/\s+/).length
-	const minutes = Math.max(1, Math.ceil(words / wpm))
+	const minutes = calcReadTime(content, wpm)
 
 	return (
 		<span
@@ -31,10 +31,4 @@ export const ReadTime = memo(function ReadTime({
 	)
 })
 
-/**
- * Calculate reading time in minutes
- */
-export function calcReadTime(content: string, wpm = 200): number {
-	const words = content.trim().split(/\s+/).length
-	return Math.max(1, Math.ceil(words / wpm))
-}
+export { calcReadTime }

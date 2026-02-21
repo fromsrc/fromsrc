@@ -1,4 +1,5 @@
-export { calcReadTime, ReadTime } from "./components/readtime"
+export { calcReadTime } from "./readtime"
+export { ReadTime } from "./components/readtime"
 export {
 	type ContentConfig,
 	type Doc,

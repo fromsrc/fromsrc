@@ -129,7 +129,7 @@ export default defineConfig([
 	},
 	{
 		entry: [
-			"src/components/readtime.tsx",
+			"src/readtime.ts",
 			"src/searchscore.ts",
 			"src/searchindex.ts",
 			"src/llms.ts",
