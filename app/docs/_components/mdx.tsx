@@ -215,6 +215,7 @@ const components = {
 	Badge,
 	Banner,
 	Zoom,
+	CodeBlock,
 	CodeGroup,
 	CodeTab,
 	CodeTabs,

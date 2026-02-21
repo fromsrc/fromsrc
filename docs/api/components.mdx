@@ -112,6 +112,9 @@ tabbed code blocks for multiple examples.
 
 <TypeTable
   data={{
+    defaultValue: { type: "string", description: "initially active tab value" },
+    group: { type: "string", default: '"global"', description: "shared persistence key" },
+    persist: { type: "boolean", default: "true", description: "persist selected tab across groups" },
     children: { type: "ReactNode", required: true, description: "CodeTab elements" },
   }}
 />
@@ -122,7 +125,8 @@ individual tab in a code group.
 
 <TypeTable
   data={{
-    title: { type: "string", required: true, description: "tab label" },
+    value: { type: "string", required: true, description: "tab value" },
+    label: { type: "string", required: true, description: "tab label" },
     children: { type: "ReactNode", required: true, description: "code block content" },
   }}
 />

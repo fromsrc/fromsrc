@@ -9,20 +9,42 @@ group code blocks with tabs for different languages or examples.
 ## usage
 
 ```tsx
-// example structure
-<CodeGroup defaultValue="bun">
+<CodeGroup group="pm" defaultValue="bun" persist>
   <CodeTabs>
-    <CodeTab value="bun" label="bun"></CodeTab>
-    <CodeTab value="npm" label="npm"></CodeTab>
+    <CodeTab value="bun" label="bun" />
+    <CodeTab value="npm" label="npm" />
+    <CodeTab value="pnpm" label="pnpm" />
   </CodeTabs>
   <CodeTab value="bun" label="bun">
-    {/* code block here */}
+    <CodeBlock lang="bash">bun add fromsrc</CodeBlock>
   </CodeTab>
   <CodeTab value="npm" label="npm">
-    {/* code block here */}
+    <CodeBlock lang="bash">npm install fromsrc</CodeBlock>
+  </CodeTab>
+  <CodeTab value="pnpm" label="pnpm">
+    <CodeBlock lang="bash">pnpm add fromsrc</CodeBlock>
   </CodeTab>
 </CodeGroup>
 ```
+
+## live
+
+<CodeGroup group="pm" defaultValue="bun" persist>
+	<CodeTabs>
+		<CodeTab value="bun" label="bun" />
+		<CodeTab value="npm" label="npm" />
+		<CodeTab value="pnpm" label="pnpm" />
+	</CodeTabs>
+	<CodeTab value="bun" label="bun">
+		<CodeBlock lang="bash">bun add fromsrc</CodeBlock>
+	</CodeTab>
+	<CodeTab value="npm" label="npm">
+		<CodeBlock lang="bash">npm install fromsrc</CodeBlock>
+	</CodeTab>
+	<CodeTab value="pnpm" label="pnpm">
+		<CodeBlock lang="bash">pnpm add fromsrc</CodeBlock>
+	</CodeTab>
+</CodeGroup>
 
 ## components
 
@@ -33,6 +55,8 @@ container for tabbed code blocks.
 | prop | type | default | description |
 |------|------|---------|-------------|
 | defaultValue | string | - | initially active tab |
+| group | string | "global" | shared persistence key |
+| persist | boolean | true | store selected tab in local storage |
 
 ### codetabs
 
@@ -46,3 +70,10 @@ individual tab button and content.
 |------|------|---------|-------------|
 | value | string | required | unique identifier |
 | label | string | required | tab label text |
+
+## keyboard
+
+| key | action |
+|-----|--------|
+| `ArrowLeft` / `ArrowRight` | previous / next tab |
+| `Home` / `End` | first / last tab |
