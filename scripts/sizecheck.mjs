@@ -5,52 +5,52 @@ const list = [
 	{
 		name: "readtime",
 		code: "import { calcReadTime } from 'fromsrc/readtime'; export default calcReadTime('a b c');",
-		max: 400,
+		max: 250,
 	},
 	{
 		name: "searchscore",
 		code: "import { scoreterms, termindex } from 'fromsrc/searchscore'; const data={title:'intro',slug:'/intro',description:'d',content:'text',titleindex:termindex(['intro']),slugindex:termindex(['intro']),descriptionindex:termindex(['d']),headingindex:termindex(['intro']),contentindex:termindex(['text'])}; export default scoreterms(['intro'],data);",
-		max: 1500,
+		max: 1400,
 	},
 	{
 		name: "searchindex",
 		code: "import { addDocument, createIndex, search } from 'fromsrc/searchindex'; const index=createIndex(); addDocument(index,{path:'/a',title:'a',headings:['h'],content:'body'}); export default search(index,'a');",
-		max: 4000,
+		max: 1400,
 	},
 	{
 		name: "llms",
 		code: "import { generateLlmsIndex } from 'fromsrc/llms'; export default generateLlmsIndex({title:'a',description:'b',baseUrl:'https://x.y'},[{title:'t',slug:'s'}]);",
-		max: 1000,
+		max: 600,
 	},
 	{
 		name: "next",
 		code: "import { nextAdapter } from 'fromsrc/next'; export default nextAdapter;",
-		max: 800,
+		max: 650,
 	},
 	{
 		name: "reactrouter",
 		code: "import { reactRouterAdapter } from 'fromsrc/react-router'; export default reactRouterAdapter;",
-		max: 800,
+		max: 600,
 	},
 	{
 		name: "tanstack",
 		code: "import { tanstackAdapter } from 'fromsrc/tanstack'; export default tanstackAdapter;",
-		max: 800,
+		max: 650,
 	},
 	{
 		name: "remix",
 		code: "import { remixAdapter } from 'fromsrc/remix'; export default remixAdapter;",
-		max: 800,
+		max: 650,
 	},
 	{
 		name: "astro",
 		code: "import { astroAdapter } from 'fromsrc/astro'; export default astroAdapter;",
-		max: 1300,
+		max: 1250,
 	},
 	{
 		name: "vite",
 		code: "import { viteAdapter } from 'fromsrc/vite'; export default viteAdapter;",
-		max: 1300,
+		max: 1250,
 	},
 ];
 
