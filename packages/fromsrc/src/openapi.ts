@@ -71,7 +71,7 @@ function extractRequestBody(root: unknown, raw: unknown): OpenApiRequestBody | u
 
 function extractResponses(root: unknown, raw: unknown): OpenApiResponse[] {
 	if (!isrecord(raw)) return []
-	return Object.entries(raw).map(([status, val]) => {
+	const list = Object.entries(raw).map(([status, val]) => {
 		const input = asrecord(val)
 		const ref = typeof input.$ref === "string" ? resolveRef(root, input.$ref) : input
 		const resolved = asrecord(ref)
@@ -81,6 +81,12 @@ function extractResponses(root: unknown, raw: unknown): OpenApiResponse[] {
 			content: resolveContent(root, resolved.content),
 		}
 	})
+	const rank = (status: string): number => {
+		if (status === "default") return Number.MAX_SAFE_INTEGER
+		const numeric = Number(status)
+		return Number.isFinite(numeric) ? numeric : Number.MAX_SAFE_INTEGER - 1
+	}
+	return list.sort((left, right) => rank(left.status) - rank(right.status))
 }
 
 function extractSecurity(raw: unknown): string[] | undefined {

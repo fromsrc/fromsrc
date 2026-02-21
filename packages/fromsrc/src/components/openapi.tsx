@@ -37,6 +37,39 @@ function sorted(endpoints: OpenApiEndpoint[]): OpenApiEndpoint[] {
 	})
 }
 
+function formatseclabel(list: string[] | undefined): string | null {
+	if (!list || list.length === 0) return null
+	return list.join(", ")
+}
+
+function endpointmeta(endpoint: OpenApiEndpoint): JSX.Element {
+	const security = formatseclabel(endpoint.security)
+	return (
+		<div className="mb-4 flex flex-wrap items-center gap-2 text-xs">
+			{endpoint.operationId && (
+				<span className="rounded border border-line px-2 py-1 font-mono text-dim">
+					{endpoint.operationId}
+				</span>
+			)}
+			{endpoint.deprecated && (
+				<span className="rounded border border-red-500/30 bg-red-500/10 px-2 py-1 text-red-400">
+					deprecated
+				</span>
+			)}
+			{endpoint.tags.map((entry) => (
+				<span key={`${endpoint.path}-${endpoint.method}-tag-${entry}`} className="rounded border border-line px-2 py-1 text-muted">
+					{entry}
+				</span>
+			))}
+			{security && (
+				<span className="rounded border border-line px-2 py-1 text-muted">
+					security: {security}
+				</span>
+			)}
+		</div>
+	)
+}
+
 function OpenapiBase({ spec, tag, method, path }: OpenapiProps): JSX.Element {
 	const parsed = useMemo(() => parsedspec(spec), [spec])
 
@@ -72,6 +105,7 @@ function OpenapiBase({ spec, tag, method, path }: OpenapiProps): JSX.Element {
 						path={endpoint.path}
 						description={endpoint.summary ?? endpoint.description}
 					>
+						{endpointmeta(endpoint)}
 						{endpoint.parameters.length > 0 && (
 							<div className="mb-4" role="list" aria-label="parameters">
 								{endpoint.parameters.map((parameter) => (
