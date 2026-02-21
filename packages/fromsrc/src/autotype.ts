@@ -48,9 +48,10 @@ function parseProperties(body: string): TypeProperty[] {
 
 	while ((match = pattern.exec(body)) !== null) {
 		const jsdoc = match[1] as string | undefined
-		const name = match[2]!
-		const optional = match[3]!
-		const rawType = match[4]!
+		const name = match[2]
+		const optional = match[3]
+		const rawType = match[4]
+		if (!name || optional === undefined || !rawType) continue
 		const property: TypeProperty = {
 			name,
 			type: normalizeType(rawType),
@@ -77,9 +78,10 @@ export function parseTypes(source: string): TypeDefinition[] {
 
 	while ((match = pattern.exec(source)) !== null) {
 		const jsdoc = match[1] as string | undefined
-		const name = match[2]!
+		const name = match[2]
 		const extendsClause = match[3] as string | undefined
-		const body = match[4]!
+		const body = match[4]
+		if (!name || !body) continue
 		const definition: TypeDefinition = {
 			name,
 			properties: parseProperties(body),

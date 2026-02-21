@@ -22,9 +22,12 @@ export type AuditResult = {
 function parsefrontmatter(raw: string): { fields: Record<string, string>; body: string } {
 	const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
 	if (!match) return { fields: {}, body: raw }
-	const body = raw.slice(match[0].length).trim()
+	const full = match[0]
+	const section = match[1]
+	if (!full || section === undefined) return { fields: {}, body: raw }
+	const body = raw.slice(full.length).trim()
 	const fields: Record<string, string> = {}
-	for (const line of match[1]!.split("\n")) {
+	for (const line of section.split("\n")) {
 		const idx = line.indexOf(":")
 		if (idx > 0) {
 			fields[line.slice(0, idx).trim()] = line.slice(idx + 1).trim()

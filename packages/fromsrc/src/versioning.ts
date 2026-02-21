@@ -19,10 +19,13 @@ export type VersionedPage = {
 export function parseVersion(label: string): { major: number; minor: number; patch: number } {
 	const clean = label.replace(/^v/, "")
 	const parts = clean.split(".")
+	const majorRaw = parts[0]
+	const minorRaw = parts[1]
+	const patchRaw = parts[2]
 	return {
-		major: Number.parseInt(parts[0]!, 10) || 0,
-		minor: Number.parseInt(parts[1]!, 10) || 0,
-		patch: Number.parseInt(parts[2]!, 10) || 0,
+		major: Number.parseInt(majorRaw ?? "0", 10) || 0,
+		minor: Number.parseInt(minorRaw ?? "0", 10) || 0,
+		patch: Number.parseInt(patchRaw ?? "0", 10) || 0,
 	}
 }
 
@@ -55,7 +58,7 @@ export function resolveVersion(path: string, config: VersionConfig): VersionedPa
 export function getLatestVersion(config: VersionConfig): DocVersion {
 	const latest = config.versions.find((v) => v.isLatest)
 	if (latest) return latest
-	return sortVersions(config.versions)[0]!
+	return sortVersions(config.versions)[0] ?? { label: "latest", path: "/" }
 }
 
 export function isVersionedPath(path: string, config: VersionConfig): boolean {

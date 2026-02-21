@@ -27,7 +27,9 @@ function matchAnnotation(line: string): { type: string; cleaned: string } | null
 	for (const pattern of patterns) {
 		const match = line.match(pattern)
 		if (match) {
-			const parsed = parseType(match[1]!)
+			const raw = match[1]
+			if (!raw) continue
+			const parsed = parseType(raw)
 			if (!parsed) continue
 			return {
 				type: parsed,
@@ -48,13 +50,15 @@ function transformer(tree: Root) {
 		const types = new Set<string>()
 
 		for (let i = 0; i < lines.length; i++) {
-			const result = matchAnnotation(lines[i]!)
+			const line = lines[i]
+			if (line === undefined) continue
+			const result = matchAnnotation(line)
 			if (result) {
 				annotations.push({ line: i + 1, type: result.type })
 				types.add(result.type)
 				cleaned.push(result.cleaned)
 			} else {
-				cleaned.push(lines[i]!)
+				cleaned.push(line)
 			}
 		}
 
