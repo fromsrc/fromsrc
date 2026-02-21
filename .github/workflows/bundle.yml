@@ -22,6 +22,9 @@ jobs:
       - name: security
         run: bun run check:security
 
+      - name: types
+        run: bun run check:types
+
       - name: build
         run: bun run build
 
