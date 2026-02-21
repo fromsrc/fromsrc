@@ -26,10 +26,16 @@ function computediff(before: string, after: string): DiffLine[] {
 
 	for (let i = 1; i <= m; i++) {
 		for (let j = 1; j <= n; j++) {
+			const row = lcs[i]
+			const prevrow = lcs[i - 1]
+			if (!row || !prevrow) continue
+			const diag = prevrow[j - 1] ?? 0
+			const up = prevrow[j] ?? 0
+			const left = row[j - 1] ?? 0
 			if (beforelines[i - 1] === afterlines[j - 1]) {
-				lcs[i]![j] = lcs[i - 1]![j - 1]! + 1
+				row[j] = diag + 1
 			} else {
-				lcs[i]![j] = Math.max(lcs[i - 1]![j]!, lcs[i]![j - 1]!)
+				row[j] = Math.max(up, left)
 			}
 		}
 	}
@@ -42,17 +48,26 @@ function computediff(before: string, after: string): DiffLine[] {
 
 	while (i > 0 || j > 0) {
 		if (i > 0 && j > 0 && beforelines[i - 1] === afterlines[j - 1]) {
-			result.unshift({ type: "context", content: beforelines[i - 1]!, beforeNum: beforenum, afterNum: afternum })
+			const content = beforelines[i - 1]
+			if (content === undefined) break
+			result.unshift({ type: "context", content, beforeNum: beforenum, afterNum: afternum })
 			i--
 			j--
 			beforenum--
 			afternum--
-		} else if (j > 0 && (i === 0 || lcs[i]![j - 1]! >= lcs[i - 1]![j]!)) {
-			result.unshift({ type: "add", content: afterlines[j - 1]!, afterNum: afternum })
+		} else if (
+			j > 0 &&
+			(i === 0 || (lcs[i]?.[j - 1] ?? 0) >= (lcs[i - 1]?.[j] ?? 0))
+		) {
+			const content = afterlines[j - 1]
+			if (content === undefined) break
+			result.unshift({ type: "add", content, afterNum: afternum })
 			j--
 			afternum--
 		} else if (i > 0) {
-			result.unshift({ type: "remove", content: beforelines[i - 1]!, beforeNum: beforenum })
+			const content = beforelines[i - 1]
+			if (content === undefined) break
+			result.unshift({ type: "remove", content, beforeNum: beforenum })
 			i--
 			beforenum--
 		}

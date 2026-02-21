@@ -47,7 +47,11 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 	let i = 0
 
 	while (i < nodes.length) {
-		const node = nodes[i]!
+		const node = nodes[i]
+		if (!node) {
+			i++
+			continue
+		}
 		const open = isColumnsOpen(node)
 		if (!open) {
 			if (node.children) node.children = processChildren(node.children)
@@ -65,12 +69,14 @@ function processChildren(nodes: AstNode[]): AstNode[] {
 		let current: AstNode[] | null = null
 		i++
 
-		while (i < nodes.length && !isClose(nodes[i]!)) {
-			if (isColumnOpen(nodes[i]!)) {
+		while (i < nodes.length) {
+			const child = nodes[i]
+			if (!child || isClose(child)) break
+			if (isColumnOpen(child)) {
 				if (current) columns.push(mdx("Column", [], current))
 				current = []
 			} else if (current) {
-				current.push(nodes[i]!)
+				current.push(child)
 			}
 			i++
 		}

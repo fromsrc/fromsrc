@@ -12,7 +12,8 @@ type CardNode = {
 
 function extract(node: Paragraph): { href: string; title: string } | null {
 	if (node.children.length !== 1) return null
-	const child = node.children[0]!
+	const child = node.children[0]
+	if (!child) return null
 	if (child.type !== "link") return null
 	const link = child as Link
 	if (!link.url.startsWith("https://")) return null

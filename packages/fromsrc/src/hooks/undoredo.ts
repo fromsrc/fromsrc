@@ -29,7 +29,8 @@ export function useUndoRedo<T>(initial: T): UndoRedoResult<T> {
 	const undo = useCallback(() => {
 		const past = pastRef.current
 		if (past.length === 0) return
-		const prev = past[past.length - 1]!
+		const prev = past[past.length - 1]
+		if (prev === undefined) return
 		pastRef.current = past.slice(0, -1)
 		futureRef.current = [state, ...futureRef.current]
 		setState(prev)
@@ -38,7 +39,8 @@ export function useUndoRedo<T>(initial: T): UndoRedoResult<T> {
 	const redo = useCallback(() => {
 		const future = futureRef.current
 		if (future.length === 0) return
-		const next = future[0]!
+		const next = future[0]
+		if (next === undefined) return
 		futureRef.current = future.slice(1)
 		pastRef.current = [...pastRef.current, state]
 		setState(next)

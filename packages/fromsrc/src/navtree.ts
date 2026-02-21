@@ -40,12 +40,14 @@ export function buildNavTree(config: NavTreeConfig): NavNode[] {
 		let parentChildren = root
 		let path = ""
 		for (let i = 0; i < segments.length; i++) {
-			path = path ? `${path}/${segments[i]}` : segments[i]!
+			const segment = segments[i]
+			if (!segment) continue
+			path = path ? `${path}/${segment}` : segment
 			const isLast = i === segments.length - 1
 			let existing = map.get(path)
 			if (!existing) {
 				existing = {
-					title: isLast ? doc.title : titleize(segments[i]!),
+					title: isLast ? doc.title : titleize(segment),
 					slug: path,
 					href: isLast ? `${basePath}/${path}` : undefined,
 					children: [],
@@ -105,5 +107,7 @@ export function getPrevNext(nodes: NavNode[], slug: string) {
 	const flat = flattenNavTree(nodes).filter((n) => n.href)
 	const i = flat.findIndex((n) => n.slug === slug)
 	if (i === -1) return { prev: null as NavNode | null, next: null as NavNode | null }
-	return { prev: i > 0 ? flat[i - 1]! : null, next: i < flat.length - 1 ? flat[i + 1]! : null }
+	const prev = i > 0 ? flat[i - 1] ?? null : null
+	const next = i < flat.length - 1 ? flat[i + 1] ?? null : null
+	return { prev, next }
 }

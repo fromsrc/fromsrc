@@ -64,7 +64,8 @@ export function removeDocument(index: SearchIndex, path: string): void {
 	index.documents.splice(idx, 1)
 	index.terms.clear()
 	for (let i = 0; i < index.documents.length; i++) {
-		indexDocument(index, i, index.documents[i]!)
+		const doc = index.documents[i]
+		if (doc) indexDocument(index, i, doc)
 	}
 }
 
@@ -82,7 +83,8 @@ export function search(index: SearchIndex, query: string, limit = 10): SearchDoc
 	return [...scores.entries()]
 		.sort((a, b) => b[1] - a[1])
 		.slice(0, limit)
-		.map(([idx]) => index.documents[idx]!)
+		.map(([idx]) => index.documents[idx])
+		.filter((doc): doc is SearchDocument => doc !== undefined)
 }
 
 export function serializeIndex(index: SearchIndex): string {
