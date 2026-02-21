@@ -47,7 +47,10 @@ export function createRedirects(config: RedirectConfig) {
 			if (!m) continue
 			const params: Record<string, string> = {}
 			for (let i = 0; i < entry.keys.length; i++) {
-				params[entry.keys[i]!] = m[i + 1]!
+				const key = entry.keys[i]
+				const value = m[i + 1]
+				if (!key || value === undefined) continue
+				params[key] = value
 			}
 			return {
 				destination: substitute(entry.destination, params),
@@ -83,8 +86,11 @@ export function parseRedirectsFile(content: string): Redirect[] {
 		.filter((line) => line && !line.startsWith("#"))
 		.map((line) => {
 			const parts = line.split(/\s+/)
-			const redirect: Redirect = { source: parts[0]!, destination: parts[1]! }
+			const source = parts[0] ?? ""
+			const destination = parts[1] ?? ""
+			const redirect: Redirect = { source, destination }
 			if (parts[2] === "302") redirect.permanent = false
 			return redirect
 		})
+		.filter((redirect) => redirect.source.length > 0 && redirect.destination.length > 0)
 }

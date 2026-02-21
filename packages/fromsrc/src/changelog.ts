@@ -48,8 +48,9 @@ export function parseChangelog(content: string): ChangelogEntry[] {
 		const header = block.match(/^\[([^\]]+)\]\s*-\s*(\S+)(.*)/)
 		if (!header) continue
 
-		const version = header[1]!
-		const date = header[2]!
+		const version = header[1]
+		const date = header[2]
+		if (!version || !date) continue
 		const rest = header[3] ?? ""
 		const title = rest.trim() || undefined
 		const items: ChangelogItem[] = []
@@ -58,12 +59,16 @@ export function parseChangelog(content: string): ChangelogEntry[] {
 		for (const line of block.split("\n").slice(1)) {
 			const section = line.match(/^### (.+)/)
 			if (section) {
-				currentType = sectionMap[section[1]!.toLowerCase()] ?? null
+				const heading = section[1]
+				currentType = heading ? (sectionMap[heading.toLowerCase()] ?? null) : null
 				continue
 			}
 			const item = line.match(/^- (.+)/)
 			if (item && currentType) {
-				items.push({ type: currentType, description: item[1]!.trim() })
+				const description = item[1]
+				if (description) {
+					items.push({ type: currentType, description: description.trim() })
+				}
 			}
 		}
 
@@ -81,8 +86,10 @@ export function parseChangelog(content: string): ChangelogEntry[] {
 	entries.sort((a, b) => b.date.localeCompare(a.date))
 
 	for (let i = 0; i < entries.length; i++) {
+		const entry = entries[i]
+		if (!entry) continue
 		const prev = entries[i + 1]
-		entries[i]!.type = detectType(entries[i]!.version, prev?.version)
+		entry.type = detectType(entry.version, prev?.version)
 	}
 
 	return entries

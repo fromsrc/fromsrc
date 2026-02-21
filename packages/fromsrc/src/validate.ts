@@ -40,16 +40,19 @@ export async function validateLinks(options: ValidateOptions): Promise<LinkIssue
 		const hrefRegex = /href=["']([^"']+)["']/g
 
 		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i]!
+			const line = lines[i]
+			if (line === undefined) continue
 			let match: RegExpExecArray | null
 
 			while ((match = linkRegex.exec(line)) !== null) {
-				const link = match[2]!
+				const link = match[2]
+				if (!link) continue
 				checkLink(link, relativePath, i + 1, issues, validSlugs, checkExternal)
 			}
 
 			while ((match = hrefRegex.exec(line)) !== null) {
-				const link = match[1]!
+				const link = match[1]
+				if (!link) continue
 				checkLink(link, relativePath, i + 1, issues, validSlugs, checkExternal)
 			}
 		}
@@ -92,7 +95,11 @@ function checkLink(
 		return
 	}
 
-	const normalized = link.split("#")[0]!.split("?")[0]!
+	const normalized = link.split("#")[0]?.split("?")[0] ?? ""
+	if (!normalized) {
+		issues.push({ file, line, link, type: "broken" })
+		return
+	}
 
 	if (!validSlugs.has(normalized) && !normalized.startsWith("/docs/")) {
 		const withPrefix = `/docs${normalized.startsWith("/") ? "" : "/"}${normalized}`

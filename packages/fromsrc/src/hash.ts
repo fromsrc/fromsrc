@@ -67,5 +67,7 @@ export function detectChanges(previous: HashManifest, current: HashManifest): Ch
 export function hashFrontmatter(content: string): string | null {
 	const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)
 	if (!match) return null
-	return fnv1a(match[1]!)
+	const body = match[1]
+	if (!body) return null
+	return fnv1a(body)
 }
