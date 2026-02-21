@@ -31,9 +31,9 @@ const rehypeSlug: Plugin<[], Root> = () => {
 
 		visit(tree, "element", (node: Element) => {
 			if (!headings.has(node.tagName)) return
-			if (node.properties?.id) return
 
-			const text = extractText(node)
+			const raw = node.properties?.id
+			const text = typeof raw === "string" && raw.length > 0 ? raw : extractText(node)
 			let slug = generateSlug(text)
 			if (!slug) return
 

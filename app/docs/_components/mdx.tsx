@@ -161,7 +161,7 @@ import {
 	YouTube,
 	Zoom,
 } from "fromsrc/client"
-import { rehypeAnchors, remarkAlerts } from "fromsrc"
+import { rehypeAnchors, rehypeSlug, remarkAlerts } from "fromsrc"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import type { ComponentPropsWithoutRef, ReactNode } from "react"
 import remarkGfm from "remark-gfm"
@@ -368,6 +368,7 @@ export async function MDX({ source }: Props) {
 				mdxOptions: {
 					remarkPlugins: [remarkGfm, remarkAlerts],
 					rehypePlugins: [
+						rehypeSlug,
 						rehypeAnchors,
 						[
 							rehypeShiki,

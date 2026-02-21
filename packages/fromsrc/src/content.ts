@@ -247,11 +247,17 @@ function stripHeadingFormatting(text: string): string {
 }
 
 function headingId(text: string): string {
-	return text.toLowerCase().replace(/\s+/g, "-")
+	return text
+		.toLowerCase()
+		.replace(/\s+/g, "-")
+		.replace(/[^a-z0-9_-]/g, "")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "")
 }
 
 export function extractHeadings(content: string): Heading[] {
 	const headings: Heading[] = []
+	const seen = new Map<string, number>()
 	const lines = content.split("\n")
 
 	for (const line of lines) {
@@ -260,7 +266,12 @@ export function extractHeadings(content: string): Heading[] {
 
 		const level = match[1]!.length
 		const raw = stripHeadingFormatting(match[2]!)
-		headings.push({ id: headingId(raw), text: raw, level })
+		const base = headingId(raw)
+		if (!base) continue
+		const count = seen.get(base) ?? 0
+		seen.set(base, count + 1)
+		const id = count === 0 ? base : `${base}-${count}`
+		headings.push({ id, text: raw, level })
 	}
 
 	return headings
