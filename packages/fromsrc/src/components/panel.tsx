@@ -1,6 +1,7 @@
 "use client"
 
-import type { JSX, KeyboardEvent, RefObject } from "react"
+import type { JSX, KeyboardEvent as KeyEvent, RefObject } from "react"
+import { useCallback, useRef } from "react"
 import type { SearchResult } from "../search"
 import { IconSearch } from "./icons"
 import { Hints } from "./hints"
@@ -18,7 +19,7 @@ export interface PanelProps {
 	list: RefObject<HTMLUListElement | null>
 	onClose: () => void
 	onChange: (value: string) => void
-	onKey: (event: KeyboardEvent) => void
+	onKey: (event: KeyEvent<HTMLInputElement>) => void
 	onSelect: (query: string) => void
 	onNavigate: (slug: string | undefined, anchor?: string) => void
 }
@@ -38,10 +39,34 @@ export function Panel({
 	onSelect,
 	onNavigate,
 }: PanelProps): JSX.Element {
+	const dialog = useRef<HTMLDivElement>(null)
+	const onTab = useCallback((event: KeyEvent<HTMLDivElement>): void => {
+		if (event.key !== "Tab" || !dialog.current) return
+		const active = document.activeElement
+		if (!(active instanceof HTMLElement) || !dialog.current.contains(active)) return
+		const nodes = dialog.current.querySelectorAll<HTMLElement>(
+			'button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])',
+		)
+		const items = Array.from(nodes).filter((item) => !item.hasAttribute("aria-hidden"))
+		if (items.length === 0) return
+		const index = items.findIndex((item) => item === active)
+		if (event.shiftKey) {
+			if (index <= 0) {
+				event.preventDefault()
+				items[items.length - 1]?.focus()
+			}
+			return
+		}
+		if (index === items.length - 1) {
+			event.preventDefault()
+			items[0]?.focus()
+		}
+	}, [])
+
 	return (
-		<div className="fixed inset-0 z-[100]">
+		<div className="fixed inset-0 z-[100]" onKeyDownCapture={onTab}>
 			<button type="button" className="fixed inset-0 bg-bg/80 backdrop-blur-sm cursor-default" onClick={onClose} aria-label="close search" />
-			<div className="relative z-10 max-w-lg mx-auto mt-[20vh]" role="dialog" aria-modal="true" aria-label="search documentation">
+			<div ref={dialog} className="relative z-10 max-w-lg mx-auto mt-[20vh]" role="dialog" aria-modal="true" aria-label="search documentation">
 				<div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
 					<div className="flex items-center gap-3 px-4 border-b border-line">
 						<IconSearch className="w-4 h-4 text-muted" size={16} />
