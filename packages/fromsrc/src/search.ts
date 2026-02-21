@@ -1,5 +1,5 @@
 import type { SearchDoc } from "./content"
-import { typomatch } from "./searchtypo"
+import { scoreterms, termindex, type Termindex } from "./searchscore"
 
 export interface SearchResult {
 	doc: SearchDoc
@@ -34,10 +34,11 @@ interface SearchIndexDoc {
 	contentraw: string
 	slug: string
 	headings: { id: string; text: string; level: number; normalized: string }[]
-	titlewords: string[]
-	descriptionwords: string[]
-	slugwords: string[]
-	headingwords: string[]
+	titleindex: Termindex
+	descriptionindex: Termindex
+	slugindex: Termindex
+	headingindex: Termindex
+	contentindex: Termindex
 }
 
 const indexCache = new WeakMap<SearchDoc[], SearchIndexDoc[]>()
@@ -97,10 +98,11 @@ function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
 			level: heading.level,
 			normalized: normalize(heading.text),
 		})),
-		titlewords: words(normalize(doc.title)),
-		descriptionwords: words(normalize(doc.description)),
-		slugwords: words(normalize(doc.slug)),
-		headingwords: words((doc.headings ?? []).map((heading) => normalize(heading.text)).join(" ")),
+		titleindex: termindex(words(normalize(doc.title))),
+		descriptionindex: termindex(words(normalize(doc.description))),
+		slugindex: termindex(words(normalize(doc.slug))),
+		headingindex: termindex(words((doc.headings ?? []).map((heading) => normalize(heading.text)).join(" "))),
+		contentindex: termindex(words(doc.content.toLowerCase())),
 	}))
 	indexCache.set(docs, indexed)
 	return indexed
@@ -181,17 +183,17 @@ export const localSearch: SearchAdapter = {
 			const descScore = fuzzy(item.description, normalized)
 			const headingResult = searchHeadings(item.headings, normalized, terms)
 			const contentResult = searchContent(item.content, item.contentraw, normalized, terms)
-			const termScore = terms.reduce((score, term) => {
-				if (item.title.includes(term)) return score + 9
-				if (typomatch(term, item.titlewords)) return score + 5
-				if (item.slug.includes(term)) return score + 7
-				if (typomatch(term, item.slugwords)) return score + 4
-				if (item.description.includes(term)) return score + 4
-				if (typomatch(term, item.descriptionwords)) return score + 2
-				if (typomatch(term, item.headingwords)) return score + 2
-				if (item.content.includes(term)) return score + 2
-				return score
-			}, 0)
+			const termScore = scoreterms(terms, {
+				title: item.title,
+				slug: item.slug,
+				description: item.description,
+				content: item.content,
+				titleindex: item.titleindex,
+				slugindex: item.slugindex,
+				descriptionindex: item.descriptionindex,
+				headingindex: item.headingindex,
+				contentindex: item.contentindex,
+			})
 			const exactScore = item.title === normalized || item.slug === normalized ? 30 : 0
 			const score =
 				titleScore +

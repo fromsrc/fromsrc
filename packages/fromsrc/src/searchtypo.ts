@@ -3,14 +3,19 @@ function oneedit(left: string, right: string): boolean {
 	const b = right.length
 	if (Math.abs(a - b) > 1) return false
 	if (a === b) {
-		let diff = 0
+		const diffs: number[] = []
 		for (let i = 0; i < a; i++) {
 			if (left[i] !== right[i]) {
-				diff++
-				if (diff > 1) return false
+				diffs.push(i)
+				if (diffs.length > 2) return false
 			}
 		}
-		return diff === 1
+		if (diffs.length === 1) return true
+		if (diffs.length !== 2) return false
+		const first = diffs[0]!
+		const second = diffs[1]!
+		if (second !== first + 1) return false
+		return left[first] === right[second] && left[second] === right[first]
 	}
 	const longer = a > b ? left : right
 	const shorter = a > b ? right : left
