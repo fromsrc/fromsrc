@@ -12,6 +12,7 @@ import {
 	resolveRef,
 	resolveSchema,
 } from "./openapiutil"
+import { parsespec, rootschema } from "./openapiguard"
 
 export type {
 	OpenApiEndpoint,
@@ -132,9 +133,8 @@ function extractEndpoints(root: unknown): OpenApiEndpoint[] {
 }
 
 function extractSchemas(root: unknown): Record<string, OpenApiSchema> {
-	const doc = asrecord(root)
-	const components = asrecord(doc.components)
-	const raw = asrecord(components.schemas ?? doc.definitions)
+	const parsed = rootschema.parse(root)
+	const raw = asrecord(parsed.components?.schemas ?? parsed.definitions)
 	const schemas: Record<string, OpenApiSchema> = {}
 	for (const [name, val] of Object.entries(raw)) {
 		schemas[name] = resolveSchema(root, val)
@@ -143,13 +143,8 @@ function extractSchemas(root: unknown): Record<string, OpenApiSchema> {
 }
 
 function extractTags(root: unknown, endpoints: OpenApiEndpoint[]): OpenApiTag[] {
-	const doc = asrecord(root)
-	const raw = Array.isArray(doc.tags) ? doc.tags : []
-	const explicit: OpenApiTag[] = raw.flatMap((item) => {
-		const tag = asrecord(item)
-		if (typeof tag.name !== "string") return []
-		return [{ name: tag.name, description: typeof tag.description === "string" ? tag.description : undefined }]
-	})
+	const parsed = rootschema.parse(root)
+	const explicit: OpenApiTag[] = parsed.tags
 
 	const named = new Set(explicit.map((t) => t.name))
 	for (const ep of endpoints) {
@@ -165,17 +160,16 @@ function extractTags(root: unknown, endpoints: OpenApiEndpoint[]): OpenApiTag[] 
 }
 
 export function parseOpenApi(spec: string | object): OpenApiSpec {
-	const root = typeof spec === "string" ? JSON.parse(spec) : spec
-	const doc = asrecord(root)
-	const info = asrecord(doc.info)
+	const root = parsespec(spec)
+	const parsed = rootschema.parse(root)
 
 	const endpoints = extractEndpoints(root)
 
 	return {
 		info: {
-			title: typeof info.title === "string" ? info.title : "",
-			version: typeof info.version === "string" ? info.version : "",
-			description: typeof info.description === "string" ? info.description : undefined,
+			title: parsed.info.title,
+			version: parsed.info.version,
+			description: parsed.info.description,
 		},
 		endpoints,
 		tags: extractTags(root, endpoints),
