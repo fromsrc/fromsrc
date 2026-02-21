@@ -6,9 +6,9 @@ type AstNode = {
 	type: string
 	children?: AstNode[]
 	value?: string
-	data?: any
+	data?: Record<string, unknown>
 	name?: string
-	attributes?: any[]
+	attributes?: unknown[]
 }
 
 const pattern = /^\[!(\w+)\]\s*/
@@ -35,7 +35,7 @@ function stripPrefix(node: Blockquote): AstNode[] {
 	const children = [...node.children]
 	const first = children[0]
 	if (first?.type !== "paragraph") return children as AstNode[]
-	const para = { ...first, children: [...(first as any).children] }
+	const para = { ...first, children: [...first.children] }
 	const text = para.children[0]
 	if (text?.type === "text" && text.value) {
 		const stripped = text.value.replace(pattern, "")
@@ -60,7 +60,7 @@ function transformer(tree: Root) {
 		if (!calloutType) return
 		const mapping = typeMap[calloutType]
 		if (!mapping) return
-		const attrs: any[] = []
+		const attrs: unknown[] = []
 		if (mapping.type) {
 			attrs.push({ type: "mdxJsxAttribute" as const, name: "type", value: mapping.type })
 		}
@@ -71,7 +71,7 @@ function transformer(tree: Root) {
 			children: stripPrefix(node),
 			data: { _mdxExplicitJsx: true },
 		}
-		;(parent.children as AstNode[])[index] = element
+		parent.children[index] = element as unknown as Root["children"][number]
 	})
 }
 

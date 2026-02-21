@@ -13,8 +13,8 @@ interface AstNode {
 	name?: string
 	children?: AstNode[]
 	value?: string
-	attributes?: any[]
-	data?: any
+	attributes?: unknown[]
+	data?: Record<string, unknown>
 }
 
 function parseAttributes(raw: string): Record<string, string> {

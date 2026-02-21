@@ -6,8 +6,8 @@ interface AstNode {
 	name?: string
 	children?: AstNode[]
 	value?: string
-	attributes?: any[]
-	data?: any
+	attributes?: unknown[]
+	data?: Record<string, unknown>
 }
 
 const types = new Set(["note", "tip", "info", "warning", "danger", "caution", "important"])
@@ -37,7 +37,7 @@ function isClose(node: AstNode): boolean {
 }
 
 function buildElement(kind: string, title: string | undefined, children: AstNode[]): AstNode {
-	const attrs: any[] = [{ type: "mdxJsxAttribute", name: "type", value: kind }]
+	const attrs: unknown[] = [{ type: "mdxJsxAttribute", name: "type", value: kind }]
 	if (title) {
 		attrs.push({ type: "mdxJsxAttribute", name: "title", value: title })
 	}

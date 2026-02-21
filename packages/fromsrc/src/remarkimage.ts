@@ -39,8 +39,15 @@ function createImageProperties(
 	return props
 }
 
-function wrapInFigure(imageNode: any, alt: string): any {
-	const children: any[] = [imageNode]
+type figurenode = {
+	type: "mdxJsxFlowElement"
+	name: "figure"
+	attributes: []
+	children: Array<Root["children"][number] | { type: "mdxJsxFlowElement"; name: "figcaption"; attributes: []; children: [{ type: "text"; value: string }] }>
+}
+
+function wrapInFigure(imageNode: Root["children"][number], alt: string): Root["children"][number] {
+	const children: figurenode["children"] = [imageNode]
 	if (alt) {
 		children.push({
 			type: "mdxJsxFlowElement",
@@ -49,12 +56,13 @@ function wrapInFigure(imageNode: any, alt: string): any {
 			children: [{ type: "text", value: alt }],
 		})
 	}
-	return {
+	const figure: figurenode = {
 		type: "mdxJsxFlowElement",
 		name: "figure",
 		attributes: [],
 		children,
 	}
+	return figure as unknown as Root["children"][number]
 }
 
 export const remarkImage: Plugin<[RemarkImageOptions?], Root> = (options = {}) => {
@@ -72,20 +80,18 @@ export const remarkImage: Plugin<[RemarkImageOptions?], Root> = (options = {}) =
 
 			node.alt = parsed.alt
 			node.url = url
-			;(node as any).data = {
-				...(node.data || {}),
-				hProperties: createImageProperties(parsed, url, isLazy),
+			const data = (node.data ?? {}) as Image["data"] & {
+				hProperties?: Record<string, string | number>
 			}
+			data.hProperties = createImageProperties(parsed, url, isLazy)
+			node.data = data
 
 			if (figure) {
-				parent.children[index] = wrapInFigure(
-					{ ...node, data: { ...node.data, _mdxExplicitJsx: false } },
-					parsed.alt,
-				) as any
+				parent.children[index] = wrapInFigure(node as unknown as Root["children"][number], parsed.alt)
 			}
 		})
 
-		visit(tree, "html", (node: any) => {
+		visit(tree, "html", (node: { value: string }) => {
 			const imgPattern = /<img\s([^>]*)>/g
 			node.value = node.value.replace(imgPattern, (match: string, attrs: string) => {
 				const current = imageIndex++

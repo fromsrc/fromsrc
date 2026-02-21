@@ -7,8 +7,8 @@ type AstNode = {
 	children?: AstNode[]
 	value?: string
 	name?: string
-	attributes?: any[]
-	data?: any
+	attributes?: unknown[]
+	data?: Record<string, unknown>
 }
 
 const langs = new Set(["math", "latex", "katex"])

@@ -49,7 +49,7 @@ function transformer(tree: Root) {
 			],
 			children,
 			data: { _mdxExplicitJsx: true },
-		} as any
+		} as unknown as Root["children"][number]
 	})
 }
 
