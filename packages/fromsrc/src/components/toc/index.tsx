@@ -40,7 +40,7 @@ export function Toc({
 	}
 
 	return (
-		<aside className="w-56 shrink-0 hidden xl:block py-12 pl-8">
+		<aside className="w-56 shrink-0 hidden lg:block py-12 pl-8">
 			<div className="sticky top-12">
 				<p className="text-xs text-muted mb-4">on this page</p>
 				{variant === "minimal" ? (
