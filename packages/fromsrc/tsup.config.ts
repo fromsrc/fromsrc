@@ -1,118 +1,129 @@
-import { readFileSync, writeFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
+import { join } from "node:path"
 import { defineConfig } from "tsup"
 
-function ignore(file: string, patterns: RegExp[]) {
-	let content = readFileSync(file, "utf-8")
-	for (const p of patterns) {
-		content = content.replace(p, (m) => m.replace("import(", "import(/* webpackIgnore: true */ "))
+function allfiles(dir: string): string[] {
+	if (!existsSync(dir)) return []
+	const list: string[] = []
+	for (const name of readdirSync(dir)) {
+		const path = join(dir, name)
+		const stat = statSync(path)
+		if (stat.isDirectory()) {
+			list.push(...allfiles(path))
+			continue
+		}
+		list.push(path)
 	}
-	writeFileSync(file, content)
+	return list
 }
+
+function patch(file: string) {
+	if (!file.endsWith(".js")) return
+	let text = readFileSync(file, "utf-8")
+	text = text.replace(
+		/import\((['"])mermaid\1\)/g,
+		"import(/* webpackIgnore: true */ $1mermaid$1)",
+	)
+	text = text.replace(
+		/import\(join\(dir, name\)\)/g,
+		"import(/* webpackIgnore: true */ join(dir, name))",
+	)
+	writeFileSync(file, text)
+}
+
+function patchall() {
+	for (const file of allfiles("dist")) patch(file)
+}
+
+function distfile(file: string) {
+	const path = file.replace(/^src\//, "dist/")
+	return path.replace(/\.(tsx|ts|jsx|js)$/, ".js")
+}
+
+function isclient(file: string) {
+	if (!/\.(tsx|ts|jsx|js)$/.test(file)) return false
+	const text = readFileSync(file, "utf-8")
+	const first = text.split("\n", 1).at(0) ?? ""
+	return /^["']use client["'];?$/.test(first.trim())
+}
+
+function patchclient() {
+	for (const file of allfiles("src")) {
+		if (!isclient(file)) continue
+		const path = distfile(file)
+		if (!existsSync(path)) continue
+		const text = readFileSync(path, "utf-8")
+		if (text.startsWith("\"use client\";\n")) continue
+		writeFileSync(path, `"use client";\n${text}`)
+	}
+}
+
+function finish() {
+	patchall()
+	patchclient()
+}
+
+const external = [
+	"react",
+	"react/jsx-runtime",
+	"next",
+	"next/*",
+	"mermaid",
+	"katex",
+	"@tanstack/react-router",
+	"react-router-dom",
+	"@remix-run/react",
+]
 
 export default defineConfig([
 	{
+		entry: [
+			"src/**/*.ts",
+			"src/**/*.tsx",
+			"!src/index.ts",
+			"!src/client.ts",
+			"!src/next.ts",
+			"!src/reactrouter.ts",
+			"!src/vite.ts",
+			"!src/tanstack.ts",
+			"!src/remix.ts",
+			"!src/astro.ts",
+		],
+		format: ["esm"],
+		bundle: false,
+		treeshake: true,
+		dts: false,
+		clean: true,
+		external,
+		onSuccess: async () => {
+			finish()
+		},
+	},
+	{
 		entry: ["src/index.ts"],
 		format: ["esm"],
-		dts: true,
+		bundle: false,
 		treeshake: true,
-		external: ["react", "next", "react/jsx-runtime"],
-		onSuccess: async () => {
-			ignore("dist/index.js", [/import\(join\(dir, name\)\)/g])
-		},
+		dts: true,
+		clean: false,
+		external,
 	},
 	{
 		entry: ["src/client.ts"],
 		format: ["esm"],
-		dts: true,
+		bundle: false,
 		treeshake: true,
-		splitting: false,
-		external: ["react", "next", "react/jsx-runtime", "mermaid", "katex"],
-		onSuccess: async () => {
-			const path = "dist/client.js"
-			let content = readFileSync(path, "utf-8")
-			content = content.replace(
-				/import\(['"]mermaid['"]\)/g,
-				"import(/* webpackIgnore: true */ 'mermaid')",
-			)
-			writeFileSync(path, `"use client";\n${content}`)
-		},
+		dts: true,
+		clean: false,
+		external,
 	},
 	{
-		entry: ["src/next.ts"],
+		entry: ["src/next.ts", "src/reactrouter.ts", "src/vite.ts", "src/tanstack.ts", "src/remix.ts", "src/astro.ts"],
 		format: ["esm"],
 		dts: true,
 		treeshake: true,
 		splitting: false,
-		external: ["react", "next", "react/jsx-runtime"],
-		onSuccess: async () => {
-			const path = "dist/next.js"
-			const content = readFileSync(path, "utf-8")
-			writeFileSync(path, `"use client";\n${content}`)
-		},
+		clean: false,
+		external,
 	},
-	{
-		entry: ["src/reactrouter.ts"],
-		format: ["esm"],
-		dts: true,
-		treeshake: true,
-		splitting: false,
-		external: ["react", "react/jsx-runtime", "react-router-dom"],
-		onSuccess: async () => {
-			const path = "dist/reactrouter.js"
-			const content = readFileSync(path, "utf-8")
-			writeFileSync(path, `"use client";\n${content}`)
-		},
-	},
-	{
-		entry: ["src/vite.ts"],
-		format: ["esm"],
-		dts: true,
-		treeshake: true,
-		splitting: false,
-		external: ["react", "react/jsx-runtime"],
-		onSuccess: async () => {
-			const path = "dist/vite.js"
-			const content = readFileSync(path, "utf-8")
-			writeFileSync(path, `"use client";\n${content}`)
-		},
-	},
-		{
-			entry: ["src/tanstack.ts"],
-		format: ["esm"],
-		dts: true,
-		treeshake: true,
-		splitting: false,
-		external: ["react", "react/jsx-runtime", "@tanstack/react-router"],
-			onSuccess: async () => {
-				const path = "dist/tanstack.js"
-				const content = readFileSync(path, "utf-8")
-				writeFileSync(path, `"use client";\n${content}`)
-			},
-		},
-		{
-			entry: ["src/remix.ts"],
-			format: ["esm"],
-			dts: true,
-			treeshake: true,
-			splitting: false,
-			external: ["react", "react/jsx-runtime", "@remix-run/react"],
-			onSuccess: async () => {
-				const path = "dist/remix.js"
-				const content = readFileSync(path, "utf-8")
-				writeFileSync(path, `"use client";\n${content}`)
-			},
-		},
-		{
-			entry: ["src/astro.ts"],
-			format: ["esm"],
-			dts: true,
-			treeshake: true,
-			splitting: false,
-			external: ["react", "react/jsx-runtime"],
-			onSuccess: async () => {
-				const path = "dist/astro.js"
-				const content = readFileSync(path, "utf-8")
-				writeFileSync(path, `"use client";\n${content}`)
-			},
-		},
-	])
+])
