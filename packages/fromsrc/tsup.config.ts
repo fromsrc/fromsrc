@@ -37,4 +37,17 @@ export default defineConfig([
 			writeFileSync(path, `"use client";\n${content}`)
 		},
 	},
+	{
+		entry: ["src/next.ts"],
+		format: ["esm"],
+		dts: true,
+		treeshake: true,
+		splitting: false,
+		external: ["react", "next", "react/jsx-runtime"],
+		onSuccess: async () => {
+			const path = "dist/next.js"
+			const content = readFileSync(path, "utf-8")
+			writeFileSync(path, `"use client";\n${content}`)
+		},
+	},
 ])

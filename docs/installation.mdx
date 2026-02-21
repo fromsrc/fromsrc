@@ -48,6 +48,18 @@ add fromsrc to an existing next.js project:
 fromsrc requires next.js 16 or later.
 </Callout>
 
+## next adapter
+
+use the next.js adapter entry for framework wiring:
+
+```tsx
+import { AdapterProvider, nextAdapter } from "fromsrc/next"
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <AdapterProvider adapter={nextAdapter}>{children}</AdapterProvider>
+}
+```
+
 ## project structure
 
 <Files>
