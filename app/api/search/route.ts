@@ -55,8 +55,8 @@ function get(key: string): row[] | null {
 
 function set(key: string, value: row[]): row[] {
 	if (cache.size >= max) {
-		const oldest = cache.keys().next().value
-		if (oldest) cache.delete(oldest)
+		const first = cache.keys().next()
+		if (!first.done) cache.delete(first.value)
 	}
 	cache.set(key, { at: Date.now(), value })
 	return value
@@ -67,7 +67,7 @@ function docsvalid(): boolean {
 }
 
 async function loaddocs(): Promise<docentry> {
-	if (docsvalid()) return docsCache as docentry
+	if (docsvalid() && docsCache) return docsCache
 	const pending = docsInflight ?? (async () => ({
 		at: Date.now(),
 		all: await getAllDocs(),
