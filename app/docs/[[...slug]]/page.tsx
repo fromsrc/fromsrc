@@ -2,6 +2,7 @@ import type { DocMeta } from "fromsrc"
 import { calcReadTime, lastModified } from "fromsrc"
 import { Breadcrumb, Toc } from "fromsrc/client"
 import type { Metadata } from "next"
+import { unstable_noStore as noStore } from "next/cache"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDX } from "../_components/mdx"
@@ -46,6 +47,9 @@ export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	if (process.env.NODE_ENV !== "production") {
+		noStore()
+	}
 	const { slug = [] } = await params
 	const doc = await getDoc(slug)
 
@@ -72,6 +76,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function DocPage({ params }: Props) {
+	if (process.env.NODE_ENV !== "production") {
+		noStore()
+	}
 	const { slug = [] } = await params
 	const [doc, rawDocs] = await Promise.all([getDoc(slug), getAllDocs()])
 	const allDocs = sortDocs(rawDocs)

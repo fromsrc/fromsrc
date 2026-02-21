@@ -42,6 +42,9 @@ const isProduction = () => process.env.NODE_ENV === "production"
 const isDraft = (data: Record<string, unknown>) => data.draft === true
 
 async function readCached(filepath: string): Promise<string> {
+	if (!isProduction()) {
+		return readFile(filepath, "utf-8")
+	}
 	const cached = fileCache.get(filepath)
 	if (cached) return cached
 	const content = await readFile(filepath, "utf-8")
@@ -100,7 +103,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	}
 
 	async function getAllDocs(): Promise<Meta[]> {
-		if (docsCache) return docsCache
+		if (isProduction() && docsCache) return docsCache
 
 		const docs: Meta[] = []
 
@@ -137,12 +140,15 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			return []
 		}
 
-		docsCache = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
-		return docsCache
+		const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+		if (isProduction()) {
+			docsCache = sorted
+		}
+		return sorted
 	}
 
 	async function getNavigation(): Promise<{ title: string; items: Meta[] }[]> {
-		if (navCache) return navCache
+		if (isProduction() && navCache) return navCache
 
 		const docs = await getAllDocs()
 
@@ -165,14 +171,17 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			}
 		}
 
-		navCache = sections.filter((s) => s.items.length > 0)
-		return navCache
+		const filtered = sections.filter((s) => s.items.length > 0)
+		if (isProduction()) {
+			navCache = filtered
+		}
+		return filtered
 	}
 
 	let searchCache: (Meta & { content: string; headings?: Heading[] })[] | null = null
 
 	async function getSearchDocs(): Promise<(Meta & { content: string; headings?: Heading[] })[]> {
-		if (searchCache) return searchCache
+		if (isProduction() && searchCache) return searchCache
 
 		const docs: (Meta & { content: string; headings?: Heading[] })[] = []
 
@@ -212,8 +221,11 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			return []
 		}
 
-		searchCache = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
-		return searchCache
+		const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+		if (isProduction()) {
+			searchCache = sorted
+		}
+		return sorted
 	}
 
 	return {
@@ -315,8 +327,10 @@ export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | nul
 
 export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 	const cacheKey = docsDir
-	const cached = metaCache.get(cacheKey)
-	if (cached) return cached
+	if (isProduction()) {
+		const cached = metaCache.get(cacheKey)
+		if (cached) return cached
+	}
 
 	const docs: DocMeta[] = []
 	const folderMetas = new Map<string, MetaFile | null>()
@@ -367,7 +381,9 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 		sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 	}
 
-	metaCache.set(cacheKey, sorted)
+	if (isProduction()) {
+		metaCache.set(cacheKey, sorted)
+	}
 	return sorted
 }
 
@@ -400,8 +416,10 @@ const searchCache = new Map<string, SearchDoc[]>()
 
 export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 	const cacheKey = docsDir
-	const cached = searchCache.get(cacheKey)
-	if (cached) return cached
+	if (isProduction()) {
+		const cached = searchCache.get(cacheKey)
+		if (cached) return cached
+	}
 
 	const docs: SearchDoc[] = []
 
@@ -444,6 +462,8 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 	}
 
 	const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
-	searchCache.set(cacheKey, sorted)
+	if (isProduction()) {
+		searchCache.set(cacheKey, sorted)
+	}
 	return sorted
 }

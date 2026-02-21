@@ -16,6 +16,7 @@ export interface PageTreeItem {
 }
 
 const metaCache = new Map<string, MetaFile | null>()
+const isProduction = () => process.env.NODE_ENV === "production"
 
 function isMetaFile(data: unknown): data is MetaFile {
 	if (typeof data !== "object" || data === null) return false
@@ -28,8 +29,10 @@ function isMetaFile(data: unknown): data is MetaFile {
 }
 
 export async function loadMeta(dir: string): Promise<MetaFile | null> {
-	const cached = metaCache.get(dir)
-	if (cached !== undefined) return cached
+	if (isProduction()) {
+		const cached = metaCache.get(dir)
+		if (cached !== undefined) return cached
+	}
 
 	const filepath = join(dir, "_meta.json")
 
@@ -37,13 +40,19 @@ export async function loadMeta(dir: string): Promise<MetaFile | null> {
 		const content = await readFile(filepath, "utf-8")
 		const data: unknown = JSON.parse(content)
 		if (!isMetaFile(data)) {
-			metaCache.set(dir, null)
+			if (isProduction()) {
+				metaCache.set(dir, null)
+			}
 			return null
 		}
-		metaCache.set(dir, data)
+		if (isProduction()) {
+			metaCache.set(dir, data)
+		}
 		return data
 	} catch {
-		metaCache.set(dir, null)
+		if (isProduction()) {
+			metaCache.set(dir, null)
+		}
 		return null
 	}
 }
