@@ -61,6 +61,15 @@ export const defaultAdapter: FrameworkAdapter = {
 	useRouter: defaultUseRouter,
 }
 
+export function createadapter(
+	adapter: Partial<FrameworkAdapter>,
+): FrameworkAdapter {
+	return {
+		...defaultAdapter,
+		...adapter,
+	}
+}
+
 export const AdapterContext = createContext<FrameworkAdapter>(defaultAdapter)
 
 export function AdapterProvider({

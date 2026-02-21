@@ -1,6 +1,6 @@
 "use client"
 
-export { nextAdapter } from "./adapternext"
+export { viteAdapter } from "./adaptervite"
 export {
 	AdapterContext,
 	AdapterProvider,

@@ -40,12 +40,12 @@ bun dev
 
 ## manual installation
 
-add fromsrc to an existing next.js project:
+add fromsrc to an existing app:
 
 <Install package="fromsrc" />
 
 <Callout type="info">
-fromsrc requires next.js 16 or later.
+fromsrc adapters are opt-in and tree-shake cleanly.
 </Callout>
 
 ## next adapter
@@ -60,6 +60,40 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
+## react router adapter
+
+use the react router adapter for browser-router apps:
+
+```tsx
+import { AdapterProvider, reactRouterAdapter } from "fromsrc/react-router"
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <AdapterProvider adapter={reactRouterAdapter}>
+      {children}
+    </AdapterProvider>
+  )
+}
+```
+
+## vite adapter
+
+use the vite adapter for custom router stacks:
+
+```tsx
+import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite"
+import { Link } from "react-router-dom"
+
+const adapter = createadapter({
+  ...viteAdapter,
+  Link: ({ href, children }) => <Link to={href}>{children}</Link>,
+})
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <AdapterProvider adapter={adapter}>{children}</AdapterProvider>
+}
+```
+
 ## project structure
 
 <Files>
@@ -70,6 +104,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       </Folder>
       <File name="layout.tsx" />
     </Folder>
+  </Folder>
+  <Folder name="src">
+    <File name="providers.tsx" />
   </Folder>
   <Folder name="docs" defaultOpen>
     <File name="index.mdx" />
@@ -82,9 +119,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 <Accordion>
   <AccordionItem title="cannot find module 'fromsrc'">
-    ensure fromsrc is installed and your next.js version is 16 or later:
+    ensure fromsrc is installed:
     ```bash
     bun add fromsrc
+    ```
+  </AccordionItem>
+  <AccordionItem title="adapter not resolving">
+    verify the subpath import matches your framework:
+    ```tsx
+    import { nextAdapter } from "fromsrc/next"
+    import { reactRouterAdapter } from "fromsrc/react-router"
+    import { viteAdapter } from "fromsrc/vite"
     ```
   </AccordionItem>
   <AccordionItem title="search not working">

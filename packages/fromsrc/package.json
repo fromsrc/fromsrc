@@ -21,6 +21,10 @@
 			"types": "./dist/reactrouter.d.ts",
 			"import": "./dist/reactrouter.js"
 		},
+		"./vite": {
+			"types": "./dist/vite.d.ts",
+			"import": "./dist/vite.js"
+		},
 		"./styles/reset.css": "./styles/reset.css"
 	},
 	"files": [
