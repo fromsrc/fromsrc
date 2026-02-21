@@ -171,6 +171,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
     import { astroAdapter } from "fromsrc/astro"
     ```
   </AccordionItem>
+  <AccordionItem title="bundle size got bigger">
+    run the tree-shake regression check:
+    ```bash
+    bun run check:shake
+    ```
+    this validates utility and adapter subpath imports stay inside budget.
+  </AccordionItem>
   <AccordionItem title="search not working">
     search indexes content from your docs folder. ensure you have `.mdx` files with valid frontmatter:
     ```yaml
