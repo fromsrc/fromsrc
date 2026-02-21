@@ -8,6 +8,7 @@ import { useLocalStorage } from "../hooks/storage"
 import type { SearchAdapter } from "../search"
 import { localSearch } from "../search"
 import { IconSearch } from "./icons"
+import { Hints } from "./hints"
 import { Recent } from "./recent"
 import { Results, getOptionId } from "./results"
 import { useSearcher } from "./searcher"
@@ -97,12 +98,12 @@ export function Search({
 		if (open) {
 			input.current?.focus()
 			document.body.style.overflow = "hidden"
-			return
+		} else {
+			updatequery("")
+			setSelected(0)
+			document.body.style.overflow = ""
+			lastfocus.current?.focus()
 		}
-		updatequery("")
-		setSelected(0)
-		document.body.style.overflow = ""
-		lastfocus.current?.focus()
 		return () => {
 			document.body.style.overflow = ""
 		}
@@ -200,11 +201,7 @@ export function Search({
 					<div className="max-h-80 overflow-y-auto">
 						{!value.trim() && recent.length > 0 ? <Recent items={recent} onSelect={updatequery} /> : loading ? <div className="p-8 text-center text-muted text-sm">loading</div> : results.length === 0 ? <div className="p-8 text-center text-muted text-sm">no results</div> : <Results results={results} selected={safe} query={value} listRef={list} onResultClick={navigate} onResultKeyDown={(event, slug, anchor) => event.key === "Enter" && navigate(slug, anchor)} />}
 					</div>
-					<div className="flex items-center justify-center gap-4 px-4 py-2 border-t border-line text-[10px] text-dim">
-						<span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↑</kbd><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↓</kbd>navigate</span>
-						<span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg border border-line rounded">tab</kbd><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↵</kbd>complete/select</span>
-						<span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg border border-line rounded">home</kbd><kbd className="px-1 py-0.5 bg-bg border border-line rounded">end</kbd>first/last</span>
-					</div>
+					<Hints />
 				</div>
 			</div>
 		</div>
