@@ -48,8 +48,8 @@ interface ResultsProps {
 	selected: number
 	query: string
 	listRef: RefObject<HTMLUListElement | null>
-	onResultClick: (slug: string | undefined) => void
-	onResultKeyDown: (e: React.KeyboardEvent, slug: string | undefined) => void
+	onResultClick: (slug: string | undefined, anchor?: string) => void
+	onResultKeyDown: (e: React.KeyboardEvent, slug: string | undefined, anchor?: string) => void
 }
 
 export function Results({
@@ -80,8 +80,8 @@ export function Results({
 									id={getOptionId(i)}
 									role="option"
 									aria-selected={i === selected}
-									onClick={() => onResultClick(result.doc.slug)}
-									onKeyDown={(e) => onResultKeyDown(e, result.doc.slug)}
+									onClick={() => onResultClick(result.doc.slug, result.anchor)}
+									onKeyDown={(e) => onResultKeyDown(e, result.doc.slug, result.anchor)}
 									tabIndex={-1}
 									className={`w-full text-left px-3 py-2 rounded-lg transition-colors cursor-pointer ${
 										i === selected
@@ -90,6 +90,7 @@ export function Results({
 									}`}
 								>
 									<div className="text-sm">{highlightMatch(result.doc.title, query)}</div>
+									{result.anchor && <div className="text-[11px] text-dim">#{result.anchor}</div>}
 									{result.snippet ? (
 										<div className="text-xs text-dim truncate">
 											{highlightMatch(result.snippet, query)}

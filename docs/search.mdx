@@ -23,8 +23,11 @@ const docs = await getSearchDocs()
 
 - full-text body content search
 - fuzzy title/description matching
+- multi-word ranking with exact and prefix boosts
+- heading-level results with section anchors
 - content snippets in results
 - keyboard navigation
+- tab autocomplete to top result
 - instant results
 
 ## search adapter interface
@@ -104,6 +107,8 @@ const adapter = createAlgoliaAdapter({
 |----------|--------|
 | `⌘K` / `Ctrl+K` | open search |
 | `↑` / `↓` | navigate results |
+| `Home` / `End` | jump to first / last |
+| `Tab` | autocomplete top result |
 | `Enter` | go to result |
 | `Escape` | close search |
 

@@ -1,5 +1,4 @@
 "use client"
-
 import type { JSX } from "react"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -11,7 +10,6 @@ import { localSearch } from "../search"
 import { IconSearch } from "./icons"
 import { Recent } from "./recent"
 import { Results, getOptionId } from "./results"
-
 export interface SearchProps {
 	basePath?: string
 	docs: (DocMeta | SearchDoc)[]
@@ -19,12 +17,10 @@ export interface SearchProps {
 	adapter?: SearchAdapter
 	debounce?: number
 }
-
 function toSearchDoc(doc: DocMeta | SearchDoc): SearchDoc {
 	if ("content" in doc) return doc
 	return { ...doc, content: "" }
 }
-
 export function Search({
 	basePath = "/docs",
 	docs,
@@ -35,139 +31,109 @@ export function Search({
 	const [open, setOpen] = useState(false)
 	const [query, setQuery] = useState("")
 	const [selected, setSelected] = useState(0)
+	const [recent, setRecent] = useLocalStorage<string[]>("fromsrc-recent-searches", [])
 	const inputRef = useRef<HTMLInputElement>(null)
 	const listRef = useRef<HTMLUListElement>(null)
 	const router = useRouter()
-	const prevQueryRef = useRef("")
-	const [recent, setRecent] = useLocalStorage<string[]>("fromsrc-recent-searches", [])
-
 	const searchDocs = useMemo(() => docs.map(toSearchDoc), [docs])
 	const debouncedQuery = useDebounce(query, debounce)
-
-	const handleGlobalKeyDown = useCallback((e: KeyboardEvent): void => {
-		if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-			e.preventDefault()
-			setOpen(true)
-		}
-		if (e.key === "Escape") {
-			setOpen(false)
-		}
-	}, [])
+	const results = useMemo(() => adapter.search(debouncedQuery, searchDocs), [adapter, searchDocs, debouncedQuery])
+	const safe = results.length === 0 ? -1 : Math.min(selected, results.length - 1)
 
 	useEffect(() => {
-		window.addEventListener("keydown", handleGlobalKeyDown)
-		return () => window.removeEventListener("keydown", handleGlobalKeyDown)
-	}, [handleGlobalKeyDown])
+		const handler = (e: KeyboardEvent): void => {
+			if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+				e.preventDefault()
+				setOpen(true)
+			}
+			if (e.key === "Escape") setOpen(false)
+		}
+		window.addEventListener("keydown", handler)
+		return () => window.removeEventListener("keydown", handler)
+	}, [])
 
 	useEffect(() => {
 		if (open) {
 			inputRef.current?.focus()
 			document.body.style.overflow = "hidden"
-		} else {
-			setQuery("")
-			setSelected(0)
-			document.body.style.overflow = ""
+			return
 		}
+		setQuery("")
+		setSelected(0)
+		document.body.style.overflow = ""
 		return () => {
 			document.body.style.overflow = ""
 		}
 	}, [open])
 
-	const results = useMemo(() => {
-		return adapter.search(debouncedQuery, searchDocs)
-	}, [adapter, searchDocs, debouncedQuery])
-
-	const safeSelected = useMemo(() => {
-		if (results.length === 0) return -1
-		return Math.min(selected, results.length - 1)
-	}, [selected, results.length])
+	useEffect(() => setSelected(0), [debouncedQuery])
 
 	useEffect(() => {
-		if (prevQueryRef.current !== debouncedQuery) {
-			setSelected(0)
-			prevQueryRef.current = debouncedQuery
-		}
-	}, [debouncedQuery])
+		if (safe < 0 || !listRef.current) return
+		const option = listRef.current.querySelector(`#${getOptionId(safe)}`)
+		option?.scrollIntoView({ block: "nearest" })
+	}, [safe])
 
-	useEffect(() => {
-		if (safeSelected >= 0 && listRef.current) {
-			const option = listRef.current.querySelector(`#${getOptionId(safeSelected)}`)
-			option?.scrollIntoView({ block: "nearest" })
-		}
-	}, [safeSelected])
-
-	const saveRecent = useCallback(
-		(q: string): void => {
-			const trimmed = q.trim()
+	const save = useCallback(
+		(value: string): void => {
+			const trimmed = value.trim()
 			if (!trimmed) return
-			setRecent((prev) => [trimmed, ...prev.filter((p) => p !== trimmed)].slice(0, 5))
+			setRecent((items) => [trimmed, ...items.filter((item) => item !== trimmed)].slice(0, 5))
 		},
 		[setRecent],
 	)
 
 	const navigate = useCallback(
-		(slug: string | undefined): void => {
-			saveRecent(query)
-			router.push(slug ? `${basePath}/${slug}` : basePath)
+		(slug: string | undefined, anchor?: string): void => {
+			save(query)
+			const target = slug ? `${basePath}/${slug}` : basePath
+			router.push(anchor ? `${target}#${anchor}` : target)
 			setOpen(false)
 		},
-		[router, basePath, query, saveRecent],
+		[basePath, query, router, save],
 	)
 
-	const handleInputKeyDown = useCallback(
+	const onkey = useCallback(
 		(e: React.KeyboardEvent): void => {
 			if (results.length === 0) return
 			if (e.key === "ArrowDown") {
 				e.preventDefault()
-				setSelected((s) => Math.min(s + 1, results.length - 1))
-			} else if (e.key === "ArrowUp") {
+				setSelected((value) => Math.min(value + 1, results.length - 1))
+				return
+			}
+			if (e.key === "ArrowUp") {
 				e.preventDefault()
-				setSelected((s) => Math.max(s - 1, 0))
-			} else if (e.key === "Enter" && safeSelected >= 0 && results[safeSelected]) {
-				navigate(results[safeSelected].doc.slug)
+				setSelected((value) => Math.max(value - 1, 0))
+				return
+			}
+			if (e.key === "Home") {
+				e.preventDefault()
+				setSelected(0)
+				return
+			}
+			if (e.key === "End") {
+				e.preventDefault()
+				setSelected(results.length - 1)
+				return
+			}
+			if (e.key === "Tab" && results[0]) {
+				e.preventDefault()
+				setQuery(results[0].doc.title)
+				setSelected(0)
+				return
+			}
+			if (e.key === "Enter" && safe >= 0 && results[safe]) {
+				navigate(results[safe].doc.slug, results[safe].anchor)
 			}
 		},
-		[results, safeSelected, navigate],
+		[navigate, results, safe],
 	)
-
-	const handleOpenClick = useCallback((): void => {
-		setOpen(true)
-	}, [])
-
-	const handleCloseClick = useCallback((): void => {
-		setOpen(false)
-	}, [])
-
-	const handleQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-		setQuery(e.target.value)
-	}, [])
-
-	const handleResultClick = useCallback(
-		(slug: string | undefined): void => {
-			navigate(slug)
-		},
-		[navigate],
-	)
-
-	const handleResultKeyDown = useCallback(
-		(e: React.KeyboardEvent, slug: string | undefined): void => {
-			if (e.key === "Enter") {
-				navigate(slug)
-			}
-		},
-		[navigate],
-	)
-
-	const handleRecentSelect = useCallback((q: string): void => {
-		setQuery(q)
-	}, [])
-
 	if (!open) {
 		if (hidden) return null
 		return (
 			<button
 				type="button"
-				onClick={handleOpenClick}
+				onClick={() => setOpen(true)}
 				className="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted bg-surface border border-line rounded-lg hover:border-dim transition-colors"
 			>
 				<IconSearch className="w-3.5 h-3.5" size={14} />
@@ -182,7 +148,7 @@ export function Search({
 			<button
 				type="button"
 				className="fixed inset-0 bg-bg/80 backdrop-blur-sm cursor-default"
-				onClick={handleCloseClick}
+				onClick={() => setOpen(false)}
 				aria-label="close search"
 			/>
 			<div className="relative z-10 max-w-lg mx-auto mt-[20vh]">
@@ -193,47 +159,39 @@ export function Search({
 							ref={inputRef}
 							type="text"
 							value={query}
-							onChange={handleQueryChange}
-							onKeyDown={handleInputKeyDown}
+							onChange={(e) => setQuery(e.target.value)}
+							onKeyDown={onkey}
 							placeholder="search documentation..."
 							className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none"
 							role="combobox"
 							aria-expanded={results.length > 0}
 							aria-haspopup="listbox"
 							aria-controls="search-listbox"
-							aria-activedescendant={safeSelected >= 0 ? getOptionId(safeSelected) : undefined}
+							aria-activedescendant={safe >= 0 ? getOptionId(safe) : undefined}
 							aria-autocomplete="list"
 						/>
-						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">
-							esc
-						</kbd>
+						<kbd className="px-1.5 py-0.5 text-[10px] text-muted bg-bg border border-line rounded">esc</kbd>
 					</div>
 					<div className="max-h-80 overflow-y-auto">
 						{!debouncedQuery.trim() && recent.length > 0 ? (
-							<Recent items={recent} onSelect={handleRecentSelect} />
+							<Recent items={recent} onSelect={setQuery} />
 						) : results.length === 0 ? (
 							<div className="p-8 text-center text-muted text-sm">no results</div>
 						) : (
 							<Results
 								results={results}
-								selected={safeSelected}
+								selected={safe}
 								query={debouncedQuery}
 								listRef={listRef}
-								onResultClick={handleResultClick}
-								onResultKeyDown={handleResultKeyDown}
+								onResultClick={navigate}
+								onResultKeyDown={(e, slug, anchor) => e.key === "Enter" && navigate(slug, anchor)}
 							/>
 						)}
 					</div>
 					<div className="flex items-center justify-center gap-4 px-4 py-2 border-t border-line text-[10px] text-dim">
-						<span className="flex items-center gap-1">
-							<kbd className="px-1 py-0.5 bg-bg border border-line rounded">↑</kbd>
-							<kbd className="px-1 py-0.5 bg-bg border border-line rounded">↓</kbd>
-							navigate
-						</span>
-						<span className="flex items-center gap-1">
-							<kbd className="px-1 py-0.5 bg-bg border border-line rounded">↵</kbd>
-							select
-						</span>
+						<span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↑</kbd><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↓</kbd>navigate</span>
+						<span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg border border-line rounded">tab</kbd><kbd className="px-1 py-0.5 bg-bg border border-line rounded">↵</kbd>complete/select</span>
+						<span className="flex items-center gap-1"><kbd className="px-1 py-0.5 bg-bg border border-line rounded">home</kbd><kbd className="px-1 py-0.5 bg-bg border border-line rounded">end</kbd>first/last</span>
 					</div>
 				</div>
 			</div>
