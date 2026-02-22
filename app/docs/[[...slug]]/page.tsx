@@ -1,4 +1,3 @@
-import type { DocMeta } from "fromsrc"
 import { calcReadTime, lastModified } from "fromsrc"
 import { Breadcrumb, Toc } from "fromsrc/client"
 import type { Metadata } from "next"
@@ -8,39 +7,13 @@ import { notFound } from "next/navigation"
 import { siteurl } from "@/app/_lib/site"
 import { MDX } from "../_components/mdx"
 import { getAllDocs, getDoc } from "../_lib/content"
+import { jsonld, neighbors, ogquery, orderdocs } from "../_lib/pageutil"
 
 type Props = {
 	params: Promise<{ slug?: string[] }>
 }
 
 const site = siteurl()
-
-function sortDocs(docs: DocMeta[]): DocMeta[] {
-	const intro: DocMeta[] = []
-	const components: DocMeta[] = []
-	const api: DocMeta[] = []
-	const other: DocMeta[] = []
-
-	for (const doc of docs) {
-		if (doc.slug.startsWith("components/")) {
-			components.push(doc)
-		} else if (doc.slug.startsWith("api/")) {
-			api.push(doc)
-		} else if (!doc.slug || doc.slug.match(/^[^/]+$/)) {
-			intro.push(doc)
-		} else {
-			other.push(doc)
-		}
-	}
-
-	const sortByOrder = (a: DocMeta, b: DocMeta) => (a.order ?? 999) - (b.order ?? 999)
-	return [
-		...intro.sort(sortByOrder),
-		...components.sort(sortByOrder),
-		...api.sort(sortByOrder),
-		...other.sort(sortByOrder),
-	]
-}
 
 export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
 	const docs = await getAllDocs()
@@ -58,8 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 	if (!doc) return { title: "not found" }
 
-	const ogParams = new URLSearchParams({ title: doc.title })
-	if (doc.description) ogParams.set("description", doc.description)
+	const query = ogquery(doc.title, doc.description)
 
 	return {
 		title: doc.title,
@@ -67,13 +39,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 		openGraph: {
 			title: doc.title,
 			description: doc.description,
-			images: [{ url: `/api/og?${ogParams}`, width: 1200, height: 630 }],
+			images: [{ url: `/api/og?${query}`, width: 1200, height: 630 }],
 		},
 		twitter: {
 			card: "summary_large_image",
 			title: doc.title,
 			description: doc.description,
-			images: [`/api/og?${ogParams}`],
+			images: [`/api/og?${query}`],
 		},
 	}
 }
@@ -84,7 +56,7 @@ export default async function DocPage({ params }: Props) {
 	}
 	const { slug = [] } = await params
 	const [doc, rawDocs] = await Promise.all([getDoc(slug), getAllDocs()])
-	const allDocs = sortDocs(rawDocs)
+	const allDocs = orderdocs(rawDocs)
 
 	if (!doc) notFound()
 
@@ -92,44 +64,14 @@ export default async function DocPage({ params }: Props) {
 	const modified = lastModified(
 		`${process.cwd()}/docs/${doc.slug || "index"}.mdx`,
 	)
-	const currentIndex = allDocs.findIndex((d) => d.slug === doc.slug)
-	const prev = currentIndex > 0 ? allDocs[currentIndex - 1] : null
-	const next = currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null
-
-	const jsonLd = {
-		"@context": "https://schema.org",
-		"@type": "TechArticle",
-		headline: doc.title,
-		description: doc.description,
-		url: `${site}/docs/${doc.slug}`,
-		author: { "@type": "Organization", name: "fromsrc" },
-		publisher: { "@type": "Organization", name: "fromsrc", url: site },
-		...(modified && { dateModified: modified.toISOString() }),
-		mainEntityOfPage: { "@type": "WebPage", "@id": `${site}/docs/${doc.slug}` },
-	}
-
-	const breadcrumbItems = [
-		{ "@type": "ListItem", position: 1, name: "Home", item: site },
-		{ "@type": "ListItem", position: 2, name: "Docs", item: `${site}/docs` },
-		...slug.map((segment, i) => ({
-			"@type": "ListItem",
-			position: i + 3,
-			name: segment,
-			item: `${site}/docs/${slug.slice(0, i + 1).join("/")}`,
-		})),
-	]
-
-	const breadcrumbLd = {
-		"@context": "https://schema.org",
-		"@type": "BreadcrumbList",
-		itemListElement: breadcrumbItems,
-	}
+	const { prev, next } = neighbors(allDocs, doc.slug)
+	const payload = jsonld(site, slug, doc, modified)
 
 	return (
 		<>
 			<script
 				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbLd]) }}
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(payload) }}
 			/>
 			<div className="flex w-full max-w-7xl mx-auto">
 			<article className="flex-1 min-w-0 py-12 px-8 lg:px-12">
