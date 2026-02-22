@@ -1,0 +1,12 @@
+{
+	"title": "Manual Installation",
+	"pages": [
+		"index",
+		"next",
+		"react-router",
+		"tanstack",
+		"vite",
+		"remix",
+		"astro"
+	]
+}

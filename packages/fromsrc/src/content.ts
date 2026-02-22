@@ -153,14 +153,17 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 		const docs = await getAllDocs()
 
 		const intro: { title: string; items: Meta[] } = { title: "introduction", items: [] }
+		const manual: { title: string; items: Meta[] } = { title: "manual", items: [] }
 		const components: { title: string; items: Meta[] } = { title: "components", items: [] }
 		const apis: { title: string; items: Meta[] } = { title: "api", items: [] }
 		const examples: { title: string; items: Meta[] } = { title: "examples", items: [] }
-		const sections = [intro, components, apis, examples]
+		const sections = [intro, manual, components, apis, examples]
 
 		for (const doc of docs) {
 			if (doc.slug.startsWith("components/")) {
 				components.items.push(doc)
+			} else if (doc.slug.startsWith("manual/")) {
+				manual.items.push(doc)
 			} else if (doc.slug.startsWith("api/")) {
 				apis.items.push(doc)
 			} else if (doc.slug.startsWith("examples/")) {
