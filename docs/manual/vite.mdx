@@ -1,0 +1,31 @@
+---
+title: vite
+description: configure fromsrc in vite apps
+---
+
+install dependencies:
+
+```bash
+bun add fromsrc react-router-dom
+```
+
+wire the adapter with optional link override:
+
+```tsx
+"use client";
+
+import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite";
+import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
+
+const adapter = createadapter({
+	...viteAdapter,
+	Link: ({ href, children }) => <Link to={href}>{children}</Link>,
+});
+
+export function Providers({ children }: { children: ReactNode }) {
+	return <AdapterProvider adapter={adapter}>{children}</AdapterProvider>;
+}
+```
+
+use this provider once at app root and keep docs routes under a dedicated `/docs/*` segment.

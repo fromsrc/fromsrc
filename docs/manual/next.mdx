@@ -1,0 +1,53 @@
+---
+title: next.js
+description: configure fromsrc in next.js apps
+---
+
+install dependencies:
+
+```bash
+bun add fromsrc
+```
+
+create a provider and wire `nextAdapter`:
+
+```tsx
+"use client";
+
+import { AdapterProvider, nextAdapter } from "fromsrc/next";
+import type { ReactNode } from "react";
+
+export function Providers({ children }: { children: ReactNode }) {
+	return <AdapterProvider adapter={nextAdapter}>{children}</AdapterProvider>;
+}
+```
+
+use it in your root layout:
+
+```tsx
+import { Providers } from "@/app/providers";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+	return (
+		<html lang="en">
+			<body>
+				<Providers>{children}</Providers>
+			</body>
+		</html>
+	);
+}
+```
+
+create docs route:
+
+```tsx
+// app/docs/[[...slug]]/page.tsx
+import { getDoc } from "fromsrc";
+
+export default async function Page({ params }: { params: Promise<{ slug?: string[] }> }) {
+	const { slug = [] } = await params;
+	const doc = await getDoc("docs", slug);
+	if (!doc) return null;
+	return <article>{doc.content}</article>;
+}
+```

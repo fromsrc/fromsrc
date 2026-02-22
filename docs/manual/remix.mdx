@@ -1,0 +1,25 @@
+---
+title: remix
+description: configure fromsrc in remix apps
+---
+
+install dependencies:
+
+```bash
+bun add fromsrc @remix-run/react
+```
+
+wire the adapter:
+
+```tsx
+"use client";
+
+import { AdapterProvider, remixAdapter } from "fromsrc/remix";
+import type { ReactNode } from "react";
+
+export function Providers({ children }: { children: ReactNode }) {
+	return <AdapterProvider adapter={remixAdapter}>{children}</AdapterProvider>;
+}
+```
+
+mount in your root route component and use `fromsrc` content helpers in loader functions for docs pages.

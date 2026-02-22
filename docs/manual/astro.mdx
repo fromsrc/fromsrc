@@ -1,0 +1,25 @@
+---
+title: astro
+description: configure fromsrc in astro apps
+---
+
+install dependencies:
+
+```bash
+bun add fromsrc
+```
+
+wire adapter inside a client component:
+
+```tsx
+"use client";
+
+import { AdapterProvider, astroAdapter } from "fromsrc/astro";
+import type { ReactNode } from "react";
+
+export function Providers({ children }: { children: ReactNode }) {
+	return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>;
+}
+```
+
+render the provider inside your astro page or layout island and keep markdown content in a shared `docs/` directory.

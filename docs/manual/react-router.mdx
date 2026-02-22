@@ -1,0 +1,35 @@
+---
+title: react router
+description: configure fromsrc in react router apps
+---
+
+install dependencies:
+
+```bash
+bun add fromsrc react-router-dom
+```
+
+wire the adapter:
+
+```tsx
+"use client";
+
+import { AdapterProvider, reactRouterAdapter } from "fromsrc/react-router";
+import type { ReactNode } from "react";
+
+export function Providers({ children }: { children: ReactNode }) {
+	return <AdapterProvider adapter={reactRouterAdapter}>{children}</AdapterProvider>;
+}
+```
+
+mount in your app root:
+
+```tsx
+import { Providers } from "./providers";
+
+export function AppRoot({ children }: { children: React.ReactNode }) {
+	return <Providers>{children}</Providers>;
+}
+```
+
+use `fromsrc` content loaders in route modules to render docs content from your `docs/` directory.
