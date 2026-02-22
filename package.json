@@ -7,6 +7,8 @@
 	],
 	"scripts": {
 		"dev": "next dev",
+		"dev:up": "bun scripts/devup.mjs",
+		"dev:down": "bun scripts/devdown.mjs",
 		"build": "bun run build:pkg && next build",
 		"build:pkg": "cd packages/fromsrc && bun run build",
 		"check:types": "bun run build:pkg && bun run check:types:raw",
