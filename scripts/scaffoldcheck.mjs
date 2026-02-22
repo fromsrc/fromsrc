@@ -43,7 +43,7 @@ const frameworks = [
 		name: "remix",
 		files: ["package.json", "vite.config.ts", "app/root.tsx", "app/routes/_index.tsx"],
 		checks: [
-			{ file: "app/root.tsx", text: "fromsrc/remix" },
+			{ file: "app/routes/_index.tsx", text: "edit app/routes/_index.tsx to start building docs." },
 			{ file: "package.json", text: "\"dev\": \"remix vite:dev\"" },
 			{ file: "package.json", text: "\"build\": \"remix vite:build\"" },
 			{ file: "package.json", text: "\"start\": \"remix-serve ./build/server/index.js\"" },
@@ -67,7 +67,7 @@ const frameworks = [
 			"src/styles/global.css",
 		],
 		checks: [
-			{ file: "src/components/shell.tsx", text: "fromsrc/astro" },
+			{ file: "src/components/shell.tsx", text: "edit files in src/pages/ to start building docs." },
 			{ file: "src/pages/index.astro", text: "<Shell client:load />" },
 			{ file: "tsconfig.json", text: "\"extends\": \"astro/tsconfigs/strict\"" },
 			{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },

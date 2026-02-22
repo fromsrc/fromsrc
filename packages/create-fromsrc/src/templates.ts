@@ -428,16 +428,12 @@ import { Shell } from "../components/shell"
 export const astroenv = `/// <reference types="astro/client" />
 `
 
-export const astroshell = `import { AdapterProvider, astroAdapter } from "fromsrc/astro"
-
-export function Shell() {
+export const astroshell = `export function Shell() {
 \treturn (
-\t\t<AdapterProvider adapter={astroAdapter}>
-\t\t\t<main style={{ padding: 24, fontFamily: "ui-monospace, monospace" }}>
-\t\t\t\t<h1>fromsrc</h1>
-\t\t\t\t<p>edit files in src/pages/ to start building docs.</p>
-\t\t\t</main>
-\t\t</AdapterProvider>
+\t\t<main style={{ padding: 24, fontFamily: "ui-monospace, monospace" }}>
+\t\t\t<h1>fromsrc</h1>
+\t\t\t<p>edit files in src/pages/ to start building docs.</p>
+\t\t</main>
 \t)
 }
 `
@@ -457,7 +453,6 @@ export const remixroot = `import {
 \tScripts,
 \tScrollRestoration,
 } from "@remix-run/react"
-import { AdapterProvider, remixAdapter } from "fromsrc/remix"
 
 export default function Root() {
 \treturn (
@@ -469,9 +464,7 @@ export default function Root() {
 \t\t\t\t<Links />
 \t\t\t</head>
 \t\t\t<body>
-\t\t\t\t<AdapterProvider adapter={remixAdapter}>
-\t\t\t\t\t<Outlet />
-\t\t\t\t</AdapterProvider>
+\t\t\t\t<Outlet />
 \t\t\t\t<ScrollRestoration />
 \t\t\t\t<Scripts />
 \t\t\t</body>
