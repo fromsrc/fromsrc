@@ -76,7 +76,7 @@
 		"styles"
 	],
 	"scripts": {
-		"build": "rm -rf dist && tsup",
+		"build": "tsup",
 		"dev": "tsup --watch"
 	},
 	"dependencies": {
