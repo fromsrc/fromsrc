@@ -1,5 +1,5 @@
 import matter from "gray-matter"
-import type { DocMeta, SearchDoc } from "./content"
+import { extractHeadings, type DocMeta, type SearchDoc } from "./content"
 import type { ContentSource } from "./source"
 
 export interface GithubSourceConfig {
@@ -46,6 +46,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 
 	const listCache = createCache<DocMeta[]>()
 	const fileCache = createCache<{ content: string; data: Record<string, unknown> }>()
+	const searchCache = createCache<SearchDoc[]>()
 
 	function rawUrl(filepath: string): string {
 		return `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${branch}/${filepath}`
@@ -113,6 +114,26 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 			}
 
 			return null
+		},
+
+		async search() {
+			const cached = searchCache.get("search")
+			if (cached) return cached
+			const listed = await this.list()
+			const docs: SearchDoc[] = []
+			for (const doc of listed) {
+				const value = await this.get(doc.slug ? doc.slug.split("/") : [])
+				if (!value) continue
+				docs.push({
+					slug: doc.slug,
+					title: doc.title,
+					description: doc.description,
+					content: value.content,
+					headings: extractHeadings(value.content),
+				})
+			}
+			searchCache.set("search", docs)
+			return docs
 		},
 	}
 }
