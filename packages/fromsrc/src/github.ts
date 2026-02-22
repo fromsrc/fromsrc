@@ -63,6 +63,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 	const fileCache = createCache<{ content: string; data: Record<string, unknown> }>()
 	const searchCache = createCache<SearchDoc[]>()
 	const treeCache = createCache<TreeCacheEntry>()
+	const pathCache = createCache<Record<string, string>>()
 
 	function rawUrl(filepath: string): string {
 		return `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${branch}/${filepath}`
@@ -149,6 +150,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 		try {
 			const entries = await allEntries()
 			const prefix = docsPath ? `${docsPath}/` : ""
+			const paths: Record<string, string> = {}
 			const docs: DocMeta[] = entries
 				.filter((item) => item.path.startsWith(prefix) && item.path.endsWith(".mdx"))
 				.map((item) => {
@@ -156,9 +158,11 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 						.slice(prefix.length)
 						.replace(/\.mdx$/, "")
 						.replace(/\/index$/, "")
+					paths[slug] = item.path
 					return { slug, title: slug.split("/").pop() ?? slug }
 				})
 
+			pathCache.set("paths", paths)
 			listCache.set("list", docs)
 			return docs
 		} catch (error) {
@@ -169,15 +173,22 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 
 	const get = async (slug: string[]): Promise<{ content: string; data: Record<string, unknown> } | null> => {
 		const path = slug.length === 0 ? "index" : slug.join("/")
+		const slugValue = slug.join("/")
 		const cacheKey = path
 
 		const cached = fileCache.get(cacheKey)
 		if (cached) return cached
 
+		const knownPaths = pathCache.get("paths") ?? {}
+		const knownPath = knownPaths[slugValue]
 		const filepath = `${docsPath}/${path}.mdx`
 		const indexPath = `${docsPath}/${path}/index.mdx`
+		const candidates = knownPath ? [knownPath, filepath, indexPath] : [filepath, indexPath]
+		const seen = new Set<string>()
 
-		for (const candidate of [filepath, indexPath]) {
+		for (const candidate of candidates) {
+			if (seen.has(candidate)) continue
+			seen.add(candidate)
 			try {
 				const res = await fetch(rawUrl(candidate), { headers })
 				if (!res.ok) continue
