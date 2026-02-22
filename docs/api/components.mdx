@@ -17,10 +17,10 @@ navigation sidebar with sections and collapsible folders.
     title: { type: "string", required: true, description: "sidebar title text" },
     logo: { type: "ReactNode", description: "logo element next to title" },
     navigation: { type: "SidebarSection[]", required: true, description: "navigation structure" },
-    docs: { type: "DocMeta[]", required: true, description: "all docs for search" },
     basePath: { type: "string", default: '"/docs"', description: "base path for doc links" },
     github: { type: "string", description: "github repo url" },
     collapsible: { type: "boolean", description: "enable collapse to icon-only mode" },
+    defaultOpenLevel: { type: "number", default: "0", description: "auto-open folder depth" },
   }}
 />
 
@@ -53,6 +53,7 @@ interface SidebarFolder {
   items: (SidebarItem | SidebarFolder)[]
   defaultOpen?: boolean
   icon?: ReactNode
+  href?: string
 }
 ```
 
@@ -87,7 +88,10 @@ inline table of contents for embedding in content.
 
 <TypeTable
   data={{
+    headings: { type: "Heading[]", required: true, description: "headings to render" },
     title: { type: "string", default: '"on this page"', description: "section title" },
+    collapsible: { type: "boolean", default: "true", description: "enable collapse toggle" },
+    defaultOpen: { type: "boolean", default: "false", description: "initial open state" },
   }}
 />
 
@@ -99,10 +103,10 @@ syntax highlighted code with copy button.
 
 <TypeTable
   data={{
-    code: { type: "string", required: true, description: "code to display" },
-    language: { type: "string", description: "syntax highlighting language" },
-    filename: { type: "string", description: "filename to display" },
-    showLineNumbers: { type: "boolean", description: "show line numbers" },
+    children: { type: "ReactNode", required: true, description: "code content" },
+    lang: { type: "string", description: "language label and icon key" },
+    title: { type: "string", description: "header title override" },
+    lines: { type: "boolean", description: "render line numbers" },
   }}
 />
 
@@ -137,7 +141,7 @@ highlighted message boxes.
 
 <TypeTable
   data={{
-    type: { type: '"info" | "warning" | "error" | "tip"', default: '"info"', description: "callout style" },
+    type: { type: '"info" | "warning" | "error" | "tip" | "note"', default: '"info"', description: "callout style" },
     title: { type: "string", description: "optional title" },
     children: { type: "ReactNode", required: true, description: "callout content" },
   }}
@@ -159,7 +163,6 @@ individual step in a steps list.
 
 <TypeTable
   data={{
-    title: { type: "string", required: true, description: "step title" },
     children: { type: "ReactNode", required: true, description: "step content" },
   }}
 />
@@ -170,6 +173,7 @@ tabbed content panels.
 
 <TypeTable
   data={{
+    items: { type: "readonly string[]", required: true, description: "tab labels and values" },
     defaultValue: { type: "string", description: "initially active tab" },
     children: { type: "ReactNode", required: true, description: "Tab elements" },
   }}
@@ -181,7 +185,7 @@ individual tab panel.
 
 <TypeTable
   data={{
-    title: { type: "string", required: true, description: "tab label" },
+    value: { type: "string", required: true, description: "tab value from Tabs items" },
     children: { type: "ReactNode", required: true, description: "tab content" },
   }}
 />
@@ -203,8 +207,8 @@ individual card in a cards grid.
 <TypeTable
   data={{
     title: { type: "string", required: true, description: "card title" },
+    description: { type: "string", description: "card body text" },
     href: { type: "string", description: "link destination" },
-    children: { type: "ReactNode", description: "card description" },
     icon: { type: "ReactNode", description: "card icon" },
   }}
 />
