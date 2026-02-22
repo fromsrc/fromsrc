@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { parseimports } from "./imports.mjs";
+import { isnodeblocked } from "./runtimepolicy.mjs";
 import { createresolver } from "./resolve.mjs";
 
 const root = process.cwd();
@@ -12,9 +13,7 @@ const issues = new Set();
 const resolvelocal = createresolver();
 
 function blocked(target) {
-	if (target.startsWith("node:")) return true;
-	const names = ["fs", "path", "child_process", "worker_threads", "module", "os", "crypto"];
-	return names.includes(target);
+	return isnodeblocked(target);
 }
 
 async function scan(file, stack) {
