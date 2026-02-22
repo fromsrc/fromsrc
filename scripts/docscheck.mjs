@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const root = process.cwd();
 const docsroot = join(root, "docs");
@@ -66,7 +66,7 @@ function anchorlinks(text) {
 function doclinks(text) {
 	return [...text.matchAll(/\[[^\]]+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g)]
 		.map((match) => (match[1] ?? "").trim())
-		.filter((target) => target.startsWith("/docs"));
+		.filter((target) => target && !target.startsWith("#") && !target.startsWith("http"));
 }
 
 function route(file) {
@@ -79,6 +79,20 @@ function route(file) {
 const issues = [];
 const list = await files(docsroot);
 const routes = new Set(list.map(route));
+const fileset = new Set(list.map((file) => file.replace(/\\/g, "/")));
+
+function localfile(file, target) {
+	const index = target.search(/[?#]/);
+	const pathname = index === -1 ? target : target.slice(0, index);
+	if (!pathname.startsWith(".")) return null;
+	const direct = resolve(dirname(file), pathname);
+	const options = [direct, `${direct}.mdx`, join(direct, "index.mdx")];
+	for (const option of options) {
+		const normalized = option.replace(/\\/g, "/");
+		if (fileset.has(normalized)) return normalized;
+	}
+	return null;
+}
 
 for (const file of list) {
 	const raw = await readFile(file, "utf8");
@@ -98,9 +112,16 @@ for (const file of list) {
 		if (!seen.has(target)) issues.push(`${name}: missing anchor target #${target}`);
 	}
 	for (const target of doclinks(clean)) {
-		const index = target.search(/[?#]/);
-		const pathname = (index === -1 ? target : target.slice(0, index)).replace(/\/+$/, "") || "/docs";
-		if (!routes.has(pathname)) issues.push(`${name}: missing docs route ${pathname}`);
+		if (target.startsWith("/docs")) {
+			const index = target.search(/[?#]/);
+			const pathname = (index === -1 ? target : target.slice(0, index)).replace(/\/+$/, "") || "/docs";
+			if (!routes.has(pathname)) issues.push(`${name}: missing docs route ${pathname}`);
+			continue;
+		}
+		if (target.startsWith(".")) {
+			const resolved = localfile(file, target);
+			if (!resolved) issues.push(`${name}: missing local docs file ${target}`);
+		}
 	}
 }
 
