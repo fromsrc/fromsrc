@@ -52,6 +52,24 @@ async function readCached(filepath: string): Promise<string> {
 	return content
 }
 
+async function resolveSource(
+	docsDir: string,
+	slug: string[],
+): Promise<{ source: string; actualPath: string; filepath: string } | null> {
+	const path = slug.length === 0 ? "index" : slug.join("/")
+	const filepath = join(docsDir, `${path}.mdx`)
+	const indexPath = join(docsDir, `${path}/index.mdx`)
+	try {
+		const source = await readCached(filepath)
+		return { source, actualPath: path, filepath }
+	} catch {}
+	try {
+		const source = await readCached(indexPath)
+		return { source, actualPath: `${path}/index`, filepath: indexPath }
+	} catch {}
+	return null
+}
+
 export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	const schema = config.schema ?? baseSchema
 
@@ -68,43 +86,28 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	}
 
 	async function getDoc(slug: string[]): Promise<Document | null> {
-		const path = slug.length === 0 ? "index" : slug.join("/")
-		const filepath = join(config.dir, `${path}.mdx`)
-		const indexPath = join(config.dir, `${path}/index.mdx`)
-
-		let source: string
-		let actualPath = path
+		const resolved = await resolveSource(config.dir, slug)
+		if (!resolved) return null
 
 		try {
-			source = await readCached(filepath)
-		} catch {
-			try {
-				source = await readCached(indexPath)
-				actualPath = `${path}/index`
-			} catch {
-				return null
-			}
-		}
-
-		try {
-			const { data, content } = matter(source)
+			const { data, content } = matter(resolved.source)
 			const parsed = schema.parse(data)
 
 			if (isProduction() && isDraft(data)) return null
 
 			return {
-				slug: actualPath,
+				slug: resolved.actualPath,
 				...parsed,
 				content,
 				data: parsed,
 			}
 		} catch (error) {
 			if (error instanceof z.ZodError) {
-				console.error(`Schema validation failed for ${filepath}:`)
+				console.error(`Schema validation failed for ${resolved.filepath}:`)
 				console.error(error.errors)
 				throw error
 			}
-			console.error(`Failed to parse ${filepath}:`, error)
+			console.error(`Failed to parse ${resolved.filepath}:`, error)
 			return null
 		}
 	}
@@ -352,32 +355,17 @@ function stripMdx(content: string): string {
 }
 
 export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | null> {
-	const path = slug.length === 0 ? "index" : slug.join("/")
-	const filepath = join(docsDir, `${path}.mdx`)
-	const indexPath = join(docsDir, `${path}/index.mdx`)
-
-	let source: string
-	let actualPath = path
+	const resolved = await resolveSource(docsDir, slug)
+	if (!resolved) return null
 
 	try {
-		source = await readCached(filepath)
-	} catch {
-		try {
-			source = await readCached(indexPath)
-			actualPath = `${path}/index`
-		} catch {
-			return null
-		}
-	}
-
-	try {
-		const { data, content } = matter(source)
+		const { data, content } = matter(resolved.source)
 		const parsed = baseSchema.parse(data)
 
 		if (isProduction() && isDraft(data)) return null
 
 		return {
-			slug: actualPath,
+			slug: resolved.actualPath,
 			title: parsed.title,
 			description: parsed.description,
 			order: parsed.order,
@@ -386,11 +374,11 @@ export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | nul
 		}
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			console.error(`Schema validation failed for ${filepath}:`)
+			console.error(`Schema validation failed for ${resolved.filepath}:`)
 			console.error(error.errors)
 			throw error
 		}
-		console.error(`Failed to parse ${filepath}:`, error)
+		console.error(`Failed to parse ${resolved.filepath}:`, error)
 		return null
 	}
 }
