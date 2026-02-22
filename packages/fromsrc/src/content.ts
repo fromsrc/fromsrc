@@ -526,6 +526,11 @@ interface navsection<T> {
 
 type navitem = { slug: string; order?: number }
 
+function fallbacktitle(key: string): string {
+	if (key === "") return "docs"
+	return key.replace(/-/g, " ")
+}
+
 async function buildNavigation<T extends navitem>(
 	docs: T[],
 	docsDir: string,
@@ -536,7 +541,7 @@ async function buildNavigation<T extends navitem>(
 		const key = groupkey(doc.slug)
 		const section = grouped.get(key) ?? {
 			key,
-			title: key === "" ? "introduction" : key.replace(/-/g, " "),
+			title: fallbacktitle(key),
 			items: [],
 		}
 		section.items.push(doc)
