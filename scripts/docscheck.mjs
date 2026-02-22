@@ -1,5 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
+import matter from "gray-matter";
 
 const root = process.cwd();
 const docsroot = join(root, "docs");
@@ -24,22 +25,6 @@ async function files(dir) {
 		if (entry.isFile() && path.endsWith(".mdx")) output.push(path);
 	}
 	return output;
-}
-
-function frontmatter(text) {
-	const match = text.match(/^---\n([\s\S]*?)\n---/);
-	if (!match) return null;
-	const body = match[1] ?? "";
-	const values = new Map();
-	for (const line of body.split("\n")) {
-		const index = line.indexOf(":");
-		if (index < 1) continue;
-		const key = line.slice(0, index).trim();
-		if (!key) continue;
-		const value = line.slice(index + 1).trim();
-		values.set(key, value);
-	}
-	return values;
 }
 
 function headingids(text) {
@@ -96,17 +81,24 @@ function localfile(file, target) {
 
 for (const file of list) {
 	const raw = await readFile(file, "utf8");
-	const data = frontmatter(raw);
 	const name = file.slice(root.length + 1);
-	if (!data) {
+	let parsed;
+	try {
+		parsed = matter(raw);
+	} catch {
+		issues.push(`${name}: invalid frontmatter`);
+		continue;
+	}
+	const data = parsed.data;
+	if (!data || Object.keys(data).length === 0) {
 		issues.push(`${name}: missing frontmatter`);
 		continue;
 	}
 	for (const key of ["title", "description"]) {
-		const value = (data.get(key) ?? "").trim();
+		const value = typeof data[key] === "string" ? data[key].trim() : "";
 		if (!value) issues.push(`${name}: missing ${key}`);
 	}
-	const clean = stripcode(raw);
+	const clean = stripcode(parsed.content);
 	const seen = new Set(headingids(clean));
 	for (const target of anchorlinks(clean)) {
 		if (!seen.has(target)) issues.push(`${name}: missing anchor target #${target}`);
