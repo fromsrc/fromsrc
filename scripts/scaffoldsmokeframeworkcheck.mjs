@@ -5,28 +5,24 @@ import { frameworks } from "./frameworkset.mjs";
 const file = join(process.cwd(), "scripts", "scaffoldsmoke.mjs");
 const text = await readFile(file, "utf8");
 
-const match = text.match(/const defaults = \[(.*?)\];/s);
-if (!match || !match[1]) {
+const importline = 'import { frameworks as defaults } from "./frameworkset.mjs";';
+if (!text.includes(importline)) {
 	console.error("x scaffold smoke framework validation failed");
-	console.error("missing defaults array in scaffoldsmoke.mjs");
+	console.error("missing defaults import from frameworkset.mjs");
 	process.exit(1);
 }
 
-const parsed = [...match[1].matchAll(/"([^"]+)"/g)].map((entry) => entry[1]);
-const missing = frameworks.filter((name) => !parsed.includes(name));
-const extra = parsed.filter((name) => !frameworks.includes(name));
-
-if (missing.length > 0 || extra.length > 0) {
+const fallbackline = "const frameworks = requested.length > 0 ? requested : defaults;";
+if (!text.includes(fallbackline)) {
 	console.error("x scaffold smoke framework validation failed");
-	for (const name of missing) console.error(`missing framework: ${name}`);
-	for (const name of extra) console.error(`unexpected framework: ${name}`);
+	console.error("missing defaults fallback assignment");
 	process.exit(1);
 }
 
-if (parsed.length !== frameworks.length) {
+if (frameworks.length === 0) {
 	console.error("x scaffold smoke framework validation failed");
-	console.error(`duplicate or malformed entries detected: ${parsed.join(", ")}`);
+	console.error("frameworkset.mjs returned no frameworks");
 	process.exit(1);
 }
 
-console.log(`o scaffold smoke framework validation passed (${parsed.length} frameworks)`);
+console.log(`o scaffold smoke framework validation passed (${frameworks.length} frameworks)`);
