@@ -10,6 +10,12 @@ export interface GithubSourceConfig {
 	token?: string
 }
 
+interface TreeEntry {
+	path: string
+	type: "blob" | "tree"
+	sha: string
+}
+
 interface CacheEntry<T> {
 	data: T
 	timestamp: number
@@ -39,7 +45,10 @@ function createCache<T>() {
 export function createGithubSource(config: GithubSourceConfig): ContentSource {
 	const branch = config.branch ?? "main"
 	const docsPath = config.path ?? "docs"
-	const headers: Record<string, string> = {}
+	const headers: Record<string, string> = {
+		Accept: "application/vnd.github+json",
+		"X-GitHub-Api-Version": "2022-11-28",
+	}
 	if (config.token) {
 		headers.Authorization = `Bearer ${config.token}`
 	}
@@ -52,8 +61,60 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 		return `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${branch}/${filepath}`
 	}
 
-	function treeUrl(): string {
-		return `https://api.github.com/repos/${config.owner}/${config.repo}/git/trees/${branch}?recursive=1`
+	function treeUrl(ref: string, recursive: boolean): string {
+		const suffix = recursive ? "?recursive=1" : ""
+		return `https://api.github.com/repos/${config.owner}/${config.repo}/git/trees/${ref}${suffix}`
+	}
+
+	function joinPath(base: string, path: string): string {
+		if (!base) return path
+		return `${base}/${path}`
+	}
+
+	async function tree(ref: string, recursive: boolean): Promise<{ entries: TreeEntry[]; truncated: boolean }> {
+		const res = await fetch(treeUrl(ref, recursive), { headers })
+		if (!res.ok) return { entries: [], truncated: false }
+		const json = (await res.json()) as {
+			tree?: Array<{ path?: string; type?: string; sha?: string }>
+			truncated?: boolean
+		}
+		const entries = (json.tree ?? [])
+			.filter((item): item is { path: string; type: "blob" | "tree"; sha: string } =>
+				typeof item.path === "string" &&
+				(item.type === "blob" || item.type === "tree") &&
+				typeof item.sha === "string",
+			)
+			.map((item) => ({
+				path: item.path,
+				type: item.type,
+				sha: item.sha,
+			}))
+		return {
+			entries,
+			truncated: json.truncated === true,
+		}
+	}
+
+	async function allEntries(): Promise<TreeEntry[]> {
+		const recursive = await tree(branch, true)
+		if (!recursive.truncated) return recursive.entries
+		const root = await tree(branch, false)
+		const files = root.entries.filter((item) => item.type === "blob")
+		const dirs = root.entries.filter((item) => item.type === "tree")
+		while (dirs.length > 0) {
+			const current = dirs.shift()
+			if (!current) continue
+			const next = await tree(current.sha, false)
+			for (const item of next.entries) {
+				const path = joinPath(current.path, item.path)
+				if (item.type === "blob") {
+					files.push({ ...item, path })
+				} else {
+					dirs.push({ ...item, path })
+				}
+			}
+		}
+		return files
 	}
 
 	return {
@@ -62,18 +123,10 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 			if (cached) return cached
 
 			try {
-				const res = await fetch(treeUrl(), {
-					headers: { ...headers, Accept: "application/vnd.github.v3+json" },
-				})
-				if (!res.ok) return []
-
-				const json = (await res.json()) as {
-					tree: { path: string; type: string }[]
-				}
-
+				const entries = await allEntries()
 				const prefix = docsPath ? `${docsPath}/` : ""
-				const docs: DocMeta[] = json.tree
-					.filter((item) => item.type === "blob" && item.path.startsWith(prefix) && item.path.endsWith(".mdx"))
+				const docs: DocMeta[] = entries
+					.filter((item) => item.path.startsWith(prefix) && item.path.endsWith(".mdx"))
 					.map((item) => {
 						const slug = item.path
 							.slice(prefix.length)
