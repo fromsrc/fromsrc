@@ -7,8 +7,12 @@ const issues = [];
 
 const files = [
 	{
-		path: "packages/create-fromsrc/src/index.ts",
+		path: "packages/create-fromsrc/src/frameworks.ts",
 		expect: frameworks,
+	},
+	{
+		path: "packages/create-fromsrc/src/index.ts",
+		expect: ['import { frameworks, parseframework } from "./frameworks"'],
 	},
 	{
 		path: "scripts/scaffoldcheck.mjs",

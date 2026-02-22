@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { docslayout, docspage, layout, metajson, page, welcomemdx } from "./pages"
+import type { Framework } from "./frameworks"
 import {
 	astroconfig,
 	astroenv,
@@ -11,7 +12,6 @@ import {
 	gitignore,
 	globalscss,
 	nextglobalscss,
-	type Framework,
 	nextenv,
 	packagejson,
 	nextconfig,

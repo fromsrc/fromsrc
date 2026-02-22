@@ -1,17 +1,7 @@
 import { generate } from "./generate"
+import { frameworks, parseframework } from "./frameworks"
 import { ask, close, select } from "./prompt"
-import type { Framework } from "./templates"
-
-const frameworks = ["next.js", "react-router", "vite", "tanstack", "remix", "astro"] as const
-const aliases = {
-	next: "next.js",
-	nextjs: "next.js",
-	rr: "react-router",
-	router: "react-router",
-	reactrouter: "react-router",
-	ts: "tanstack",
-	tanstackstart: "tanstack",
-} as const
+import type { Framework } from "./frameworks"
 
 function usage() {
 	console.log("  usage: create-fromsrc [options]")
@@ -110,17 +100,6 @@ function positional(): string | undefined {
 		return value
 	}
 	return undefined
-}
-
-function parseframework(value: string | undefined): Framework | undefined {
-	if (!value) {
-		return undefined
-	}
-	const key = value.toLowerCase().replaceAll("_", "").replaceAll("-", "").replaceAll(".", "")
-	const mapped = (aliases as Record<string, Framework | undefined>)[key]
-	const target = mapped ?? value.toLowerCase()
-	const found = frameworks.find((item) => item.toLowerCase() === target)
-	return found
 }
 
 async function main() {

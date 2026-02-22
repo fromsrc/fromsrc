@@ -1,4 +1,4 @@
-export type Framework = "next.js" | "react-router" | "vite" | "tanstack" | "remix" | "astro"
+import type { Framework } from "./frameworks"
 
 export function packagejson(name: string, framework: Framework): string {
 	const base = {
