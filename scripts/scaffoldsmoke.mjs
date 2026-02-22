@@ -5,7 +5,7 @@ import { spawn } from "node:child_process";
 
 const root = process.cwd();
 const bin = join(root, "packages", "create-fromsrc", "dist", "index.js");
-const defaults = ["next.js", "react-router", "vite", "astro", "remix"];
+const defaults = ["next.js", "react-router", "vite", "tanstack", "astro", "remix"];
 const requested = process.argv.slice(2);
 const frameworks = requested.length > 0 ? requested : defaults;
 
