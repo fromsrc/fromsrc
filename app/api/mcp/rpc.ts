@@ -33,6 +33,7 @@ export const toolcall = z.object({
 export const resource = z.object({
 	uri: z.string().trim().min(1).max(512),
 })
+export const slug = z.string().trim().regex(/^$|^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/)
 export const init = z.object({
 	protocolVersion: z.string().trim().min(1),
 	capabilities: z.record(z.unknown()).optional(),

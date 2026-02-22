@@ -1,5 +1,5 @@
 import { generateMcpManifest, z } from "fromsrc"
-import { init, list, page, protocol, resource, search, supported, toolcall } from "./rpc"
+import { init, list, page, protocol, resource, search, slug, supported, toolcall } from "./rpc"
 
 interface config {
 	name: string
@@ -59,12 +59,17 @@ function uri(slug: string): string {
 	return `fromsrc://docs/${safe}`
 }
 
-function slug(uri: string): string | null {
+function parseslug(uri: string): string | null {
 	const prefix = "fromsrc://docs/"
 	if (!uri.startsWith(prefix)) return null
 	const value = uri.slice(prefix.length).replace(/\/+$/, "")
 	if (value.length === 0 || value === "index") return ""
 	return value
+}
+
+function safeslug(value: string | null): string | null {
+	if (value === null) return null
+	return slug.safeParse(value).success ? value : null
 }
 
 function toolresult(
@@ -165,7 +170,7 @@ export async function execute(core: core): Promise<ok | fail> {
 		case "resources/read": {
 			const parsed = resource.safeParse(core.params)
 			if (!parsed.success) return { ok: false, code: -32602, message: "invalid params", status: 400 }
-			const value = slug(parsed.data.uri)
+			const value = safeslug(parseslug(parsed.data.uri))
 			if (value === null) return { ok: false, code: -32602, message: "invalid params", status: 400 }
 			const content = await core.handler.getPage(value)
 			if (!content) return { ok: false, code: -32004, message: "not found", status: 404 }
