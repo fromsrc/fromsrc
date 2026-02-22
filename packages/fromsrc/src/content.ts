@@ -62,6 +62,11 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	let fullDocsCache: Document[] | null = null
 	let navCache: { title: string; items: Meta[] }[] | null = null
 
+	function asMeta(doc: Document): Meta {
+		const { content: _content, data: _data, ...meta } = doc
+		return meta
+	}
+
 	async function getDoc(slug: string[]): Promise<Document | null> {
 		const path = slug.length === 0 ? "index" : slug.join("/")
 		const filepath = join(config.dir, `${path}.mdx`)
@@ -105,6 +110,11 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 	async function getAllDocs(): Promise<Meta[]> {
 		if (isProduction() && docsCache) return docsCache
+		if (isProduction() && fullDocsCache) {
+			const sorted = fullDocsCache.map(asMeta)
+			docsCache = sorted
+			return sorted
+		}
 
 		const docs: Meta[] = []
 
@@ -241,6 +251,20 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 	async function getSearchDocs(): Promise<(Meta & { content: string; headings?: Heading[] })[]> {
 		if (isProduction() && searchCache) return searchCache
+		if (isProduction() && fullDocsCache) {
+			const sorted = fullDocsCache
+				.map((doc) => {
+					const headings = extractHeadings(doc.content)
+					return {
+						...asMeta(doc),
+						content: stripMdx(doc.content),
+						headings: headings.length > 0 ? headings : undefined,
+					}
+				})
+				.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+			searchCache = sorted
+			return sorted
+		}
 
 		const docs: (Meta & { content: string; headings?: Heading[] })[] = []
 
