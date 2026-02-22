@@ -1,0 +1,35 @@
+---
+title: frameworks
+description: use fromsrc across supported application frameworks
+order: 17
+---
+
+fromsrc ships framework adapters with the same shared adapter primitives.
+
+## supported adapters
+
+- next.js: `fromsrc/next` with `nextAdapter`
+- react router: `fromsrc/react-router` with `reactRouterAdapter`
+- vite: `fromsrc/vite` with `viteAdapter`
+- tanstack start: `fromsrc/tanstack` with `tanstackAdapter`
+- remix: `fromsrc/remix` with `remixAdapter`
+- astro: `fromsrc/astro` with `astroAdapter`
+
+all adapter entrypoints also export:
+
+- `AdapterProvider`
+- `AdapterContext`
+- `createadapter`
+- `useAdapter`
+
+## example
+
+```tsx
+"use client";
+
+import { AdapterProvider, nextAdapter } from "fromsrc/next";
+
+export function Shell({ children }: { children: React.ReactNode }) {
+	return <AdapterProvider adapter={nextAdapter}>{children}</AdapterProvider>;
+}
+```
