@@ -31,9 +31,15 @@ function parsedspec(spec: string | object): OpenApiSpec | null {
 	}
 }
 
+function methodrank(method: string): number {
+	const list = ["get", "post", "put", "patch", "delete", "options", "head", "trace"]
+	const index = list.indexOf(method.toLowerCase())
+	return index === -1 ? list.length : index
+}
+
 function sorted(endpoints: OpenApiEndpoint[]): OpenApiEndpoint[] {
 	return [...endpoints].sort((left, right) => {
-		if (left.path === right.path) return left.method.localeCompare(right.method)
+		if (left.path === right.path) return methodrank(left.method) - methodrank(right.method)
 		return left.path.localeCompare(right.path)
 	})
 }
@@ -47,6 +53,10 @@ function tagname(endpoint: OpenApiEndpoint): string {
 	const first = endpoint.tags[0]
 	if (!first) return "untagged"
 	return first
+}
+
+function tagid(name: string): string {
+	return `tag-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`
 }
 
 function groups(endpoints: OpenApiEndpoint[]): Array<[string, OpenApiEndpoint[]]> {
@@ -162,8 +172,11 @@ function OpenapiBase({ spec, tag, method, path, group = "none" }: OpenapiProps):
 			{group === "tag" ? (
 				<div className="space-y-8">
 					{groups(endpoints).map(([name, list]) => (
-						<section key={name} aria-label={`tag ${name}`}>
-							<h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-dim">{name}</h3>
+						<section key={name} aria-labelledby={tagid(name)}>
+							<h3 id={tagid(name)} className="mb-2 flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-dim">
+								<span>{name}</span>
+								<span className="rounded border border-line px-1.5 py-0.5 text-[10px] font-mono normal-case">{list.length}</span>
+							</h3>
 							<div>{list.map(endpointview)}</div>
 						</section>
 					))}

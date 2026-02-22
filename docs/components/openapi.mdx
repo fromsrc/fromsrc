@@ -22,6 +22,9 @@ render grouped endpoint docs from an openapi spec.
 | path | string | - | path substring filter |
 | group | `"none" \| "tag"` | `"none"` | render endpoints in tag sections |
 
+grouped mode shows a per-tag endpoint count and uses stable method ordering:
+`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `HEAD`, `TRACE`.
+
 ## schema renderer
 
 `Openapischema` renders nested request/response shapes.
