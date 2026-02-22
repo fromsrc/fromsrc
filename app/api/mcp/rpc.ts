@@ -11,6 +11,7 @@ export const methodname = z.enum([
 	"tools/list",
 	"tools/call",
 	"resources/list",
+	"resources/templates/list",
 	"resources/read",
 	"initialize",
 	"notifications/initialized",
