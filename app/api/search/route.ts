@@ -125,16 +125,16 @@ export async function GET(request: Request) {
 			request,
 			cached,
 			cachecontrol,
-				{
-					"Server-Timing": `search;dur=${duration.toFixed(2)}`,
-					"X-Search-Cache": "hit",
-					"X-Search-Docs-Cache": docsCacheBefore ? "hit" : "miss",
-					"X-Search-Result-Count": String(cached.length),
-				},
-			)
+			{
+				"Server-Timing": `search;dur=${duration.toFixed(2)}`,
+				"X-Search-Cache": "hit",
+				"X-Search-Docs-Cache": docsCacheBefore ? "hit" : "miss",
+				"X-Search-Result-Count": String(cached.length),
+			},
+		)
 	}
 
-	const pending = inflight.get(key) ?? compute(values.q, values.limit)
+	const pending = inflight.get(key) ?? compute(query || undefined, values.limit)
 	if (!inflight.has(key)) inflight.set(key, pending)
 	const results = await pending.finally(() => {
 		if (inflight.get(key) === pending) inflight.delete(key)
