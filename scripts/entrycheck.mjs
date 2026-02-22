@@ -25,11 +25,22 @@ const entries = [
 
 const issues = [];
 
+function isdirective(node) {
+	if (!ts.isExpressionStatement(node)) return false;
+	if (!ts.isStringLiteral(node.expression)) return false;
+	const value = node.expression.text;
+	return value === "use client" || value === "use strict";
+}
+
 for (const entry of entries) {
 	const file = path.join(src, entry);
 	const text = await readFile(file, "utf8");
 	const source = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 	for (const node of source.statements) {
+		if (ts.isExpressionStatement(node) && !isdirective(node)) {
+			issues.push(`${path.relative(root, file)}: top-level side effect statement is not allowed`);
+			continue;
+		}
 		if (ts.isExportAssignment(node)) {
 			issues.push(`${path.relative(root, file)}: default export is not allowed`);
 			continue;
