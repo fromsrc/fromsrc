@@ -8,6 +8,7 @@ const required = [
 	"bunx create-fromsrc",
 	"bunx create-fromsrc --name my-docs --framework next.js --yes",
 	"bunx create-fromsrc --list",
+	"bun run typecheck",
 ];
 
 const issues = [];
