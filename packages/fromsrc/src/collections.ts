@@ -7,6 +7,7 @@ interface CollectionConfig<T extends z.ZodRawShape> {
 	name: string
 	dir: string
 	schema: z.ZodObject<T>
+	includeDrafts?: boolean
 }
 
 interface CollectionItem<T> {
@@ -35,6 +36,7 @@ type InferSchema<T extends CollectionConfig<z.ZodRawShape>> = z.infer<T["schema"
 async function scan<T extends z.ZodRawShape>(
 	dir: string,
 	schema: z.ZodObject<T>,
+	includeDrafts: boolean,
 ): Promise<CollectionItem<InferCollection<T>>[]> {
 	const items: CollectionItem<InferCollection<T>>[] = []
 
@@ -47,6 +49,7 @@ async function scan<T extends z.ZodRawShape>(
 				const filepath = join(current, entry.name)
 				const source = await readFile(filepath, "utf-8")
 				const { data, content } = matter(source)
+				if (!includeDrafts && (data as Record<string, unknown>).draft === true) continue
 				const parsed = schema.parse(data)
 				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
 				items.push({ slug, content, data: parsed })
@@ -78,7 +81,8 @@ export function defineCollection<T extends z.ZodRawShape>(
 
 	async function load(): Promise<Item[]> {
 		if (cached) return cached
-		const items = await scan(config.dir, config.schema)
+		const includeDrafts = config.includeDrafts ?? process.env.NODE_ENV !== "production"
+		const items = await scan(config.dir, config.schema, includeDrafts)
 		cached = items
 		return items
 	}

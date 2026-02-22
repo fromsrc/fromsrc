@@ -72,6 +72,7 @@
       "peerDependencies": {
         "@remix-run/react": ">=2.0.0",
         "@tanstack/react-router": ">=1.0.0",
+        "katex": ">=0.16.0",
         "mermaid": ">=10.0.0",
         "next": ">=14.0.0",
         "react": ">=18.0.0",
@@ -80,6 +81,7 @@
       "optionalPeers": [
         "@remix-run/react",
         "@tanstack/react-router",
+        "katex",
         "mermaid",
         "react-router",
       ],

@@ -67,6 +67,7 @@ export function generateEndpointSlug(method: string, path: string): string {
 }
 
 type jsonrecord = Record<string, unknown>
+const MAX_SCHEMA_DEPTH = 40
 
 function isrecord(value: unknown): value is jsonrecord {
 	return typeof value === "object" && value !== null
@@ -84,9 +85,20 @@ export function resolveRef(root: unknown, ref: string): unknown {
 	return current
 }
 
-export function resolveSchema(root: unknown, raw: unknown): OpenApiSchema {
+export function resolveSchema(
+	root: unknown,
+	raw: unknown,
+	depth = 0,
+	refs: Set<string> = new Set(),
+): OpenApiSchema {
+	if (depth > MAX_SCHEMA_DEPTH) return {}
 	if (!isrecord(raw)) return {}
-	if (typeof raw.$ref === "string") return resolveSchema(root, resolveRef(root, raw.$ref))
+	if (typeof raw.$ref === "string") {
+		if (refs.has(raw.$ref)) return {}
+		const next = new Set(refs)
+		next.add(raw.$ref)
+		return resolveSchema(root, resolveRef(root, raw.$ref), depth + 1, next)
+	}
 
 	const schema: OpenApiSchema = {}
 	if (typeof raw.type === "string") schema.type = raw.type
@@ -103,14 +115,14 @@ export function resolveSchema(root: unknown, raw: unknown): OpenApiSchema {
 	if (isrecord(raw.properties)) {
 		schema.properties = {}
 		for (const [key, val] of Object.entries(raw.properties)) {
-			schema.properties[key] = resolveSchema(root, val)
+			schema.properties[key] = resolveSchema(root, val, depth + 1, refs)
 		}
 	}
 
-	if (raw.items) schema.items = resolveSchema(root, raw.items)
-	if (Array.isArray(raw.oneOf)) schema.oneOf = raw.oneOf.map((schemaitem) => resolveSchema(root, schemaitem))
-	if (Array.isArray(raw.anyOf)) schema.anyOf = raw.anyOf.map((schemaitem) => resolveSchema(root, schemaitem))
-	if (Array.isArray(raw.allOf)) schema.allOf = raw.allOf.map((schemaitem) => resolveSchema(root, schemaitem))
+	if (raw.items) schema.items = resolveSchema(root, raw.items, depth + 1, refs)
+	if (Array.isArray(raw.oneOf)) schema.oneOf = raw.oneOf.map((schemaitem) => resolveSchema(root, schemaitem, depth + 1, refs))
+	if (Array.isArray(raw.anyOf)) schema.anyOf = raw.anyOf.map((schemaitem) => resolveSchema(root, schemaitem, depth + 1, refs))
+	if (Array.isArray(raw.allOf)) schema.allOf = raw.allOf.map((schemaitem) => resolveSchema(root, schemaitem, depth + 1, refs))
 
 	return schema
 }

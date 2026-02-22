@@ -8,12 +8,12 @@
 		"gzip": 134
 	},
 	"searchscore": {
-		"size": 1327,
-		"gzip": 571
+		"size": 1551,
+		"gzip": 638
 	},
 	"searchindex": {
-		"size": 979,
-		"gzip": 572
+		"size": 1344,
+		"gzip": 692
 	},
 	"searchpolicy": {
 		"size": 175,
@@ -24,8 +24,8 @@
 		"gzip": 278
 	},
 	"openapi": {
-		"size": 4841,
-		"gzip": 1714
+		"size": 4974,
+		"gzip": 1774
 	},
 	"algolia": {
 		"size": 1590,

@@ -13,18 +13,18 @@ const links: Record<string, Link[]> = {
 		{ href: "#ai", label: "ai-native" },
 	],
 	resources: [
-		{ href: null, label: "docs" },
-		{ href: null, label: "examples" },
-		{ href: null, label: "changelog" },
+		{ href: "/docs", label: "docs" },
+		{ href: "/docs/examples/index", label: "examples" },
+		{ href: "/docs/components/changelog", label: "changelog" },
 	],
 	community: [
 		{ href: "https://github.com/fromsrc", label: "github" },
 		{ href: "https://twitter.com/fromsrc", label: "twitter" },
-		{ href: null, label: "discord" },
+		{ href: "https://github.com/fromsrc/fromsrc/discussions", label: "discussions" },
 	],
 	legal: [
-		{ href: null, label: "privacy" },
-		{ href: null, label: "terms" },
+		{ href: "/docs", label: "privacy" },
+		{ href: "/docs", label: "terms" },
 	],
 }
 
@@ -57,16 +57,12 @@ export function Foot() {
 							<ul className="space-y-2 text-sm">
 								{items.map((item) => (
 									<li key={item.label}>
-										{item.href ? (
-											<a
-												href={item.href}
-												className="block text-dim hover:text-fg transition-colors duration-200"
-											>
-												{item.label}
-											</a>
-										) : (
-											<span className="block text-dim cursor-not-allowed">{item.label}</span>
-										)}
+										<a
+											href={item.href ?? "/docs"}
+											className="block text-dim hover:text-fg transition-colors duration-200"
+										>
+											{item.label}
+										</a>
 									</li>
 								))}
 							</ul>

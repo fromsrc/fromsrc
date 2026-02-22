@@ -15,14 +15,14 @@ export const list = [
 	{
 		name: "searchscore",
 		code: "import { scoreterms, termindex } from 'fromsrc/searchscore'; const data={title:'intro',slug:'/intro',description:'d',content:'text',titleindex:termindex(['intro']),slugindex:termindex(['intro']),descriptionindex:termindex(['d']),headingindex:termindex(['intro']),contentindex:termindex(['text'])}; export default scoreterms(['intro'],data);",
-		max: 1400,
+		max: 1700,
 		maxgzip: 740,
 	},
 	{
 		name: "searchindex",
 		code: "import { addDocument, createIndex, search } from 'fromsrc/searchindex'; const index=createIndex(); addDocument(index,{path:'/a',title:'a',headings:['h'],content:'body'}); export default search(index,'a');",
 		max: 1400,
-		maxgzip: 620,
+		maxgzip: 750,
 	},
 	{
 		name: "searchpolicy",

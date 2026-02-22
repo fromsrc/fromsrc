@@ -7,14 +7,16 @@ type RateLimitResult = { allowed: boolean; remaining: number; resetAt: number }
 
 const DEFAULT_METHODS = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
 const DEFAULT_HEADERS = "Content-Type, Authorization, X-Requested-With"
+let corsWarned = false
 
 export function json<T>(data: T, status = 200, headers?: HeadersInit): Response {
+	const next = new Headers(headers)
+	if (!next.has("Content-Type")) {
+		next.set("Content-Type", "application/json")
+	}
 	return new Response(JSON.stringify(data), {
 		status,
-		headers: {
-			"Content-Type": "application/json",
-			...Object.fromEntries(new Headers(headers)),
-		},
+		headers: next,
 	})
 }
 
@@ -26,8 +28,13 @@ export function error(message: string, status = 500): Response {
 }
 
 export function cors(config?: CorsConfig): Record<string, string> {
+	if (!corsWarned && process.env.NODE_ENV === "production" && (!config?.origins || config.origins.length === 0)) {
+		corsWarned = true
+		console.warn("fromsrc cors is using wildcard origins in production")
+	}
+	const origin = config?.origins && config.origins.length > 0 ? config.origins.join(", ") : "*"
 	return {
-		"Access-Control-Allow-Origin": config?.origins?.join(", ") ?? "*",
+		"Access-Control-Allow-Origin": origin,
 		"Access-Control-Allow-Methods": config?.methods?.join(", ") ?? DEFAULT_METHODS,
 		"Access-Control-Allow-Headers": config?.headers?.join(", ") ?? DEFAULT_HEADERS,
 	}

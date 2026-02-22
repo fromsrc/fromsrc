@@ -11,6 +11,7 @@ export interface SearchIndex {
 	documents: SearchDocument[]
 	terms: Map<string, number[]>
 	version: number
+	config?: IndexConfig
 }
 
 export interface IndexConfig {
@@ -33,11 +34,13 @@ export function tokenize(text: string, config?: IndexConfig): string[] {
 		.toLowerCase()
 		.split(/[^a-z0-9]+/)
 		.filter((w) => w.length >= min && !stops.has(w))
+		.map((word) => (config?.stemming ? stem(word) : word))
+		.filter((word) => word.length >= min)
 }
 
 function indexDocument(index: SearchIndex, idx: number, doc: SearchDocument) {
 	const text = [doc.title, doc.description ?? "", ...doc.headings, doc.content].join(" ")
-	const tokens = tokenize(text)
+	const tokens = tokenize(text, index.config)
 	for (const token of tokens) {
 		const existing = index.terms.get(token)
 		if (existing) {
@@ -49,7 +52,7 @@ function indexDocument(index: SearchIndex, idx: number, doc: SearchDocument) {
 }
 
 export function createIndex(config?: IndexConfig): SearchIndex {
-	return { documents: [], terms: new Map(), version: 1 }
+	return { documents: [], terms: new Map(), version: 1, config }
 }
 
 export function addDocument(index: SearchIndex, doc: SearchDocument): void {
@@ -70,7 +73,7 @@ export function removeDocument(index: SearchIndex, path: string): void {
 }
 
 export function search(index: SearchIndex, query: string, limit = 10): SearchDocument[] {
-	const tokens = tokenize(query)
+	const tokens = tokenize(query, index.config)
 	if (tokens.length === 0) return []
 	const scores = new Map<number, number>()
 	for (const token of tokens) {
@@ -92,6 +95,7 @@ export function serializeIndex(index: SearchIndex): string {
 		documents: index.documents,
 		terms: [...index.terms.entries()],
 		version: index.version,
+		config: index.config,
 	})
 }
 
@@ -121,6 +125,19 @@ function istermentry(value: unknown): value is [string, number[]] {
 	return true
 }
 
+function isindexconfig(value: unknown): value is IndexConfig {
+	if (!isrecord(value)) return false
+	if (value.stemming !== undefined && typeof value.stemming !== "boolean") return false
+	if (value.minLength !== undefined && (typeof value.minLength !== "number" || !Number.isInteger(value.minLength))) {
+		return false
+	}
+	if (value.stopWords !== undefined) {
+		if (!Array.isArray(value.stopWords)) return false
+		if (value.stopWords.some((item) => typeof item !== "string")) return false
+	}
+	return true
+}
+
 export function deserializeIndex(data: string): SearchIndex {
 	const parsed: unknown = JSON.parse(data)
 	if (!isrecord(parsed)) {
@@ -138,9 +155,23 @@ export function deserializeIndex(data: string): SearchIndex {
 	if (typeof version !== "number" || !Number.isInteger(version)) {
 		throw new Error("invalid search index version")
 	}
+	const config = parsed.config
+	if (config !== undefined && !isindexconfig(config)) {
+		throw new Error("invalid search index config")
+	}
 	return {
 		documents,
 		terms: new Map(termsraw),
 		version,
+		config,
 	}
+}
+
+function stem(word: string): string {
+	if (word.length <= 3) return word
+	if (word.endsWith("ies") && word.length > 4) return `${word.slice(0, -3)}y`
+	if (word.endsWith("ing") && word.length > 5) return word.slice(0, -3)
+	if (word.endsWith("ed") && word.length > 4) return word.slice(0, -2)
+	if (word.endsWith("s") && !word.endsWith("ss") && word.length > 3) return word.slice(0, -1)
+	return word
 }

@@ -20,6 +20,16 @@ const rules = [
 		patterns: ['from "@/app/api/_lib/text"', "return send("],
 	},
 	{
+		name: "raw-root",
+		file: "app/api/raw/route.ts",
+		patterns: ['from "@/app/api/_lib/text"', "return send("],
+	},
+	{
+		name: "llms-root",
+		file: "app/api/llms/route.ts",
+		patterns: ['from "@/app/api/_lib/text"', "return send("],
+	},
+	{
 		name: "docs-markdown",
 		file: "app/api/docs/[...slug]/route.ts",
 		patterns: ['from "@/app/api/_lib/text"', "return sendmarkdown("],

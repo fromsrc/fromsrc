@@ -17,9 +17,15 @@ export interface BreadcrumbItem {
  */
 export interface BreadcrumbProps {
 	base?: string
+	rootLabel?: string
+	indexLabel?: string
 }
 
-function BreadcrumbBase({ base = "/docs" }: BreadcrumbProps): JSX.Element {
+function BreadcrumbBase({
+	base = "/docs",
+	rootLabel = "docs",
+	indexLabel = "introduction",
+}: BreadcrumbProps): JSX.Element {
 	const pathname = usePathname()
 	const segments = pathname.replace(base, "").split("/").filter(Boolean)
 
@@ -33,7 +39,7 @@ function BreadcrumbBase({ base = "/docs" }: BreadcrumbProps): JSX.Element {
 			<ol className="flex items-center gap-2">
 				<li>
 					<Link href={base} className="hover:text-fg transition-colors">
-						docs
+						{rootLabel}
 					</Link>
 				</li>
 				{items.length === 0 ? (
@@ -42,7 +48,7 @@ function BreadcrumbBase({ base = "/docs" }: BreadcrumbProps): JSX.Element {
 							/
 						</span>
 						<span aria-current="page" className="text-fg">
-							introduction
+							{indexLabel}
 						</span>
 					</li>
 				) : (
