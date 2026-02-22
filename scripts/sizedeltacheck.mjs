@@ -48,8 +48,10 @@ try {
 		const gzip = gzipSync(Buffer.from(text, "utf8")).byteLength;
 		const grow = size - mark.size;
 		const growgzip = gzip - mark.gzip;
-		const limit = Math.max(Math.ceil(mark.size * 0.08), 700);
-		const limitgzip = Math.max(Math.ceil(mark.gzip * 0.08), 300);
+		const limit =
+			mark.size < 2000 ? Math.max(Math.ceil(mark.size * 0.08), 120) : Math.max(Math.ceil(mark.size * 0.08), 700);
+		const limitgzip =
+			mark.gzip < 1000 ? Math.max(Math.ceil(mark.gzip * 0.08), 80) : Math.max(Math.ceil(mark.gzip * 0.08), 300);
 		if (grow > limit || growgzip > limitgzip) {
 			fail = true;
 			console.error(
