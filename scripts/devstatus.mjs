@@ -60,6 +60,8 @@ if (Number.isFinite(port) && port > 0) {
 	console.log(busy ? `o port ${port} open` : `o port ${port} closed`);
 }
 
+if (!pid && busy) process.exit(0);
+
 try {
 	const log = await readFile(logfile, "utf8");
 	const lines = log.trim().split("\n").filter(Boolean);

@@ -197,6 +197,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   <AccordionItem title="pages not found">
     verify your catch-all route is at `app/docs/[[...slug]]/page.tsx` and imports from fromsrc correctly.
   </AccordionItem>
+  <AccordionItem title="dev process stuck">
+    restart and inspect logs:
+    ```bash
+    bun run dev:restart
+    bun run dev:tail 80
+    ```
+  </AccordionItem>
 </Accordion>
 
 ## next steps

@@ -25,7 +25,9 @@
 		"check:ci": "bun run check:security && bun run build:pkg && bun run check:types:raw && bun run check:nonnull && bun run check:cast && bun run check:client && bun run check:light && bun run check:pack:raw && bun run check:shake:raw && next build",
 		"start": "next start",
 		"prepare": "husky",
-		"dev:status": "bun scripts/devstatus.mjs"
+		"dev:status": "bun scripts/devstatus.mjs",
+		"dev:restart": "bun scripts/devrestart.mjs",
+		"dev:tail": "bun scripts/devtail.mjs"
 	},
 	"dependencies": {
 		"@mdx-js/mdx": "^3.1.1",
