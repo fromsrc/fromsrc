@@ -86,12 +86,13 @@ import { getNavigation } from "fromsrc"
 
 const nav = await getNavigation("docs")
 // [
-//   { title: "introduction", items: [...] },
-//   { title: "components", items: [...] },
+//   { title: "documentation", items: [...] },
+//   { title: "api", items: [...] },
+//   { title: "manual installation", items: [...] },
 // ]
 ```
 
-groups documents into sections based on path prefixes.
+groups documents by first folder segment. top-level pages stay in one root section. section titles use `_meta.json` `title` when present.
 
 ## defineContent
 

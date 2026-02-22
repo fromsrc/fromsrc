@@ -41,6 +41,8 @@ server-side utilities for content loading.
 
 `rateLimiter` stores counters in process memory. use a shared store for multi-instance deployments.
 
+`cors()` defaults to wildcard origins when no explicit `origins` are provided. pass `origins` in production APIs.
+
 ### schema utilities
 
 <TypeTable
