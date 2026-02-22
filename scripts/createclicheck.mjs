@@ -8,22 +8,14 @@ const bin = join(root, "packages", "create-fromsrc", "dist", "index.js");
 const temp = await mkdtemp(join(tmpdir(), "fromsrc-cli-"));
 const target = join(temp, "sample-docs");
 const run = await new Promise((resolve) => {
-	const child = spawn("node", [bin], { cwd: temp, stdio: ["pipe", "pipe", "pipe"] });
+	const child = spawn("node", [bin, "--name", "sample-docs", "--framework", "next.js", "--yes"], {
+		cwd: temp,
+		stdio: ["pipe", "pipe", "pipe"],
+	});
 	let out = "";
 	let err = "";
-	let sentName = false;
-	let sentFramework = false;
 	child.stdout.on("data", (chunk) => {
 		out += String(chunk);
-		if (!sentName && out.includes("project name")) {
-			child.stdin.write("sample-docs\n");
-			sentName = true;
-		}
-		if (!sentFramework && out.includes("choose")) {
-			child.stdin.write("1\n");
-			child.stdin.end();
-			sentFramework = true;
-		}
 	});
 	child.stderr.on("data", (chunk) => {
 		err += String(chunk);
@@ -31,6 +23,7 @@ const run = await new Promise((resolve) => {
 	child.on("close", (code) => {
 		resolve({ code, out, err });
 	});
+	child.stdin.end();
 });
 
 const issues = [];
