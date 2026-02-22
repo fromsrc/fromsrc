@@ -1,7 +1,10 @@
 import { getAllDocs, getDoc } from "@/app/docs/_lib/content"
 import { calcReadTime } from "fromsrc"
+import { sendjson } from "@/app/api/_lib/json"
 
-export async function GET() {
+const cache = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+
+export async function GET(request: Request) {
 	const metas = await getAllDocs()
 	const docs = await Promise.all(metas.map((m) => getDoc(m.slug ? m.slug.split("/") : [])))
 	const valid = docs.filter((doc): doc is NonNullable<(typeof docs)[number]> => doc !== null)
@@ -18,8 +21,5 @@ export async function GET() {
 		categories[category] = (categories[category] || 0) + 1
 	}
 
-	return Response.json(
-		{ pages: valid.length, words, readTime, categories },
-		{ headers: { "Cache-Control": "public, max-age=3600" } },
-	)
+	return sendjson(request, { pages: valid.length, words, readTime, categories }, cache)
 }
