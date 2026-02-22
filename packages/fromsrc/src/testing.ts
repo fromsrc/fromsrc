@@ -111,6 +111,15 @@ export function assertHeadings(
 
 export function assertLinks(content: string) {
 	const placeholders = new Set(["#", "todo", "http://", "https://", "about:blank", "javascript:void(0)"])
+	const headingids = new Set(
+		[...content.matchAll(/^#{1,6}\s+(.+)$/gm)]
+			.map((match) => {
+				const value = match[1]
+				if (!value) return ""
+				return value.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-")
+			})
+			.filter(Boolean),
+	)
 	const links = [...content.matchAll(/\[([^\]]*)\]\(([^)]*)\)/g)]
 	for (const [, text = "", url = ""] of links) {
 		if (!text.trim()) throw new Error("empty link text")
@@ -118,6 +127,12 @@ export function assertLinks(content: string) {
 		const lowered = value.toLowerCase()
 		if (!value || placeholders.has(lowered)) {
 			throw new Error(`placeholder link: ${url}`)
+		}
+		if (value.startsWith("#")) {
+			const target = value.slice(1).toLowerCase()
+			if (!target || !headingids.has(target)) {
+				throw new Error(`missing anchor target: ${url}`)
+			}
 		}
 	}
 }
