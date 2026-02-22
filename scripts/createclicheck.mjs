@@ -32,7 +32,10 @@ const runpositional = await run(["cli-positional", "--framework", "next.js", "--
 const runcase = await run(["--name", "cli-case-next", "--framework", "Next.js", "--yes"]);
 const runmissingname = await run(["--name"]);
 const runmissingframework = await run(["--framework"]);
+const runmissingnameequals = await run(["--name="]);
+const runmissingframeworkequals = await run(["--framework="]);
 const rununknown = await run(["--wat"]);
+const runequals = await run(["--name=cli-equals", "--framework=react-router", "--yes"]);
 const cases = [
 	{
 		name: "cli-next",
@@ -136,8 +139,25 @@ if (runmissingname.code === 0 || !runmissingname.out.includes("missing value for
 if (runmissingframework.code === 0 || !runmissingframework.out.includes("missing value for --framework")) {
 	issues.push("cli missing --framework value path missing or failed");
 }
+if (runmissingnameequals.code === 0 || !runmissingnameequals.out.includes("missing value for --name")) {
+	issues.push("cli missing --name= value path missing or failed");
+}
+if (
+	runmissingframeworkequals.code === 0 ||
+	!runmissingframeworkequals.out.includes("missing value for --framework")
+) {
+	issues.push("cli missing --framework= value path missing or failed");
+}
 if (rununknown.code === 0 || !rununknown.out.includes("unknown option")) {
 	issues.push("cli unknown option path missing or failed");
+}
+if (runequals.code !== 0 || !runequals.out.includes("created cli-equals")) {
+	issues.push("cli equals syntax path missing or failed");
+}
+try {
+	await access(join(temp, "cli-equals", "src", "main.tsx"));
+} catch {
+	issues.push("cli equals syntax did not create project");
 }
 
 if (runpositional.code !== 0 || !runpositional.out.includes("created cli-positional")) {
@@ -165,7 +185,10 @@ if (issues.length > 0) {
 	if (runbad.err.trim()) console.error(runbad.err.trim());
 	if (runmissingname.err.trim()) console.error(runmissingname.err.trim());
 	if (runmissingframework.err.trim()) console.error(runmissingframework.err.trim());
+	if (runmissingnameequals.err.trim()) console.error(runmissingnameequals.err.trim());
+	if (runmissingframeworkequals.err.trim()) console.error(runmissingframeworkequals.err.trim());
 	if (rununknown.err.trim()) console.error(rununknown.err.trim());
+	if (runequals.err.trim()) console.error(runequals.err.trim());
 	if (runpositional.err.trim()) console.error(runpositional.err.trim());
 	process.exit(1);
 }

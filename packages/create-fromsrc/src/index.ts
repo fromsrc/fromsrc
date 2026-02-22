@@ -26,6 +26,13 @@ function usage() {
 
 function readflag(key: string, short: string): string | undefined {
 	const args = process.argv.slice(2)
+	const long = `--${key}=`
+	for (const value of args) {
+		if (value.startsWith(long)) {
+			const inline = value.slice(long.length)
+			return inline.length > 0 ? inline : undefined
+		}
+	}
 	const full = args.indexOf(`--${key}`)
 	if (full !== -1) {
 		const value = args[full + 1]
@@ -41,11 +48,17 @@ function readflag(key: string, short: string): string | undefined {
 
 function hasflag(key: string, short: string): boolean {
 	const args = process.argv.slice(2)
-	return args.includes(`--${key}`) || args.includes(`-${short}`)
+	return args.includes(`--${key}`) || args.includes(`-${short}`) || args.some((item) => item.startsWith(`--${key}=`))
 }
 
 function missingvalue(key: string, short: string): boolean {
 	const args = process.argv.slice(2)
+	const long = `--${key}=`
+	for (const value of args) {
+		if (value.startsWith(long)) {
+			return value.slice(long.length).length === 0
+		}
+	}
 	const full = args.indexOf(`--${key}`)
 	if (full !== -1) {
 		const value = args[full + 1]
@@ -62,10 +75,14 @@ function missingvalue(key: string, short: string): boolean {
 function unknownflags(): string[] {
 	const args = process.argv.slice(2)
 	const known = new Set(["--name", "-n", "--framework", "-f", "--yes", "-y", "--help", "-h", "--list", "-l"])
+	const inline = ["--name=", "--framework="]
 	const out: string[] = []
 	for (let i = 0; i < args.length; i++) {
 		const value = args[i]
 		if (!value || !value.startsWith("-")) {
+			continue
+		}
+		if (inline.some((item) => value.startsWith(item))) {
 			continue
 		}
 		if (known.has(value)) {
