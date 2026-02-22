@@ -2,11 +2,24 @@ import { createHash } from "node:crypto"
 
 const type = "application/json; charset=utf-8"
 
+type jsonprimitive = string | number | boolean | null
+type jsonify<T> = T extends jsonprimitive
+	? T
+	: T extends undefined
+		? undefined
+		: T extends (...args: never[]) => unknown
+			? never
+			: T extends readonly (infer U)[]
+				? jsonify<U>[]
+				: T extends object
+					? { [K in keyof T]: jsonify<T[K]> }
+					: never
+
 function token(content: string): string {
 	return `"${createHash("sha256").update(content).digest("base64url")}"`
 }
 
-export function sendjson(request: Request, value: unknown, cache: string, status = 200): Response {
+export function sendjson<T>(request: Request, value: jsonify<T>, cache: string, status = 200): Response {
 	const content = JSON.stringify(value)
 	const etag = token(content)
 	const headers = new Headers({
@@ -21,9 +34,9 @@ export function sendjson(request: Request, value: unknown, cache: string, status
 	return new Response(content, { status, headers })
 }
 
-export function sendjsonwithheaders(
+export function sendjsonwithheaders<T>(
 	request: Request,
-	value: unknown,
+	value: jsonify<T>,
 	cache: string,
 	extra: HeadersInit,
 	status = 200,
