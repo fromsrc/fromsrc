@@ -4,6 +4,16 @@ import type { Framework } from "./templates"
 
 const frameworks = ["next.js", "react-router", "vite", "tanstack", "remix", "astro"] as const
 
+function usage() {
+	console.log("  usage: create-fromsrc [options]")
+	console.log("  options:")
+	console.log("    -n, --name <name>")
+	console.log("    -f, --framework <framework>")
+	console.log("    -y, --yes")
+	console.log("    -h, --help")
+	console.log(`  frameworks: ${frameworks.join(", ")}\n`)
+}
+
 function readflag(key: string, short: string): string | undefined {
 	const args = process.argv.slice(2)
 	const full = args.indexOf(`--${key}`)
@@ -34,6 +44,12 @@ function parseframework(value: string | undefined): Framework | undefined {
 
 async function main() {
 	console.log("\n  fromsrc\n")
+
+	if (hasflag("help", "h")) {
+		close()
+		usage()
+		return
+	}
 
 	const yes = hasflag("yes", "y")
 	const argname = readflag("name", "n")
