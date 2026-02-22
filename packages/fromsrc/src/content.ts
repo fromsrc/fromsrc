@@ -59,6 +59,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	type Document = Meta & { content: string; data: z.infer<T> }
 
 	let docsCache: Meta[] | null = null
+	let fullDocsCache: Document[] | null = null
 	let navCache: { title: string; items: Meta[] }[] | null = null
 
 	async function getDoc(slug: string[]): Promise<Document | null> {
@@ -143,6 +144,52 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 		const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 		if (isProduction()) {
 			docsCache = sorted
+		}
+		return sorted
+	}
+
+	async function getDocs(): Promise<Document[]> {
+		if (isProduction() && fullDocsCache) return fullDocsCache
+
+		const docs: Document[] = []
+
+		async function scan(dir: string, prefix = ""): Promise<void> {
+			const entries = await readdir(dir, { withFileTypes: true })
+
+			for (const entry of entries) {
+				if (entry.isDirectory()) {
+					await scan(join(dir, entry.name), `${prefix}${entry.name}/`)
+				} else if (entry.name.endsWith(".mdx")) {
+					const filepath = join(dir, entry.name)
+					const source = await readCached(filepath)
+					const { data, content } = matter(source)
+					const parsed = schema.parse(data)
+
+					if (isProduction() && isDraft(data)) continue
+
+					const slug = `${prefix}${entry.name.replace(".mdx", "")}`
+					docs.push({
+						slug: slug === "index" ? "" : slug,
+						...parsed,
+						content,
+						data: parsed,
+					})
+				}
+			}
+		}
+
+		try {
+			await scan(config.dir)
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				throw error
+			}
+			return []
+		}
+
+		const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+		if (isProduction()) {
+			fullDocsCache = sorted
 		}
 		return sorted
 	}
@@ -242,6 +289,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 
 	return {
 		getDoc,
+		getDocs,
 		getAllDocs,
 		getNavigation,
 		getSearchDocs,

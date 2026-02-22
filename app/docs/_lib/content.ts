@@ -11,6 +11,7 @@ const content = defineContent({
 })
 
 export const getDoc = content.getDoc
+export const getDocs = content.getDocs
 export const getAllDocs = content.getAllDocs
 export const getNavigation = content.getNavigation
 export const getSearchDocs = content.getSearchDocs
