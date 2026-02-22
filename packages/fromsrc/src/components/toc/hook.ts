@@ -14,6 +14,10 @@ export interface TocState {
 	activeRange: string[]
 }
 
+function cleanheading(text: string): string {
+	return text.replace(/\s*#+\s*$/, "").trim()
+}
+
 export function useToc(multi = false): TocState {
 	const [headings, setHeadings] = useState<Heading[]>([])
 	const [active, setActive] = useState<string>("")
@@ -29,7 +33,7 @@ export function useToc(multi = false): TocState {
 					const level = Number(el.tagName.replace("H", ""))
 					items.push({
 						id: el.id,
-						text: el.textContent || "",
+						text: cleanheading(el.textContent || ""),
 						level: Number.isFinite(level) ? level : 2,
 					})
 				}
