@@ -21,6 +21,12 @@ interface CacheEntry<T> {
 	timestamp: number
 }
 
+interface TreeCacheEntry {
+	entries: TreeEntry[]
+	truncated: boolean
+	etag?: string
+}
+
 const TTL = 5 * 60 * 1000
 
 function createCache<T>() {
@@ -56,6 +62,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 	const listCache = createCache<DocMeta[]>()
 	const fileCache = createCache<{ content: string; data: Record<string, unknown> }>()
 	const searchCache = createCache<SearchDoc[]>()
+	const treeCache = createCache<TreeCacheEntry>()
 
 	function rawUrl(filepath: string): string {
 		return `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${branch}/${filepath}`
@@ -72,8 +79,20 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 	}
 
 	async function tree(ref: string, recursive: boolean): Promise<{ entries: TreeEntry[]; truncated: boolean }> {
-		const res = await fetch(treeUrl(ref, recursive), { headers })
-		if (!res.ok) return { entries: [], truncated: false }
+		const url = treeUrl(ref, recursive)
+		const cached = treeCache.get(url)
+		const requestHeaders = { ...headers }
+		if (cached?.etag) {
+			requestHeaders["If-None-Match"] = cached.etag
+		}
+		const res = await fetch(url, { headers: requestHeaders })
+		if (res.status === 304 && cached) {
+			return { entries: cached.entries, truncated: cached.truncated }
+		}
+		if (!res.ok) {
+			console.error(`github tree request failed (${res.status}) for ${url}`)
+			return cached ? { entries: cached.entries, truncated: cached.truncated } : { entries: [], truncated: false }
+		}
 		const json = (await res.json()) as {
 			tree?: Array<{ path?: string; type?: string; sha?: string }>
 			truncated?: boolean
@@ -89,10 +108,16 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 				type: item.type,
 				sha: item.sha,
 			}))
-		return {
+		const result = {
 			entries,
 			truncated: json.truncated === true,
 		}
+		treeCache.set(url, {
+			entries: result.entries,
+			truncated: result.truncated,
+			etag: res.headers.get("etag") ?? undefined,
+		})
+		return result
 	}
 
 	async function allEntries(): Promise<TreeEntry[]> {
