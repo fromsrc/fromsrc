@@ -1,8 +1,11 @@
 import { readFile, unlink } from "node:fs/promises";
 import { join } from "node:path";
+import net from "node:net";
 
 const root = process.cwd();
 const pidfile = join(root, ".dev.pid");
+const rawport = process.env.PORT || "3000";
+const port = Number(rawport);
 
 async function readpid() {
 	try {
@@ -37,9 +40,30 @@ function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function listen(target) {
+	return new Promise((resolve) => {
+		const socket = new net.Socket();
+		const done = (value) => {
+			socket.removeAllListeners();
+			socket.destroy();
+			resolve(value);
+		};
+		socket.setTimeout(250);
+		socket.once("connect", () => done(true));
+		socket.once("error", () => done(false));
+		socket.once("timeout", () => done(false));
+		socket.connect(target, "127.0.0.1");
+	});
+}
+
 const pid = await readpid();
 if (!pid) {
-	console.log("o no pid");
+	const busy = Number.isFinite(port) && port > 0 ? await listen(port) : false;
+	if (busy) {
+		console.log("o external dev process");
+	} else {
+		console.log("o no pid");
+	}
 	process.exit(0);
 }
 
