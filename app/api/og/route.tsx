@@ -1,11 +1,27 @@
 import { ImageResponse } from "next/og"
 import type { NextRequest } from "next/server"
+import { z } from "zod"
 
 export const runtime = "edge"
 
+const query = z.object({
+	title: z.preprocess(
+		(value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+		z.string().trim().max(120).default("fromsrc"),
+	),
+	description: z.preprocess(
+		(value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+		z.string().trim().max(220).default(""),
+	),
+})
+
 export async function GET(request: NextRequest) {
-	const title = request.nextUrl.searchParams.get("title") || "fromsrc"
-	const description = request.nextUrl.searchParams.get("description") || ""
+	const parsed = query.safeParse({
+		title: request.nextUrl.searchParams.get("title") ?? undefined,
+		description: request.nextUrl.searchParams.get("description") ?? undefined,
+	})
+	const title = parsed.success ? parsed.data.title : "fromsrc"
+	const description = parsed.success ? parsed.data.description : ""
 
 	return new ImageResponse(
 		(
