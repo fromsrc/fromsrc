@@ -54,6 +54,25 @@ this lets ai tools fetch specific pages without parsing html.
   />
 </Cards>
 
+## mcp endpoint
+
+the `/api/mcp` endpoint supports both plain method calls and json-rpc 2.0 payloads.
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "search_docs",
+  "params": { "query": "installation" }
+}
+```
+
+available methods:
+
+- `search_docs`
+- `get_page`
+- `list_pages`
+
 ## implementation
 
 ### route handler

@@ -1,4 +1,5 @@
 import { type ContentSource, createMcpHandler, generateMcpManifest, z } from "fromsrc"
+import { searchmaxquery } from "fromsrc/searchpolicy"
 import { siteurl } from "@/app/_lib/site"
 import { sendjson } from "@/app/api/_lib/json"
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content"
@@ -25,8 +26,15 @@ const source: ContentSource = {
 
 const handler = createMcpHandler(config, source)
 const method = z.object({ method: z.enum(["search_docs", "get_page", "list_pages"]) })
-const search = z.object({ query: z.string().trim().min(1).max(200) })
+const search = z.object({ query: z.string().trim().min(1).max(searchmaxquery) })
 const page = z.object({ slug: z.string().trim().min(1).max(300) })
+const rpcid = z.union([z.string(), z.number(), z.null()]).optional()
+const rpcmethod = z.object({
+	jsonrpc: z.literal("2.0"),
+	id: rpcid,
+	method: z.enum(["search_docs", "get_page", "list_pages"]),
+	params: z.unknown().optional(),
+})
 
 const cors = {
 	"Access-Control-Allow-Origin": "*",
@@ -53,35 +61,52 @@ export async function POST(request: Request) {
 	} catch {
 		return Response.json({ error: "invalid json" }, { status: 400, headers: cors })
 	}
-	const parsed = method.safeParse(body)
-	if (!parsed.success) {
-		return Response.json({ error: "invalid method" }, { status: 400, headers: cors })
+	const rpc = rpcmethod.safeParse(body)
+	let name: z.infer<typeof method>["method"]
+	let params: unknown
+	if (rpc.success) {
+		name = rpc.data.method
+		params = rpc.data.params
+	} else {
+		const legacy = method.safeParse(body)
+		if (!legacy.success) {
+			return Response.json({ error: "invalid method" }, { status: 400, headers: cors })
+		}
+		name = legacy.data.method
+		params = (body as { params?: unknown }).params
 	}
-	const params = (body as { params?: unknown }).params
+	const rid = rpc.success ? rpc.data.id : undefined
 
-	switch (parsed.data.method) {
+	function jsonrpc(result: unknown, status = 200): Response {
+		if (!rpc.success) return Response.json(result, { status, headers: cors })
+		if (rid === undefined) return new Response(null, { status: 202, headers: cors })
+		return Response.json({ jsonrpc: "2.0", id: rid, result }, { status, headers: cors })
+	}
+
+	function jsonerror(code: number, message: string, status = 400): Response {
+		if (!rpc.success) return Response.json({ error: message }, { status, headers: cors })
+		return Response.json({ jsonrpc: "2.0", id: rid ?? null, error: { code, message } }, { status, headers: cors })
+	}
+
+	switch (name) {
 		case "search_docs": {
 			const query = search.safeParse(params)
-			if (!query.success) {
-				return Response.json({ error: "invalid params" }, { status: 400, headers: cors })
-			}
+			if (!query.success) return jsonerror(-32602, "invalid params")
 			const results = await handler.search(query.data.query)
-			return Response.json(results, { headers: cors })
+			return jsonrpc(results)
 		}
 		case "get_page": {
 			const slug = page.safeParse(params)
-			if (!slug.success) {
-				return Response.json({ error: "invalid params" }, { status: 400, headers: cors })
-			}
+			if (!slug.success) return jsonerror(-32602, "invalid params")
 			const content = await handler.getPage(slug.data.slug)
-			if (!content) return Response.json({ error: "not found" }, { status: 404, headers: cors })
-			return Response.json({ content }, { headers: cors })
+			if (!content) return jsonerror(-32004, "not found", 404)
+			return jsonrpc({ content })
 		}
 		case "list_pages": {
 			const pages = await handler.listPages()
-			return Response.json(pages, { headers: cors })
+			return jsonrpc(pages)
 		}
 		default:
-			return Response.json({ error: "unknown method" }, { status: 400, headers: cors })
+			return jsonerror(-32601, "unknown method")
 	}
 }

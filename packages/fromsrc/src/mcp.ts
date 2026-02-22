@@ -1,4 +1,6 @@
 import type { DocMeta, SearchDoc } from "./content"
+import { localSearch } from "./search"
+import { trimquery } from "./searchpolicy"
 import type { ContentSource } from "./source"
 
 export interface McpConfig {
@@ -80,20 +82,12 @@ export function createMcpHandler(config: McpConfig, source: ContentSource): McpH
 		async search(query) {
 			if (!source.search) return []
 			const docs = await source.search()
-			const q = query.toLowerCase()
-			return docs
-				.filter(
-					(d) =>
-						d.title.toLowerCase().includes(q) ||
-						d.description?.toLowerCase().includes(q) ||
-						d.content?.toLowerCase().includes(q),
-				)
-				.slice(0, 10)
-				.map((d) => ({
-					slug: d.slug,
-					title: d.title,
-					snippet: d.description || d.content?.slice(0, 120),
-				}))
+			const results = await Promise.resolve(localSearch.search(trimquery(query), docs, 10))
+			return results.map((item) => ({
+				slug: item.doc.slug,
+				title: item.doc.title,
+				snippet: item.snippet ?? item.doc.description ?? item.doc.content.slice(0, 120),
+			}))
 		},
 
 		async getPage(slug) {
