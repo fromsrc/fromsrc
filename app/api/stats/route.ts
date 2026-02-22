@@ -9,15 +9,19 @@ export async function GET(request: Request) {
 
 	let words = 0
 	let readTime = 0
-	const categories: Record<string, number> = {}
+	const categories = new Map<string, number>()
 
 	for (const doc of docs) {
 		const count = doc.content.split(/\s+/).filter(Boolean).length
 		words += count
 		readTime += calcReadTime(doc.content)
 		const category = doc.slug.split("/")[0] || "root"
-		categories[category] = (categories[category] || 0) + 1
+		categories.set(category, (categories.get(category) ?? 0) + 1)
 	}
 
-	return sendjson(request, { pages: docs.length, words, readTime, categories }, cache)
+	return sendjson(
+		request,
+		{ pages: docs.length, words, readTime, categories: Object.fromEntries(categories) },
+		cache,
+	)
 }
