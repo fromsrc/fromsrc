@@ -1,17 +1,7 @@
-import { getAllDocs } from "@/app/docs/_lib/content"
+import { sendjson } from "@/app/api/_lib/json"
 
-export async function GET() {
-	const docs = await getAllDocs()
-	return Response.json(
-		{
-			status: "ok",
-			docs: docs.length,
-			timestamp: new Date().toISOString(),
-		},
-		{
-			headers: {
-				"Cache-Control": "public, max-age=60",
-			},
-		},
-	)
+const cache = "no-store"
+
+export async function GET(request: Request) {
+	return sendjson(request, { status: "ok" }, cache)
 }

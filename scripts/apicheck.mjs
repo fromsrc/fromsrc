@@ -34,6 +34,11 @@ const rules = [
 		file: "app/api/mcp/route.ts",
 		patterns: ['from "@/app/api/_lib/json"', "sendjson(", "const cachecontrol ="],
 	},
+	{
+		name: "api-health",
+		file: "app/api/health/route.ts",
+		patterns: ['from "@/app/api/_lib/json"', "sendjson(", 'const cache = "no-store"'],
+	},
 ];
 
 const issues = [];
