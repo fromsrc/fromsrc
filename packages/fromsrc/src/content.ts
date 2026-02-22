@@ -406,14 +406,17 @@ export async function getNavigation(docsDir: string): Promise<{ title: string; i
 	const docs = await getAllDocs(docsDir)
 
 	const intro: { title: string; items: DocMeta[] } = { title: "introduction", items: [] }
+	const manual: { title: string; items: DocMeta[] } = { title: "manual", items: [] }
 	const components: { title: string; items: DocMeta[] } = { title: "components", items: [] }
 	const apis: { title: string; items: DocMeta[] } = { title: "api", items: [] }
 	const examples: { title: string; items: DocMeta[] } = { title: "examples", items: [] }
-	const sections = [intro, components, apis, examples]
+	const sections = [intro, manual, components, apis, examples]
 
 	for (const doc of docs) {
 		if (doc.slug.startsWith("components/")) {
 			components.items.push(doc)
+		} else if (doc.slug.startsWith("manual/")) {
+			manual.items.push(doc)
 		} else if (doc.slug.startsWith("api/")) {
 			apis.items.push(doc)
 		} else if (doc.slug.startsWith("examples/")) {
