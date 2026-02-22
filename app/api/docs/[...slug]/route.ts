@@ -1,21 +1,20 @@
 import { getDoc } from "@/app/docs/_lib/content"
+import { z } from "zod"
+import { sendmarkdown } from "@/app/api/_lib/text"
 
 interface Props {
 	params: Promise<{ slug: string[] }>
 }
 
-export async function GET(_request: Request, { params }: Props) {
-	const { slug } = await params
+const schema = z.object({ slug: z.array(z.string().trim().min(1)).min(1) })
+const cache = "public, max-age=600, s-maxage=86400, stale-while-revalidate=604800"
+
+export async function GET(request: Request, { params }: Props) {
+	const parsed = schema.safeParse(await params)
+	if (!parsed.success) return sendmarkdown(request, "bad request", cache, 400)
+	const { slug } = parsed.data
 	const path = slug.join("/").replace(/\.md$/, "")
 	const doc = await getDoc(path.split("/"))
-
-	if (!doc) {
-		return new Response("not found", { status: 404 })
-	}
-
-	return new Response(doc.content, {
-		headers: {
-			"Content-Type": "text/markdown; charset=utf-8",
-		},
-	})
+	if (!doc) return sendmarkdown(request, "not found", cache, 404)
+	return sendmarkdown(request, doc.content, cache)
 }
