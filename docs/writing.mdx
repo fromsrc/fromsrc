@@ -62,6 +62,20 @@ const app = new App()
 ```
 ````
 
+## twoslash
+
+enable twoslash annotations in fenced code blocks with the `twoslash` meta flag:
+
+````md
+```ts twoslash
+const value = "fromsrc"
+value.
+//    ^| string methods
+```
+````
+
+fromsrc parses twoslash markers and renders typed query/completion notes under the code block.
+
 ## frontmatter
 
 every mdx file needs frontmatter:

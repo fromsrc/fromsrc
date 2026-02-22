@@ -54,3 +54,16 @@ the copy button appears in the header when a title or language is set. without a
 | children | ReactNode | required | code content to display |
 | lang | string | - | language for icon and label |
 | title | string | - | title shown in header |
+| lines | boolean | false | show line numbers |
+
+## twoslash integration
+
+twoslash metadata is rendered as notes below the code block when annotations are present:
+
+````md
+```ts twoslash
+const map = new Map<string, number>()
+map.
+//  ^| Map APIs
+```
+````
