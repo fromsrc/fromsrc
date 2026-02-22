@@ -47,6 +47,14 @@ try {
 			continue;
 		}
 
+		const typecheck = await run("bun", ["run", "typecheck"], target);
+		if (typecheck.code !== 0) {
+			issues.push(`${framework}: bun run typecheck failed`);
+			if (typecheck.out.trim()) console.error(typecheck.out.trim());
+			if (typecheck.err.trim()) console.error(typecheck.err.trim());
+			continue;
+		}
+
 		const build = await run("bun", ["run", "build"], target);
 		if (build.code !== 0) {
 			issues.push(`${framework}: bun run build failed`);

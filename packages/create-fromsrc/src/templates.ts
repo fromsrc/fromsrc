@@ -16,6 +16,7 @@ export function packagejson(name: string, framework: Framework): string {
 		devDependencies: {
 			"@types/node": "^22.0.0",
 			"@types/react": "^19.0.0",
+			"@types/react-dom": "^19.0.0",
 			typescript: "^5.0.0",
 		},
 	}
@@ -28,6 +29,7 @@ export function packagejson(name: string, framework: Framework): string {
 					dev: "next dev",
 					build: "next build",
 					start: "next start",
+					typecheck: "tsc --noEmit",
 				},
 				dependencies: {
 					...base.dependencies,
@@ -53,6 +55,7 @@ export function packagejson(name: string, framework: Framework): string {
 					dev: "astro dev",
 					build: "astro build",
 					start: "astro preview",
+					typecheck: "tsc --noEmit",
 				},
 				dependencies: {
 					...base.dependencies,
@@ -76,6 +79,7 @@ export function packagejson(name: string, framework: Framework): string {
 					dev: "remix vite:dev",
 					build: "remix vite:build",
 					start: "remix-serve ./build/server/index.js",
+					typecheck: "tsc --noEmit",
 				},
 				dependencies: {
 					...base.dependencies,
@@ -101,6 +105,7 @@ export function packagejson(name: string, framework: Framework): string {
 					dev: "vite",
 					build: "vite build",
 					start: "vite preview",
+					typecheck: "tsc --noEmit",
 				},
 				dependencies: {
 					...base.dependencies,
