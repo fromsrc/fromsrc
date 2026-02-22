@@ -151,6 +151,7 @@ import {
 	Tooltip,
 	Tweet,
 	Typed,
+	Twoslash,
 	TypePopup,
 	TypeTable,
 	Typewriter,
@@ -172,6 +173,8 @@ type PreProps = ComponentPropsWithoutRef<"pre"> & {
 	children?: ReactNode
 	"data-language"?: string
 	"data-title"?: string
+	"data-twoslash-annotations"?: string
+	"data-twoslash-noerrors"?: string
 }
 
 function getId(children: ReactNode): string {
@@ -194,9 +197,15 @@ const components = {
 	pre: (props: PreProps) => {
 		const lang = props["data-language"] || ""
 		const title = props["data-title"] || ""
+		const data = props["data-twoslash-annotations"]
+		const noerrors = typeof props["data-twoslash-noerrors"] === "string"
+		const active = Boolean(data || noerrors)
 		return (
-			<CodeBlock lang={lang} title={title || undefined}>
-				<pre {...props} />
+			<CodeBlock lang={lang} title={title || undefined} lines={active}>
+				<>
+					<pre {...props} />
+					{active ? <Twoslash data={data} noerrors={noerrors} /> : null}
+				</>
 			</CodeBlock>
 		)
 	},
