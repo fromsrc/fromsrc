@@ -13,10 +13,6 @@ function extractText(children: ReactNode): string {
 	return ""
 }
 
-interface KatexAPI {
-	renderToString: (tex: string, options: { displayMode: boolean; throwOnError: boolean }) => string
-}
-
 /**
  * Props for the Math component
  */
@@ -37,7 +33,12 @@ function MathBase({ children, display = false }: MathProps): JSX.Element {
 		async function render(): Promise<void> {
 			try {
 				const module = await import("katex" as string)
-				const katex = module.default as KatexAPI
+				const katex = module.default as {
+					renderToString(
+						tex: string,
+						options: { displayMode: boolean; throwOnError: boolean },
+					): string
+				}
 				const rendered = katex.renderToString(text, {
 					displayMode: display,
 					throwOnError: false,

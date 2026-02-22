@@ -22,7 +22,7 @@ type EventMap<T> = T extends Window
  */
 export function useEventListener<
 	T extends EventTarget,
-	K extends keyof EventMap<NonNullable<T>>,
+	K extends Extract<keyof EventMap<NonNullable<T>>, string>,
 >(
 	target: T,
 	event: K,
@@ -34,10 +34,10 @@ export function useEventListener<
 		if (!enabled || !target) return
 
 		const listener = handler as EventListener
-		target.addEventListener(event as string, listener, options)
+		target.addEventListener(event, listener, options)
 
 		return () => {
-			target.removeEventListener(event as string, listener, options)
+			target.removeEventListener(event, listener, options)
 		}
 	}, [target, event, handler, enabled, options])
 }

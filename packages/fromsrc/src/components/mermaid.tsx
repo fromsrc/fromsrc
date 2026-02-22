@@ -16,21 +16,6 @@ export interface MermaidProps {
 /**
  * Configuration options for mermaid initialization
  */
-interface MermaidConfig {
-	startOnLoad: boolean
-	securityLevel: "strict" | "loose" | "antiscript" | "sandbox"
-	fontFamily: string
-	theme: "default" | "forest" | "dark" | "neutral" | "base"
-}
-
-/**
- * Mermaid library API interface
- */
-interface MermaidAPI {
-	initialize: (config: MermaidConfig) => void
-	render: (id: string, code: string) => Promise<{ svg: string }>
-}
-
 function MermaidBase({ chart, label }: MermaidProps): ReactElement {
 	const id = useId()
 	const [svg, setSvg] = useState<string>("")
@@ -47,7 +32,15 @@ function MermaidBase({ chart, label }: MermaidProps): ReactElement {
 		async function render() {
 			try {
 				const module = await import("mermaid" as string)
-				const mermaid = module.default as MermaidAPI
+				const mermaid = module.default as {
+					initialize(config: {
+						startOnLoad: boolean
+						securityLevel: "strict" | "loose" | "antiscript" | "sandbox"
+						fontFamily: string
+						theme: "default" | "forest" | "dark" | "neutral" | "base"
+					}): void
+					render(id: string, code: string): Promise<{ svg: string }>
+				}
 				mermaid.initialize({
 					startOnLoad: false,
 					securityLevel: "loose",

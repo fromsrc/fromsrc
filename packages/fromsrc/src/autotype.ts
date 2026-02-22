@@ -47,7 +47,7 @@ function parseProperties(body: string): TypeProperty[] {
 	let match: RegExpExecArray | null = null
 
 	while ((match = pattern.exec(body)) !== null) {
-		const jsdoc = match[1] as string | undefined
+		const jsdoc = match[1]
 		const name = match[2]
 		const optional = match[3]
 		const rawType = match[4]
@@ -77,9 +77,9 @@ export function parseTypes(source: string): TypeDefinition[] {
 	let match: RegExpExecArray | null = null
 
 	while ((match = pattern.exec(source)) !== null) {
-		const jsdoc = match[1] as string | undefined
+		const jsdoc = match[1]
 		const name = match[2]
-		const extendsClause = match[3] as string | undefined
+		const extendsClause = match[3]
 		const body = match[4]
 		if (!name || !body) continue
 		const definition: TypeDefinition = {
