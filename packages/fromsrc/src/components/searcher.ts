@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { z } from "zod"
 import type { SearchResult } from "../search"
+import { normalizequery, trimquery } from "../searchpolicy"
 
 const schema = z.array(
 	z.object({
@@ -24,16 +25,11 @@ interface cacheentry {
 
 const ttl = 1000 * 60 * 5
 const max = 200
-const maxquery = 200
 const store = new Map<string, cacheentry>()
 const inflight = new Map<string, Promise<SearchResult[]>>()
 
-function normalize(query: string): string {
-	return query.toLowerCase().replace(/\s+/g, " ").trim().slice(0, maxquery)
-}
-
 function key(endpoint: string, query: string, limit: number): string {
-	return `${endpoint}::${normalize(query)}::${limit}`
+	return `${endpoint}::${normalizequery(query)}::${limit}`
 }
 
 function getCache(key: string): cacheentry | null {
@@ -81,7 +77,7 @@ async function load(
 	stale?: cacheentry,
 	signal?: AbortSignal,
 ): Promise<SearchResult[]> {
-	const params = new URLSearchParams({ q: query, limit: String(limit) })
+	const params = new URLSearchParams({ q: trimquery(query), limit: String(limit) })
 	const response = await fetch(`${endpoint}?${params}`, {
 		signal,
 		headers: stale?.etag ? { "If-None-Match": stale.etag } : undefined,

@@ -9,6 +9,7 @@ import { useScrollLock } from "../hooks/scrolllock"
 import type { SearchResult } from "../search"
 import type { SearchAdapter } from "../search"
 import { localSearch } from "../search"
+import { trimquery } from "../searchpolicy"
 import { getOptionId } from "./results"
 import { Panel } from "./panel"
 import { Trigger } from "./trigger"
@@ -23,8 +24,6 @@ export interface SearchProps {
 	debounce?: number
 	limit?: number
 }
-
-const maxquery = 200
 
 function tosearchdoc(doc: DocMeta | SearchDoc): SearchDoc {
 	if ("content" in doc) return doc
@@ -58,7 +57,7 @@ export function Search({
 	const requestref = useRef(0)
 	const lastfocus = useRef<HTMLElement | null>(null)
 	const updatequery = useCallback((next: string): void => {
-		const value = next.slice(0, maxquery)
+		const value = trimquery(next)
 		queryref.current = value
 		setQuery(value)
 	}, [])

@@ -22,6 +22,12 @@ const list = [
 		maxgzip: 620,
 	},
 	{
+		name: "searchpolicy",
+		code: "import { normalizequery, searchmaxquery, trimquery } from 'fromsrc/searchpolicy'; export default [normalizequery('A   B'), trimquery('abc'), searchmaxquery];",
+		max: 260,
+		maxgzip: 170,
+	},
+	{
 		name: "llms",
 		code: "import { generateLlmsIndex } from 'fromsrc/llms'; export default generateLlmsIndex({title:'a',description:'b',baseUrl:'https://x.y'},[{title:'t',slug:'s'}]);",
 		max: 600,

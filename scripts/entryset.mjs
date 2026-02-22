@@ -10,6 +10,7 @@ export const entrymap = new Map([
 	["./readtime", "readtime.ts"],
 	["./searchscore", "searchscore.ts"],
 	["./searchindex", "searchindex.ts"],
+	["./searchpolicy", "searchpolicy.ts"],
 	["./llms", "llms.ts"],
 	["./openapi", "openapi.ts"],
 	["./algolia", "algolia.ts"],

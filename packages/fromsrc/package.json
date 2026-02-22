@@ -49,6 +49,10 @@
 			"types": "./dist/searchindex.d.ts",
 			"import": "./dist/searchindex.js"
 		},
+		"./searchpolicy": {
+			"types": "./dist/searchpolicy.d.ts",
+			"import": "./dist/searchpolicy.js"
+		},
 		"./llms": {
 			"types": "./dist/llms.d.ts",
 			"import": "./dist/llms.js"

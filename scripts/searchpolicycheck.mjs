@@ -5,19 +5,44 @@ const root = process.cwd();
 
 const files = [
 	{
-		name: "api",
+		name: "policy",
+		file: join(root, "packages", "fromsrc", "src", "searchpolicy.ts"),
+		pattern: /export\s+const\s+searchmaxquery\s*=\s*(\d+)/,
+	},
+	{
+		name: "api-import",
 		file: join(root, "app", "api", "search", "route.ts"),
-		pattern: /\.max\((\d+)\)/,
+		pattern: /from\s+["']fromsrc\/searchpolicy["']/,
 	},
 	{
-		name: "search-ui",
+		name: "api-usage",
+		file: join(root, "app", "api", "search", "route.ts"),
+		pattern: /\.max\(searchmaxquery\)/,
+	},
+	{
+		name: "search-ui-import",
 		file: join(root, "packages", "fromsrc", "src", "components", "search.tsx"),
-		pattern: /const\s+maxquery\s*=\s*(\d+)/,
+		pattern: /from\s+["']\.\.\/searchpolicy["']/,
 	},
 	{
-		name: "search-fetcher",
+		name: "search-ui-usage",
+		file: join(root, "packages", "fromsrc", "src", "components", "search.tsx"),
+		pattern: /trimquery\(/,
+	},
+	{
+		name: "search-fetcher-import",
 		file: join(root, "packages", "fromsrc", "src", "components", "searcher.ts"),
-		pattern: /const\s+maxquery\s*=\s*(\d+)/,
+		pattern: /from\s+["']\.\.\/searchpolicy["']/,
+	},
+	{
+		name: "search-fetcher-usage-normalize",
+		file: join(root, "packages", "fromsrc", "src", "components", "searcher.ts"),
+		pattern: /normalizequery\(/,
+	},
+	{
+		name: "search-fetcher-usage-trim",
+		file: join(root, "packages", "fromsrc", "src", "components", "searcher.ts"),
+		pattern: /trimquery\(/,
 	},
 ];
 
@@ -28,23 +53,21 @@ for (const item of files) {
 	try {
 		const text = await readFile(item.file, "utf8");
 		const match = text.match(item.pattern);
-		const raw = match?.[1] ?? "";
-		const value = Number(raw);
-		if (!Number.isFinite(value) || value <= 0) {
-			issues.push(`${item.name} missing max query value`);
+		if (!match) {
+			issues.push(`${item.name} policy missing`);
 			continue;
 		}
-		values.push({ name: item.name, value });
+		if (item.name === "policy") {
+			const raw = match[1] ?? "";
+			const value = Number(raw);
+			if (!Number.isFinite(value) || value <= 0) {
+				issues.push("policy max query value invalid");
+				continue;
+			}
+			values.push({ name: item.name, value });
+		}
 	} catch {
 		issues.push(`${item.name} file missing`);
-	}
-}
-
-if (values.length > 0) {
-	const unique = new Set(values.map((item) => item.value));
-	if (unique.size > 1) {
-		const detail = values.map((item) => `${item.name}=${item.value}`).join(", ");
-		issues.push(`search query limit mismatch (${detail})`);
 	}
 }
 
