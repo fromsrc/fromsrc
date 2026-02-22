@@ -5,9 +5,9 @@ const root = process.cwd();
 const file = join(root, "docs", "installation.mdx");
 const text = await readFile(file, "utf8");
 const required = [
-	"npx create-fromsrc",
-	"npx create-fromsrc --name my-docs --framework next.js --yes",
-	"npx create-fromsrc --list",
+	"bunx create-fromsrc",
+	"bunx create-fromsrc --name my-docs --framework next.js --yes",
+	"bunx create-fromsrc --list",
 ];
 
 const issues = [];

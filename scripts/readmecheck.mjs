@@ -7,8 +7,8 @@ const text = await readFile(file, "utf8");
 const required = [
 	"/api/raw/intro",
 	"/api/llms/intro",
-	"npx create-fromsrc --name my-docs --framework next.js --yes",
-	"npx create-fromsrc --list",
+	"bunx create-fromsrc --name my-docs --framework next.js --yes",
+	"bunx create-fromsrc --list",
 ];
 
 const issues = [];

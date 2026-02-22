@@ -35,9 +35,9 @@
 
 > install?
 
-  npx create-fromsrc
-  npx create-fromsrc --name my-docs --framework next.js --yes
-  npx create-fromsrc --list
+  bunx create-fromsrc
+  bunx create-fromsrc --name my-docs --framework next.js --yes
+  bunx create-fromsrc --list
 
 > links?
 

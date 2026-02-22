@@ -46,7 +46,7 @@ export function Foot() {
 							<Bolt />
 							introduction
 						</Link>
-						<code className="text-muted">npx create-fromsrc</code>
+						<code className="text-muted">bunx create-fromsrc</code>
 					</div>
 				</div>
 

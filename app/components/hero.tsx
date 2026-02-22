@@ -43,7 +43,7 @@ export function Hero() {
 						introduction
 					</Link>
 					<Copy
-						text="npx create-fromsrc"
+						text="bunx create-fromsrc"
 						className="text-xs underline underline-offset-4 shimmer"
 					/>
 				</div>
