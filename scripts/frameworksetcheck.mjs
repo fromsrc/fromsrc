@@ -1,6 +1,9 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { adapterpaths, adapters, frameworks, manuals } from "./frameworkset.mjs";
 
 const issues = [];
+const root = process.cwd();
 
 function uniq(values) {
 	return [...new Set(values)];
@@ -68,6 +71,11 @@ for (const manual of manuals) {
 	}
 	if (!manual.install.startsWith("bun add ")) {
 		issues.push(`manual install invalid ${manual.file}`);
+	}
+	try {
+		await readFile(join(root, manual.file), "utf8");
+	} catch {
+		issues.push(`manual file missing ${manual.file}`);
 	}
 }
 
