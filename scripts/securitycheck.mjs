@@ -19,6 +19,7 @@ function gte(left, right) {
 
 const base = process.cwd();
 const pkgPath = join(base, "node_modules", "next-mdx-remote", "package.json");
+const lockPath = join(base, "bun.lock");
 const mdxPath = join(base, "app", "docs", "_components", "mdx.tsx");
 const min = { major: 6, minor: 0, patch: 0 };
 let fail = false;
@@ -39,6 +40,31 @@ try {
 	}
 } catch {
 	console.error("x next-mdx-remote is not installed");
+	fail = true;
+}
+
+try {
+	const lock = await readFile(lockPath, "utf8");
+	const matches = lock.matchAll(/next-mdx-remote@(\d+\.\d+\.\d+)/g);
+	const versions = Array.from(matches, (item) => item[1]).filter(Boolean);
+	if (versions.length === 0) {
+		console.error("x next-mdx-remote lock entry missing");
+		fail = true;
+	} else {
+		let stale = false;
+		for (const raw of versions) {
+			const parsed = parse(raw);
+			if (!parsed || !gte(parsed, min)) stale = true;
+		}
+		if (stale) {
+			console.error("x bun.lock contains next-mdx-remote below 6.0.0");
+			fail = true;
+		} else {
+			console.log(`o bun.lock next-mdx-remote entries are patched (${versions.length})`);
+		}
+	}
+} catch {
+	console.error("x bun.lock missing");
 	fail = true;
 }
 
