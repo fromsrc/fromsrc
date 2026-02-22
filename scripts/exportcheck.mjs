@@ -1,35 +1,17 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { entrymap } from "./entryset.mjs";
 
 const root = process.cwd();
 const pkgfile = path.join(root, "packages", "fromsrc", "package.json");
 const srcroot = path.join(root, "packages", "fromsrc", "src");
-
-const expected = new Map([
-	[".", "index.ts"],
-	["./client", "client.ts"],
-	["./next", "next.ts"],
-	["./react-router", "reactrouter.ts"],
-	["./vite", "vite.ts"],
-	["./tanstack", "tanstack.ts"],
-	["./remix", "remix.ts"],
-	["./astro", "astro.ts"],
-	["./readtime", "readtime.ts"],
-	["./searchscore", "searchscore.ts"],
-	["./searchindex", "searchindex.ts"],
-	["./llms", "llms.ts"],
-	["./openapi", "openapi.ts"],
-	["./algolia", "algolia.ts"],
-	["./orama", "orama.ts"],
-	["./styles/reset.css", null],
-]);
 
 const text = await readFile(pkgfile, "utf8");
 const pkg = JSON.parse(text);
 const map = pkg.exports ?? {};
 const issues = [];
 
-for (const [key, source] of expected.entries()) {
+for (const [key, source] of entrymap.entries()) {
 	const value = map[key];
 	if (!value) {
 		issues.push(`missing export key ${key}`);
@@ -62,7 +44,7 @@ for (const [key, source] of expected.entries()) {
 }
 
 for (const key of Object.keys(map)) {
-	if (!expected.has(key)) issues.push(`unexpected export key ${key}`);
+	if (!entrymap.has(key)) issues.push(`unexpected export key ${key}`);
 }
 
 if (issues.length > 0) {
@@ -71,4 +53,4 @@ if (issues.length > 0) {
 	process.exit(1);
 }
 
-console.log(`o export map validation passed (${expected.size} keys)`);
+console.log(`o export map validation passed (${entrymap.size} keys)`);

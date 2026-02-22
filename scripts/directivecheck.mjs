@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { clientkeys } from "./entryset.mjs";
 
 const root = process.cwd();
 const pkgfile = path.join(root, "packages", "fromsrc", "package.json");
@@ -7,23 +8,13 @@ const text = await readFile(pkgfile, "utf8");
 const pkg = JSON.parse(text);
 const map = pkg.exports ?? {};
 
-const required = [
-	"./client",
-	"./next",
-	"./react-router",
-	"./vite",
-	"./tanstack",
-	"./remix",
-	"./astro",
-];
-
 function isclient(text) {
 	const line = (text.split("\n", 1).at(0) ?? "").trim();
 	return /^["']use client["'];?$/.test(line);
 }
 
 const issues = [];
-for (const key of required) {
+for (const key of clientkeys) {
 	const entry = map[key];
 	if (!entry || typeof entry !== "object" || typeof entry.import !== "string") {
 		issues.push(`missing import export for ${key}`);
@@ -46,4 +37,4 @@ if (issues.length > 0) {
 	process.exit(1);
 }
 
-console.log(`o client directive validation passed (${required.length} entries)`);
+console.log(`o client directive validation passed (${clientkeys.length} entries)`);

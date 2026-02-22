@@ -1,27 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import ts from "typescript";
+import { entryfiles } from "./entryset.mjs";
 
 const root = process.cwd();
 const src = path.join(root, "packages", "fromsrc", "src");
-
-const entries = [
-	"index.ts",
-	"client.ts",
-	"next.ts",
-	"reactrouter.ts",
-	"vite.ts",
-	"tanstack.ts",
-	"remix.ts",
-	"astro.ts",
-	"readtime.ts",
-	"searchscore.ts",
-	"searchindex.ts",
-	"llms.ts",
-	"openapi.ts",
-	"algolia.ts",
-	"orama.ts",
-];
 
 const issues = [];
 
@@ -32,7 +15,7 @@ function isdirective(node) {
 	return value === "use client" || value === "use strict";
 }
 
-for (const entry of entries) {
+for (const entry of entryfiles) {
 	const file = path.join(src, entry);
 	const text = await readFile(file, "utf8");
 	const source = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
@@ -59,4 +42,4 @@ if (issues.length > 0) {
 	process.exit(1);
 }
 
-console.log(`o public entry validation passed (${entries.length} files)`);
+console.log(`o public entry validation passed (${entryfiles.length} files)`);
