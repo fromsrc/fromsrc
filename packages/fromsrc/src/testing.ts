@@ -86,10 +86,13 @@ export function assertHeadings(
 }
 
 export function assertLinks(content: string) {
+	const placeholders = new Set(["#", "todo", "http://", "https://", "about:blank", "javascript:void(0)"])
 	const links = [...content.matchAll(/\[([^\]]*)\]\(([^)]*)\)/g)]
 	for (const [, text = "", url = ""] of links) {
 		if (!text.trim()) throw new Error("empty link text")
-		if (!url.trim() || url === "#" || url === "TODO" || url === "http://") {
+		const value = url.trim()
+		const lowered = value.toLowerCase()
+		if (!value || placeholders.has(lowered)) {
 			throw new Error(`placeholder link: ${url}`)
 		}
 	}
