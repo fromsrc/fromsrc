@@ -7,48 +7,56 @@ const frameworks = [
 	{
 		name: "next.js",
 		files: ["package.json", "next.config.ts", "app/layout.tsx", "app/docs/[[...slug]]/page.tsx"],
-		checks: [{ file: "tsconfig.json", text: "\"jsx\": \"preserve\"" }],
+		checks: [
+			{ file: "tsconfig.json", text: "\"jsx\": \"preserve\"" },
+			{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+		],
 	},
 	{
 		name: "react-router",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [
-			{ file: "src/main.tsx", text: "fromsrc/react-router" },
-			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
-		],
-	},
+			checks: [
+				{ file: "src/main.tsx", text: "fromsrc/react-router" },
+				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+			],
+		},
 	{
 		name: "vite",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [
-			{ file: "src/main.tsx", text: "fromsrc/vite" },
-			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
-		],
-	},
+			checks: [
+				{ file: "src/main.tsx", text: "fromsrc/vite" },
+				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+			],
+		},
 	{
 		name: "tanstack",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [
-			{ file: "src/main.tsx", text: "fromsrc/tanstack" },
-			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
-		],
-	},
+			checks: [
+				{ file: "src/main.tsx", text: "fromsrc/tanstack" },
+				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+			],
+		},
 	{
 		name: "remix",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [
-			{ file: "src/main.tsx", text: "fromsrc/remix" },
-			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
-		],
-	},
+			checks: [
+				{ file: "src/main.tsx", text: "fromsrc/remix" },
+				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+			],
+		},
 	{
 		name: "astro",
 		files: ["package.json", "astro.config.mjs", "src/pages/index.astro", "src/styles/global.css"],
-		checks: [
-			{ file: "src/pages/index.astro", text: "fromsrc/astro" },
-			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
-		],
-	},
+			checks: [
+				{ file: "src/pages/index.astro", text: "fromsrc/astro" },
+				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+			],
+		},
 ];
 
 const temp = await mkdtemp(join(tmpdir(), "fromsrc-scaffold-"));

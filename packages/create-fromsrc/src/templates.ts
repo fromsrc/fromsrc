@@ -5,6 +5,9 @@ export function packagejson(name: string, framework: Framework): string {
 		name,
 		version: "0.0.0",
 		private: true,
+		engines: {
+			node: "^20.19.0 || >=22.12.0",
+		},
 		dependencies: {
 			fromsrc: "latest",
 			react: "^19.0.0",
