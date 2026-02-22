@@ -12,8 +12,6 @@ bun add fromsrc @tanstack/react-router
 wire the adapter:
 
 ```tsx
-"use client";
-
 import { AdapterProvider, tanstackAdapter } from "fromsrc/tanstack";
 import type { ReactNode } from "react";
 
@@ -24,4 +22,4 @@ export function Providers({ children }: { children: ReactNode }) {
 
 use the provider near your router provider so link/navigation components are consistent.
 
-use the core content helpers from `fromsrc` for docs source parsing and search indexing.
+use the core content helpers from `fromsrc` for docs parsing and search indexing.

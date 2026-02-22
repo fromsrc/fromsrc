@@ -9,11 +9,9 @@ install dependencies:
 bun add fromsrc
 ```
 
-wire adapter inside a client component:
+wire adapter in your react docs shell:
 
 ```tsx
-"use client";
-
 import { AdapterProvider, astroAdapter } from "fromsrc/astro";
 import type { ReactNode } from "react";
 
@@ -22,4 +20,4 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-render the provider inside your astro page or layout island and keep markdown content in a shared `docs/` directory.
+render this component in an astro island with `client:load` and keep markdown content in a shared `docs/` directory.

@@ -12,8 +12,6 @@ bun add fromsrc react-router
 wire the adapter:
 
 ```tsx
-"use client";
-
 import { AdapterProvider, reactRouterAdapter } from "fromsrc/react-router";
 import type { ReactNode } from "react";
 
@@ -32,4 +30,4 @@ export function AppRoot({ children }: { children: React.ReactNode }) {
 }
 ```
 
-use `fromsrc` content loaders in route modules to render docs content from your `docs/` directory.
+use `fromsrc` content loaders in route modules for docs content and search indexing from `docs/`.
