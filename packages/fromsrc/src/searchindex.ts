@@ -38,9 +38,12 @@ export function tokenize(text: string, config?: IndexConfig): string[] {
 		.filter((word) => word.length >= min)
 }
 
+function doctext(doc: SearchDocument): string {
+	return [doc.title, doc.description ?? "", ...doc.headings, doc.content].join(" ")
+}
+
 function indexDocument(index: SearchIndex, idx: number, doc: SearchDocument) {
-	const text = [doc.title, doc.description ?? "", ...doc.headings, doc.content].join(" ")
-	const tokens = tokenize(text, index.config)
+	const tokens = tokenize(doctext(doc), index.config)
 	for (const token of tokens) {
 		const existing = index.terms.get(token)
 		if (existing) {
@@ -64,12 +67,22 @@ export function addDocument(index: SearchIndex, doc: SearchDocument): void {
 export function removeDocument(index: SearchIndex, path: string): void {
 	const idx = index.documents.findIndex((d) => d.path === path)
 	if (idx === -1) return
-	index.documents.splice(idx, 1)
-	index.terms.clear()
-	for (let i = 0; i < index.documents.length; i++) {
-		const doc = index.documents[i]
-		if (doc) indexDocument(index, i, doc)
+	const doc = index.documents[idx]
+	if (!doc) return
+	const tokens = new Set(tokenize(doctext(doc), index.config))
+	for (const token of tokens) {
+		const entries = index.terms.get(token)
+		if (!entries) continue
+		const next = entries
+			.filter((value) => value !== idx)
+			.map((value) => (value > idx ? value - 1 : value))
+		if (next.length === 0) {
+			index.terms.delete(token)
+		} else {
+			index.terms.set(token, next)
+		}
 	}
+	index.documents.splice(idx, 1)
 }
 
 export function search(index: SearchIndex, query: string, limit = 10): SearchDocument[] {

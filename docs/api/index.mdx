@@ -26,6 +26,21 @@ server-side utilities for content loading.
   }}
 />
 
+### api utilities
+
+<TypeTable
+  data={{
+    json: { type: "(data, status?, headers?) => Response", description: "return json response with content-type" },
+    error: { type: "(message, status?) => Response", description: "return json error response" },
+    cors: { type: "(config?) => Record<string, string>", description: "build cors headers map" },
+    withCors: { type: "(response, config?) => Response", description: "attach cors headers to response" },
+    cache: { type: "(response, maxAge, stale?) => Response", description: "attach cache-control headers" },
+    rateLimiter: { type: "(config) => (key) => { allowed; remaining; resetAt }", description: "create fixed-window limiter" },
+  }}
+/>
+
+`rateLimiter` stores counters in process memory. use a shared store for multi-instance deployments.
+
 ### schema utilities
 
 <TypeTable
