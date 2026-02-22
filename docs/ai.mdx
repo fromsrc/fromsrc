@@ -27,6 +27,8 @@ access raw markdown for any page by appending `.md` to the url:
 ```
 /docs/installation     → rendered page
 /docs/installation.md  → raw markdown
+/docs                 → rendered index page
+/docs.md              → raw index markdown
 ```
 
 this lets ai tools fetch specific pages without parsing html.
@@ -89,8 +91,13 @@ import { NextRequest, NextResponse } from "next/server"
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
-  if (pathname.endsWith(".md")) {
+  const accept = request.headers.get("accept") ?? ""
+  if (pathname === "/docs.md" || pathname.endsWith(".md")) {
     const slug = pathname.replace("/docs/", "").replace(".md", "")
+    return NextResponse.rewrite(new URL(`/api/raw/${slug}`, request.url))
+  }
+  if (pathname.startsWith("/docs/") && accept.includes("text/markdown")) {
+    const slug = pathname.replace("/docs/", "")
     return NextResponse.rewrite(new URL(`/api/raw/${slug}`, request.url))
   }
   return NextResponse.next()
