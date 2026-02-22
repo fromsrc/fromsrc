@@ -19,7 +19,10 @@ export const method = z.object({ method: methodname })
 
 export const search = z.object({ query: z.string().trim().min(1).max(searchmaxquery) })
 export const page = z.object({ slug: z.string().trim().min(1).max(300) })
-export const toollist = z.object({ cursor: z.string().trim().min(1).optional() }).optional()
+export const list = z.object({
+	cursor: z.string().trim().min(1).optional(),
+	limit: z.coerce.number().int().min(1).max(100).optional(),
+}).optional()
 export const toolcall = z.object({
 	name: z.string().trim().min(1).max(128),
 	arguments: z.record(z.unknown()).optional(),

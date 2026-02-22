@@ -92,6 +92,17 @@ available methods:
 }
 ```
 
+`tools/list` and `list_pages` support optional pagination params:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "3",
+  "method": "tools/list",
+  "params": { "cursor": "search_docs", "limit": 20 }
+}
+```
+
 ## implementation
 
 ### route handler

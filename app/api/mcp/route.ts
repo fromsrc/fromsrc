@@ -1,7 +1,7 @@
 import { type ContentSource, createMcpHandler, generateMcpManifest, z } from "fromsrc"
 import { siteurl } from "@/app/_lib/site"
 import { sendjson } from "@/app/api/_lib/json"
-import { init, method, page, protocol, rpcmethod, search, supported, toolcall, toollist } from "./rpc"
+import { init, list, method, page, protocol, rpcmethod, search, supported, toolcall } from "./rpc"
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content"
 
 const config = {
@@ -30,6 +30,29 @@ const cors = {
 	"Access-Control-Allow-Headers": "Content-Type",
 }
 const cachecontrol = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+type Listinput = NonNullable<z.infer<typeof list>>
+
+function pageitems<T extends { slug: string }>(
+	items: T[],
+	input: Listinput,
+): { items: T[]; nextCursor?: string } {
+	const limit = input.limit ?? 50
+	if (!input.cursor) {
+		const slice = items.slice(0, limit)
+		const next = items[limit]?.slug
+		return next ? { items: slice, nextCursor: next } : { items: slice }
+	}
+	const start = items.findIndex((item) => item.slug === input.cursor)
+	if (start < 0) {
+		const slice = items.slice(0, limit)
+		const next = items[limit]?.slug
+		return next ? { items: slice, nextCursor: next } : { items: slice }
+	}
+	const from = start + 1
+	const slice = items.slice(from, from + limit)
+	const next = items[from + limit]?.slug
+	return next ? { items: slice, nextCursor: next } : { items: slice }
+}
 
 export async function OPTIONS() {
 	return new Response(null, { status: 204, headers: cors })
@@ -122,14 +145,23 @@ export async function POST(request: Request) {
 			return jsonrpc({ content })
 		}
 		case "list_pages": {
+			const listed = list.safeParse(params)
+			if (!listed.success) return jsonerror(-32602, "invalid params")
 			const pages = await handler.listPages()
-			return jsonrpc(pages)
+			if (!listed.data) return jsonrpc(pages)
+			const paged = pageitems(pages, listed.data)
+			return jsonrpc(paged)
 		}
 		case "tools/list": {
-			const listed = toollist.safeParse(params)
+			const listed = list.safeParse(params)
 			if (!listed.success) return jsonerror(-32602, "invalid params")
 			const manifest = generateMcpManifest(config)
-			return jsonrpc({ tools: manifest.tools })
+			if (!listed.data) return jsonrpc({ tools: manifest.tools })
+			const paged = pageitems(manifest.tools.map((tool) => ({ ...tool, slug: tool.name })), listed.data)
+			return jsonrpc({
+				tools: paged.items.map(({ slug: _slug, ...tool }) => tool),
+				nextCursor: paged.nextCursor,
+			})
 		}
 		case "tools/call": {
 			const call = toolcall.safeParse(params)
@@ -150,8 +182,14 @@ export async function POST(request: Request) {
 					return jsonrpc(toolresult(content, { content }))
 				}
 				case "list_pages": {
+					const listed = list.safeParse(args)
+					if (!listed.success) return jsonerror(-32602, "invalid params")
 					const pages = await handler.listPages()
-					return jsonrpc(toolresult(JSON.stringify(pages), { pages }))
+					if (!listed.data) {
+						return jsonrpc(toolresult(JSON.stringify(pages), { pages }))
+					}
+					const paged = pageitems(pages, listed.data)
+					return jsonrpc(toolresult(JSON.stringify(paged), paged))
 				}
 				default:
 					return jsonerror(-32601, "unknown tool")
