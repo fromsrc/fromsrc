@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import ts from "typescript";
 
 const root = process.cwd();
 const src = path.join(root, "packages", "fromsrc", "src");
@@ -11,54 +12,48 @@ const issues = new Set();
 
 function parseimports(text) {
 	const targets = new Set();
-	const statementpattern = /(?:^|\n)\s*(import|export)\s+[\s\S]*?from\s+["']([^"']+)["']/g;
-	statementpattern.lastIndex = 0;
-	let statementmatch = statementpattern.exec(text);
-	while (statementmatch) {
-		const statement = statementmatch[0] ?? "";
-		const target = statementmatch[2] ?? "";
-		if (target && !istypeonly(statement)) targets.add(target);
-		statementmatch = statementpattern.exec(text);
-	}
-	const sideeffectpattern = /(?:^|\n)\s*import\s+["']([^"']+)["']/g;
-	sideeffectpattern.lastIndex = 0;
-	let sideeffectmatch = sideeffectpattern.exec(text);
-	while (sideeffectmatch) {
-		if (sideeffectmatch[1]) targets.add(sideeffectmatch[1]);
-		sideeffectmatch = sideeffectpattern.exec(text);
-	}
-	const patterns = [/import\s*\(\s*["']([^"']+)["']\s*\)/g, /require\(\s*["']([^"']+)["']\s*\)/g];
-	for (const pattern of patterns) {
-		pattern.lastIndex = 0;
-		let match = pattern.exec(text);
-		while (match) {
-			if (match[1]) targets.add(match[1]);
-			match = pattern.exec(text);
+	const file = ts.createSourceFile("input.tsx", text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+	function visit(node) {
+		if (ts.isImportDeclaration(node)) {
+			const target = literal(node.moduleSpecifier);
+			if (target && !importistype(node.importClause)) targets.add(target);
 		}
+		if (ts.isExportDeclaration(node)) {
+			const target = node.moduleSpecifier ? literal(node.moduleSpecifier) : null;
+			if (target && !node.isTypeOnly) targets.add(target);
+		}
+		if (ts.isCallExpression(node)) {
+			if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+				const target = node.arguments[0] ? literal(node.arguments[0]) : null;
+				if (target) targets.add(target);
+			}
+			if (ts.isIdentifier(node.expression) && node.expression.text === "require") {
+				const target = node.arguments[0] ? literal(node.arguments[0]) : null;
+				if (target) targets.add(target);
+			}
+		}
+		ts.forEachChild(node, visit);
 	}
+	visit(file);
 	return Array.from(targets);
 }
 
-function istypeonly(statement) {
-	if (/^\s*(import|export)\s+type\b/.test(statement)) return true;
-	const namespaced = /^\s*import\s+\*\s+as\s+[^,]+,\s*\{([\s\S]*?)\}\s+from/.exec(statement);
-	if (namespaced) return alltypes(namespaced[1] ?? "");
-	const braced = /^\s*(import|export)\s+\{([\s\S]*?)\}\s+from/.exec(statement);
-	if (braced) return alltypes(braced[2] ?? "");
-	return false;
+function literal(node) {
+	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node) ? node.text : null;
 }
 
-function alltypes(specifiers) {
-	const items = specifiers
-		.split(",")
-		.map((item) => item.trim())
-		.filter(Boolean);
-	if (items.length === 0) return false;
-	for (const item of items) {
-		const normalized = item.replace(/\s+as\s+.+$/, "").trim();
-		if (!normalized.startsWith("type ")) return false;
+function importistype(clause) {
+	if (!clause) return false;
+	if (clause.isTypeOnly) return true;
+	const named = clause.namedBindings;
+	if (!named || !ts.isNamedImports(named)) return false;
+	if (!clause.name && named.elements.length > 0) {
+		for (const item of named.elements) {
+			if (!item.isTypeOnly) return false;
+		}
+		return true;
 	}
-	return true;
+	return false;
 }
 
 async function fileexists(file) {
