@@ -10,23 +10,31 @@ const [local, exported] = await Promise.all([content.getNavigation(), getnav(doc
 
 const localtitles = local.map((item) => item.title);
 const exportedtitles = exported.map((item) => item.title);
+const key = (section) => {
+	const slug = section.items[0]?.slug ?? "";
+	if (!slug || slug === "index") return "";
+	return slug.split("/")[0] ?? slug;
+};
+const localkeys = local.map((section) => key(section));
+const exportedkeys = exported.map((section) => key(section));
 
 const issues = [];
 
-if (!localtitles.includes("manual")) issues.push("defineContent navigation missing manual section");
-if (!exportedtitles.includes("manual")) issues.push("exported navigation missing manual section");
-if (localtitles.join("|") !== exportedtitles.join("|")) issues.push("navigation section order mismatch");
+if (!localkeys.includes("manual")) issues.push("defineContent navigation missing manual section");
+if (!exportedkeys.includes("manual")) issues.push("exported navigation missing manual section");
+if (localkeys.join("|") !== exportedkeys.join("|")) issues.push("navigation section order mismatch");
 
-for (const title of localtitles) {
-	const left = local.find((item) => item.title === title)?.items.length ?? 0;
-	const right = exported.find((item) => item.title === title)?.items.length ?? 0;
-	if (left !== right) issues.push(`navigation item count mismatch for ${title}: ${left} vs ${right}`);
+for (const section of local) {
+	const sectionKey = key(section);
+	const left = section.items.length;
+	const right = exported.find((item) => key(item) === sectionKey)?.items.length ?? 0;
+	if (left !== right) issues.push(`navigation item count mismatch for ${sectionKey || "root"}: ${left} vs ${right}`);
 }
 
 const manualmeta = await loadMeta(join(docsdir, "manual"));
 const manualpages = (manualmeta?.pages ?? []).filter((item) => item !== "index");
 const expected = ["manual/index", ...manualpages.map((item) => `manual/${item}`)];
-const actual = local.find((item) => item.title === "manual")?.items.map((item) => item.slug) ?? [];
+const actual = local.find((item) => key(item) === "manual")?.items.map((item) => item.slug) ?? [];
 if (expected.length > 0 && expected.join("|") !== actual.join("|")) {
 	issues.push("manual navigation order mismatch with docs/manual/_meta.json");
 }

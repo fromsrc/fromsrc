@@ -559,7 +559,7 @@ async function buildNavigation<T extends navitem>(
 
 	const metas = await Promise.all(
 		sections.map((section) => {
-			if (section.key === "") return Promise.resolve<MetaFile | null>(null)
+			if (section.key === "") return Promise.resolve(rootMeta)
 			return loadMeta(join(docsDir, section.key))
 		}),
 	)
@@ -568,8 +568,9 @@ async function buildNavigation<T extends navitem>(
 		.map((section, index) => {
 			const prefix = section.key ? `${section.key}/` : ""
 			const sorted = sortByMeta(section.items, metas[index]?.pages, prefix)
+			const label = metas[index]?.title ?? section.title
 			return {
-				title: section.title,
+				title: label,
 				items: sorted,
 			}
 		})

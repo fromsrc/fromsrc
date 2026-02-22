@@ -39,75 +39,37 @@ const icons: Record<string, ReactNode> = {
 	i18n: <Globe size={14} />,
 }
 
-const sections: Record<string, string[]> = {
-	"getting started": ["", "installation", "quickstart"],
-	basics: ["configuration", "theming", "customization", "writing", "navigation"],
-	features: ["search", "ai", "slugs", "keyboard", "versioning"],
-	production: ["deploying", "i18n"],
-}
-
 export async function Sidebar() {
 	const rawNavigation = await getNavigation()
 
 	const navigation: SidebarSection[] = []
 	const referenceItems: (SidebarItem | SidebarFolder)[] = []
 
-	const introItems = rawNavigation.find((s) => s.title === "introduction")?.items || []
-	const itemMap = new Map(introItems.map((item) => [item.slug, item]))
-
-	for (const [sectionTitle, slugs] of Object.entries(sections)) {
-		const items: SidebarItem[] = []
-		for (const slug of slugs) {
-			const item = itemMap.get(slug)
-			if (item) {
-				items.push({
+	for (const section of rawNavigation) {
+		const root = section.items.every((item) => !item.slug.includes("/"))
+		if (root) {
+			const items: SidebarItem[] = section.items.map((item) => {
+				const slug = item.slug || "introduction"
+				return {
 					type: "item",
 					title: item.title,
-					href: slug ? `/docs/${slug}` : "/docs",
-					icon: icons[slug || "introduction"],
-				})
-			}
-		}
-		if (items.length > 0) {
-			navigation.push({ title: sectionTitle, items })
-		}
-	}
-
-	for (const section of rawNavigation) {
-		if (section.title === "components") {
-			referenceItems.push({
-				type: "folder",
-				title: "components",
-				defaultOpen: false,
-				items: section.items.map((item) => ({
-					type: "item" as const,
-					title: item.title,
-					href: `/docs/${item.slug}`,
-				})),
+					href: item.slug ? `/docs/${item.slug}` : "/docs",
+					icon: icons[slug],
+				}
 			})
-		} else if (section.title === "api") {
-			referenceItems.push({
-				type: "folder",
-				title: "api",
-				defaultOpen: false,
-				items: section.items.map((item) => ({
-					type: "item" as const,
-					title: item.title,
-					href: `/docs/${item.slug}`,
-				})),
-			})
-		} else if (section.title === "examples") {
-			referenceItems.push({
-				type: "folder",
-				title: "examples",
-				defaultOpen: false,
-				items: section.items.map((item) => ({
-					type: "item" as const,
-					title: item.title,
-					href: `/docs/${item.slug}`,
-				})),
-			})
+			navigation.push({ title: section.title, items })
+			continue
 		}
+		referenceItems.push({
+			type: "folder",
+			title: section.title,
+			defaultOpen: false,
+			items: section.items.map((item) => ({
+				type: "item" as const,
+				title: item.title,
+				href: `/docs/${item.slug}`,
+			})),
+		})
 	}
 
 	if (referenceItems.length > 0) {
