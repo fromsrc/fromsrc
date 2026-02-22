@@ -25,6 +25,9 @@ interface McpManifest {
 		tools: {
 			listChanged: boolean
 		}
+		resources: {
+			listChanged: boolean
+		}
 	}
 	tools: McpTool[]
 }
@@ -34,6 +37,9 @@ export function generateMcpManifest(config: McpConfig): McpManifest {
 		server: { name: config.name, version: config.version },
 		capabilities: {
 			tools: {
+				listChanged: false,
+			},
+			resources: {
 				listChanged: false,
 			},
 		},

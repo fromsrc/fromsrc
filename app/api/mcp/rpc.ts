@@ -10,6 +10,8 @@ export const methodname = z.enum([
 	"list_pages",
 	"tools/list",
 	"tools/call",
+	"resources/list",
+	"resources/read",
 	"initialize",
 	"notifications/initialized",
 	"ping",
@@ -26,6 +28,9 @@ export const list = z.object({
 export const toolcall = z.object({
 	name: z.string().trim().min(1).max(128),
 	arguments: z.record(z.unknown()).optional(),
+})
+export const resource = z.object({
+	uri: z.string().trim().min(1).max(512),
 })
 export const init = z.object({
 	protocolVersion: z.string().trim().min(1),

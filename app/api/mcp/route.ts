@@ -1,7 +1,7 @@
 import { type ContentSource, createMcpHandler, generateMcpManifest, z } from "fromsrc"
 import { siteurl } from "@/app/_lib/site"
 import { sendjson } from "@/app/api/_lib/json"
-import { init, list, method, page, protocol, rpcmethod, search, supported, toolcall } from "./rpc"
+import { init, list, method, page, protocol, resource, rpcmethod, search, supported, toolcall } from "./rpc"
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content"
 
 const config = {
@@ -52,6 +52,19 @@ function pageitems<T extends { slug: string }>(
 	const slice = items.slice(from, from + limit)
 	const next = items[from + limit]?.slug
 	return next ? { items: slice, nextCursor: next } : { items: slice }
+}
+
+function resourceuri(slug: string): string {
+	const safe = slug.length > 0 ? slug : "index"
+	return `fromsrc://docs/${safe}`
+}
+
+function resourceslug(uri: string): string | null {
+	const prefix = "fromsrc://docs/"
+	if (!uri.startsWith(prefix)) return null
+	const value = uri.slice(prefix.length).replace(/\/+$/, "")
+	if (value.length === 0 || value === "index") return ""
+	return value
 }
 
 export async function OPTIONS() {
@@ -120,6 +133,7 @@ export async function POST(request: Request) {
 				protocolVersion: selected,
 				capabilities: {
 					tools: { listChanged: false },
+					resources: { listChanged: false },
 				},
 				serverInfo: {
 					name: config.name,
@@ -194,6 +208,45 @@ export async function POST(request: Request) {
 				default:
 					return jsonerror(-32601, "unknown tool")
 			}
+		}
+		case "resources/list": {
+			const listed = list.safeParse(params)
+			if (!listed.success) return jsonerror(-32602, "invalid params")
+			const pages = await handler.listPages()
+			const resources = pages.map((item) => ({
+				slug: item.slug,
+				uri: resourceuri(item.slug),
+				name: item.title,
+				description: item.description,
+				mimeType: "text/markdown",
+			}))
+			if (!listed.data) {
+				return jsonrpc({
+					resources: resources.map(({ slug: _slug, ...item }) => item),
+				})
+			}
+			const paged = pageitems(resources, listed.data)
+			return jsonrpc({
+				resources: paged.items.map(({ slug: _slug, ...item }) => item),
+				nextCursor: paged.nextCursor,
+			})
+		}
+		case "resources/read": {
+			const target = resource.safeParse(params)
+			if (!target.success) return jsonerror(-32602, "invalid params")
+			const slug = resourceslug(target.data.uri)
+			if (slug === null) return jsonerror(-32602, "invalid params")
+			const content = await handler.getPage(slug)
+			if (!content) return jsonerror(-32004, "not found", 404)
+			return jsonrpc({
+				contents: [
+					{
+						uri: target.data.uri,
+						mimeType: "text/markdown",
+						text: content,
+					},
+				],
+			})
 		}
 		default:
 			return jsonerror(-32601, "unknown method")

@@ -77,6 +77,8 @@ available methods:
 - `list_pages`
 - `tools/list`
 - `tools/call`
+- `resources/list`
+- `resources/read`
 
 `tools/call` example:
 
@@ -100,6 +102,17 @@ available methods:
   "id": "3",
   "method": "tools/list",
   "params": { "cursor": "search_docs", "limit": 20 }
+}
+```
+
+`resources/read` example:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "4",
+  "method": "resources/read",
+  "params": { "uri": "fromsrc://docs/installation" }
 }
 ```
 
