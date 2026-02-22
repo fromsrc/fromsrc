@@ -1,5 +1,6 @@
 import { z } from "fromsrc"
 import { searchmaxquery } from "fromsrc/searchpolicy"
+import { slugpathregex } from "@/app/api/_lib/slugpattern"
 
 export const protocol = "2025-06-18"
 export const supported = new Set(["2025-06-18", "2025-03-26", "2024-11-05"])
@@ -21,7 +22,7 @@ export const methodname = z.enum([
 export const method = z.object({ method: methodname })
 
 export const search = z.object({ query: z.string().trim().min(1).max(searchmaxquery) })
-export const slug = z.string().trim().max(300).regex(/^$|^[a-z0-9][a-z0-9_-]*(?:\/[a-z0-9][a-z0-9_-]*)*$/)
+export const slug = z.string().trim().max(300).regex(slugpathregex)
 export const page = z.object({ slug })
 export const list = z.object({
 	cursor: z.string().trim().min(1).optional(),
