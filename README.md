@@ -25,8 +25,8 @@
 > ai-native?
 
   /docs/intro        → rendered page
-  /docs/intro.md     → raw markdown
-  /docs/intro/llms.txt → page for ai
+  /api/raw/intro     → raw markdown
+  /api/llms/intro    → page for ai
   /llms.txt          → all docs for ai
 
 > stack?
@@ -36,6 +36,8 @@
 > install?
 
   npx create-fromsrc
+  npx create-fromsrc --name my-docs --framework next.js --yes
+  npx create-fromsrc --list
 
 > links?
 
