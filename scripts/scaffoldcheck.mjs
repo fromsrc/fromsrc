@@ -51,12 +51,14 @@ const frameworks = [
 	{
 		name: "astro",
 		files: ["package.json", "astro.config.mjs", "src/pages/index.astro", "src/styles/global.css"],
-			checks: [
-				{ file: "src/pages/index.astro", text: "fromsrc/astro" },
-				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
-				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
-			],
-		},
+		checks: [
+			{ file: "src/pages/index.astro", text: "fromsrc/astro" },
+			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+			{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+			{ file: "package.json", text: "\"@astrojs/react\": \"^4.4.0\"" },
+			{ file: "astro.config.mjs", text: "integrations: [react()]" },
+		],
+	},
 ];
 
 const temp = await mkdtemp(join(tmpdir(), "fromsrc-scaffold-"));

@@ -57,6 +57,7 @@ export function packagejson(name: string, framework: Framework): string {
 				dependencies: {
 					...base.dependencies,
 					astro: "^5.0.0",
+					"@astrojs/react": "^4.4.0",
 				},
 			},
 			null,
@@ -347,9 +348,12 @@ export const vitehtml = `<!doctype html>
 </html>
 `
 
-export const astroconfig = `import { defineConfig } from "astro/config"
+export const astroconfig = `import react from "@astrojs/react"
+import { defineConfig } from "astro/config"
 
-export default defineConfig({})
+export default defineConfig({
+\tintegrations: [react()],
+})
 `
 
 export const astropage = `---
