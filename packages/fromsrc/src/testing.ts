@@ -8,6 +8,20 @@ export type TestSuite = {
 	duration: number
 }
 
+function headingid(value: string): string {
+	return value.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-")
+}
+
+function collectheadingids(content: string): string[] {
+	return [...content.matchAll(/^#{1,6}\s+(.+)$/gm)]
+		.map((match) => {
+			const value = match[1]
+			if (!value) return ""
+			return headingid(value)
+		})
+		.filter(Boolean)
+}
+
 export function createTestSuite(name: string) {
 	const cases: TestCase[] = []
 
@@ -71,13 +85,7 @@ export function assertHeadings(
 	content: string,
 	options?: { minCount?: number; maxDepth?: number; sequential?: boolean },
 ) {
-	const ids = [...content.matchAll(/^#{1,6}\s+(.+)$/gm)]
-		.map((match) => {
-			const value = match[1]
-			if (!value) return ""
-			return value.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-")
-		})
-		.filter(Boolean)
+	const ids = collectheadingids(content)
 	const seen = new Set<string>()
 	for (const id of ids) {
 		if (seen.has(id)) throw new Error(`duplicate heading id: ${id}`)
@@ -111,15 +119,7 @@ export function assertHeadings(
 
 export function assertLinks(content: string) {
 	const placeholders = new Set(["#", "todo", "http://", "https://", "about:blank", "javascript:void(0)"])
-	const headingids = new Set(
-		[...content.matchAll(/^#{1,6}\s+(.+)$/gm)]
-			.map((match) => {
-				const value = match[1]
-				if (!value) return ""
-				return value.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-")
-			})
-			.filter(Boolean),
-	)
+	const headingids = new Set(collectheadingids(content))
 	const links = [...content.matchAll(/\[([^\]]*)\]\(([^)]*)\)/g)]
 	for (const [, text = "", url = ""] of links) {
 		if (!text.trim()) throw new Error("empty link text")
