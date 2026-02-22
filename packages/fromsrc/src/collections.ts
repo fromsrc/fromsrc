@@ -15,16 +15,22 @@ interface CollectionItem<T> {
 	data: T
 }
 
+type SortValue = string | number | bigint | boolean | Date
+type SortKey<T> = {
+	[K in keyof T]: T[K] extends SortValue ? K : never
+}[keyof T]
+
 interface Collection<T> {
 	name: string
 	getAll(): Promise<CollectionItem<T>[]>
 	get(slug: string): Promise<CollectionItem<T> | null>
 	count(): Promise<number>
 	filter(fn: (doc: CollectionItem<T>) => boolean): Promise<CollectionItem<T>[]>
-	sort(key: "slug" | keyof T, order?: "asc" | "desc"): Promise<CollectionItem<T>[]>
+	sort(key: "slug" | SortKey<T>, order?: "asc" | "desc"): Promise<CollectionItem<T>[]>
 }
 
 type InferCollection<T extends z.ZodRawShape> = z.infer<z.ZodObject<T>>
+type InferSchema<T extends CollectionConfig<z.ZodRawShape>> = z.infer<T["schema"]>
 
 async function scan<T extends z.ZodRawShape>(
 	dir: string,
@@ -58,6 +64,18 @@ export function defineCollection<T extends z.ZodRawShape>(
 	type Item = CollectionItem<InferCollection<T>>
 	let cached: Item[] | null = null
 
+	function compare(a: SortValue | undefined, b: SortValue | undefined): number {
+		if (a === b) return 0
+		if (a === undefined) return -1
+		if (b === undefined) return 1
+		if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime()
+		if (typeof a === "string" && typeof b === "string") return a.localeCompare(b)
+		if (typeof a === "number" && typeof b === "number") return a - b
+		if (typeof a === "bigint" && typeof b === "bigint") return a < b ? -1 : 1
+		if (typeof a === "boolean" && typeof b === "boolean") return a === b ? 0 : a ? 1 : -1
+		return String(a).localeCompare(String(b))
+	}
+
 	async function load(): Promise<Item[]> {
 		if (cached) return cached
 		const items = await scan(config.dir, config.schema)
@@ -79,9 +97,8 @@ export function defineCollection<T extends z.ZodRawShape>(
 			return [...items].sort((a, b) => {
 				const va = key === "slug" ? a.slug : a.data[key]
 				const vb = key === "slug" ? b.slug : b.data[key]
-				if (va < vb) return order === "asc" ? -1 : 1
-				if (va > vb) return order === "asc" ? 1 : -1
-				return 0
+				const result = compare(va, vb)
+				return order === "asc" ? result : -result
 			})
 		},
 	}
@@ -90,9 +107,11 @@ export function defineCollection<T extends z.ZodRawShape>(
 export function defineCollections<T extends Record<string, CollectionConfig<z.ZodRawShape>>>(
 	configs: T,
 ): { [K in keyof T]: Collection<z.infer<T[K]["schema"]>> } {
-	const result = {} as Record<string, Collection<unknown>>
-	for (const [key, config] of Object.entries(configs)) {
+	const result = {} as { [K in keyof T]: Collection<InferSchema<T[K]>> }
+	for (const key in configs) {
+		const config = configs[key]
+		if (!config) continue
 		result[key] = defineCollection(config)
 	}
-	return result as { [K in keyof T]: Collection<z.infer<T[K]["schema"]>> }
+	return result
 }
