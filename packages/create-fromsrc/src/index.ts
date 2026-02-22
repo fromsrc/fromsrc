@@ -42,6 +42,22 @@ function hasflag(key: string, short: string): boolean {
 	return args.includes(`--${key}`) || args.includes(`-${short}`)
 }
 
+function positional(): string | undefined {
+	const args = process.argv.slice(2)
+	for (let i = 0; i < args.length; i++) {
+		const value = args[i]
+		if (!value || value.startsWith("-")) {
+			continue
+		}
+		const prev = i > 0 ? args[i - 1] : undefined
+		if (prev === "--name" || prev === "-n" || prev === "--framework" || prev === "-f") {
+			continue
+		}
+		return value
+	}
+	return undefined
+}
+
 function parseframework(value: string | undefined): Framework | undefined {
 	if (!value) {
 		return undefined
@@ -69,6 +85,7 @@ async function main() {
 
 	const yes = hasflag("yes", "y")
 	const argname = readflag("name", "n")
+	const positionalname = positional()
 	const argframework = parseframework(readflag("framework", "f"))
 	const rawframework = readflag("framework", "f")
 
@@ -79,7 +96,7 @@ async function main() {
 		process.exit(1)
 	}
 
-	const name = argname ?? (yes ? "my-docs" : await ask("  project name", "my-docs"))
+	const name = argname ?? positionalname ?? (yes ? "my-docs" : await ask("  project name", "my-docs"))
 	const framework = argframework ?? (yes ? frameworks[0] : await select<Framework>("  framework", frameworks, 0))
 
 	close()

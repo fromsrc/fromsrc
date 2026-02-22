@@ -28,6 +28,7 @@ function run(args) {
 const runhelp = await run(["--help"]);
 const runlist = await run(["--list"]);
 const runbad = await run(["--name", "bad-docs", "--framework", "bad", "--yes"]);
+const runpositional = await run(["cli-positional", "--framework", "next.js", "--yes"]);
 const cases = [
 	{
 		name: "cli-next",
@@ -109,6 +110,15 @@ if (runbad.code === 0 || !runbad.out.includes("invalid framework")) {
 	issues.push("cli invalid framework path missing or failed");
 }
 
+if (runpositional.code !== 0 || !runpositional.out.includes("created cli-positional")) {
+	issues.push("cli positional name path missing or failed");
+}
+try {
+	await access(join(temp, "cli-positional", "package.json"));
+} catch {
+	issues.push("cli positional name did not create project");
+}
+
 await rm(temp, { recursive: true, force: true });
 
 if (issues.length > 0) {
@@ -121,6 +131,7 @@ if (issues.length > 0) {
 	if (runhelp.err.trim()) console.error(runhelp.err.trim());
 	if (runlist.err.trim()) console.error(runlist.err.trim());
 	if (runbad.err.trim()) console.error(runbad.err.trim());
+	if (runpositional.err.trim()) console.error(runpositional.err.trim());
 	process.exit(1);
 }
 
