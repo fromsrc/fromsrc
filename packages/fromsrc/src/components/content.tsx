@@ -25,6 +25,7 @@ import { Step, Steps } from "./steps"
 import { Tab, Tabs } from "./tabs"
 import { TocInline } from "./toc/inline"
 import { Tooltip } from "./tooltip"
+import { Twoslash } from "./twoslash"
 import { TypeTable } from "./typetable"
 import { Video } from "./video"
 import { Zoom } from "./zoom"
@@ -62,6 +63,8 @@ type PreProps = ComponentPropsWithoutRef<"pre"> & {
 	className?: string
 	"data-language"?: string
 	"data-title"?: string
+	"data-twoslash-annotations"?: string
+	"data-twoslash-noerrors"?: string
 }
 
 /** props for blockquote elements */
@@ -156,17 +159,23 @@ const components = {
 	pre: (props: PreProps): JSX.Element => {
 		const lang = props["data-language"] || ""
 		const title = props["data-title"] || ""
+		const data = props["data-twoslash-annotations"]
+		const noerrors = typeof props["data-twoslash-noerrors"] === "string"
+		const active = Boolean(data || noerrors)
 		return (
-			<CodeBlock lang={lang} title={title || undefined}>
-				<pre
-					{...props}
-					style={{
-						margin: 0,
-						padding: 0,
-						background: "transparent",
-						fontFamily: "var(--font-mono), ui-monospace, monospace",
-					}}
-				/>
+			<CodeBlock lang={lang} title={title || undefined} lines={active}>
+				<>
+					<pre
+						{...props}
+						style={{
+							margin: 0,
+							padding: 0,
+							background: "transparent",
+							fontFamily: "var(--font-mono), ui-monospace, monospace",
+						}}
+					/>
+					{active ? <Twoslash data={data} noerrors={noerrors} /> : null}
+				</>
 			</CodeBlock>
 		)
 	},
