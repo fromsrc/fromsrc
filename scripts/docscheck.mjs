@@ -63,8 +63,22 @@ function anchorlinks(text) {
 		.filter(Boolean);
 }
 
+function doclinks(text) {
+	return [...text.matchAll(/\[[^\]]+\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g)]
+		.map((match) => (match[1] ?? "").trim())
+		.filter((target) => target.startsWith("/docs"));
+}
+
+function route(file) {
+	const relative = file.slice(docsroot.length + 1).replace(/\\/g, "/");
+	if (relative === "index.mdx") return "/docs";
+	if (relative.endsWith("/index.mdx")) return `/docs/${relative.slice(0, -"/index.mdx".length)}`;
+	return `/docs/${relative.slice(0, -".mdx".length)}`;
+}
+
 const issues = [];
 const list = await files(docsroot);
+const routes = new Set(list.map(route));
 
 for (const file of list) {
 	const raw = await readFile(file, "utf8");
@@ -82,6 +96,11 @@ for (const file of list) {
 	const seen = new Set(headingids(clean));
 	for (const target of anchorlinks(clean)) {
 		if (!seen.has(target)) issues.push(`${name}: missing anchor target #${target}`);
+	}
+	for (const target of doclinks(clean)) {
+		const index = target.search(/[?#]/);
+		const pathname = (index === -1 ? target : target.slice(0, index)).replace(/\/+$/, "") || "/docs";
+		if (!routes.has(pathname)) issues.push(`${name}: missing docs route ${pathname}`);
 	}
 }
 
