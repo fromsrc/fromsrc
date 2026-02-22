@@ -3,18 +3,9 @@
 import { memo, useCallback, useEffect, useState } from "react"
 import type { JSX } from "react"
 
-/**
- * Theme preference value
- */
 export type Theme = "light" | "dark" | "system"
 
-/**
- * Props for the ThemeToggle component
- */
 export interface ThemeToggleProps {
-	/**
-	 * Initial theme when no preference is stored
-	 */
 	defaultTheme?: Theme
 }
 

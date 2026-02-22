@@ -4,13 +4,8 @@ import { type JSX, type ReactNode, useCallback, useEffect, useRef, useState } fr
 import { useEscapeKey } from "../hooks/escapekey"
 import { useScrollLock } from "../hooks/scrolllock"
 
-/**
- * Props for the Zoom component.
- */
 export interface ZoomProps {
-	/** Content to display as the trigger and zoomed view. */
 	children: ReactNode
-	/** Optional CSS class for the trigger button. */
 	className?: string
 }
 
