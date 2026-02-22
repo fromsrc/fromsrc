@@ -4,6 +4,13 @@ import { gzipSync } from "node:zlib";
 
 const list = [
 	{
+		name: "core",
+		code: "import { defineContent, z } from 'fromsrc'; export default defineContent({dir:'docs',schema:z.object({title:z.string()})});",
+		max: 130000,
+		maxgzip: 37000,
+		block: ["next/link", "next/image", "next/navigation", "@tanstack/react-router", "@remix-run/react"],
+	},
+	{
 		name: "readtime",
 		code: "import { calcReadTime } from 'fromsrc/readtime'; export default calcReadTime('a b c');",
 		max: 250,
