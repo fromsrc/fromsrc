@@ -1,4 +1,4 @@
-import { access, mkdtemp, rm } from "node:fs/promises";
+import { access, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
@@ -94,6 +94,18 @@ for (const item of runs) {
 		} catch {
 			issues.push(`${item.framework}: missing ${file}`);
 		}
+	}
+	try {
+		const raw = await readFile(join(temp, item.name, "package.json"), "utf8");
+		const parsed = JSON.parse(raw);
+		if (parsed?.scripts?.typecheck !== "tsc --noEmit") {
+			issues.push(`${item.framework}: package.json missing typecheck script`);
+		}
+		if (parsed?.devDependencies?.["@types/react-dom"] !== "^19.0.0") {
+			issues.push(`${item.framework}: package.json missing @types/react-dom`);
+		}
+	} catch {
+		issues.push(`${item.framework}: package.json unreadable`);
 	}
 }
 
