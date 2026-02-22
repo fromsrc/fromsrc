@@ -28,6 +28,8 @@ const blocked = [
 	"lucide-react",
 ];
 
+const blockednode = ["fs", "path", "child_process", "worker_threads", "module", "os", "crypto"];
+
 const externalcache = new Map();
 const issues = new Set();
 const resolvelocal = createresolver();
@@ -38,6 +40,8 @@ function addissue(file, target, entry) {
 
 function isblocked(target) {
 	if (target.endsWith(".css")) return true;
+	if (target.startsWith("node:")) return true;
+	if (blockednode.includes(target)) return true;
 	for (const item of blocked) {
 		if (target === item || target.startsWith(`${item}/`)) return true;
 	}
