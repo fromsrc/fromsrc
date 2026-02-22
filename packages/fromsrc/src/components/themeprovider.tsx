@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
+import type { ReactNode } from "react"
 
 export type ThemeMode = "light" | "dark" | "system"
 
@@ -11,13 +12,17 @@ export type ThemeContextValue = {
 }
 
 export type ThemeProviderProps = {
-	children: React.ReactNode
+	children: ReactNode
 	defaultTheme?: ThemeMode
 	storageKey?: string
 	attribute?: string
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
+
+function istheme(value: string | null): value is ThemeMode {
+	return value === "light" || value === "dark" || value === "system"
+}
 
 function resolve(theme: ThemeMode): "light" | "dark" {
 	if (theme === "system") {
@@ -34,7 +39,8 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
 	const [theme, setTheme] = useState<ThemeMode>(() => {
 		if (typeof window === "undefined") return defaultTheme
-		return (localStorage.getItem(storageKey) as ThemeMode) ?? defaultTheme
+		const stored = localStorage.getItem(storageKey)
+		return istheme(stored) ? stored : defaultTheme
 	})
 	const [resolved, setResolved] = useState<"light" | "dark">(() => {
 		if (typeof window === "undefined") return "light"
