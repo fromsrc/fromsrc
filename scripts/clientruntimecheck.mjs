@@ -1,6 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import ts from "typescript";
+import { parseimports } from "./imports.mjs";
 
 const root = process.cwd();
 const src = path.join(root, "packages", "fromsrc", "src");
@@ -9,52 +9,6 @@ const entry = path.join(src, "client.ts");
 const localcache = new Map();
 const importcache = new Map();
 const issues = new Set();
-
-function parseimports(text) {
-	const targets = new Set();
-	const file = ts.createSourceFile("input.tsx", text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-	function visit(node) {
-		if (ts.isImportDeclaration(node)) {
-			const target = literal(node.moduleSpecifier);
-			if (target && !importistype(node.importClause)) targets.add(target);
-		}
-		if (ts.isExportDeclaration(node)) {
-			const target = node.moduleSpecifier ? literal(node.moduleSpecifier) : null;
-			if (target && !node.isTypeOnly) targets.add(target);
-		}
-		if (ts.isCallExpression(node)) {
-			if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
-				const target = node.arguments[0] ? literal(node.arguments[0]) : null;
-				if (target) targets.add(target);
-			}
-			if (ts.isIdentifier(node.expression) && node.expression.text === "require") {
-				const target = node.arguments[0] ? literal(node.arguments[0]) : null;
-				if (target) targets.add(target);
-			}
-		}
-		ts.forEachChild(node, visit);
-	}
-	visit(file);
-	return Array.from(targets);
-}
-
-function literal(node) {
-	return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node) ? node.text : null;
-}
-
-function importistype(clause) {
-	if (!clause) return false;
-	if (clause.isTypeOnly) return true;
-	const named = clause.namedBindings;
-	if (!named || !ts.isNamedImports(named)) return false;
-	if (!clause.name && named.elements.length > 0) {
-		for (const item of named.elements) {
-			if (!item.isTypeOnly) return false;
-		}
-		return true;
-	}
-	return false;
-}
 
 async function fileexists(file) {
 	try {
