@@ -66,7 +66,9 @@ for (const name of needed) {
 if (!manifest.includes("resources:")) issues.push("manifest resources capability missing");
 if (!manifest.includes("listChanged: false")) issues.push("manifest listChanged missing");
 if (!ops.includes("fromsrc://docs/{slug}")) issues.push("resource template missing");
-if (!rpc.includes("regex(/^$|^")) issues.push("slug schema missing");
+if (!rpc.includes("export const slug =")) issues.push("slug schema missing");
+if (!rpc.includes("[a-z0-9_-]")) issues.push("slug schema missing underscore support");
+if (!rpc.includes("export const page = z.object({ slug })")) issues.push("page schema not bound to slug schema");
 
 if (issues.length > 0) {
 	console.error("x mcp contract validation failed");
