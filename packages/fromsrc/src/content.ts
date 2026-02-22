@@ -591,6 +591,7 @@ function sectionOrder(pages: string[] | undefined): Map<string, number> {
 
 function groupkey(slug: string): string {
 	if (!slug || slug === "index") return ""
+	if (!slug.includes("/")) return ""
 	const [head] = slug.split("/")
 	if (!head || head === "index") return ""
 	return head
