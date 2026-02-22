@@ -172,6 +172,16 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 				intro.items.push(doc)
 			}
 		}
+		const [manualMeta, componentsMeta, apiMeta, examplesMeta] = await Promise.all([
+			loadMeta(join(config.dir, "manual")),
+			loadMeta(join(config.dir, "components")),
+			loadMeta(join(config.dir, "api")),
+			loadMeta(join(config.dir, "examples")),
+		])
+		manual.items = sortByMeta(manual.items, manualMeta?.pages, "manual/")
+		components.items = sortByMeta(components.items, componentsMeta?.pages, "components/")
+		apis.items = sortByMeta(apis.items, apiMeta?.pages, "api/")
+		examples.items = sortByMeta(examples.items, examplesMeta?.pages, "examples/")
 
 		const filtered = sections.filter((s) => s.items.length > 0)
 		if (isProduction()) {
@@ -425,6 +435,16 @@ export async function getNavigation(docsDir: string): Promise<{ title: string; i
 			intro.items.push(doc)
 		}
 	}
+	const [manualMeta, componentsMeta, apiMeta, examplesMeta] = await Promise.all([
+		loadMeta(join(docsDir, "manual")),
+		loadMeta(join(docsDir, "components")),
+		loadMeta(join(docsDir, "api")),
+		loadMeta(join(docsDir, "examples")),
+	])
+	manual.items = sortByMeta(manual.items, manualMeta?.pages, "manual/")
+	components.items = sortByMeta(components.items, componentsMeta?.pages, "components/")
+	apis.items = sortByMeta(apis.items, apiMeta?.pages, "api/")
+	examples.items = sortByMeta(examples.items, examplesMeta?.pages, "examples/")
 
 	return sections.filter((s) => s.items.length > 0)
 }

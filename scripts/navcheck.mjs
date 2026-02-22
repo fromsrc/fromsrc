@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { baseSchema } from "../packages/fromsrc/src/schema.ts";
 import { defineContent, getNavigation as getnav } from "../packages/fromsrc/src/content.ts";
+import { loadMeta } from "../packages/fromsrc/src/meta.ts";
 
 const docsdir = join(process.cwd(), "docs");
 const content = defineContent({ dir: docsdir, schema: baseSchema });
@@ -20,6 +21,14 @@ for (const title of localtitles) {
 	const left = local.find((item) => item.title === title)?.items.length ?? 0;
 	const right = exported.find((item) => item.title === title)?.items.length ?? 0;
 	if (left !== right) issues.push(`navigation item count mismatch for ${title}: ${left} vs ${right}`);
+}
+
+const manualmeta = await loadMeta(join(docsdir, "manual"));
+const manualpages = (manualmeta?.pages ?? []).filter((item) => item !== "index");
+const expected = ["manual/index", ...manualpages.map((item) => `manual/${item}`)];
+const actual = local.find((item) => item.title === "manual")?.items.map((item) => item.slug) ?? [];
+if (expected.length > 0 && expected.join("|") !== actual.join("|")) {
+	issues.push("manual navigation order mismatch with docs/manual/_meta.json");
 }
 
 if (issues.length > 0) {
