@@ -7,32 +7,47 @@ const frameworks = [
 	{
 		name: "next.js",
 		files: ["package.json", "next.config.ts", "app/layout.tsx", "app/docs/[[...slug]]/page.tsx"],
-		checks: [],
+		checks: [{ file: "tsconfig.json", text: "\"jsx\": \"preserve\"" }],
 	},
 	{
 		name: "react-router",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [{ file: "src/main.tsx", text: "fromsrc/react-router" }],
+		checks: [
+			{ file: "src/main.tsx", text: "fromsrc/react-router" },
+			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+		],
 	},
 	{
 		name: "vite",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [{ file: "src/main.tsx", text: "fromsrc/vite" }],
+		checks: [
+			{ file: "src/main.tsx", text: "fromsrc/vite" },
+			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+		],
 	},
 	{
 		name: "tanstack",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [{ file: "src/main.tsx", text: "fromsrc/tanstack" }],
+		checks: [
+			{ file: "src/main.tsx", text: "fromsrc/tanstack" },
+			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+		],
 	},
 	{
 		name: "remix",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
-		checks: [{ file: "src/main.tsx", text: "fromsrc/remix" }],
+		checks: [
+			{ file: "src/main.tsx", text: "fromsrc/remix" },
+			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+		],
 	},
 	{
 		name: "astro",
 		files: ["package.json", "astro.config.mjs", "src/pages/index.astro", "src/styles/global.css"],
-		checks: [{ file: "src/pages/index.astro", text: "fromsrc/astro" }],
+		checks: [
+			{ file: "src/pages/index.astro", text: "fromsrc/astro" },
+			{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+		],
 	},
 ];
 

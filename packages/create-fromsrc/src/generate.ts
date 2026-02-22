@@ -43,7 +43,7 @@ export function generate(options: Options) {
 	mkdirSync(target, { recursive: true })
 
 	write(target, "package.json", packagejson(name, framework))
-	write(target, "tsconfig.json", tsconfig)
+	write(target, "tsconfig.json", tsconfig(framework))
 	write(target, ".gitignore", gitignore)
 	write(target, "content/docs/index.mdx", welcomemdx)
 

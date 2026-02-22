@@ -116,31 +116,33 @@ const config: NextConfig = {}
 export default config
 `
 
-export const tsconfig = JSON.stringify(
-	{
-		compilerOptions: {
-			target: "ES2017",
-			lib: ["dom", "dom.iterable", "esnext"],
-			allowJs: true,
-			skipLibCheck: true,
-			strict: true,
-			noEmit: true,
-			esModuleInterop: true,
-			module: "esnext",
-			moduleResolution: "bundler",
-			resolveJsonModule: true,
-			isolatedModules: true,
-			jsx: "preserve",
-			incremental: true,
-			plugins: [{ name: "next" }],
-			paths: { "@/*": ["./*"] },
+export function tsconfig(framework: Framework) {
+	return JSON.stringify(
+		{
+			compilerOptions: {
+				target: "ES2017",
+				lib: ["dom", "dom.iterable", "esnext"],
+				allowJs: true,
+				skipLibCheck: true,
+				strict: true,
+				noEmit: true,
+				esModuleInterop: true,
+				module: "esnext",
+				moduleResolution: "bundler",
+				resolveJsonModule: true,
+				isolatedModules: true,
+				jsx: framework === "next.js" ? "preserve" : "react-jsx",
+				incremental: true,
+				plugins: framework === "next.js" ? [{ name: "next" }] : [],
+				paths: { "@/*": ["./*"] },
+			},
+			include: ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+			exclude: ["node_modules"],
 		},
-		include: ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-		exclude: ["node_modules"],
-	},
-	null,
-	"\t",
-)
+		null,
+		"\t",
+	)
+}
 
 export const tailwindconfig = `import type { Config } from "tailwindcss"
 
@@ -265,12 +267,65 @@ if (root) {
 `
 }
 
-export const browserapp = `export function app() {
+export const browserapp = `const docs = [
+\t{
+\t\tslug: "/docs",
+\t\ttitle: "getting started",
+\t\tdescription: "build composable docs with full control",
+\t\tsections: [
+\t\t\t{ id: "install", title: "install", body: "bun add fromsrc" },
+\t\t\t{ id: "layout", title: "layout", body: "split primitives and own your ui." },
+\t\t],
+\t},
+\t{
+\t\tslug: "/docs/next",
+\t\ttitle: "next.js setup",
+\t\tdescription: "wire fromsrc into app routes",
+\t\tsections: [
+\t\t\t{ id: "adapter", title: "adapter", body: "mount AdapterProvider in your root shell." },
+\t\t\t{ id: "content", title: "content", body: "keep docs in content/docs and map routes." },
+\t\t],
+\t},
+]
+
+function current() {
+\tconst path = window.location.pathname === "/" ? "/docs" : window.location.pathname
+\treturn docs.find((doc) => doc.slug === path) ?? docs[0]
+}
+
+export function app() {
+\tconst doc = current()
 \treturn (
-\t\t<main style={{ padding: 24, fontFamily: "system-ui" }}>
-\t\t\t<h1>fromsrc</h1>
-\t\t\t<p>edit files in src/ to start building docs.</p>
-\t\t</main>
+\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh" }}>
+\t\t\t<aside style={{ borderRight: "1px solid #1c1c1c", padding: "24px 16px" }}>
+\t\t\t\t{docs.map((item) => (
+\t\t\t\t\t<a
+\t\t\t\t\t\tkey={item.slug}
+\t\t\t\t\t\thref={item.slug}
+\t\t\t\t\t\tstyle={{ display: "block", marginBottom: 8, color: item.slug === doc.slug ? "#fafafa" : "#737373" }}
+\t\t\t\t\t>
+\t\t\t\t\t\t{item.title}
+\t\t\t\t\t</a>
+\t\t\t\t))}
+\t\t\t</aside>
+\t\t\t<main style={{ padding: 24 }}>
+\t\t\t\t<h1 style={{ marginBottom: 8 }}>{doc.title}</h1>
+\t\t\t\t<p style={{ color: "#737373", marginBottom: 24 }}>{doc.description}</p>
+\t\t\t\t{doc.sections.map((section) => (
+\t\t\t\t\t<section key={section.id} id={section.id} style={{ marginBottom: 20 }}>
+\t\t\t\t\t\t<h2 style={{ marginBottom: 6 }}>{section.title}</h2>
+\t\t\t\t\t\t<p>{section.body}</p>
+\t\t\t\t\t</section>
+\t\t\t\t))}
+\t\t\t</main>
+\t\t\t<aside style={{ borderLeft: "1px solid #1c1c1c", padding: "24px 16px" }}>
+\t\t\t\t{doc.sections.map((section) => (
+\t\t\t\t\t<a key={section.id} href={\`#\${section.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
+\t\t\t\t\t\t{section.title}
+\t\t\t\t\t</a>
+\t\t\t\t))}
+\t\t\t</aside>
+\t\t</div>
 \t)
 }
 `

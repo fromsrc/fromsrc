@@ -17,7 +17,11 @@ export function ask(question: string, fallback: string): Promise<string> {
 	})
 }
 
-export function select(question: string, options: string[], fallback: number): Promise<string> {
+export function select<T extends string>(
+	question: string,
+	options: readonly T[],
+	fallback: number,
+): Promise<T> {
 	return new Promise((resolve) => {
 		console.log(`\n${question}`)
 		for (let i = 0; i < options.length; i++) {
