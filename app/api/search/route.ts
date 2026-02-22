@@ -16,6 +16,11 @@ interface entry {
 	value: row[]
 }
 
+interface cacheentry<T> {
+	at: number
+	value: T
+}
+
 interface row {
 	slug: string
 	title: string
@@ -26,16 +31,17 @@ interface row {
 	score: number
 }
 
-interface docentry {
-	at: number
-	all: Awaited<ReturnType<typeof getAllDocs>>
-	search: Awaited<ReturnType<typeof getSearchDocs>>
+interface computev {
+	rows: row[]
+	docsHit: boolean
 }
 
 const cache = new Map<string, entry>()
-const inflight = new Map<string, Promise<row[]>>()
-let docsCache: docentry | null = null
-let docsInflight: Promise<docentry> | null = null
+const inflight = new Map<string, Promise<computev>>()
+let allCache: cacheentry<Awaited<ReturnType<typeof getAllDocs>>> | null = null
+let searchCache: cacheentry<Awaited<ReturnType<typeof getSearchDocs>>> | null = null
+let allInflight: Promise<Awaited<ReturnType<typeof getAllDocs>>> | null = null
+let searchInflight: Promise<Awaited<ReturnType<typeof getSearchDocs>>> | null = null
 const ttl = 1000 * 60 * 5
 const max = 200
 const cachecontrol = "public, max-age=60, s-maxage=300, stale-while-revalidate=86400"
@@ -63,52 +69,69 @@ function set(key: string, value: row[]): row[] {
 	return value
 }
 
-function docsvalid(): boolean {
-	return Boolean(docsCache && Date.now() - docsCache.at <= ttl)
+function valid<T>(entry: cacheentry<T> | null): boolean {
+	return Boolean(entry && Date.now() - entry.at <= ttl)
 }
 
-async function loaddocs(): Promise<docentry> {
-	if (docsvalid() && docsCache) return docsCache
-	const pending = docsInflight ?? (async () => ({
-		at: Date.now(),
-		all: await getAllDocs(),
-		search: await getSearchDocs(),
-	}))()
-	if (!docsInflight) docsInflight = pending
+function doccachehit(query: string): boolean {
+	return query ? valid(searchCache) : valid(allCache)
+}
+
+async function loadall(): Promise<{ value: Awaited<ReturnType<typeof getAllDocs>>; hit: boolean }> {
+	if (valid(allCache) && allCache) return { value: allCache.value, hit: true }
+	const pending = allInflight ?? getAllDocs()
+	if (!allInflight) allInflight = pending
 	const value = await pending.finally(() => {
-		if (docsInflight === pending) docsInflight = null
+		if (allInflight === pending) allInflight = null
 	})
-	docsCache = value
-	return value
+	allCache = { at: Date.now(), value }
+	return { value, hit: false }
 }
 
-async function compute(query: string | undefined, limit: number): Promise<row[]> {
-	const docs = await loaddocs()
+async function loadsearch(): Promise<{ value: Awaited<ReturnType<typeof getSearchDocs>>; hit: boolean }> {
+	if (valid(searchCache) && searchCache) return { value: searchCache.value, hit: true }
+	const pending = searchInflight ?? getSearchDocs()
+	if (!searchInflight) searchInflight = pending
+	const value = await pending.finally(() => {
+		if (searchInflight === pending) searchInflight = null
+	})
+	searchCache = { at: Date.now(), value }
+	return { value, hit: false }
+}
+
+async function compute(query: string | undefined, limit: number): Promise<computev> {
 	if (!query) {
-		return docs.all.slice(0, limit).map((doc) => ({
-			slug: doc.slug,
-			title: doc.title,
-			description: doc.description,
-			snippet: undefined,
-			anchor: undefined,
-			score: 0,
-		}))
+		const docs = await loadall()
+		return {
+			rows: docs.value.slice(0, limit).map((doc) => ({
+				slug: doc.slug,
+				title: doc.title,
+				description: doc.description,
+				snippet: undefined,
+				anchor: undefined,
+				score: 0,
+			})),
+			docsHit: docs.hit,
+		}
 	}
-	const results = await localSearch.search(query, docs.search, limit)
-	return results.map((result) => ({
-		slug: result.doc.slug,
-		title: result.doc.title,
-		description: result.doc.description,
-		snippet: result.snippet,
-		anchor: result.anchor,
-		heading: result.heading,
-		score: result.score,
-	}))
+	const docs = await loadsearch()
+	const results = await localSearch.search(query, docs.value, limit)
+	return {
+		rows: results.map((result) => ({
+			slug: result.doc.slug,
+			title: result.doc.title,
+			description: result.doc.description,
+			snippet: result.snippet,
+			anchor: result.anchor,
+			heading: result.heading,
+			score: result.score,
+		})),
+		docsHit: docs.hit,
+	}
 }
 
 export async function GET(request: Request) {
 	const started = performance.now()
-	const docsCacheBefore = docsvalid()
 	const url = new URL(request.url)
 	const parsed = schema.safeParse({
 		q: url.searchParams.get("q") ?? undefined,
@@ -128,7 +151,7 @@ export async function GET(request: Request) {
 			{
 				"Server-Timing": `search;dur=${duration.toFixed(2)}`,
 				"X-Search-Cache": "hit",
-				"X-Search-Docs-Cache": docsCacheBefore ? "hit" : "miss",
+				"X-Search-Docs-Cache": doccachehit(query) ? "hit" : "miss",
 				"X-Search-Result-Count": String(cached.length),
 			},
 		)
@@ -136,19 +159,19 @@ export async function GET(request: Request) {
 
 	const pending = inflight.get(key) ?? compute(query || undefined, values.limit)
 	if (!inflight.has(key)) inflight.set(key, pending)
-	const results = await pending.finally(() => {
+	const computed = await pending.finally(() => {
 		if (inflight.get(key) === pending) inflight.delete(key)
 	})
 	const duration = performance.now() - started
 	return sendjsonwithheaders(
 		request,
-		set(key, results),
+		set(key, computed.rows),
 		cachecontrol,
 		{
 			"Server-Timing": `search;dur=${duration.toFixed(2)}`,
 			"X-Search-Cache": "miss",
-			"X-Search-Docs-Cache": docsCacheBefore ? "hit" : "miss",
-			"X-Search-Result-Count": String(results.length),
+			"X-Search-Docs-Cache": computed.docsHit ? "hit" : "miss",
+			"X-Search-Result-Count": String(computed.rows.length),
 		},
 	)
 }
