@@ -57,12 +57,12 @@ const cases = [
 	{
 		name: "cli-remix",
 		framework: "remix",
-		files: ["package.json", "index.html", "src/main.tsx"],
+		files: ["package.json", "vite.config.ts", "app/root.tsx", "app/routes/_index.tsx"],
 	},
 	{
 		name: "cli-astro",
 		framework: "astro",
-		files: ["package.json", "astro.config.mjs", "src/pages/index.astro"],
+		files: ["package.json", "astro.config.mjs", "src/pages/index.astro", "src/components/shell.tsx"],
 	},
 ]
 const runs = [];

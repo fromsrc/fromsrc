@@ -59,6 +59,34 @@ export function packagejson(name: string, framework: Framework): string {
 					astro: "^5.0.0",
 					"@astrojs/react": "^4.4.0",
 				},
+				devDependencies: {
+					...base.devDependencies,
+				},
+			},
+			null,
+			"\t",
+		)
+	}
+
+	if (framework === "remix") {
+		return JSON.stringify(
+			{
+				...base,
+				scripts: {
+					dev: "remix vite:dev",
+					build: "remix vite:build",
+					start: "remix-serve ./build/server/index.js",
+				},
+				dependencies: {
+					...base.dependencies,
+					"@remix-run/node": "^2.17.2",
+					"@remix-run/react": "^2.17.2",
+				},
+				devDependencies: {
+					...base.devDependencies,
+					"@remix-run/dev": "^2.17.2",
+					vite: "^7.1.12",
+				},
 			},
 			null,
 			"\t",
@@ -70,7 +98,7 @@ export function packagejson(name: string, framework: Framework): string {
 		"react-router": { "react-router-dom": "^7.0.0" },
 		vite: { vite: "^7.0.0" },
 		tanstack: { "@tanstack/react-router": "^1.0.0", vite: "^7.0.0" },
-		remix: { "@remix-run/react": "^2.0.0", vite: "^7.0.0" },
+		remix: {},
 		astro: {},
 	}
 
@@ -91,11 +119,7 @@ export function packagejson(name: string, framework: Framework): string {
 			build: "vite build",
 			start: "vite preview",
 		},
-		remix: {
-			dev: "vite",
-			build: "vite build",
-			start: "vite preview",
-		},
+		remix: {},
 		astro: {},
 	}
 
@@ -121,6 +145,44 @@ export default config
 `
 
 export function tsconfig(framework: Framework) {
+	if (framework === "astro") {
+		return JSON.stringify(
+			{
+				extends: "astro/tsconfigs/strict",
+				include: [".astro/types.d.ts", "**/*"],
+				exclude: ["dist"],
+			},
+			null,
+			"\t",
+		)
+	}
+
+	if (framework === "remix") {
+		return JSON.stringify(
+			{
+				compilerOptions: {
+					target: "ES2022",
+					lib: ["DOM", "DOM.Iterable", "ES2022"],
+					module: "ESNext",
+					moduleResolution: "Bundler",
+					jsx: "react-jsx",
+					types: ["@remix-run/node", "vite/client"],
+					strict: true,
+					resolveJsonModule: true,
+					noEmit: true,
+					allowJs: true,
+					esModuleInterop: true,
+					isolatedModules: true,
+					skipLibCheck: true,
+				},
+				include: ["**/*.ts", "**/*.tsx"],
+				exclude: ["node_modules"],
+			},
+			null,
+			"\t",
+		)
+	}
+
 	return JSON.stringify(
 		{
 			compilerOptions: {
@@ -357,13 +419,73 @@ export default defineConfig({
 `
 
 export const astropage = `---
-import { AdapterProvider, astroAdapter } from "fromsrc/astro"
+import { Shell } from "../components/shell"
 ---
 
-<AdapterProvider adapter={astroAdapter}>
-\t<main style="padding:24px;font-family:system-ui">
-\t\t<h1>fromsrc</h1>
-\t\t<p>edit files in src/pages/ to start building docs.</p>
-\t</main>
-</AdapterProvider>
+<Shell client:load />
+`
+
+export const astroenv = `/// <reference types="astro/client" />
+`
+
+export const astroshell = `import { AdapterProvider, astroAdapter } from "fromsrc/astro"
+
+export function Shell() {
+\treturn (
+\t\t<AdapterProvider adapter={astroAdapter}>
+\t\t\t<main style={{ padding: 24, fontFamily: "ui-monospace, monospace" }}>
+\t\t\t\t<h1>fromsrc</h1>
+\t\t\t\t<p>edit files in src/pages/ to start building docs.</p>
+\t\t\t</main>
+\t\t</AdapterProvider>
+\t)
+}
+`
+
+export const remixviteconfig = `import { vitePlugin as remix } from "@remix-run/dev"
+import { defineConfig } from "vite"
+
+export default defineConfig({
+\tplugins: [remix()],
+})
+`
+
+export const remixroot = `import {
+\tLinks,
+\tMeta,
+\tOutlet,
+\tScripts,
+\tScrollRestoration,
+} from "@remix-run/react"
+import { AdapterProvider, remixAdapter } from "fromsrc/remix"
+
+export default function Root() {
+\treturn (
+\t\t<html lang="en">
+\t\t\t<head>
+\t\t\t\t<meta charSet="utf-8" />
+\t\t\t\t<meta name="viewport" content="width=device-width, initial-scale=1" />
+\t\t\t\t<Meta />
+\t\t\t\t<Links />
+\t\t\t</head>
+\t\t\t<body>
+\t\t\t\t<AdapterProvider adapter={remixAdapter}>
+\t\t\t\t\t<Outlet />
+\t\t\t\t</AdapterProvider>
+\t\t\t\t<ScrollRestoration />
+\t\t\t\t<Scripts />
+\t\t\t</body>
+\t\t</html>
+\t)
+}
+`
+
+export const remixindex = `export default function Index() {
+\treturn (
+\t\t<main style={{ padding: 24 }}>
+\t\t\t<h1>fromsrc</h1>
+\t\t\t<p>edit app/routes/_index.tsx to start building docs.</p>
+\t\t</main>
+\t)
+}
 `

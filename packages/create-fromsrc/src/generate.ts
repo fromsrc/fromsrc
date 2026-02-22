@@ -3,7 +3,9 @@ import { join } from "node:path"
 import { docslayout, docspage, layout, metajson, page, welcomemdx } from "./pages"
 import {
 	astroconfig,
+	astroenv,
 	astropage,
+	astroshell,
 	browserapp,
 	browserentry,
 	gitignore,
@@ -12,6 +14,9 @@ import {
 	packagejson,
 	nextconfig,
 	postcssconfig,
+	remixindex,
+	remixroot,
+	remixviteconfig,
 	tailwindconfig,
 	tsconfig,
 	vitehtml,
@@ -63,7 +68,16 @@ export function generate(options: Options) {
 	if (framework === "astro") {
 		write(target, "astro.config.mjs", astroconfig)
 		write(target, "src/pages/index.astro", astropage)
+		write(target, "src/components/shell.tsx", astroshell)
 		write(target, "src/styles/global.css", globalscss)
+		write(target, "src/env.d.ts", astroenv)
+		return target
+	}
+
+	if (framework === "remix") {
+		write(target, "vite.config.ts", remixviteconfig)
+		write(target, "app/root.tsx", remixroot)
+		write(target, "app/routes/_index.tsx", remixindex)
 		return target
 	}
 
