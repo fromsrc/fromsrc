@@ -102,6 +102,10 @@ async function scanfile(file, entry, stack) {
 	let imports = externalcache.get(file);
 	if (!imports) {
 		const text = await fs.readFile(file, "utf8");
+		const trimmed = text.trimStart();
+		if (trimmed.startsWith("\"use client\"") || trimmed.startsWith("'use client'")) {
+			addissue(file, "use client directive", entry);
+		}
 		imports = parseimports(text);
 		externalcache.set(file, imports);
 	}
