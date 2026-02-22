@@ -53,6 +53,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
 
 export const docspage = `import { readFileSync } from "node:fs"
 import { join } from "node:path"
+import { MDXRemote } from "next-mdx-remote/rsc"
 
 interface Props {
 \tparams: Promise<{ slug?: string[] }>
@@ -90,7 +91,7 @@ export default async function DocPage({ params }: Props) {
 \treturn (
 \t\t<div className="prose">
 \t\t\t{title && <h1 className="text-2xl font-bold mb-6">{title}</h1>}
-\t\t\t<pre className="whitespace-pre-wrap text-sm text-muted">{body}</pre>
+\t\t\t<MDXRemote source={body} />
 \t\t</div>
 \t)
 }
