@@ -210,10 +210,16 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 					batch.map(async (doc) => {
 						const value = await get(doc.slug ? doc.slug.split("/") : [])
 						if (!value) return null
+						const title = typeof value.data.title === "string" && value.data.title.length > 0
+							? value.data.title
+							: doc.title
+						const description = typeof value.data.description === "string"
+							? value.data.description
+							: doc.description
 						return {
 							slug: doc.slug,
-							title: doc.title,
-							description: doc.description,
+							title,
+							description,
 							content: value.content,
 							headings: extractHeadings(value.content),
 						} satisfies SearchDoc
