@@ -2,6 +2,7 @@ import { type JSX, memo, useMemo } from "react"
 import { parseOpenApi, type OpenApiEndpoint, type OpenApiSpec } from "../openapi"
 import { Endpoint, Param, Response } from "./endpoint"
 import { Openapischema } from "./openapischema"
+import { OpenapiTags } from "./openapitags"
 
 export interface OpenapiProps {
 	spec: string | object
@@ -161,6 +162,8 @@ function OpenapiBase({ spec, tag, method, path, group = "none" }: OpenapiProps):
 
 	if (!parsed) return <p className="text-sm text-red-400">invalid openapi specification</p>
 	if (endpoints.length === 0) return <p className="text-sm text-muted">no endpoints found</p>
+	const list = groups(endpoints)
+	const items = list.map(([name, value]) => ({ name, id: tagid(name), count: value.length }))
 
 	return (
 		<section className="my-6" aria-label="openapi reference">
@@ -171,7 +174,8 @@ function OpenapiBase({ spec, tag, method, path, group = "none" }: OpenapiProps):
 			</header>
 			{group === "tag" ? (
 				<div className="space-y-8">
-					{groups(endpoints).map(([name, list]) => (
+					<OpenapiTags items={items} />
+					{list.map(([name, list]) => (
 						<section key={name} aria-labelledby={tagid(name)}>
 							<h3 id={tagid(name)} className="mb-2 flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-dim">
 								<span>{name}</span>

@@ -79,6 +79,8 @@ export type { EndpointProps, Method, ParamProps, ResponseProps } from "./compone
 export { Endpoint, Param, Response } from "./components/endpoint"
 export type { OpenapiProps } from "./components/openapi"
 export { Openapi } from "./components/openapi"
+export type { OpenapiTag, OpenapiTagsProps } from "./components/openapitags"
+export { OpenapiTags } from "./components/openapitags"
 export type { OpenapischemaProps } from "./components/openapischema"
 export { Openapischema } from "./components/openapischema"
 export type { ErrorMessageProps } from "./components/errormessage"
