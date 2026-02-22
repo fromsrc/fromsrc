@@ -1,7 +1,7 @@
 import { type ContentSource, createMcpHandler, generateMcpManifest, z } from "fromsrc"
-import { searchmaxquery } from "fromsrc/searchpolicy"
 import { siteurl } from "@/app/_lib/site"
 import { sendjson } from "@/app/api/_lib/json"
+import { init, method, page, protocol, rpcmethod, search, supported, toolcall, toollist } from "./rpc"
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content"
 
 const config = {
@@ -9,7 +9,6 @@ const config = {
 	version: "1.0.0",
 	baseUrl: siteurl(),
 }
-
 const source: ContentSource = {
 	async list() {
 		return getAllDocs()
@@ -25,22 +24,6 @@ const source: ContentSource = {
 }
 
 const handler = createMcpHandler(config, source)
-const method = z.object({ method: z.enum(["search_docs", "get_page", "list_pages", "tools/list", "tools/call"]) })
-const search = z.object({ query: z.string().trim().min(1).max(searchmaxquery) })
-const page = z.object({ slug: z.string().trim().min(1).max(300) })
-const toollist = z.object({ cursor: z.string().trim().min(1).optional() }).optional()
-const toolcall = z.object({
-	name: z.string().trim().min(1).max(128),
-	arguments: z.record(z.unknown()).optional(),
-})
-const rpcid = z.union([z.string(), z.number(), z.null()]).optional()
-const rpcmethod = z.object({
-	jsonrpc: z.literal("2.0"),
-	id: rpcid,
-	method: z.enum(["search_docs", "get_page", "list_pages", "tools/list", "tools/call"]),
-	params: z.unknown().optional(),
-})
-
 const cors = {
 	"Access-Control-Allow-Origin": "*",
 	"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -105,6 +88,26 @@ export async function POST(request: Request) {
 	}
 
 	switch (name) {
+		case "initialize": {
+			const request = init.safeParse(params)
+			if (!request.success) return jsonerror(-32602, "invalid params")
+			const value = request.data.protocolVersion
+			const selected = supported.has(value) ? value : protocol
+			return jsonrpc({
+				protocolVersion: selected,
+				capabilities: {
+					tools: { listChanged: false },
+				},
+				serverInfo: {
+					name: config.name,
+					version: config.version,
+				},
+			})
+		}
+		case "notifications/initialized":
+			return jsonrpc({ ok: true }, 202)
+		case "ping":
+			return jsonrpc({})
 		case "search_docs": {
 			const query = search.safeParse(params)
 			if (!query.success) return jsonerror(-32602, "invalid params")
