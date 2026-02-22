@@ -18,6 +18,10 @@ export interface ThemeToggleProps {
 	defaultTheme?: Theme
 }
 
+function istheme(value: string | null): value is Theme {
+	return value === "light" || value === "dark" || value === "system"
+}
+
 function resolves(theme: Theme): "light" | "dark" {
 	if (theme === "system") {
 		return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
@@ -30,8 +34,8 @@ function ThemeToggleBase({ defaultTheme = "dark" }: ThemeToggleProps): JSX.Eleme
 	const [resolved, setResolved] = useState<"light" | "dark" | null>(null)
 
 	useEffect(() => {
-		const stored = localStorage.getItem("theme") as Theme | null
-		const initial = stored ?? defaultTheme
+		const raw = localStorage.getItem("theme")
+		const initial = istheme(raw) ? raw : defaultTheme
 		setTheme(initial)
 		setResolved(resolves(initial))
 	}, [defaultTheme])

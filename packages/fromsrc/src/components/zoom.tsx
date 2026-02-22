@@ -20,6 +20,11 @@ export function Zoom({ children, className }: ZoomProps): JSX.Element {
 	const closeRef = useRef<HTMLButtonElement>(null)
 	const backdropRef = useRef<HTMLButtonElement>(null)
 
+	const isbutton = useCallback(
+		(value: HTMLButtonElement | null): value is HTMLButtonElement => value !== null,
+		[]
+	)
+
 	const close = useCallback((): void => {
 		setOpen(false)
 		triggerRef.current?.focus()
@@ -31,14 +36,14 @@ export function Zoom({ children, className }: ZoomProps): JSX.Element {
 
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLDivElement>): void => {
-			if (e.key === "Tab") {
-				e.preventDefault()
-				const focusable = [backdropRef.current, closeRef.current].filter(Boolean)
-				const current = document.activeElement
-				const index = focusable.indexOf(current as HTMLButtonElement)
-				const next = e.shiftKey
-					? focusable[(index - 1 + focusable.length) % focusable.length]
-					: focusable[(index + 1) % focusable.length]
+				if (e.key === "Tab") {
+					e.preventDefault()
+					const focusable = [backdropRef.current, closeRef.current].filter(isbutton)
+					const current = document.activeElement
+					const index = current instanceof HTMLButtonElement ? focusable.indexOf(current) : -1
+					const next = e.shiftKey
+						? focusable[(index - 1 + focusable.length) % focusable.length]
+						: focusable[(index + 1) % focusable.length]
 				next?.focus()
 			}
 		},
