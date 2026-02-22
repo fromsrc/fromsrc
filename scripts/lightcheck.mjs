@@ -52,6 +52,7 @@ function parseimports(text) {
 }
 
 function isblocked(target) {
+	if (target.endsWith(".css")) return true;
 	for (const item of blocked) {
 		if (target === item || target.startsWith(`${item}/`)) return true;
 	}
@@ -99,6 +100,11 @@ async function resolvelocal(base, target) {
 async function scanfile(file, entry, stack) {
 	if (stack.has(file)) return;
 	stack.add(file);
+	if (file.endsWith(".css")) {
+		addissue(file, "css side effect", entry);
+		stack.delete(file);
+		return;
+	}
 	let imports = externalcache.get(file);
 	if (!imports) {
 		const text = await fs.readFile(file, "utf8");
