@@ -27,6 +27,12 @@ interface TreeCacheEntry {
 	etag?: string
 }
 
+interface RawCacheEntry {
+	content: string
+	data: Record<string, unknown>
+	etag?: string
+}
+
 const TTL = 5 * 60 * 1000
 
 function createCache<T>() {
@@ -64,6 +70,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 	const searchCache = createCache<SearchDoc[]>()
 	const treeCache = createCache<TreeCacheEntry>()
 	const pathCache = createCache<Record<string, string>>()
+	const rawCache = createCache<RawCacheEntry>()
 
 	function rawUrl(filepath: string): string {
 		return `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${branch}/${filepath}`
@@ -190,11 +197,27 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 			if (seen.has(candidate)) continue
 			seen.add(candidate)
 			try {
-				const res = await fetch(rawUrl(candidate), { headers })
+				const url = rawUrl(candidate)
+				const cachedRaw = rawCache.get(url)
+				const requestHeaders = { ...headers }
+				if (cachedRaw?.etag) {
+					requestHeaders["If-None-Match"] = cachedRaw.etag
+				}
+				const res = await fetch(url, { headers: requestHeaders })
+				if (res.status === 304 && cachedRaw) {
+					const result = { content: cachedRaw.content, data: cachedRaw.data }
+					fileCache.set(cacheKey, result)
+					return result
+				}
 				if (!res.ok) continue
 				const raw = await res.text()
 				const { content, data } = matter(raw)
 				const result = { content, data }
+				rawCache.set(url, {
+					content,
+					data,
+					etag: res.headers.get("etag") ?? undefined,
+				})
 				fileCache.set(cacheKey, result)
 				return result
 			} catch (error) {
