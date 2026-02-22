@@ -80,6 +80,9 @@ for (const item of cases) {
 }
 const runalias = await run(["--name", "cli-alias-rr", "--framework", "rr", "--yes"]);
 const runaliasfull = await run(["--name", "cli-alias-reactrouter", "--framework", "reactrouter", "--yes"]);
+const runaliasnextjs = await run(["--name", "cli-alias-nextjs", "--framework", "nextjs", "--yes"]);
+const runaliastanstack = await run(["--name", "cli-alias-tanstackstart", "--framework", "tanstackstart", "--yes"]);
+const runaliasts = await run(["--name", "cli-alias-ts", "--framework", "ts", "--yes"]);
 
 const issues = [];
 const caseframeworks = [...new Set(cases.map((item) => item.framework))];
@@ -138,6 +141,30 @@ try {
 	await access(join(temp, "cli-alias-reactrouter", "src", "main.tsx"));
 } catch {
 	issues.push("alias reactrouter: missing src/main.tsx");
+}
+if (runaliasnextjs.code !== 0) {
+	issues.push(`alias nextjs: cli exited with ${runaliasnextjs.code}`);
+}
+try {
+	await access(join(temp, "cli-alias-nextjs", "next.config.ts"));
+} catch {
+	issues.push("alias nextjs: missing next.config.ts");
+}
+if (runaliastanstack.code !== 0) {
+	issues.push(`alias tanstackstart: cli exited with ${runaliastanstack.code}`);
+}
+try {
+	await access(join(temp, "cli-alias-tanstackstart", "src", "main.tsx"));
+} catch {
+	issues.push("alias tanstackstart: missing src/main.tsx");
+}
+if (runaliasts.code !== 0) {
+	issues.push(`alias ts: cli exited with ${runaliasts.code}`);
+}
+try {
+	await access(join(temp, "cli-alias-ts", "src", "main.tsx"));
+} catch {
+	issues.push("alias ts: missing src/main.tsx");
 }
 if (runcase.code !== 0) {
 	issues.push(`case-insensitive next.js: cli exited with ${runcase.code}`);
@@ -210,6 +237,9 @@ if (issues.length > 0) {
 	}
 	if (runalias.err.trim()) console.error(runalias.err.trim());
 	if (runaliasfull.err.trim()) console.error(runaliasfull.err.trim());
+	if (runaliasnextjs.err.trim()) console.error(runaliasnextjs.err.trim());
+	if (runaliastanstack.err.trim()) console.error(runaliastanstack.err.trim());
+	if (runaliasts.err.trim()) console.error(runaliasts.err.trim());
 	if (runcase.err.trim()) console.error(runcase.err.trim());
 	if (runhelp.err.trim()) console.error(runhelp.err.trim());
 	if (runlist.err.trim()) console.error(runlist.err.trim());
