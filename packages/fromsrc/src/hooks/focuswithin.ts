@@ -15,7 +15,7 @@ export function useFocusWithin<T extends HTMLElement>(): [
 
 		const onFocusIn = () => setFocused(true)
 		const onFocusOut = (e: FocusEvent) => {
-			if (!el.contains(e.relatedTarget as Node)) setFocused(false)
+			if (!(e.relatedTarget instanceof Node) || !el.contains(e.relatedTarget)) setFocused(false)
 		}
 
 		el.addEventListener("focusin", onFocusIn)

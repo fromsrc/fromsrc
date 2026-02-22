@@ -2,17 +2,11 @@
 
 import { type KeyboardEvent, memo, type ReactNode, useCallback, useState } from "react"
 
-/**
- * Container for file tree display
- */
 export interface FilesProps {
 	children: ReactNode
 	label?: string
 }
 
-/**
- * Root component for file tree structure
- */
 export const Files = memo(function Files({ children, label = "File tree" }: FilesProps): ReactNode {
 	return (
 		<div
@@ -25,17 +19,11 @@ export const Files = memo(function Files({ children, label = "File tree" }: File
 	)
 })
 
-/**
- * Props for individual file item
- */
 export interface FileProps {
 	name: string
 	icon?: ReactNode
 }
 
-/**
- * Leaf node representing a single file
- */
 export const File = memo(function File({ name, icon }: FileProps): ReactNode {
 	return (
 		<div
@@ -54,20 +42,18 @@ export const File = memo(function File({ name, icon }: FileProps): ReactNode {
 	)
 })
 
-/**
- * Props for folder item with expandable children
- */
 export interface FolderProps {
 	name: string
 	children?: ReactNode
 	defaultOpen?: boolean
 }
 
-/**
- * Expandable folder node containing child items
- */
 export function Folder({ name, children, defaultOpen = false }: FolderProps): ReactNode {
 	const [open, setOpen] = useState(defaultOpen)
+
+	const toelement = useCallback((value: Element | null | undefined): HTMLElement | null => {
+		return value instanceof HTMLElement ? value : null
+	}, [])
 
 	const toggle = useCallback((): void => {
 		setOpen((prev) => !prev)
@@ -88,48 +74,48 @@ export function Folder({ name, children, defaultOpen = false }: FolderProps): Re
 						event.preventDefault()
 					}
 					break
-				case "ArrowDown":
-					{
-						const next = event.currentTarget.closest("[role=treeitem]")?.nextElementSibling
-						const focusable = next?.querySelector("button, [tabindex='0']") as HTMLElement | null
-						focusable?.focus()
-						event.preventDefault()
-					}
+					case "ArrowDown":
+						{
+							const next = event.currentTarget.closest("[role=treeitem]")?.nextElementSibling
+							const focusable = toelement(next?.querySelector("button, [tabindex='0']"))
+							focusable?.focus()
+							event.preventDefault()
+						}
 					break
-				case "ArrowUp":
-					{
-						const prev = event.currentTarget.closest("[role=treeitem]")?.previousElementSibling
-						const focusable = prev?.querySelector("button, [tabindex='0']") as HTMLElement | null
-						focusable?.focus()
-						event.preventDefault()
-					}
+					case "ArrowUp":
+						{
+							const prev = event.currentTarget.closest("[role=treeitem]")?.previousElementSibling
+							const focusable = toelement(prev?.querySelector("button, [tabindex='0']"))
+							focusable?.focus()
+							event.preventDefault()
+						}
 					break
 				case "Enter":
 				case " ":
 					toggle()
 					event.preventDefault()
 					break
-				case "Home":
-					{
-						const tree = event.currentTarget.closest("[role=tree]")
-						const first = tree?.querySelector("button, [tabindex='0']") as HTMLElement | null
-						first?.focus()
-						event.preventDefault()
-					}
+					case "Home":
+						{
+							const tree = event.currentTarget.closest("[role=tree]")
+							const first = toelement(tree?.querySelector("button, [tabindex='0']"))
+							first?.focus()
+							event.preventDefault()
+						}
 					break
-				case "End":
-					{
-						const tree = event.currentTarget.closest("[role=tree]")
-						const all = tree?.querySelectorAll("button, [tabindex='0']")
-						const last = all?.[all.length - 1] as HTMLElement | null
-						last?.focus()
-						event.preventDefault()
-					}
+					case "End":
+						{
+							const tree = event.currentTarget.closest("[role=tree]")
+							const all = tree?.querySelectorAll("button, [tabindex='0']")
+							const last = all && all.length > 0 ? toelement(all[all.length - 1] ?? null) : null
+							last?.focus()
+							event.preventDefault()
+						}
 					break
 			}
 		},
-		[open, toggle]
-	)
+			[open, toggle, toelement]
+		)
 
 	return (
 		<div role="treeitem" aria-expanded={open}>

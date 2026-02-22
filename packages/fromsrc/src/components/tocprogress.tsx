@@ -40,7 +40,8 @@ function TocProgressBase({ headings, className, activeClassName, lineColor }: To
 
 	useEffect(() => {
 		if (!active || !listRef.current) return
-		const link = listRef.current.querySelector(`a[href="#${active}"]`) as HTMLElement | null
+		const current = listRef.current.querySelector(`a[href="#${active}"]`)
+		const link = current instanceof HTMLElement ? current : null
 		if (!link) return
 		const top = listRef.current.getBoundingClientRect().top
 		const rect = link.getBoundingClientRect()

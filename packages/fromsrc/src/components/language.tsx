@@ -5,22 +5,20 @@ import type { JSX, KeyboardEvent } from "react"
 import { getNextIndex } from "../hooks/arrownav"
 import { IconCheck, IconLanguages } from "./icons"
 
-/**
- * Represents a locale option for language switching
- */
 export interface Locale {
 	code: string
 	name: string
 	flag?: string
 }
 
-/**
- * Props for the LanguageSwitch component
- */
 export interface LanguageSwitchProps {
 	current: string
 	locales: Locale[]
 	onChange?: (code: string) => void
+}
+
+function isnode(value: EventTarget | null): value is Node {
+	return value instanceof Node
 }
 
 function LanguageSwitchBase({ current, locales, onChange }: LanguageSwitchProps): JSX.Element {
@@ -33,7 +31,7 @@ function LanguageSwitchBase({ current, locales, onChange }: LanguageSwitchProps)
 
 	useEffect((): (() => void) => {
 		function handleClick(e: globalThis.MouseEvent): void {
-			if (ref.current && !ref.current.contains(e.target as Node)) {
+			if (ref.current && isnode(e.target) && !ref.current.contains(e.target)) {
 				setOpen(false)
 			}
 		}
