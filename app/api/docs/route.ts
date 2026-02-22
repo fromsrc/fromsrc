@@ -1,4 +1,5 @@
 import { getAllDocs } from "@/app/docs/_lib/content"
+import { sendjson } from "@/app/api/_lib/json"
 import { z } from "zod"
 
 const query = z.object({
@@ -11,6 +12,7 @@ const query = z.object({
 })
 
 export async function GET(request: Request) {
+	const cache = "public, max-age=300, s-maxage=1800, stale-while-revalidate=86400"
 	const url = new URL(request.url)
 	const parsed = query.safeParse({
 		page: url.searchParams.get("page") ?? undefined,
@@ -18,7 +20,7 @@ export async function GET(request: Request) {
 		category: url.searchParams.get("category") ?? undefined,
 	})
 	if (!parsed.success) {
-		return Response.json({ data: [], total: 0, page: 1, pages: 0 }, { status: 400 })
+		return sendjson(request, { data: [], total: 0, page: 1, pages: 0 }, cache, 400)
 	}
 	const { page, limit, category } = parsed.data
 
@@ -33,8 +35,5 @@ export async function GET(request: Request) {
 	const start = (page - 1) * limit
 	const data = docs.slice(start, start + limit)
 
-	return Response.json(
-		{ data, total, page, pages },
-		{ headers: { "Cache-Control": "public, max-age=300" } },
-	)
+	return sendjson(request, { data, total, page, pages }, cache)
 }
