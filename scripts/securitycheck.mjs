@@ -18,50 +18,81 @@ function gte(left, right) {
 }
 
 const base = process.cwd();
-const pkgPath = join(base, "node_modules", "next-mdx-remote", "package.json");
 const lockPath = join(base, "bun.lock");
 const mdxPath = join(base, "app", "docs", "_components", "mdx.tsx");
-const min = { major: 6, minor: 0, patch: 0 };
+const checks = [
+	{
+		name: "next-mdx-remote",
+		file: join(base, "node_modules", "next-mdx-remote", "package.json"),
+		min: { major: 6, minor: 0, patch: 0 },
+	},
+	{
+		name: "react",
+		file: join(base, "node_modules", "react", "package.json"),
+		min: { major: 19, minor: 2, patch: 4 },
+	},
+	{
+		name: "react-dom",
+		file: join(base, "node_modules", "react-dom", "package.json"),
+		min: { major: 19, minor: 2, patch: 4 },
+	},
+];
 let fail = false;
 
-try {
-	const pkgText = await readFile(pkgPath, "utf8");
-	const pkg = JSON.parse(pkgText);
-	const raw = typeof pkg.version === "string" ? pkg.version : "";
-	const parsed = parse(raw);
-	if (!parsed) {
-		console.error(`x next-mdx-remote version is invalid: ${raw}`);
+function label(min) {
+	return `${min.major}.${min.minor}.${min.patch}`;
+}
+
+async function checkpkg(name, file, min) {
+	try {
+		const text = await readFile(file, "utf8");
+		const pkg = JSON.parse(text);
+		const raw = typeof pkg.version === "string" ? pkg.version : "";
+		const parsed = parse(raw);
+		if (!parsed) {
+			console.error(`x ${name} version is invalid: ${raw}`);
+			fail = true;
+			return;
+		}
+		if (!gte(parsed, min)) {
+			console.error(`x ${name} ${raw} is below ${label(min)}`);
+			fail = true;
+			return;
+		}
+		console.log(`o ${name} ${raw} is patched`);
+	} catch {
+		console.error(`x ${name} is not installed`);
 		fail = true;
-	} else if (!gte(parsed, min)) {
-		console.error(`x next-mdx-remote ${raw} is below 6.0.0`);
-		fail = true;
-	} else {
-		console.log(`o next-mdx-remote ${raw} is patched`);
 	}
-} catch {
-	console.error("x next-mdx-remote is not installed");
-	fail = true;
+}
+
+function checklock(name, min, locktext) {
+	const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	const pattern = new RegExp(`"${escaped}"\\s*:\\s*\\["${escaped}@(\\d+\\.\\d+\\.\\d+)"`);
+	const match = locktext.match(pattern);
+	const raw = match?.[1] ?? "";
+	if (!raw) {
+		console.error(`x ${name} lock entry missing`);
+		fail = true;
+		return;
+	}
+	const parsed = parse(raw);
+	if (!parsed || !gte(parsed, min)) {
+		console.error(`x bun.lock contains ${name} below ${label(min)}`);
+		fail = true;
+		return;
+	}
+	console.log(`o bun.lock ${name} entry is patched (${raw})`);
+}
+
+for (const item of checks) {
+	await checkpkg(item.name, item.file, item.min);
 }
 
 try {
-	const lock = await readFile(lockPath, "utf8");
-	const matches = lock.matchAll(/next-mdx-remote@(\d+\.\d+\.\d+)/g);
-	const versions = Array.from(matches, (item) => item[1]).filter(Boolean);
-	if (versions.length === 0) {
-		console.error("x next-mdx-remote lock entry missing");
-		fail = true;
-	} else {
-		let stale = false;
-		for (const raw of versions) {
-			const parsed = parse(raw);
-			if (!parsed || !gte(parsed, min)) stale = true;
-		}
-		if (stale) {
-			console.error("x bun.lock contains next-mdx-remote below 6.0.0");
-			fail = true;
-		} else {
-			console.log(`o bun.lock next-mdx-remote entries are patched (${versions.length})`);
-		}
+	const locktext = await readFile(lockPath, "utf8");
+	for (const item of checks) {
+		checklock(item.name, item.min, locktext);
 	}
 } catch {
 	console.error("x bun.lock missing");
