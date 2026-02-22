@@ -1,18 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { adapters } from "./frameworkset.mjs";
 
 const root = process.cwd();
 const src = join(root, "packages", "fromsrc", "src");
 const docs = join(root, "docs", "frameworks.mdx");
-
-const adapters = [
-	{ key: "next", file: "next.ts", name: "nextAdapter", path: "fromsrc/next" },
-	{ key: "react-router", file: "reactrouter.ts", name: "reactRouterAdapter", path: "fromsrc/react-router" },
-	{ key: "vite", file: "vite.ts", name: "viteAdapter", path: "fromsrc/vite" },
-	{ key: "tanstack", file: "tanstack.ts", name: "tanstackAdapter", path: "fromsrc/tanstack" },
-	{ key: "remix", file: "remix.ts", name: "remixAdapter", path: "fromsrc/remix" },
-	{ key: "astro", file: "astro.ts", name: "astroAdapter", path: "fromsrc/astro" },
-];
 
 const shared = ["AdapterProvider", "AdapterContext", "createadapter", "useAdapter"];
 const issues = [];

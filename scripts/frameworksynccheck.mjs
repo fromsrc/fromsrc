@@ -16,7 +16,7 @@ const files = [
 	},
 	{
 		path: "scripts/adaptercheck.mjs",
-		expect: adapterpaths,
+		expect: ['import { adapters } from "./frameworkset.mjs";'],
 	},
 	{
 		path: "docs/frameworks.mdx",

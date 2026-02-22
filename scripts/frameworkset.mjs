@@ -9,6 +9,15 @@ export const adapterpaths = [
 	"fromsrc/astro",
 ];
 
+export const adapters = [
+	{ key: "next", file: "next.ts", name: "nextAdapter", path: "fromsrc/next" },
+	{ key: "react-router", file: "reactrouter.ts", name: "reactRouterAdapter", path: "fromsrc/react-router" },
+	{ key: "vite", file: "vite.ts", name: "viteAdapter", path: "fromsrc/vite" },
+	{ key: "tanstack", file: "tanstack.ts", name: "tanstackAdapter", path: "fromsrc/tanstack" },
+	{ key: "remix", file: "remix.ts", name: "remixAdapter", path: "fromsrc/remix" },
+	{ key: "astro", file: "astro.ts", name: "astroAdapter", path: "fromsrc/astro" },
+];
+
 export const manuals = [
 	{
 		name: "next.js",
