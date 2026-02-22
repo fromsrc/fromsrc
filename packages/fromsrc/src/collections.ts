@@ -21,7 +21,7 @@ interface Collection<T> {
 	get(slug: string): Promise<CollectionItem<T> | null>
 	count(): Promise<number>
 	filter(fn: (doc: CollectionItem<T>) => boolean): Promise<CollectionItem<T>[]>
-	sort(key: keyof CollectionItem<T>, order?: "asc" | "desc"): Promise<CollectionItem<T>[]>
+	sort(key: "slug" | keyof T, order?: "asc" | "desc"): Promise<CollectionItem<T>[]>
 }
 
 type InferCollection<T extends z.ZodRawShape> = z.infer<z.ZodObject<T>>
@@ -77,8 +77,8 @@ export function defineCollection<T extends z.ZodRawShape>(
 		sort: async (key, order = "asc") => {
 			const items = await load()
 			return [...items].sort((a, b) => {
-				const va = a[key]
-				const vb = b[key]
+				const va = key === "slug" ? a.slug : a.data[key]
+				const vb = key === "slug" ? b.slug : b.data[key]
 				if (va < vb) return order === "asc" ? -1 : 1
 				if (va > vb) return order === "asc" ? 1 : -1
 				return 0

@@ -68,6 +68,7 @@ const one = await posts.get("intro");
 const count = await posts.count();
 const tagged = await posts.filter((item) => item.data.tags.includes("release"));
 const sorted = await posts.sort("slug", "asc");
+const byDate = await posts.sort("publishedAt", "desc");
 ```
 
 ## type inference
