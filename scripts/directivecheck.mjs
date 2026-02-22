@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { isclientdirective } from "./clientutil.mjs";
 import { clientkeys } from "./entryset.mjs";
 
 const root = process.cwd();
@@ -7,11 +8,6 @@ const pkgfile = path.join(root, "packages", "fromsrc", "package.json");
 const text = await readFile(pkgfile, "utf8");
 const pkg = JSON.parse(text);
 const map = pkg.exports ?? {};
-
-function isclient(text) {
-	const line = (text.split("\n", 1).at(0) ?? "").trim();
-	return /^["']use client["'];?$/.test(line);
-}
 
 const issues = [];
 for (const key of clientkeys) {
@@ -23,7 +19,7 @@ for (const key of clientkeys) {
 	const file = path.join(root, "packages", "fromsrc", entry.import);
 	try {
 		const content = await readFile(file, "utf8");
-		if (!isclient(content)) {
+		if (!isclientdirective(content)) {
 			issues.push(`${key} dist entry missing use client directive`);
 		}
 	} catch {

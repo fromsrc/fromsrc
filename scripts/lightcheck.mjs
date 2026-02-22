@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { isclientdirective } from "./clientutil.mjs";
 import { parseimports } from "./imports.mjs";
 import { createresolver } from "./resolve.mjs";
 
@@ -54,8 +55,7 @@ async function scanfile(file, entry, stack) {
 	let imports = externalcache.get(file);
 	if (!imports) {
 		const text = await fs.readFile(file, "utf8");
-		const trimmed = text.trimStart();
-		if (trimmed.startsWith("\"use client\"") || trimmed.startsWith("'use client'")) {
+		if (isclientdirective(text)) {
 			addissue(file, "use client directive", entry);
 		}
 		imports = parseimports(text);

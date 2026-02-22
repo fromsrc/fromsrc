@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs"
 import path from "node:path"
+import { isclientdirective } from "./clientutil.mjs"
 
 const root = process.cwd()
 const source = path.join(root, "packages", "fromsrc", "src")
@@ -20,14 +21,6 @@ async function collect(folder) {
 	return files
 }
 
-function firstline(text) {
-	return (text.split("\n", 1).at(0) ?? "").trim()
-}
-
-function isclient(text) {
-	return /^['\"]use client['\"];?$/.test(firstline(text))
-}
-
 function todist(file) {
 	const rel = path.relative(source, file)
 	return path.join(dist, rel.replace(/\.(tsx|ts|jsx|js)$/, ".js"))
@@ -37,7 +30,7 @@ const sourcefiles = await collect(source)
 const expected = []
 for (const file of sourcefiles) {
 	const text = await fs.readFile(file, "utf8")
-	if (isclient(text)) expected.push(file)
+	if (isclientdirective(text)) expected.push(file)
 }
 
 const missing = []
@@ -45,7 +38,7 @@ for (const file of expected) {
 	const output = todist(file)
 	try {
 		const text = await fs.readFile(output, "utf8")
-		if (!isclient(text)) missing.push(path.relative(root, output))
+		if (!isclientdirective(text)) missing.push(path.relative(root, output))
 	} catch {
 		missing.push(path.relative(root, output))
 	}
