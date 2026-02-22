@@ -66,7 +66,7 @@ const cases = [
 	{
 		name: "cli-astro",
 		framework: "astro",
-		files: ["package.json", "astro.config.mjs", "src/pages/index.astro", "src/components/shell.tsx"],
+		files: ["package.json", "astro.config.mjs", "src/pages/index.astro", "src/pages/docs.astro", "content/docs/index.mdx"],
 	},
 ]
 const runs = [];

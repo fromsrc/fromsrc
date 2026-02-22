@@ -65,7 +65,7 @@ export function packagejson(name: string, framework: Framework): string {
 				dependencies: {
 					...base.dependencies,
 					astro: "^5.0.0",
-					"@astrojs/react": "^4.4.0",
+					marked: "^16.4.1",
 				},
 				devDependencies: {
 					...base.devDependencies,
@@ -92,6 +92,7 @@ export function packagejson(name: string, framework: Framework): string {
 					...base.dependencies,
 					"@remix-run/node": "^2.17.2",
 					"@remix-run/react": "^2.17.2",
+					marked: "^16.4.1",
 				},
 				devDependencies: {
 					...base.devDependencies,
@@ -118,6 +119,7 @@ export function packagejson(name: string, framework: Framework): string {
 				},
 				dependencies: {
 					...base.dependencies,
+					marked: "^16.4.1",
 				},
 				devDependencies: {
 					...base.devDependencies,
@@ -330,110 +332,48 @@ if (root) {
 `
 }
 
-const docsdata = `const docs = [
-\t{
-\t\ttitle: "getting started",
-\t\tdescription: "build composable docs with full control",
-\t\tsections: [
-\t\t\t{ id: "install", title: "install", body: "bun add fromsrc" },
-\t\t\t{ id: "layout", title: "layout", body: "split primitives and own your ui." },
-\t\t],
-\t},
-]
-`
+export const browserapp = `import { marked } from "marked"
+import doc from "../content/docs/index.mdx?raw"
 
-const docsframe = `\tconst doc = docs[0]
+function text(value: string): string {
+\treturn value
+\t\t.toLowerCase()
+\t\t.replace(/\\s+/g, "-")
+\t\t.replace(/[^a-z0-9_-]/g, "")
+\t\t.replace(/-+/g, "-")
+\t\t.replace(/^-|-$/g, "")
+}
+
+function sections(source: string): { id: string; title: string }[] {
+\tconst values: { id: string; title: string }[] = []
+\tfor (const match of source.matchAll(/^##\\s+(.+)$/gm)) {
+\t\tconst title = (match[1] ?? "").trim()
+\t\tif (!title) continue
+\t\tvalues.push({ id: text(title), title })
+\t}
+\treturn values
+}
+
+export function app() {
+\tif (window.location.pathname === "/") {
+\t\twindow.history.replaceState(null, "", "/docs")
+\t}
+\tconst links = sections(doc)
+\tconst html = String(marked.parse(doc))
 \treturn (
-\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh", fontFamily: "ui-monospace, monospace" }}>
+\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh" }}>
 \t\t\t<aside style={{ borderRight: "1px solid #1c1c1c", padding: "24px 16px" }}>
 \t\t\t\t<a href="/docs" style={{ display: "block", color: "#fafafa" }}>
 \t\t\t\t\tgetting started
 \t\t\t\t</a>
 \t\t\t</aside>
 \t\t\t<main style={{ padding: 24 }}>
-\t\t\t\t<h1 style={{ marginBottom: 8 }}>{doc.title}</h1>
-\t\t\t\t<p style={{ color: "#737373", marginBottom: 24 }}>{doc.description}</p>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<section key={section.id} id={section.id} style={{ marginBottom: 20 }}>
-\t\t\t\t\t\t<h2 style={{ marginBottom: 6 }}>{section.title}</h2>
-\t\t\t\t\t\t<p>{section.body}</p>
-\t\t\t\t\t</section>
-\t\t\t\t))}
+\t\t\t\t<article dangerouslySetInnerHTML={{ __html: html }} />
 \t\t\t</main>
 \t\t\t<aside style={{ borderLeft: "1px solid #1c1c1c", padding: "24px 16px" }}>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<a key={section.id} href={\`#\${section.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
-\t\t\t\t\t\t{section.title}
-\t\t\t\t\t</a>
-\t\t\t\t))}
-\t\t\t</aside>
-\t\t</div>
-\t)
-`
-
-function shellcode(head: string): string {
-	return `${docsdata}
-
-${head} {
-${docsframe}}
-`
-}
-
-export const browserapp = `const docs = [
-\t{
-\t\tslug: "/docs",
-\t\ttitle: "getting started",
-\t\tdescription: "build composable docs with full control",
-\t\tsections: [
-\t\t\t{ id: "install", title: "install", body: "bun add fromsrc" },
-\t\t\t{ id: "layout", title: "layout", body: "split primitives and own your ui." },
-\t\t],
-\t},
-\t{
-\t\tslug: "/docs/next",
-\t\ttitle: "next.js setup",
-\t\tdescription: "wire fromsrc into app routes",
-\t\tsections: [
-\t\t\t{ id: "adapter", title: "adapter", body: "mount AdapterProvider in your root shell." },
-\t\t\t{ id: "content", title: "content", body: "keep docs in content/docs and map routes." },
-\t\t],
-\t},
-]
-
-function current() {
-\tconst path = window.location.pathname === "/" ? "/docs" : window.location.pathname
-\treturn docs.find((doc) => doc.slug === path) ?? docs[0]
-}
-
-export function app() {
-\tconst doc = current()
-\treturn (
-\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh" }}>
-\t\t\t<aside style={{ borderRight: "1px solid #1c1c1c", padding: "24px 16px" }}>
-\t\t\t\t{docs.map((item) => (
-\t\t\t\t\t<a
-\t\t\t\t\t\tkey={item.slug}
-\t\t\t\t\t\thref={item.slug}
-\t\t\t\t\t\tstyle={{ display: "block", marginBottom: 8, color: item.slug === doc.slug ? "#fafafa" : "#737373" }}
-\t\t\t\t\t>
-\t\t\t\t\t\t{item.title}
-\t\t\t\t\t</a>
-\t\t\t\t))}
-\t\t\t</aside>
-\t\t\t<main style={{ padding: 24 }}>
-\t\t\t\t<h1 style={{ marginBottom: 8 }}>{doc.title}</h1>
-\t\t\t\t<p style={{ color: "#737373", marginBottom: 24 }}>{doc.description}</p>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<section key={section.id} id={section.id} style={{ marginBottom: 20 }}>
-\t\t\t\t\t\t<h2 style={{ marginBottom: 6 }}>{section.title}</h2>
-\t\t\t\t\t\t<p>{section.body}</p>
-\t\t\t\t\t</section>
-\t\t\t\t))}
-\t\t\t</main>
-\t\t\t<aside style={{ borderLeft: "1px solid #1c1c1c", padding: "24px 16px" }}>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<a key={section.id} href={\`#\${section.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
-\t\t\t\t\t\t{section.title}
+\t\t\t\t{links.map((link) => (
+\t\t\t\t\t<a key={link.id} href={\`#\${link.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
+\t\t\t\t\t\t{link.title}
 \t\t\t\t\t</a>
 \t\t\t\t))}
 \t\t\t</aside>
@@ -456,25 +396,77 @@ export const vitehtml = `<!doctype html>
 </html>
 `
 
-export const astroconfig = `import react from "@astrojs/react"
-import { defineConfig } from "astro/config"
+export const astroconfig = `import { defineConfig } from "astro/config"
 
-export default defineConfig({
-\tintegrations: [react()],
-})
+export default defineConfig({})
 `
 
+export const astroindex = `---
+return Astro.redirect("/docs")
+---`
+
 export const astropage = `---
-import { Shell } from "../components/shell"
+import { marked } from "marked"
+import doc from "../../content/docs/index.mdx?raw"
+const html = String(marked.parse(doc))
+
+function text(value: string): string {
+\treturn value
+\t\t.toLowerCase()
+\t\t.replace(/\\s+/g, "-")
+\t\t.replace(/[^a-z0-9_-]/g, "")
+\t\t.replace(/-+/g, "-")
+\t\t.replace(/^-|-$/g, "")
+}
+
+const links = Array.from(doc.matchAll(/^##\\s+(.+)$/gm))
+\t.map((entry) => (entry[1] ?? "").trim())
+\t.filter((entry) => entry.length > 0)
+\t.map((entry) => ({ id: text(entry), title: entry }))
 ---
 
-<Shell client:load />
+<html lang="en">
+\t<head>
+\t\t<meta charset="utf-8" />
+\t\t<meta name="viewport" content="width=device-width, initial-scale=1" />
+\t\t<title>fromsrc docs</title>
+\t</head>
+\t<body>
+\t\t<div style="display:grid;grid-template-columns:220px 1fr 200px;min-height:100vh;">
+\t\t\t<aside style="border-right:1px solid #1c1c1c;padding:24px 16px;">
+\t\t\t\t<a href="/docs" style="display:block;color:#fafafa;">getting started</a>
+\t\t\t</aside>
+\t\t\t<main style="padding:24px;">
+\t\t\t\t<article set:html={html} />
+\t\t\t</main>
+\t\t\t<aside style="border-left:1px solid #1c1c1c;padding:24px 16px;">
+\t\t\t\t{links.map((link) => (
+\t\t\t\t\t<a href={\`#\${link.id}\`} style="display:block;margin-bottom:8px;color:#737373;">
+\t\t\t\t\t\t{link.title}
+\t\t\t\t\t</a>
+\t\t\t\t))}
+\t\t\t</aside>
+\t\t</div>
+\t</body>
+</html>
 `
 
 export const astroenv = `/// <reference types="astro/client" />
+/// <reference types="vite/client" />
+
+declare module "*.mdx?raw" {
+\tconst value: string
+\texport default value
+}
 `
 
-export const astroshell = shellcode("export function Shell()")
+export const rawenv = `/// <reference types="vite/client" />
+
+declare module "*.mdx?raw" {
+\tconst value: string
+\texport default value
+}
+`
 
 export const remixviteconfig = `import { vitePlugin as remix } from "@remix-run/dev"
 import { defineConfig } from "vite"
@@ -522,4 +514,44 @@ export default function Index() {
 }
 `
 
-export const remixdocs = shellcode("export default function Docs()")
+export const remixdocs = `import { marked } from "marked"
+import doc from "../../content/docs/index.mdx?raw"
+
+function text(value: string): string {
+\treturn value
+\t\t.toLowerCase()
+\t\t.replace(/\\s+/g, "-")
+\t\t.replace(/[^a-z0-9_-]/g, "")
+\t\t.replace(/-+/g, "-")
+\t\t.replace(/^-|-$/g, "")
+}
+
+const links = Array.from(doc.matchAll(/^##\\s+(.+)$/gm))
+\t.map((entry) => (entry[1] ?? "").trim())
+\t.filter((entry) => entry.length > 0)
+\t.map((entry) => ({ id: text(entry), title: entry }))
+
+const html = String(marked.parse(doc))
+
+export default function Docs() {
+\treturn (
+\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh", fontFamily: "ui-monospace, monospace" }}>
+\t\t\t<aside style={{ borderRight: "1px solid #1c1c1c", padding: "24px 16px" }}>
+\t\t\t\t<a href="/docs" style={{ display: "block", color: "#fafafa" }}>
+\t\t\t\t\tgetting started
+\t\t\t\t</a>
+\t\t\t</aside>
+\t\t\t<main style={{ padding: 24 }}>
+\t\t\t\t<article dangerouslySetInnerHTML={{ __html: html }} />
+\t\t\t</main>
+\t\t\t<aside style={{ borderLeft: "1px solid #1c1c1c", padding: "24px 16px" }}>
+\t\t\t\t{links.map((link) => (
+\t\t\t\t\t<a key={link.id} href={\`#\${link.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
+\t\t\t\t\t\t{link.title}
+\t\t\t\t\t</a>
+\t\t\t\t))}
+\t\t\t</aside>
+\t\t</div>
+\t)
+}
+`

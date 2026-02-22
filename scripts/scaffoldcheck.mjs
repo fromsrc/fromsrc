@@ -7,7 +7,14 @@ import { frameworks as sharedframeworks } from "./frameworkset.mjs";
 const frameworks = [
 	{
 		name: "next.js",
-		files: ["package.json", "next.config.ts", "next-env.d.ts", "app/layout.tsx", "app/docs/[[...slug]]/page.tsx"],
+		files: [
+			"package.json",
+			"next.config.ts",
+			"next-env.d.ts",
+			"app/layout.tsx",
+			"app/docs/[[...slug]]/page.tsx",
+			"content/docs/index.mdx",
+		],
 		checks: [
 			{ file: "tsconfig.json", text: "\"jsx\": \"preserve\"" },
 			{ file: "tsconfig.json", text: "\"next-env.d.ts\"" },
@@ -18,9 +25,10 @@ const frameworks = [
 	},
 	{
 		name: "react-router",
-		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
+		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx", "content/docs/index.mdx"],
 			checks: [
 				{ file: "src/main.tsx", text: "createRoot(root).render(" },
+				{ file: "src/app.tsx", text: "content/docs/index.mdx?raw" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
 				{ file: "tsconfig.json", text: "\"**/*.ts\"" },
 				{ file: "package.json", text: "\"typecheck\": \"tsc --noEmit\"" },
@@ -31,9 +39,10 @@ const frameworks = [
 		},
 	{
 		name: "vite",
-		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
+		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx", "content/docs/index.mdx"],
 			checks: [
 				{ file: "src/main.tsx", text: "createRoot(root).render(" },
+				{ file: "src/app.tsx", text: "content/docs/index.mdx?raw" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
 				{ file: "package.json", text: "\"typecheck\": \"tsc --noEmit\"" },
 				{ file: "package.json", text: "\"@types/react-dom\": \"^19.0.0\"" },
@@ -43,9 +52,10 @@ const frameworks = [
 		},
 	{
 		name: "tanstack",
-		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
+		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx", "content/docs/index.mdx"],
 			checks: [
 				{ file: "src/main.tsx", text: "createRoot(root).render(" },
+				{ file: "src/app.tsx", text: "content/docs/index.mdx?raw" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
 				{ file: "package.json", text: "\"typecheck\": \"tsc --noEmit\"" },
 				{ file: "package.json", text: "\"@types/react-dom\": \"^19.0.0\"" },
@@ -55,10 +65,17 @@ const frameworks = [
 		},
 	{
 		name: "remix",
-		files: ["package.json", "vite.config.ts", "app/root.tsx", "app/routes/_index.tsx", "app/routes/docs.tsx"],
+		files: [
+			"package.json",
+			"vite.config.ts",
+			"app/root.tsx",
+			"app/routes/_index.tsx",
+			"app/routes/docs.tsx",
+			"content/docs/index.mdx",
+		],
 		checks: [
 			{ file: "app/routes/_index.tsx", text: "return redirect(\"/docs\")" },
-			{ file: "app/routes/docs.tsx", text: "build composable docs with full control" },
+			{ file: "app/routes/docs.tsx", text: "content/docs/index.mdx?raw" },
 			{ file: "package.json", text: "\"dev\": \"remix vite:dev\"" },
 			{ file: "package.json", text: "\"build\": \"remix vite:build\"" },
 			{ file: "package.json", text: "\"start\": \"remix-serve ./build/server/index.js\"" },
@@ -80,20 +97,19 @@ const frameworks = [
 			"astro.config.mjs",
 			"src/pages/index.astro",
 			"src/pages/docs.astro",
-			"src/components/shell.tsx",
+			"content/docs/index.mdx",
 			"src/env.d.ts",
 			"src/styles/global.css",
 		],
 		checks: [
-			{ file: "src/components/shell.tsx", text: "build composable docs with full control" },
-			{ file: "src/pages/index.astro", text: "<Shell client:load />" },
-			{ file: "src/pages/docs.astro", text: "<Shell client:load />" },
+			{ file: "src/pages/index.astro", text: "Astro.redirect(\"/docs\")" },
+			{ file: "src/pages/docs.astro", text: "content/docs/index.mdx?raw" },
 			{ file: "tsconfig.json", text: "\"extends\": \"astro/tsconfigs/strict\"" },
 			{ file: "package.json", text: "\"typecheck\": \"tsc --noEmit\"" },
 			{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
 			{ file: "package.json", text: "\"@types/react-dom\": \"^19.0.0\"" },
-			{ file: "package.json", text: "\"@astrojs/react\": \"^4.4.0\"" },
-			{ file: "astro.config.mjs", text: "integrations: [react()]" },
+			{ file: "package.json", text: "\"marked\": \"^16.4.1\"" },
+			{ file: "astro.config.mjs", text: "defineConfig({})" },
 		],
 	},
 ];

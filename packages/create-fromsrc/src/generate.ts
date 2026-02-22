@@ -4,9 +4,9 @@ import { docslayout, docspage, layout, metajson, page, welcomemdx } from "./page
 import type { Framework } from "./frameworks"
 import {
 	astroconfig,
+	astroindex,
 	astroenv,
 	astropage,
-	astroshell,
 	browserapp,
 	browserentry,
 	gitignore,
@@ -17,6 +17,7 @@ import {
 	nextconfig,
 	postcssconfig,
 	remixdocs,
+	rawenv,
 	remixrootindex,
 	remixroot,
 	remixviteconfig,
@@ -49,13 +50,13 @@ export function generate(options: Options) {
 	}
 
 	mkdirSync(target, { recursive: true })
+	write(target, "content/docs/index.mdx", welcomemdx)
 
 	write(target, "package.json", packagejson(name, framework))
 	write(target, "tsconfig.json", tsconfig(framework))
 	write(target, ".gitignore", gitignore)
 
 	if (framework === "next.js") {
-		write(target, "content/docs/index.mdx", welcomemdx)
 		write(target, "next.config.ts", nextconfig)
 		write(target, "next-env.d.ts", nextenv)
 		write(target, "tailwind.config.ts", tailwindconfig)
@@ -71,9 +72,8 @@ export function generate(options: Options) {
 
 	if (framework === "astro") {
 		write(target, "astro.config.mjs", astroconfig)
-		write(target, "src/pages/index.astro", astropage)
+		write(target, "src/pages/index.astro", astroindex)
 		write(target, "src/pages/docs.astro", astropage)
-		write(target, "src/components/shell.tsx", astroshell)
 		write(target, "src/styles/global.css", globalscss)
 		write(target, "src/env.d.ts", astroenv)
 		return target
@@ -81,6 +81,7 @@ export function generate(options: Options) {
 
 	if (framework === "remix") {
 		write(target, "vite.config.ts", remixviteconfig)
+		write(target, "env.d.ts", rawenv)
 		write(target, "app/root.tsx", remixroot)
 		write(target, "app/routes/_index.tsx", remixrootindex)
 		write(target, "app/routes/docs.tsx", remixdocs)
@@ -88,6 +89,7 @@ export function generate(options: Options) {
 	}
 
 	write(target, "index.html", vitehtml)
+	write(target, "src/env.d.ts", rawenv)
 	write(target, "src/main.tsx", browserentry())
 	write(target, "src/app.tsx", browserapp)
 	write(target, "src/globals.css", globalscss)
