@@ -24,11 +24,12 @@ interface cacheentry {
 
 const ttl = 1000 * 60 * 5
 const max = 200
+const maxquery = 200
 const store = new Map<string, cacheentry>()
 const inflight = new Map<string, Promise<SearchResult[]>>()
 
 function normalize(query: string): string {
-	return query.toLowerCase().replace(/\s+/g, " ").trim()
+	return query.toLowerCase().replace(/\s+/g, " ").trim().slice(0, maxquery)
 }
 
 function key(endpoint: string, query: string, limit: number): string {

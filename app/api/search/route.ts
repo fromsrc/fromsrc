@@ -5,7 +5,7 @@ import { getAllDocs, getSearchDocs } from "@/app/docs/_lib/content"
 const schema = z.object({
 	q: z.preprocess(
 		(value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
-		z.string().trim().min(1).optional(),
+		z.string().trim().min(1).max(200).optional(),
 	),
 	limit: z.coerce.number().int().min(1).max(50).default(8),
 })

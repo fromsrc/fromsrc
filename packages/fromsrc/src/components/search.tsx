@@ -24,6 +24,8 @@ export interface SearchProps {
 	limit?: number
 }
 
+const maxquery = 200
+
 function tosearchdoc(doc: DocMeta | SearchDoc): SearchDoc {
 	if ("content" in doc) return doc
 	return { ...doc, content: "" }
@@ -56,8 +58,9 @@ export function Search({
 	const requestref = useRef(0)
 	const lastfocus = useRef<HTMLElement | null>(null)
 	const updatequery = useCallback((next: string): void => {
-		queryref.current = next
-		setQuery(next)
+		const value = next.slice(0, maxquery)
+		queryref.current = value
+		setQuery(value)
 	}, [])
 	const router = useRouter()
 	const searchdocs = useMemo(() => docs.map(tosearchdoc), [docs])
