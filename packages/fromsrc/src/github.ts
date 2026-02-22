@@ -168,12 +168,14 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 			const docs: DocMeta[] = entries
 				.filter((item) => item.path.startsWith(prefix) && item.path.endsWith(".mdx"))
 				.map((item) => {
-					const slug = item.path
+					const rawSlug = item.path
 						.slice(prefix.length)
 						.replace(/\.mdx$/, "")
 						.replace(/\/index$/, "")
+					const slug = rawSlug === "index" ? "" : rawSlug
+					const fallbackTitle = slug === "" ? "index" : (slug.split("/").pop() ?? slug)
 					paths[slug] = item.path
-					return { slug, title: slug.split("/").pop() ?? slug }
+					return { slug, title: fallbackTitle }
 				})
 
 			pathCache.set("paths", paths)
