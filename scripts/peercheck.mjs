@@ -32,7 +32,7 @@ async function walk(dir) {
 }
 
 await walk(src);
-const needed = [...dynamic].sort();
+const needed = [...new Set([...dynamic, ...optionalAllow])].sort();
 
 for (const name of needed) {
 	if (typeof peers[name] !== "string" || peers[name].trim().length === 0) {
@@ -45,7 +45,7 @@ for (const name of needed) {
 
 for (const name of Object.keys(meta)) {
 	if (meta[name]?.optional !== true) continue;
-	if (!needed.includes(name) && !optionalAllow.has(name)) {
+	if (!needed.includes(name)) {
 		issues.push(`stale optional peer meta ${name}`);
 	}
 }
