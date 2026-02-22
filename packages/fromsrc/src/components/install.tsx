@@ -13,11 +13,7 @@ const commands: Record<Manager, string> = {
 	bun: "bun add",
 }
 
-/**
- * Props for the Install component
- */
 export interface InstallProps {
-	/** The package name to display in the install command */
 	package: string
 }
 
@@ -26,6 +22,13 @@ function InstallBase({ package: pkg }: InstallProps): ReactElement {
 	const command = `${commands[active]} ${pkg}`
 	const id = useId()
 	const tablistRef = useRef<HTMLDivElement>(null)
+	const mapRef = useRef<Map<Manager, number>>(new Map())
+	for (const manager of managers) {
+		if (!mapRef.current.has(manager)) {
+			mapRef.current.set(manager, mapRef.current.size)
+		}
+	}
+	const getTabId = useCallback((value: Manager): string => `${id}-tab-${mapRef.current.get(value) ?? 0}`, [id])
 
 	const handleKeyDown = useCallback(
 		(e: KeyboardEvent<HTMLDivElement>): void => {
@@ -95,7 +98,7 @@ function InstallBase({ package: pkg }: InstallProps): ReactElement {
 					{managers.map((m, index) => (
 						<button
 							key={m}
-							id={`${id}-tab-${index}`}
+							id={getTabId(m)}
 							type="button"
 							role="tab"
 							aria-selected={active === m}
@@ -123,7 +126,7 @@ function InstallBase({ package: pkg }: InstallProps): ReactElement {
 			<div
 				id={`${id}-panel`}
 				role="tabpanel"
-				aria-labelledby={`${id}-tab-${managers.indexOf(active)}`}
+				aria-labelledby={getTabId(active)}
 				tabIndex={0}
 				style={{
 					padding: "14px 16px",
