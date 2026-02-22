@@ -44,6 +44,22 @@ function listen(target) {
 	});
 }
 
+function external(target) {
+	const ids = Bun.spawnSync(["lsof", "-nP", `-iTCP:${target}`, "-sTCP:LISTEN", "-t"], {
+		stdout: "pipe",
+		stderr: "ignore",
+	});
+	if (ids.exitCode !== 0) return null;
+	const pid = ids.stdout.toString().trim().split("\n").find(Boolean);
+	if (!pid) return null;
+	const info = Bun.spawnSync(["ps", "-p", pid, "-o", "comm="], {
+		stdout: "pipe",
+		stderr: "ignore",
+	});
+	const cmd = info.exitCode === 0 ? info.stdout.toString().trim() : "";
+	return { pid, cmd };
+}
+
 const pid = await readpid();
 const run = pid ? alive(pid) : false;
 const busy = Number.isFinite(port) && port > 0 ? await listen(port) : false;
@@ -58,6 +74,14 @@ if (pid && run) {
 
 if (Number.isFinite(port) && port > 0) {
 	console.log(busy ? `o port ${port} open` : `o port ${port} closed`);
+	if (!pid && busy) {
+		const ext = external(port);
+		if (ext?.cmd) {
+			console.log(`o external ${ext.pid} ${ext.cmd}`);
+		} else if (ext?.pid) {
+			console.log(`o external ${ext.pid}`);
+		}
+	}
 }
 
 if (!pid && busy) process.exit(0);
