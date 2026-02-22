@@ -133,17 +133,24 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 		if (!recursive.truncated) return recursive.entries
 		const root = await tree(branch, false)
 		const files = root.entries.filter((item) => item.type === "blob")
-		const dirs = root.entries.filter((item) => item.type === "tree")
-		while (dirs.length > 0) {
-			const current = dirs.shift()
-			if (!current) continue
-			const next = await tree(current.sha, false)
-			for (const item of next.entries) {
-				const path = joinPath(current.path, item.path)
-				if (item.type === "blob") {
-					files.push({ ...item, path })
-				} else {
-					dirs.push({ ...item, path })
+		const queue = root.entries.filter((item) => item.type === "tree")
+		const width = 6
+		while (queue.length > 0) {
+			const batch = queue.splice(0, width)
+			const nodes = await Promise.all(
+				batch.map(async (current) => {
+					const next = await tree(current.sha, false)
+					return { base: current.path, entries: next.entries }
+				}),
+			)
+			for (const node of nodes) {
+				for (const item of node.entries) {
+					const path = joinPath(node.base, item.path)
+					if (item.type === "blob") {
+						files.push({ ...item, path })
+					} else {
+						queue.push({ ...item, path })
+					}
 				}
 			}
 		}
