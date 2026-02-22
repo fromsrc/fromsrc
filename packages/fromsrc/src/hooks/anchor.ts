@@ -7,16 +7,13 @@ export interface AnchorOptions {
 	smooth?: boolean
 }
 
-/**
- * Hook for smooth scrolling to anchor links with configurable offset
- * @param options - Configuration for offset and smooth scroll behavior
- */
 export function useAnchorScroll(options: AnchorOptions = {}): void {
 	const { offset = 80, smooth = true } = options
 
 	useEffect(() => {
 		function handleClick(e: MouseEvent) {
-			const target = e.target as HTMLElement
+			if (!(e.target instanceof Element)) return
+			const target = e.target
 			const anchor = target.closest("a")
 
 			if (!anchor) return

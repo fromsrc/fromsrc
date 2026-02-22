@@ -26,7 +26,8 @@ export function useHotkeys(bindings: HotkeyBinding[]): void {
 
 	useEffect(() => {
 		function handle(e: KeyboardEvent) {
-			const target = e.target as HTMLElement
+			if (!(e.target instanceof HTMLElement)) return
+			const target = e.target
 			if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
 				return
 			}
