@@ -93,48 +93,29 @@ export function packagejson(name: string, framework: Framework): string {
 		)
 	}
 
-	const deps: Record<Framework, Record<string, string>> = {
-		"next.js": {},
-		"react-router": { "react-router-dom": "^7.0.0" },
-		vite: { vite: "^7.0.0" },
-		tanstack: { "@tanstack/react-router": "^1.0.0", vite: "^7.0.0" },
-		remix: {},
-		astro: {},
-	}
-
-	const scripts: Record<Framework, Record<string, string>> = {
-		"next.js": {},
-		"react-router": {
-			dev: "vite",
-			build: "vite build",
-			start: "vite preview",
-		},
-		vite: {
-			dev: "vite",
-			build: "vite build",
-			start: "vite preview",
-		},
-		tanstack: {
-			dev: "vite",
-			build: "vite build",
-			start: "vite preview",
-		},
-		remix: {},
-		astro: {},
-	}
-
-	return JSON.stringify(
-		{
-			...base,
-			scripts: scripts[framework],
-			dependencies: {
-				...base.dependencies,
-				...deps[framework],
+	if (framework === "react-router" || framework === "vite" || framework === "tanstack") {
+		return JSON.stringify(
+			{
+				...base,
+				scripts: {
+					dev: "vite",
+					build: "vite build",
+					start: "vite preview",
+				},
+				dependencies: {
+					...base.dependencies,
+				},
+				devDependencies: {
+					...base.devDependencies,
+					vite: "^7.1.12",
+				},
 			},
-		},
-		null,
-		"\t",
-	)
+			null,
+			"\t",
+		)
+	}
+
+	throw new Error(`unsupported framework: ${framework}`)
 }
 
 export const nextconfig = `import type { NextConfig } from "next"
@@ -234,7 +215,7 @@ export const postcssconfig = `export default {
 }
 `
 
-export const globalscss = `@import "tailwindcss";
+export const nextglobalscss = `@import "tailwindcss";
 
 @theme {
 \t--color-bg: #0c0c0c;
@@ -288,41 +269,39 @@ export const globalscss = `@import "tailwindcss";
 }
 `
 
+export const globalscss = `* {
+\tbox-sizing: border-box;
+\tmargin: 0;
+\tpadding: 0;
+}
+
+html,
+body {
+\theight: 100%;
+}
+
+body {
+\tbackground: #0c0c0c;
+\tcolor: #fafafa;
+\tfont-family: ui-monospace, monospace;
+\tfont-size: 13px;
+\tline-height: 1.7;
+}
+
+a {
+\tcolor: inherit;
+\ttext-decoration: none;
+}
+`
+
 export const gitignore = `node_modules
 .next
 dist
 `
 
-const browsermap = {
-	"react-router": {
-		path: "fromsrc/react-router",
-		name: "reactRouterAdapter",
-		framework: "react-router",
-	},
-	vite: {
-		path: "fromsrc/vite",
-		name: "viteAdapter",
-		framework: "vite",
-	},
-	tanstack: {
-		path: "fromsrc/tanstack",
-		name: "tanstackAdapter",
-		framework: "tanstack",
-	},
-	remix: {
-		path: "fromsrc/remix",
-		name: "remixAdapter",
-		framework: "remix",
-	},
-} as const
-
-type Browserframework = keyof typeof browsermap
-
-export function browserentry(framework: Browserframework) {
-	const current = browsermap[framework]
+export function browserentry() {
 	return `import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import { AdapterProvider, ${current.name} } from "${current.path}"
 import { app } from "./app"
 import "./globals.css"
 
@@ -330,7 +309,7 @@ const root = document.getElementById("root")
 if (root) {
 \tcreateRoot(root).render(
 \t\t<StrictMode>
-\t\t\t<AdapterProvider adapter={${current.name}}>{app()}</AdapterProvider>
+\t\t\t{app()}
 \t\t</StrictMode>,
 \t)
 }

@@ -10,6 +10,7 @@ import {
 	browserentry,
 	gitignore,
 	globalscss,
+	nextglobalscss,
 	type Framework,
 	nextenv,
 	packagejson,
@@ -58,7 +59,7 @@ export function generate(options: Options) {
 		write(target, "next-env.d.ts", nextenv)
 		write(target, "tailwind.config.ts", tailwindconfig)
 		write(target, "postcss.config.mjs", postcssconfig)
-		write(target, "app/globals.css", globalscss)
+		write(target, "app/globals.css", nextglobalscss)
 		write(target, "app/layout.tsx", layout)
 		write(target, "app/page.tsx", page)
 		write(target, "app/docs/layout.tsx", docslayout)
@@ -84,7 +85,7 @@ export function generate(options: Options) {
 	}
 
 	write(target, "index.html", vitehtml)
-	write(target, "src/main.tsx", browserentry(framework))
+	write(target, "src/main.tsx", browserentry())
 	write(target, "src/app.tsx", browserapp)
 	write(target, "src/globals.css", globalscss)
 

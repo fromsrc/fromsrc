@@ -17,9 +17,10 @@ const frameworks = [
 		name: "react-router",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
 			checks: [
-				{ file: "src/main.tsx", text: "fromsrc/react-router" },
+				{ file: "src/main.tsx", text: "createRoot(root).render(" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
 				{ file: "tsconfig.json", text: "\"**/*.ts\"" },
+				{ file: "package.json", text: "\"vite\": \"^7.1.12\"" },
 				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
 			],
 		},
@@ -27,8 +28,9 @@ const frameworks = [
 		name: "vite",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
 			checks: [
-				{ file: "src/main.tsx", text: "fromsrc/vite" },
+				{ file: "src/main.tsx", text: "createRoot(root).render(" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "package.json", text: "\"vite\": \"^7.1.12\"" },
 				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
 			],
 		},
@@ -36,8 +38,9 @@ const frameworks = [
 		name: "tanstack",
 		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
 			checks: [
-				{ file: "src/main.tsx", text: "fromsrc/tanstack" },
+				{ file: "src/main.tsx", text: "createRoot(root).render(" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "package.json", text: "\"vite\": \"^7.1.12\"" },
 				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
 			],
 		},
