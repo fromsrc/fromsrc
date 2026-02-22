@@ -2,6 +2,7 @@ import { access, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
+import { frameworks } from "./frameworkset.mjs";
 
 const root = process.cwd();
 const bin = join(root, "packages", "create-fromsrc", "dist", "index.js");
@@ -81,6 +82,19 @@ const runalias = await run(["--name", "cli-alias-rr", "--framework", "rr", "--ye
 const runaliasfull = await run(["--name", "cli-alias-reactrouter", "--framework", "reactrouter", "--yes"]);
 
 const issues = [];
+const caseframeworks = [...new Set(cases.map((item) => item.framework))];
+const missingframeworks = frameworks.filter((name) => !caseframeworks.includes(name));
+const extraframeworks = caseframeworks.filter((name) => !frameworks.includes(name));
+
+if (missingframeworks.length > 0 || extraframeworks.length > 0) {
+	for (const name of missingframeworks) {
+		issues.push(`cases missing framework ${name}`);
+	}
+	for (const name of extraframeworks) {
+		issues.push(`cases include unexpected framework ${name}`);
+	}
+}
+
 for (const item of runs) {
 	if (item.result.code !== 0) {
 		issues.push(`${item.framework}: cli exited with ${item.result.code}`);
@@ -138,8 +152,13 @@ if (runhelp.code !== 0 || !runhelp.out.includes("usage: create-fromsrc")) {
 	issues.push("cli help output missing or failed");
 }
 
-if (runlist.code !== 0 || !runlist.out.includes("next.js") || !runlist.out.includes("astro")) {
+if (runlist.code !== 0) {
 	issues.push("cli list output missing or failed");
+}
+for (const framework of frameworks) {
+	if (!runlist.out.includes(framework)) {
+		issues.push(`cli list missing ${framework}`);
+	}
 }
 
 if (runbad.code === 0 || !runbad.out.includes("invalid framework")) {
