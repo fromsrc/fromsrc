@@ -104,13 +104,15 @@ export function defineCollection<T extends z.ZodRawShape>(
 	}
 }
 
-export function defineCollections<T extends Record<string, CollectionConfig<z.ZodRawShape>>>(
+export function defineCollections<const T extends Record<string, CollectionConfig<z.ZodRawShape>>>(
 	configs: T,
 ): { [K in keyof T]: Collection<z.infer<T[K]["schema"]>> } {
 	const result = {} as { [K in keyof T]: Collection<InferSchema<T[K]>> }
-	for (const key in configs) {
+	for (const key of Object.keys(configs) as (keyof T)[]) {
 		const config = configs[key]
-		if (!config) continue
+		if (config === undefined) {
+			throw new Error(`missing collection config: ${String(key)}`)
+		}
 		result[key] = defineCollection(config)
 	}
 	return result

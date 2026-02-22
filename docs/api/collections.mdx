@@ -60,7 +60,7 @@ collection instances expose:
 - `get(slug)`
 - `count()`
 - `filter(fn)`
-- `sort(key, order?)`
+- `sort(key, order?)` where `key` is `slug` or a scalar schema field
 
 ```tsx
 const all = await posts.getAll();
