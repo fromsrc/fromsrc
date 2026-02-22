@@ -11,6 +11,12 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
 	const docs = await getAllDocs()
 	return (
 		<>
+			<a
+				href="#main"
+				className="fixed left-3 top-3 -translate-y-20 rounded bg-fg px-3 py-2 text-sm text-bg focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-fg focus:ring-offset-2 focus:ring-offset-bg z-50"
+			>
+				skip to content
+			</a>
 			<MobileNavigation />
 			<SearchModal />
 			<Shortcuts />
