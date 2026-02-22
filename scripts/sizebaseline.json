@@ -1,0 +1,17 @@
+{
+	"core": { "size": 123035, "gzip": 34719 },
+	"readtime": { "size": 128, "gzip": 134 },
+	"searchscore": { "size": 1327, "gzip": 571 },
+	"searchindex": { "size": 979, "gzip": 572 },
+	"searchpolicy": { "size": 175, "gzip": 152 },
+	"llms": { "size": 351, "gzip": 244 },
+	"openapi": { "size": 4841, "gzip": 1714 },
+	"algolia": { "size": 1590, "gzip": 816 },
+	"orama": { "size": 1593, "gzip": 752 },
+	"next": { "size": 601, "gzip": 322 },
+	"reactrouter": { "size": 421, "gzip": 271 },
+	"tanstack": { "size": 479, "gzip": 306 },
+	"remix": { "size": 452, "gzip": 290 },
+	"astro": { "size": 1175, "gzip": 497 },
+	"vite": { "size": 1175, "gzip": 498 }
+}
