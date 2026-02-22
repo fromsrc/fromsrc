@@ -24,6 +24,15 @@ for (const name of missingfromshared) {
 for (const name of extraincreate) {
 	issues.push(`unexpected create-fromsrc framework: ${name}`);
 }
+if (frameworks.length === sharedframeworks.length) {
+	for (let index = 0; index < frameworks.length; index++) {
+		if (frameworks[index] !== sharedframeworks[index]) {
+			issues.push(
+				`framework order mismatch at index ${index}: ${frameworks[index]} != ${sharedframeworks[index]}`,
+			);
+		}
+	}
+}
 
 const aliaskeys = Object.keys(aliases);
 if (aliaskeys.length === 0) {
