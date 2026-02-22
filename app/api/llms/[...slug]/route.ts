@@ -1,13 +1,12 @@
 import type { NextRequest } from "next/server"
-import { z } from "zod"
+import { slugparams } from "@/app/api/_lib/slug"
 import { send } from "@/app/api/_lib/text"
 import { getAllDocs, getDoc } from "@/app/docs/_lib/content"
 
 const cache = "public, max-age=600, s-maxage=86400, stale-while-revalidate=604800"
-const schema = z.object({ slug: z.array(z.string().min(1)).min(1) })
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string[] }> }) {
-	const parsed = schema.safeParse(await params)
+	const parsed = slugparams.safeParse(await params)
 	if (!parsed.success) {
 		return send(request, "bad request", cache, 400)
 	}
