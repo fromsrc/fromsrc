@@ -1,5 +1,5 @@
 import { openSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, unlink, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 import net from "node:net";
@@ -52,6 +52,11 @@ const existing = await readpid();
 if (existing && alive(existing)) {
 	console.log(`o dev already running (${existing})`);
 	process.exit(0);
+}
+if (existing && !alive(existing)) {
+	try {
+		await unlink(pidfile);
+	} catch {}
 }
 
 const rawport = process.env.PORT || "3000";
