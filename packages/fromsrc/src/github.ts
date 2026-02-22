@@ -34,6 +34,7 @@ interface RawCacheEntry {
 }
 
 const TTL = 5 * 60 * 1000
+const SEARCH_CONCURRENCY = 12
 
 function createCache<T>() {
 	const store = new Map<string, CacheEntry<T>>()
@@ -52,6 +53,28 @@ function createCache<T>() {
 			store.set(key, { data, timestamp: Date.now() })
 		},
 	}
+}
+
+async function maplimit<T, R>(
+	items: readonly T[],
+	limit: number,
+	run: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+	if (items.length === 0) return []
+	const workers = Math.max(1, Math.min(limit, items.length))
+	const output = new Array<R>(items.length)
+	let cursor = 0
+	await Promise.all(
+		Array.from({ length: workers }, async () => {
+			while (cursor < items.length) {
+				const index = cursor++
+				const item = items[index]
+				if (item === undefined) continue
+				output[index] = await run(item, index)
+			}
+		}),
+	)
+	return output
 }
 
 export function createGithubSource(config: GithubSourceConfig): ContentSource {
@@ -245,33 +268,27 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 			const cached = searchCache.get("search")
 			if (cached) return cached
 			const listed = await list()
+			const values = await maplimit<DocMeta, SearchDoc | null>(listed, SEARCH_CONCURRENCY, async (doc) => {
+				const value = await get(doc.slug ? doc.slug.split("/") : [])
+				if (!value) return null
+				const title = typeof value.data.title === "string" && value.data.title.length > 0
+					? value.data.title
+					: doc.title
+				const description = typeof value.data.description === "string"
+					? value.data.description
+					: doc.description
+				return {
+					slug: doc.slug,
+					title,
+					description,
+					content: value.content,
+					headings: extractHeadings(value.content),
+				} satisfies SearchDoc
+			})
 			const docs: SearchDoc[] = []
-			const batchSize = 8
-			for (let index = 0; index < listed.length; index += batchSize) {
-				const batch = listed.slice(index, index + batchSize)
-				const values = await Promise.all(
-					batch.map(async (doc) => {
-						const value = await get(doc.slug ? doc.slug.split("/") : [])
-						if (!value) return null
-						const title = typeof value.data.title === "string" && value.data.title.length > 0
-							? value.data.title
-							: doc.title
-						const description = typeof value.data.description === "string"
-							? value.data.description
-							: doc.description
-						return {
-							slug: doc.slug,
-							title,
-							description,
-							content: value.content,
-							headings: extractHeadings(value.content),
-						} satisfies SearchDoc
-					}),
-				)
-				for (const item of values) {
-					if (!item) continue
-					docs.push(item)
-				}
+			for (const item of values) {
+				if (!item) continue
+				docs.push(item)
 			}
 			searchCache.set("search", docs)
 			return docs
