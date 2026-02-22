@@ -12,6 +12,20 @@ render grouped endpoint docs from an openapi spec.
 <Openapi spec={spec} />
 ```
 
+## grouped tags
+
+```mdx
+<Openapi spec={spec} group="tag" />
+```
+
+## filtered views
+
+```mdx
+<Openapi spec={spec} tag="billing" />
+<Openapi spec={spec} method="get" />
+<Openapi spec={spec} path="/v1/invoices" />
+```
+
 ## props
 
 | prop | type | default | description |
