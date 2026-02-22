@@ -6,10 +6,22 @@ description: configure fromsrc in astro apps
 install dependencies:
 
 ```bash
-bun add fromsrc
+bun add fromsrc react react-dom
+bun add -D astro @astrojs/react
 ```
 
-wire adapter in your react docs shell:
+enable the react integration:
+
+```ts
+import react from "@astrojs/react";
+import { defineConfig } from "astro/config";
+
+export default defineConfig({
+	integrations: [react()],
+});
+```
+
+wire the adapter in your react docs shell:
 
 ```tsx
 import { AdapterProvider, astroAdapter } from "fromsrc/astro";
