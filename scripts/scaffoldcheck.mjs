@@ -39,13 +39,15 @@ const frameworks = [
 				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
 			],
 		},
-	{
-		name: "remix",
-		files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
+		{
+			name: "remix",
+			files: ["package.json", "index.html", "src/main.tsx", "src/app.tsx"],
 			checks: [
 				{ file: "src/main.tsx", text: "fromsrc/remix" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
 				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
+				{ file: "package.json", text: "\"@remix-run/react\": \"^2.0.0\"" },
+				{ file: "package.json", text: "\"vite\": \"^7.0.0\"" },
 			],
 		},
 	{

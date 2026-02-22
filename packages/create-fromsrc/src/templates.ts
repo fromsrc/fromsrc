@@ -70,7 +70,7 @@ export function packagejson(name: string, framework: Framework): string {
 		"react-router": { "react-router-dom": "^7.0.0" },
 		vite: { vite: "^7.0.0" },
 		tanstack: { "@tanstack/react-router": "^1.0.0", vite: "^7.0.0" },
-		remix: { "@remix-run/react": "^2.0.0", "react-router-dom": "^7.0.0", vite: "^7.0.0" },
+		remix: { "@remix-run/react": "^2.0.0", vite: "^7.0.0" },
 		astro: {},
 	}
 
