@@ -52,7 +52,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
 `
 
 export const docspage = `import { readFileSync } from "node:fs"
-import { join } from "node:path"
+import { resolve } from "node:path"
 import { MDXRemote } from "next-mdx-remote/rsc"
 
 interface Props {
@@ -61,9 +61,14 @@ interface Props {
 
 export default async function DocPage({ params }: Props) {
 \tconst { slug } = await params
-\tconst path = slug?.join("/") || "index"
-\tconst direct = join(process.cwd(), "content", "docs", \`\${path}.mdx\`)
-\tconst nested = join(process.cwd(), "content", "docs", path, "index.mdx")
+\tconst safe = (slug ?? []).filter((part) => /^[a-z0-9_-]+$/i.test(part))
+\tif (safe.length !== (slug ?? []).length) return <p>not found</p>
+\tconst path = safe.join("/") || "index"
+\tconst base = resolve(process.cwd(), "content", "docs")
+\tconst direct = resolve(base, \`\${path}.mdx\`)
+\tconst nested = resolve(base, path, "index.mdx")
+\tconst rooted = \`\${base}/\`
+\tif ((!direct.startsWith(rooted) && direct !== base) || (!nested.startsWith(rooted) && nested !== base)) return <p>not found</p>
 
 \tlet content: string
 \ttry {

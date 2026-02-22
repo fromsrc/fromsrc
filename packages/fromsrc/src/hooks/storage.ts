@@ -41,7 +41,7 @@ function useStorage<T>(
 			}
 		} catch {
 		}
-	}, [getStorage, key])
+	}, [defaultValue, getStorage, key])
 
 	const setStoredValue: StorageSetter<T> = useCallback(
 		(newValue: T | ((prev: T) => T)): void => {

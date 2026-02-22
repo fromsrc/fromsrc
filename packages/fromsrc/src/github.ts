@@ -35,6 +35,7 @@ interface RawCacheEntry {
 
 const TTL = 5 * 60 * 1000
 const SEARCH_CONCURRENCY = 12
+const RATE_RETRIES = 3
 
 function createCache<T>() {
 	const store = new Map<string, CacheEntry<T>>()
@@ -77,6 +78,34 @@ async function maplimit<T, R>(
 	return output
 }
 
+function waitms(res: Response, attempt: number): number {
+	const retry = Number(res.headers.get("retry-after") ?? "")
+	if (Number.isFinite(retry) && retry > 0) {
+		return retry * 1000
+	}
+	const reset = Number(res.headers.get("x-ratelimit-reset") ?? "")
+	if (Number.isFinite(reset) && reset > 0) {
+		return Math.max(0, reset * 1000 - Date.now())
+	}
+	return Math.min(4000, 500 * 2 ** attempt)
+}
+
+function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+async function request(url: string, headers: Record<string, string>): Promise<Response> {
+	for (let attempt = 0; attempt < RATE_RETRIES; attempt++) {
+		const res = await fetch(url, { headers })
+		const limited = res.status === 429 || (res.status === 403 && res.headers.get("x-ratelimit-remaining") === "0")
+		if (!limited || attempt === RATE_RETRIES - 1) {
+			return res
+		}
+		await sleep(waitms(res, attempt))
+	}
+	return fetch(url, { headers })
+}
+
 export function createGithubSource(config: GithubSourceConfig): ContentSource {
 	const branch = config.branch ?? "main"
 	const docsPath = config.path ?? "docs"
@@ -116,7 +145,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 		if (cached?.etag) {
 			requestHeaders["If-None-Match"] = cached.etag
 		}
-		const res = await fetch(url, { headers: requestHeaders })
+		const res = await request(url, requestHeaders)
 		if (res.status === 304 && cached) {
 			return { entries: cached.entries, truncated: cached.truncated }
 		}
@@ -196,10 +225,10 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 						.replace(/\.mdx$/, "")
 						.replace(/\/index$/, "")
 					const slug = rawSlug === "index" ? "" : rawSlug
-					const fallbackTitle = slug === "" ? "index" : (slug.split("/").pop() ?? slug)
-					paths[slug] = item.path
-					return { slug, title: fallbackTitle }
-				})
+				const fallbackTitle = slug === "" ? "index" : (slug.split("/").pop() ?? slug)
+				paths[slug] = item.path
+				return { slug, title: fallbackTitle, description: fallbackTitle }
+			})
 
 			pathCache.set("paths", paths)
 			listCache.set("list", docs)
@@ -235,7 +264,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 				if (cachedRaw?.etag) {
 					requestHeaders["If-None-Match"] = cachedRaw.etag
 				}
-				const res = await fetch(url, { headers: requestHeaders })
+				const res = await request(url, requestHeaders)
 				if (res.status === 304 && cachedRaw) {
 					const result = { content: cachedRaw.content, data: cachedRaw.data }
 					fileCache.set(cacheKey, result)

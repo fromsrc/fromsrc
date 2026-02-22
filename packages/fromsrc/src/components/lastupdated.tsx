@@ -40,6 +40,8 @@ export const LastUpdated = memo(function LastUpdated({
 	useEffect(() => {
 		if (format === "absolute") return
 		setRel(relative(parsed))
+		const timer = setInterval(() => setRel(relative(parsed)), 60_000)
+		return () => clearInterval(timer)
 	}, [format, parsed])
 
 	const label = format === "absolute" ? abs : rel || abs

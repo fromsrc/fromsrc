@@ -50,6 +50,7 @@ export function Shortcuts() {
 					type="button"
 					onClick={() => setOpen(true)}
 					className="size-8 flex items-center justify-center bg-surface border border-line rounded-lg shadow-lg text-muted hover:text-fg transition-colors text-sm font-mono"
+					aria-label="open shortcuts"
 				>
 					?
 				</button>

@@ -22,16 +22,12 @@ const links: Record<string, Link[]> = {
 		{ href: "https://twitter.com/fromsrc", label: "twitter" },
 		{ href: "https://github.com/fromsrc/fromsrc/discussions", label: "discussions" },
 	],
-	legal: [
-		{ href: "/docs", label: "privacy" },
-		{ href: "/docs", label: "terms" },
-	],
 }
 
 export function Foot() {
 	return (
 		<footer className="px-6 pt-24 pb-0">
-			<div className="mx-auto max-w-5xl rounded-t-4xl bg-linear-to-b from-[#1a1a1a] to-[#0a0a0a] border border-line border-b-0 px-8 py-12 md:px-12 md:py-16">
+			<div className="mx-auto max-w-5xl rounded-t-4xl bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-line border-b-0 px-8 py-12 md:px-12 md:py-16">
 				<div className="mb-16">
 					<h2 className="font-serif text-4xl md:text-5xl leading-tight mb-6">
 						Ready to build docs

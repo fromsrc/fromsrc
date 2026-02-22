@@ -1,12 +1,14 @@
-import { execSync } from "node:child_process"
+import { execFileSync } from "node:child_process"
 
 export function lastModified(filepath: string): Date | null {
 	try {
-		const result = execSync(`git log -1 --format=%cI "${filepath}"`, {
+		const result = execFileSync("git", ["log", "-1", "--format=%cI", filepath], {
 			encoding: "utf-8",
 			stdio: ["pipe", "pipe", "pipe"],
 		}).trim()
-		return result ? new Date(result) : null
+		if (!result) return null
+		const value = new Date(result)
+		return Number.isNaN(value.getTime()) ? null : value
 	} catch {
 		return null
 	}

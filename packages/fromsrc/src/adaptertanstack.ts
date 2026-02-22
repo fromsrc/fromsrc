@@ -4,6 +4,7 @@ import { createElement } from "react"
 import {
 	Link as RouterLink,
 	useNavigate,
+	useRouter,
 	useRouterState,
 } from "@tanstack/react-router"
 import type { FrameworkAdapter, fromsrcimageprops, fromsrclinkprops } from "./adapter"
@@ -31,9 +32,10 @@ function useTanstackPathname(): string {
 
 function useTanstackRouter() {
 	const navigate = useNavigate()
+	const router = useRouter()
 	return {
 		push: (url: string) => navigate({ to: url }),
-		back: () => window.history.back(),
+		back: () => router.history.back(),
 	}
 }
 

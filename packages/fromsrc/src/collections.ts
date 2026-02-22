@@ -50,9 +50,13 @@ async function scan<T extends z.ZodRawShape>(
 				const source = await readFile(filepath, "utf-8")
 				const { data, content } = matter(source)
 				if (!includeDrafts && (data as Record<string, unknown>).draft === true) continue
-				const parsed = schema.parse(data)
+				const parsed = schema.safeParse(data)
+				if (!parsed.success) {
+					console.error(`invalid frontmatter in ${filepath}`)
+					continue
+				}
 				const slug = `${prefix}${entry.name.replace(".mdx", "")}`
-				items.push({ slug, content, data: parsed })
+				items.push({ slug, content, data: parsed.data })
 			}
 		}
 	}

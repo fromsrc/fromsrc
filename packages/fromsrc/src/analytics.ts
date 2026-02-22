@@ -22,6 +22,8 @@ export function createAnalytics(config?: AnalyticsConfig) {
 	const endpoint = config?.endpoint ?? "/api/analytics"
 	const sampleRate = config?.sampleRate ?? 1
 	const respectDnt = config?.respectDnt ?? true
+	let retries = 0
+	const maxretries = 5
 
 	function track(event: Omit<AnalyticsEvent, "timestamp">) {
 		if (respectDnt && typeof navigator !== "undefined" && navigator.doNotTrack === "1") return
@@ -38,8 +40,12 @@ export function createAnalytics(config?: AnalyticsConfig) {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(batch),
 			})
+			retries = 0
 		} catch {
-			queue.unshift(...batch)
+			if (retries < maxretries) {
+				retries += 1
+				queue.unshift(...batch)
+			}
 		}
 	}
 
@@ -54,7 +60,8 @@ export function generateScript(config?: AnalyticsConfig): string {
 	const ep = config?.endpoint ?? "/api/analytics"
 	const sr = config?.sampleRate ?? 1
 	const dnt = config?.respectDnt ?? true
-	return `<script>(function(){${dnt ? 'if(navigator.doNotTrack==="1")return;' : ""}${sr < 1 ? `if(Math.random()>${sr})return;` : ""}var q=[],e="${ep}",p=location.pathname,h=history;function t(){q.push({type:"pageview",path:location.pathname,timestamp:+new Date})}function s(){if(q.length){var d=JSON.stringify(q);q=[];navigator.sendBeacon?navigator.sendBeacon(e,d):fetch(e,{method:"POST",body:d})}}t();var o=h.pushState;h.pushState=function(){o.apply(h,arguments);t()};onpopstate=t;setInterval(s,5e3);document.onvisibilitychange=function(){document.hidden&&s()}})()</script>`
+	const safe = JSON.stringify(ep)
+	return `<script>(function(){${dnt ? 'if(navigator.doNotTrack==="1")return;' : ""}${sr < 1 ? `if(Math.random()>${sr})return;` : ""}var q=[],e=${safe},h=history;function t(){q.push({type:"pageview",path:location.pathname,timestamp:+new Date})}function s(){if(q.length){var d=JSON.stringify(q);q=[];navigator.sendBeacon?navigator.sendBeacon(e,d):fetch(e,{method:"POST",body:d})}}t();var o=h.pushState;h.pushState=function(){o.apply(h,arguments);t()};onpopstate=t;setInterval(s,5e3);document.onvisibilitychange=function(){document.hidden&&s()}})()</script>`
 }
 
 export function aggregateEvents(events: AnalyticsEvent[]): AnalyticsSummary {

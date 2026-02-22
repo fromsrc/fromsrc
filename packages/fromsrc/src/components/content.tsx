@@ -5,6 +5,7 @@ import {
 	type ComponentPropsWithoutRef,
 	type JSX,
 	type ReactNode,
+	isValidElement,
 	memo,
 	useEffect,
 	useState,
@@ -85,11 +86,25 @@ type TdProps = ComponentPropsWithoutRef<"td">
 /** props for table row elements */
 type TrProps = ComponentPropsWithoutRef<"tr">
 
-function getId(children: ReactNode): string {
-	if (typeof children === "string") {
-		return children.toLowerCase().replace(/\s+/g, "-")
-	}
+function text(node: ReactNode): string {
+	if (typeof node === "string" || typeof node === "number") return String(node)
+	if (Array.isArray(node)) return node.map((item) => text(item)).join(" ")
+	if (isValidElement<{ children?: ReactNode }>(node)) return text(node.props.children)
 	return ""
+}
+
+function slugify(value: string): string {
+	return value
+		.trim()
+		.toLowerCase()
+		.replace(/[^a-z0-9\s-]/g, "")
+		.replace(/\s+/g, "-")
+		.replace(/-+/g, "-")
+}
+
+function getId(children: ReactNode): string {
+	const value = text(children)
+	return value ? slugify(value) : ""
 }
 
 const components = {

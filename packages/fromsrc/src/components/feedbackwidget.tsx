@@ -85,6 +85,7 @@ function FeedbackWidgetBase({ onSubmit }: FeedbackWidgetProps): JSX.Element {
 						onChange={(e) => setMessage(e.target.value)}
 						onKeyDown={keydown}
 						placeholder="share feedback"
+						aria-label="feedback"
 						className="h-8 w-56 rounded-md border border-line bg-surface px-3 text-sm text-fg placeholder:text-muted outline-none focus:border-accent transition-colors"
 					/>
 					<button

@@ -1,7 +1,7 @@
 {
 	"core": {
-		"size": 124584,
-		"gzip": 35102
+		"size": 124769,
+		"gzip": 35155
 	},
 	"readtime": {
 		"size": 128,
@@ -20,8 +20,8 @@
 		"gzip": 152
 	},
 	"llms": {
-		"size": 409,
-		"gzip": 278
+		"size": 514,
+		"gzip": 340
 	},
 	"openapi": {
 		"size": 5170,
@@ -44,8 +44,8 @@
 		"gzip": 271
 	},
 	"tanstack": {
-		"size": 479,
-		"gzip": 306
+		"size": 495,
+		"gzip": 310
 	},
 	"remix": {
 		"size": 452,

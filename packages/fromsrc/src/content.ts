@@ -41,6 +41,10 @@ const metaCache = new Map<string, DocMeta[]>()
 const isProduction = () => process.env.NODE_ENV === "production"
 const isDraft = (data: Record<string, unknown>) => data.draft === true
 
+function isnotfound(error: unknown): boolean {
+	return typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT"
+}
+
 async function readCached(filepath: string): Promise<string> {
 	if (!isProduction()) {
 		return readFile(filepath, "utf-8")
@@ -62,11 +66,19 @@ async function resolveSource(
 	try {
 		const source = await readCached(filepath)
 		return { source, actualPath: path, filepath }
-	} catch {}
+	} catch (error) {
+		if (!isnotfound(error)) {
+			console.error(`failed to read ${filepath}`, error)
+		}
+	}
 	try {
 		const source = await readCached(indexPath)
 		return { source, actualPath: `${path}/index`, filepath: indexPath }
-	} catch {}
+	} catch (error) {
+		if (!isnotfound(error)) {
+			console.error(`failed to read ${indexPath}`, error)
+		}
+	}
 	return null
 }
 

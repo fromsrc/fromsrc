@@ -52,7 +52,7 @@ export function Compare() {
 						</ul>
 					</div>
 
-					<div className="rounded-2xl border border-line p-6 bg-linear-to-br from-surface to-bg">
+					<div className="rounded-2xl border border-line p-6 bg-gradient-to-br from-surface to-bg">
 						<div className="text-xs text-accent uppercase tracking-widest mb-6">what you get</div>
 						<ul>
 							{benefits.map((b) => (

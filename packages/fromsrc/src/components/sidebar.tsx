@@ -78,6 +78,15 @@ export function Sidebar({
 		leaveTimer.current = setTimeout(() => setHovered(false), 150)
 	}, [])
 
+	useEffect(() => {
+		return () => {
+			if (leaveTimer.current) {
+				clearTimeout(leaveTimer.current)
+				leaveTimer.current = null
+			}
+		}
+	}, [])
+
 	const openSearch = useCallback((): void => {
 		const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
 		window.dispatchEvent(event)
