@@ -61,14 +61,41 @@ function route(file) {
 	return `/docs/${relative.slice(0, -".mdx".length)}`;
 }
 
+function parsepath(target) {
+	let value = target.trim();
+	let anchor = "";
+	const hash = value.indexOf("#");
+	if (hash !== -1) {
+		anchor = value.slice(hash + 1).trim();
+		value = value.slice(0, hash);
+	}
+	const query = value.indexOf("?");
+	if (query !== -1) value = value.slice(0, query);
+	const path = value.replace(/\/+$/, "");
+	return {
+		path: path || "/docs",
+		anchor: normalizeanchor(anchor),
+	};
+}
+
+function normalizeanchor(value) {
+	if (!value) return "";
+	try {
+		return decodeURIComponent(value).trim().toLowerCase();
+	} catch {
+		return value.trim().toLowerCase();
+	}
+}
+
 const issues = [];
 const list = await files(docsroot);
 const routes = new Set(list.map(route));
 const fileset = new Set(list.map((file) => file.replace(/\\/g, "/")));
+const routefile = new Map(list.map((file) => [route(file), file.replace(/\\/g, "/")]));
+const idcache = new Map();
 
 function localfile(file, target) {
-	const index = target.search(/[?#]/);
-	const pathname = index === -1 ? target : target.slice(0, index);
+	const { path: pathname } = parsepath(target);
 	if (!pathname.startsWith(".")) return null;
 	const direct = resolve(dirname(file), pathname);
 	const options = [direct, `${direct}.mdx`, join(direct, "index.mdx")];
@@ -77,6 +104,19 @@ function localfile(file, target) {
 		if (fileset.has(normalized)) return normalized;
 	}
 	return null;
+}
+
+async function anchorsfor(file) {
+	const cached = idcache.get(file);
+	if (cached) return cached;
+	const raw = await readFile(file, "utf8");
+	let content = raw;
+	try {
+		content = matter(raw).content;
+	} catch {}
+	const ids = new Set(headingids(stripcode(content)));
+	idcache.set(file, ids);
+	return ids;
 }
 
 for (const file of list) {
@@ -105,14 +145,25 @@ for (const file of list) {
 	}
 	for (const target of doclinks(clean)) {
 		if (target.startsWith("/docs")) {
-			const index = target.search(/[?#]/);
-			const pathname = (index === -1 ? target : target.slice(0, index)).replace(/\/+$/, "") || "/docs";
+			const { path: pathname, anchor } = parsepath(target);
 			if (!routes.has(pathname)) issues.push(`${name}: missing docs route ${pathname}`);
+			if (anchor) {
+				const linked = routefile.get(pathname);
+				if (linked) {
+					const ids = await anchorsfor(linked);
+					if (!ids.has(anchor)) issues.push(`${name}: missing docs anchor ${pathname}#${anchor}`);
+				}
+			}
 			continue;
 		}
 		if (target.startsWith(".")) {
 			const resolved = localfile(file, target);
 			if (!resolved) issues.push(`${name}: missing local docs file ${target}`);
+			const { anchor } = parsepath(target);
+			if (resolved && anchor) {
+				const ids = await anchorsfor(resolved);
+				if (!ids.has(anchor)) issues.push(`${name}: missing local docs anchor ${target}`);
+			}
 		}
 	}
 }
