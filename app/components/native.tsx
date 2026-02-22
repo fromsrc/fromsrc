@@ -39,7 +39,7 @@ export function Native() {
 								<span className="text-muted" aria-hidden="true">
 									$
 								</span>
-								<code>curl fromsrc.com/api/llms/auth</code>
+								<code>curl https://your-docs.com/api/llms/auth</code>
 							</div>
 							<div className="pl-6 text-muted border-l border-line">
 								<p className="text-dim"># Authentication</p>

@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Bolt, Logo } from "./logo"
 
 type Link = {
-	href: string | null
+	href: string
 	label: string
 }
 
@@ -58,7 +58,7 @@ export function Foot() {
 								{items.map((item) => (
 									<li key={item.label}>
 										<a
-											href={item.href ?? "/docs"}
+											href={item.href}
 											className="block text-dim hover:text-fg transition-colors duration-200"
 										>
 											{item.label}

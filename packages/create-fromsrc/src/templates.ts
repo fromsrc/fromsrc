@@ -36,7 +36,7 @@ export function packagejson(name: string, framework: Framework): string {
 				dependencies: {
 					...base.dependencies,
 					next: "^16.0.0",
-					"next-mdx-remote": "^5.0.0",
+					"next-mdx-remote": "^6.0.0",
 				},
 				devDependencies: {
 					...base.devDependencies,

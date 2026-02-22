@@ -213,12 +213,17 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 	async function getNavigation(): Promise<{ title: string; items: Meta[] }[]> {
 		if (isProduction() && navCache) return navCache
 
-		const docs = await getAllDocs()
-		const filtered = await buildNavigation(docs, config.dir)
-		if (isProduction()) {
-			navCache = filtered
+		try {
+			const docs = await getAllDocs()
+			const filtered = await buildNavigation(docs, config.dir)
+			if (isProduction()) {
+				navCache = filtered
+			}
+			return filtered
+		} catch (error) {
+			console.error(`Failed to build navigation for ${config.dir}:`, error)
+			return []
 		}
-		return filtered
 	}
 
 	let searchCache: (Meta & { content: string; headings?: Heading[] })[] | null = null
@@ -447,8 +452,13 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 }
 
 export async function getNavigation(docsDir: string): Promise<{ title: string; items: DocMeta[] }[]> {
-	const docs = await getAllDocs(docsDir)
-	return buildNavigation(docs, docsDir)
+	try {
+		const docs = await getAllDocs(docsDir)
+		return buildNavigation(docs, docsDir)
+	} catch (error) {
+		console.error(`Failed to build navigation for ${docsDir}:`, error)
+		return []
+	}
 }
 
 const searchCache = new Map<string, SearchDoc[]>()
@@ -497,6 +507,7 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 		if (error instanceof z.ZodError) {
 			throw error
 		}
+		console.error(`Failed to build search docs in ${docsDir}:`, error)
 		return []
 	}
 
