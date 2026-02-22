@@ -1,0 +1,78 @@
+---
+title: content source
+description: load docs from local, remote, or github sources
+order: 5
+---
+
+fromsrc supports pluggable content sources for docs, ai routes, and mcp handlers.
+
+## local source
+
+use `defineContent` for local filesystem docs:
+
+```ts
+import { defineContent } from "fromsrc";
+
+export const content = defineContent({
+	dir: "docs",
+});
+```
+
+## remote source
+
+use `createRemoteSource` when docs are hosted on a remote fromsrc site:
+
+```ts
+import { createRemoteSource } from "fromsrc";
+
+const source = createRemoteSource({
+	baseUrl: "https://fromsrc.com",
+});
+```
+
+default remote endpoints:
+
+- list: `/api/docs?limit=1000`
+- page content: `/api/raw/[...slug]`
+- search index: `/api/search-index`
+- fallback index: `/llms.txt`
+
+## github source
+
+use `createGithubSource` to read docs directly from a repository:
+
+```ts
+import { createGithubSource } from "fromsrc";
+
+const source = createGithubSource({
+	owner: "fromsrc",
+	repo: "fromsrc",
+	branch: "main",
+	path: "docs",
+});
+```
+
+`createGithubSource` provides:
+
+- page listing
+- page content loading
+- cached full-text search documents for mcp search tools
+
+## mcp integration
+
+wire any source into the mcp handler:
+
+```ts
+import { createMcpHandler, createRemoteSource } from "fromsrc";
+
+const source = createRemoteSource({ baseUrl: "https://fromsrc.com" });
+
+const mcp = createMcpHandler(
+	{
+		name: "fromsrc",
+		version: "0.0.0",
+		baseUrl: "https://fromsrc.com",
+	},
+	source,
+);
+```
