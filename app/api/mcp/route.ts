@@ -26,6 +26,10 @@ const source: ContentSource = {
 }
 
 const handler = createMcpHandler(config, source)
+const legacybody = z.object({
+	method: method.shape.method,
+	params: z.unknown().optional(),
+})
 const cors = {
 	"Access-Control-Allow-Origin": "*",
 	"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -72,10 +76,10 @@ export async function POST(request: Request) {
 		name = rpc.data.method
 		params = rpc.data.params
 	} else {
-		const legacy = method.safeParse(body)
+		const legacy = legacybody.safeParse(body)
 		if (!legacy.success) return Response.json({ error: "invalid method" }, { status: 400, headers: cors })
 		name = legacy.data.method
-		params = (body as { params?: unknown }).params
+		params = legacy.data.params
 	}
 
 	const result = await execute({ name, params, config, handler })
