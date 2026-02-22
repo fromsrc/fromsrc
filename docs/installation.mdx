@@ -73,6 +73,10 @@ add fromsrc to an existing app:
 fromsrc adapters are opt-in and tree-shake cleanly.
 </Callout>
 
+<Callout type="info">
+for the smallest bundles, prefer subpath imports like `fromsrc/readtime`, `fromsrc/searchindex`, and `fromsrc/openapi` for utility-only usage.
+</Callout>
+
 for framework-specific walkthroughs, use the manual guides:
 
 <Cards>
@@ -210,7 +214,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     ```bash
     bun run check:shake
     ```
-    this validates utility and adapter subpath imports stay inside budget.
+    this validates root, utility, and adapter imports stay inside budget.
   </AccordionItem>
   <AccordionItem title="search not working">
     search indexes content from your docs folder. ensure you have `.mdx` files with valid frontmatter:
