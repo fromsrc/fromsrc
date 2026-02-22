@@ -51,7 +51,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
 }
 `
 
-export const docspage = `import { readFileSync } from "node:fs"
+export const docspage = `import { readFile } from "node:fs/promises"
 import { resolve } from "node:path"
 import { MDXRemote } from "next-mdx-remote/rsc"
 
@@ -69,30 +69,25 @@ export default async function DocPage({ params }: Props) {
 \tconst nested = resolve(base, path, "index.mdx")
 \tconst rooted = \`\${base}/\`
 \tif ((!direct.startsWith(rooted) && direct !== base) || (!nested.startsWith(rooted) && nested !== base)) return <p>not found</p>
-
-\tlet content: string
+\tlet content = ""
 \ttry {
-\t\tcontent = readFileSync(direct, "utf-8")
+\t\tcontent = await readFile(direct, "utf-8")
 \t} catch {
 \t\ttry {
-\t\t\tcontent = readFileSync(nested, "utf-8")
+\t\t\tcontent = await readFile(nested, "utf-8")
 \t\t} catch {
 \t\t\treturn <p>not found</p>
 \t\t}
 \t}
-
 \tconst lines = content.split("\\n")
 \tlet title = ""
 \tlet body = content
-
 \tif (lines[0] === "---") {
 \t\tconst end = lines.indexOf("---", 1)
 \t\tif (end !== -1) {
 \t\t\tfor (let i = 1; i < end; i++) {
 \t\t\t\tconst line = lines[i]!
-\t\t\t\tif (line.startsWith("title:")) {
-\t\t\t\t\ttitle = line.slice(6).trim()
-\t\t\t\t}
+\t\t\t\tif (line.startsWith("title:")) title = line.slice(6).trim()
 \t\t\t}
 \t\t\tbody = lines.slice(end + 1).join("\\n").trim()
 \t\t}

@@ -69,20 +69,41 @@ export function removeDocument(index: SearchIndex, path: string): void {
 	if (idx === -1) return
 	const doc = index.documents[idx]
 	if (!doc) return
-	const tokens = new Set(tokenize(doctext(doc), index.config))
-	for (const token of tokens) {
+	const lastidx = index.documents.length - 1
+	const remove = (token: string, target: number) => {
 		const entries = index.terms.get(token)
-		if (!entries) continue
-		const next = entries
-			.filter((value) => value !== idx)
-			.map((value) => (value > idx ? value - 1 : value))
+		if (!entries) return
+		const next = entries.filter((value) => value !== target)
 		if (next.length === 0) {
 			index.terms.delete(token)
 		} else {
 			index.terms.set(token, next)
 		}
 	}
-	index.documents.splice(idx, 1)
+	const replace = (token: string, from: number, to: number) => {
+		const entries = index.terms.get(token)
+		if (!entries) return
+		const position = entries.indexOf(from)
+		if (position === -1) return
+		entries[position] = to
+	}
+	for (const token of new Set(tokenize(doctext(doc), index.config))) {
+		remove(token, idx)
+	}
+	if (idx === lastidx) {
+		index.documents.pop()
+		return
+	}
+	const lastdoc = index.documents[lastidx]
+	if (!lastdoc) {
+		index.documents.pop()
+		return
+	}
+	for (const token of new Set(tokenize(doctext(lastdoc), index.config))) {
+		replace(token, lastidx, idx)
+	}
+	index.documents[idx] = lastdoc
+	index.documents.pop()
 }
 
 export function search(index: SearchIndex, query: string, limit = 10): SearchDocument[] {
