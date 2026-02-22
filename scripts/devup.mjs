@@ -1,6 +1,6 @@
 import { openSync } from "node:fs";
 import { readFile, unlink, writeFile } from "node:fs/promises";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { join } from "node:path";
 import net from "node:net";
 
@@ -67,6 +67,16 @@ if (Number.isFinite(port) && port > 0) {
 		console.log(`o port busy (${port})`);
 		process.exit(0);
 	}
+}
+
+const built = spawnSync("bun", ["run", "build:pkg"], {
+	cwd: root,
+	stdio: "inherit",
+	env: process.env,
+});
+if (built.status !== 0) {
+	console.log("x build failed");
+	process.exit(built.status ?? 1);
 }
 
 const fd = openSync(logfile, "w");
