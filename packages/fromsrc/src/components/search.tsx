@@ -14,6 +14,7 @@ import { getOptionId } from "./results"
 import { Panel } from "./panel"
 import { Trigger } from "./trigger"
 import { useSearcher } from "./searcher"
+import { getRecentOptionId } from "./recent"
 
 export interface SearchProps {
 	basePath?: string
@@ -72,7 +73,9 @@ export function Search({
 	}, [endpoint, remote.results, value])
 	const results = endpoint ? remoteResults : local
 	const loading = endpoint ? remote.loading : adapterloading
+	const hasrecent = value.trim().length === 0 && recent.length > 0
 	const safe = results.length === 0 ? -1 : Math.min(selected, results.length - 1)
+	const saferecent = hasrecent ? Math.min(selected, recent.length - 1) : -1
 	useScrollLock(open)
 	const openmodal = useCallback((): void => {
 		const active = document.activeElement
@@ -132,10 +135,12 @@ export function Search({
 	}, [adapter, endpoint, limit, searchdocs, value])
 
 	useEffect(() => {
-		if (safe < 0 || !list.current) return
-		const option = list.current.querySelector(`#${getOptionId(safe)}`)
+		const target = hasrecent ? saferecent : safe
+		if (target < 0 || !list.current) return
+		const id = hasrecent ? getRecentOptionId(target) : getOptionId(target)
+		const option = list.current.querySelector(`#${id}`)
 		option?.scrollIntoView({ block: "nearest" })
-	}, [safe])
+	}, [hasrecent, safe, saferecent])
 
 	const save = useCallback(
 		(item: string): void => {
@@ -158,6 +163,34 @@ export function Search({
 
 	const onkey = useCallback(
 		(event: React.KeyboardEvent): void => {
+			if (hasrecent) {
+				if (event.key === "ArrowDown") {
+					event.preventDefault()
+					setSelected((item) => Math.min(item + 1, recent.length - 1))
+					return
+				}
+				if (event.key === "ArrowUp") {
+					event.preventDefault()
+					setSelected((item) => Math.max(item - 1, 0))
+					return
+				}
+				if (event.key === "Home") {
+					event.preventDefault()
+					setSelected(0)
+					return
+				}
+				if (event.key === "End") {
+					event.preventDefault()
+					setSelected(recent.length - 1)
+					return
+				}
+				if (event.key === "Enter" && saferecent >= 0 && recent[saferecent]) {
+					event.preventDefault()
+					updatequery(recent[saferecent])
+					setSelected(0)
+					return
+				}
+			}
 			if (results.length === 0) return
 			if (event.key === "ArrowDown") {
 				event.preventDefault()
@@ -189,7 +222,7 @@ export function Search({
 				navigate(results[safe].doc.slug, results[safe].anchor)
 			}
 		},
-		[navigate, results, safe, updatequery],
+		[hasrecent, navigate, recent, results, safe, saferecent, updatequery],
 	)
 
 	if (!open) {
@@ -201,7 +234,7 @@ export function Search({
 		<Panel
 			query={query}
 			value={value}
-			safe={safe}
+			safe={hasrecent ? saferecent : safe}
 			recent={recent}
 			loading={loading}
 			results={results}
