@@ -5,8 +5,10 @@ import type { Framework } from "./templates"
 const frameworks = ["next.js", "react-router", "vite", "tanstack", "remix", "astro"] as const
 const aliases = {
 	next: "next.js",
+	nextjs: "next.js",
 	rr: "react-router",
 	router: "react-router",
+	reactrouter: "react-router",
 	ts: "tanstack",
 	tanstackstart: "tanstack",
 } as const
@@ -62,10 +64,10 @@ function parseframework(value: string | undefined): Framework | undefined {
 	if (!value) {
 		return undefined
 	}
-	const key = value.toLowerCase()
+	const key = value.toLowerCase().replaceAll("_", "").replaceAll("-", "").replaceAll(".", "")
 	const mapped = (aliases as Record<string, Framework | undefined>)[key]
-	const target = mapped ?? value
-	const found = frameworks.find((item) => item === target)
+	const target = mapped ?? value.toLowerCase()
+	const found = frameworks.find((item) => item.toLowerCase() === target)
 	return found
 }
 

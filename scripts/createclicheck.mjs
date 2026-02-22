@@ -29,6 +29,7 @@ const runhelp = await run(["--help"]);
 const runlist = await run(["--list"]);
 const runbad = await run(["--name", "bad-docs", "--framework", "bad", "--yes"]);
 const runpositional = await run(["cli-positional", "--framework", "next.js", "--yes"]);
+const runcase = await run(["--name", "cli-case-next", "--framework", "Next.js", "--yes"]);
 const cases = [
 	{
 		name: "cli-next",
@@ -71,6 +72,7 @@ for (const item of cases) {
 	})
 }
 const runalias = await run(["--name", "cli-alias-rr", "--framework", "rr", "--yes"]);
+const runaliasfull = await run(["--name", "cli-alias-reactrouter", "--framework", "reactrouter", "--yes"]);
 
 const issues = [];
 for (const item of runs) {
@@ -96,6 +98,22 @@ try {
 	await access(join(temp, "cli-alias-rr", "src", "main.tsx"));
 } catch {
 	issues.push("alias rr: missing src/main.tsx");
+}
+if (runaliasfull.code !== 0) {
+	issues.push(`alias reactrouter: cli exited with ${runaliasfull.code}`);
+}
+try {
+	await access(join(temp, "cli-alias-reactrouter", "src", "main.tsx"));
+} catch {
+	issues.push("alias reactrouter: missing src/main.tsx");
+}
+if (runcase.code !== 0) {
+	issues.push(`case-insensitive next.js: cli exited with ${runcase.code}`);
+}
+try {
+	await access(join(temp, "cli-case-next", "next.config.ts"));
+} catch {
+	issues.push("case-insensitive next.js: missing next.config.ts");
 }
 
 if (runhelp.code !== 0 || !runhelp.out.includes("usage: create-fromsrc")) {
@@ -128,6 +146,8 @@ if (issues.length > 0) {
 		if (item.result.err.trim()) console.error(item.result.err.trim());
 	}
 	if (runalias.err.trim()) console.error(runalias.err.trim());
+	if (runaliasfull.err.trim()) console.error(runaliasfull.err.trim());
+	if (runcase.err.trim()) console.error(runcase.err.trim());
 	if (runhelp.err.trim()) console.error(runhelp.err.trim());
 	if (runlist.err.trim()) console.error(runlist.err.trim());
 	if (runbad.err.trim()) console.error(runbad.err.trim());
