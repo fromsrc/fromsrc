@@ -31,6 +31,7 @@
 		"check:adapters": "bun scripts/adaptercheck.mjs",
 		"check:frameworksync": "bun scripts/frameworksynccheck.mjs",
 		"check:scaffold": "bun scripts/scaffoldcheck.mjs",
+		"check:scaffoldsmoke": "bun run build:create && bun scripts/scaffoldsmoke.mjs",
 		"check:createcli": "bun scripts/createclicheck.mjs",
 		"check:shake": "bun run build:pkg && bun run check:shake:raw",
 		"check:shake:raw": "bun scripts/sizecheck.mjs",
