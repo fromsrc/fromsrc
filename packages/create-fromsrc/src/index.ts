@@ -44,6 +44,41 @@ function hasflag(key: string, short: string): boolean {
 	return args.includes(`--${key}`) || args.includes(`-${short}`)
 }
 
+function missingvalue(key: string, short: string): boolean {
+	const args = process.argv.slice(2)
+	const full = args.indexOf(`--${key}`)
+	if (full !== -1) {
+		const value = args[full + 1]
+		return !value || value.startsWith("-")
+	}
+	const mini = args.indexOf(`-${short}`)
+	if (mini !== -1) {
+		const value = args[mini + 1]
+		return !value || value.startsWith("-")
+	}
+	return false
+}
+
+function unknownflags(): string[] {
+	const args = process.argv.slice(2)
+	const known = new Set(["--name", "-n", "--framework", "-f", "--yes", "-y", "--help", "-h", "--list", "-l"])
+	const out: string[] = []
+	for (let i = 0; i < args.length; i++) {
+		const value = args[i]
+		if (!value || !value.startsWith("-")) {
+			continue
+		}
+		if (known.has(value)) {
+			if (value === "--name" || value === "-n" || value === "--framework" || value === "-f") {
+				i += 1
+			}
+			continue
+		}
+		out.push(value)
+	}
+	return out
+}
+
 function positional(): string | undefined {
 	const args = process.argv.slice(2)
 	for (let i = 0; i < args.length; i++) {
@@ -86,6 +121,22 @@ async function main() {
 	}
 
 	const yes = hasflag("yes", "y")
+	const unknown = unknownflags()
+	if (unknown.length > 0) {
+		close()
+		console.log(`  unknown option: ${unknown[0]}\n`)
+		process.exit(1)
+	}
+	if (missingvalue("name", "n")) {
+		close()
+		console.log("  missing value for --name\n")
+		process.exit(1)
+	}
+	if (missingvalue("framework", "f")) {
+		close()
+		console.log("  missing value for --framework\n")
+		process.exit(1)
+	}
 	const argname = readflag("name", "n")
 	const positionalname = positional()
 	const argframework = parseframework(readflag("framework", "f"))

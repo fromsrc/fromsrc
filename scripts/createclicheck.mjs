@@ -30,6 +30,9 @@ const runlist = await run(["--list"]);
 const runbad = await run(["--name", "bad-docs", "--framework", "bad", "--yes"]);
 const runpositional = await run(["cli-positional", "--framework", "next.js", "--yes"]);
 const runcase = await run(["--name", "cli-case-next", "--framework", "Next.js", "--yes"]);
+const runmissingname = await run(["--name"]);
+const runmissingframework = await run(["--framework"]);
+const rununknown = await run(["--wat"]);
 const cases = [
 	{
 		name: "cli-next",
@@ -127,6 +130,15 @@ if (runlist.code !== 0 || !runlist.out.includes("next.js") || !runlist.out.inclu
 if (runbad.code === 0 || !runbad.out.includes("invalid framework")) {
 	issues.push("cli invalid framework path missing or failed");
 }
+if (runmissingname.code === 0 || !runmissingname.out.includes("missing value for --name")) {
+	issues.push("cli missing --name value path missing or failed");
+}
+if (runmissingframework.code === 0 || !runmissingframework.out.includes("missing value for --framework")) {
+	issues.push("cli missing --framework value path missing or failed");
+}
+if (rununknown.code === 0 || !rununknown.out.includes("unknown option")) {
+	issues.push("cli unknown option path missing or failed");
+}
 
 if (runpositional.code !== 0 || !runpositional.out.includes("created cli-positional")) {
 	issues.push("cli positional name path missing or failed");
@@ -151,6 +163,9 @@ if (issues.length > 0) {
 	if (runhelp.err.trim()) console.error(runhelp.err.trim());
 	if (runlist.err.trim()) console.error(runlist.err.trim());
 	if (runbad.err.trim()) console.error(runbad.err.trim());
+	if (runmissingname.err.trim()) console.error(runmissingname.err.trim());
+	if (runmissingframework.err.trim()) console.error(runmissingframework.err.trim());
+	if (rununknown.err.trim()) console.error(rununknown.err.trim());
 	if (runpositional.err.trim()) console.error(runpositional.err.trim());
 	process.exit(1);
 }
