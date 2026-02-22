@@ -19,6 +19,10 @@ const files = [
 		expect: ['import { adapters } from "./frameworkset.mjs";'],
 	},
 	{
+		path: "scripts/entryset.mjs",
+		expect: ['import { adapterpaths } from "./frameworkset.mjs";'],
+	},
+	{
 		path: "docs/frameworks.mdx",
 		expect: adapterpaths,
 	},

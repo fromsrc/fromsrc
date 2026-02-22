@@ -1,12 +1,17 @@
+import { adapterpaths } from "./frameworkset.mjs";
+
+const frameworkentries = adapterpaths.map((path) => {
+	const key = `./${path.replace("fromsrc/", "")}`;
+	if (key === "./react-router") {
+		return [key, "reactrouter.ts"];
+	}
+	return [key, `${key.replace("./", "")}.ts`];
+});
+
 export const entrymap = new Map([
 	[".", "index.ts"],
 	["./client", "client.ts"],
-	["./next", "next.ts"],
-	["./react-router", "reactrouter.ts"],
-	["./vite", "vite.ts"],
-	["./tanstack", "tanstack.ts"],
-	["./remix", "remix.ts"],
-	["./astro", "astro.ts"],
+	...frameworkentries,
 	["./readtime", "readtime.ts"],
 	["./searchscore", "searchscore.ts"],
 	["./searchindex", "searchindex.ts"],
@@ -20,12 +25,4 @@ export const entrymap = new Map([
 
 export const entryfiles = Array.from(entrymap.values()).filter((value) => value !== null);
 
-export const clientkeys = [
-	"./client",
-	"./next",
-	"./react-router",
-	"./vite",
-	"./tanstack",
-	"./remix",
-	"./astro",
-];
+export const clientkeys = ["./client", ...frameworkentries.map(([key]) => key)];
