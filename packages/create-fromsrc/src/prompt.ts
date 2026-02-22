@@ -5,10 +5,6 @@ const rl = createInterface({
 	output: process.stdout,
 })
 
-rl.on("close", () => {
-	process.exit(0)
-})
-
 export function ask(question: string, fallback: string): Promise<string> {
 	return new Promise((resolve) => {
 		rl.question(`${question} (${fallback}): `, (answer) => {
