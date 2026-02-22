@@ -4,6 +4,7 @@ import matter from "gray-matter";
 
 const root = process.cwd();
 const docsroot = join(root, "docs");
+const segment = /^[a-z0-9][a-z0-9_-]*$/;
 
 function slug(value) {
 	return value.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-");
@@ -122,6 +123,12 @@ async function anchorsfor(file) {
 for (const file of list) {
 	const raw = await readFile(file, "utf8");
 	const name = file.slice(root.length + 1);
+	const path = route(file);
+	if (path !== "/docs") {
+		for (const part of path.slice("/docs/".length).split("/")) {
+			if (!segment.test(part)) issues.push(`${name}: invalid route segment ${part}`);
+		}
+	}
 	let parsed;
 	try {
 		parsed = matter(raw);
