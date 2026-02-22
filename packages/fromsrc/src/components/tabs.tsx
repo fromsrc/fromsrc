@@ -25,21 +25,6 @@ interface TabsContextValue {
 
 const TabsContext = createContext<TabsContextValue | null>(null)
 
-/**
- * Accessible tabbed interface component with keyboard navigation.
- * Supports arrow keys, Home, and End for navigation.
- * @property items - array of tab names to display
- * @property defaultValue - initially active tab, defaults to first item
- * @property children - Tab elements corresponding to items
- * @example
- * ```tsx
- * <Tabs items={["npm", "yarn", "pnpm"]}>
- *   <Tab value="npm">npm install fromsrc</Tab>
- *   <Tab value="yarn">yarn add fromsrc</Tab>
- *   <Tab value="pnpm">pnpm add fromsrc</Tab>
- * </Tabs>
- * ```
- */
 export interface TabsProps {
 	items: readonly string[]
 	defaultValue?: string
@@ -135,12 +120,6 @@ export function Tabs({ items, defaultValue, children }: TabsProps): JSX.Element 
 	)
 }
 
-/**
- * Individual tab panel content within a Tabs container.
- * Only renders when its value matches the active tab.
- * @property value - must match an item from parent Tabs items array
- * @property children - content to display when tab is active
- */
 export interface TabProps {
 	value: string
 	children: ReactNode
