@@ -1,8 +1,8 @@
 const endpoints = [
-	{ path: "/docs/auth.md", desc: "raw markdown" },
-	{ path: "/docs/auth/llms.txt", desc: "ai-optimized" },
+	{ path: "/api/raw/auth", desc: "raw markdown" },
+	{ path: "/api/llms/auth", desc: "ai-optimized" },
 	{ path: "/llms.txt", desc: "all docs" },
-	{ path: "/mcp", desc: "real-time" },
+	{ path: "/api/mcp", desc: "real-time" },
 ]
 
 export function Native() {
@@ -39,7 +39,7 @@ export function Native() {
 								<span className="text-muted" aria-hidden="true">
 									$
 								</span>
-								<code>curl fromsrc.com/docs/auth/llms.txt</code>
+								<code>curl fromsrc.com/api/llms/auth</code>
 							</div>
 							<div className="pl-6 text-muted border-l border-line">
 								<p className="text-dim"># Authentication</p>

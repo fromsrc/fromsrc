@@ -8,8 +8,8 @@ export interface LlmsConfig {
 
 function formatEntry(baseUrl: string, doc: DocMeta): string {
 	const url = `${baseUrl}/docs/${doc.slug}`
-	const desc = doc.description ? `: ${doc.description}` : ""
-	return `- [${doc.title}](${url})${desc}`
+	const desc = doc.description ? `: ${escapeMarkdown(doc.description)}` : ""
+	return `- [${escapeMarkdown(doc.title)}](${url})${desc}`
 }
 
 export function generateLlmsIndex(config: LlmsConfig, docs: DocMeta[]): string {
@@ -27,11 +27,15 @@ export function generateLlmsFull(config: LlmsConfig, docs: Doc[]): string {
 	}
 	lines.push("", "## content")
 	for (const doc of docs) {
-		lines.push("", `### ${doc.title}`)
+		lines.push("", `### ${escapeMarkdown(doc.title)}`)
 		if (doc.description) {
-			lines.push("", doc.description)
+			lines.push("", escapeMarkdown(doc.description))
 		}
 		lines.push("", doc.content.trim())
 	}
 	return lines.join("\n")
+}
+
+function escapeMarkdown(text: string): string {
+	return text.replace(/[[\]()\\]/g, "\\$&")
 }

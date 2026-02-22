@@ -117,73 +117,86 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 		return files
 	}
 
-	return {
-		async list() {
-			const cached = listCache.get("list")
-			if (cached) return cached
+	const list = async (): Promise<DocMeta[]> => {
+		const cached = listCache.get("list")
+		if (cached) return cached
 
+		try {
+			const entries = await allEntries()
+			const prefix = docsPath ? `${docsPath}/` : ""
+			const docs: DocMeta[] = entries
+				.filter((item) => item.path.startsWith(prefix) && item.path.endsWith(".mdx"))
+				.map((item) => {
+					const slug = item.path
+						.slice(prefix.length)
+						.replace(/\.mdx$/, "")
+						.replace(/\/index$/, "")
+					return { slug, title: slug.split("/").pop() ?? slug }
+				})
+
+			listCache.set("list", docs)
+			return docs
+		} catch (error) {
+			console.error("github source list failed", error)
+			return []
+		}
+	}
+
+	const get = async (slug: string[]): Promise<{ content: string; data: Record<string, unknown> } | null> => {
+		const path = slug.length === 0 ? "index" : slug.join("/")
+		const cacheKey = path
+
+		const cached = fileCache.get(cacheKey)
+		if (cached) return cached
+
+		const filepath = `${docsPath}/${path}.mdx`
+		const indexPath = `${docsPath}/${path}/index.mdx`
+
+		for (const candidate of [filepath, indexPath]) {
 			try {
-				const entries = await allEntries()
-				const prefix = docsPath ? `${docsPath}/` : ""
-				const docs: DocMeta[] = entries
-					.filter((item) => item.path.startsWith(prefix) && item.path.endsWith(".mdx"))
-					.map((item) => {
-						const slug = item.path
-							.slice(prefix.length)
-							.replace(/\.mdx$/, "")
-							.replace(/\/index$/, "")
-						return { slug, title: slug.split("/").pop() ?? slug }
-					})
-
-				listCache.set("list", docs)
-				return docs
+				const res = await fetch(rawUrl(candidate), { headers })
+				if (!res.ok) continue
+				const raw = await res.text()
+				const { content, data } = matter(raw)
+				const result = { content, data }
+				fileCache.set(cacheKey, result)
+				return result
 			} catch {
-				return []
+				continue
 			}
-		},
+		}
 
-		async get(slug) {
-			const path = slug.length === 0 ? "index" : slug.join("/")
-			const cacheKey = path
+		return null
+	}
 
-			const cached = fileCache.get(cacheKey)
-			if (cached) return cached
-
-			const filepath = `${docsPath}/${path}.mdx`
-			const indexPath = `${docsPath}/${path}/index.mdx`
-
-			for (const candidate of [filepath, indexPath]) {
-				try {
-					const res = await fetch(rawUrl(candidate), { headers })
-					if (!res.ok) continue
-					const raw = await res.text()
-					const { content, data } = matter(raw)
-					const result = { content, data }
-					fileCache.set(cacheKey, result)
-					return result
-				} catch {
-					continue
-				}
-			}
-
-			return null
-		},
-
+	return {
+		list,
+		get,
 		async search() {
 			const cached = searchCache.get("search")
 			if (cached) return cached
-			const listed = await this.list()
+			const listed = await list()
 			const docs: SearchDoc[] = []
-			for (const doc of listed) {
-				const value = await this.get(doc.slug ? doc.slug.split("/") : [])
-				if (!value) continue
-				docs.push({
-					slug: doc.slug,
-					title: doc.title,
-					description: doc.description,
-					content: value.content,
-					headings: extractHeadings(value.content),
-				})
+			const batchSize = 8
+			for (let index = 0; index < listed.length; index += batchSize) {
+				const batch = listed.slice(index, index + batchSize)
+				const values = await Promise.all(
+					batch.map(async (doc) => {
+						const value = await get(doc.slug ? doc.slug.split("/") : [])
+						if (!value) return null
+						return {
+							slug: doc.slug,
+							title: doc.title,
+							description: doc.description,
+							content: value.content,
+							headings: extractHeadings(value.content),
+						} satisfies SearchDoc
+					}),
+				)
+				for (const item of values) {
+					if (!item) continue
+					docs.push(item)
+				}
 			}
 			searchCache.set("search", docs)
 			return docs

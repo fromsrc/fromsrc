@@ -104,6 +104,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 				console.error(error.errors)
 				throw error
 			}
+			console.error(`Failed to parse ${filepath}:`, error)
 			return null
 		}
 	}
@@ -208,39 +209,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 		if (isProduction() && navCache) return navCache
 
 		const docs = await getAllDocs()
-
-		const intro: { title: string; items: Meta[] } = { title: "introduction", items: [] }
-		const manual: { title: string; items: Meta[] } = { title: "manual", items: [] }
-		const components: { title: string; items: Meta[] } = { title: "components", items: [] }
-		const apis: { title: string; items: Meta[] } = { title: "api", items: [] }
-		const examples: { title: string; items: Meta[] } = { title: "examples", items: [] }
-		const sections = [intro, manual, components, apis, examples]
-
-		for (const doc of docs) {
-			if (doc.slug.startsWith("components/")) {
-				components.items.push(doc)
-			} else if (doc.slug.startsWith("manual/")) {
-				manual.items.push(doc)
-			} else if (doc.slug.startsWith("api/")) {
-				apis.items.push(doc)
-			} else if (doc.slug.startsWith("examples/")) {
-				examples.items.push(doc)
-			} else {
-				intro.items.push(doc)
-			}
-		}
-		const [manualMeta, componentsMeta, apiMeta, examplesMeta] = await Promise.all([
-			loadMeta(join(config.dir, "manual")),
-			loadMeta(join(config.dir, "components")),
-			loadMeta(join(config.dir, "api")),
-			loadMeta(join(config.dir, "examples")),
-		])
-		manual.items = sortByMeta(manual.items, manualMeta?.pages, "manual/")
-		components.items = sortByMeta(components.items, componentsMeta?.pages, "components/")
-		apis.items = sortByMeta(apis.items, apiMeta?.pages, "api/")
-		examples.items = sortByMeta(examples.items, examplesMeta?.pages, "examples/")
-
-		const filtered = sections.filter((s) => s.items.length > 0)
+		const filtered = await buildNavigation(docs, config.dir)
 		if (isProduction()) {
 			navCache = filtered
 		}
@@ -418,6 +387,7 @@ export async function getDoc(docsDir: string, slug: string[]): Promise<Doc | nul
 			console.error(error.errors)
 			throw error
 		}
+		console.error(`Failed to parse ${filepath}:`, error)
 		return null
 	}
 }
@@ -486,39 +456,7 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 
 export async function getNavigation(docsDir: string): Promise<{ title: string; items: DocMeta[] }[]> {
 	const docs = await getAllDocs(docsDir)
-
-	const intro: { title: string; items: DocMeta[] } = { title: "introduction", items: [] }
-	const manual: { title: string; items: DocMeta[] } = { title: "manual", items: [] }
-	const components: { title: string; items: DocMeta[] } = { title: "components", items: [] }
-	const apis: { title: string; items: DocMeta[] } = { title: "api", items: [] }
-	const examples: { title: string; items: DocMeta[] } = { title: "examples", items: [] }
-	const sections = [intro, manual, components, apis, examples]
-
-	for (const doc of docs) {
-		if (doc.slug.startsWith("components/")) {
-			components.items.push(doc)
-		} else if (doc.slug.startsWith("manual/")) {
-			manual.items.push(doc)
-		} else if (doc.slug.startsWith("api/")) {
-			apis.items.push(doc)
-		} else if (doc.slug.startsWith("examples/")) {
-			examples.items.push(doc)
-		} else {
-			intro.items.push(doc)
-		}
-	}
-	const [manualMeta, componentsMeta, apiMeta, examplesMeta] = await Promise.all([
-		loadMeta(join(docsDir, "manual")),
-		loadMeta(join(docsDir, "components")),
-		loadMeta(join(docsDir, "api")),
-		loadMeta(join(docsDir, "examples")),
-	])
-	manual.items = sortByMeta(manual.items, manualMeta?.pages, "manual/")
-	components.items = sortByMeta(components.items, componentsMeta?.pages, "components/")
-	apis.items = sortByMeta(apis.items, apiMeta?.pages, "api/")
-	examples.items = sortByMeta(examples.items, examplesMeta?.pages, "examples/")
-
-	return sections.filter((s) => s.items.length > 0)
+	return buildNavigation(docs, docsDir)
 }
 
 const searchCache = new Map<string, SearchDoc[]>()
@@ -575,4 +513,81 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
 		searchCache.set(cacheKey, sorted)
 	}
 	return sorted
+}
+
+interface navsection<T> {
+	key: string
+	title: string
+	items: T[]
+}
+
+type navitem = { slug: string; order?: number }
+
+async function buildNavigation<T extends navitem>(
+	docs: T[],
+	docsDir: string,
+): Promise<{ title: string; items: T[] }[]> {
+	const grouped = new Map<string, navsection<T>>()
+
+	for (const doc of docs) {
+		const key = groupkey(doc.slug)
+		const section = grouped.get(key) ?? {
+			key,
+			title: key === "" ? "introduction" : key.replace(/-/g, " "),
+			items: [],
+		}
+		section.items.push(doc)
+		grouped.set(key, section)
+	}
+
+	const rootMeta = await loadMeta(docsDir)
+	const order = sectionOrder(rootMeta?.pages)
+	const sections = [...grouped.values()]
+	sections.sort((left, right) => {
+		const leftOrder = order.get(left.key)
+		const rightOrder = order.get(right.key)
+		if (leftOrder !== undefined && rightOrder !== undefined) return leftOrder - rightOrder
+		if (leftOrder !== undefined) return -1
+		if (rightOrder !== undefined) return 1
+		if (left.key === "") return -1
+		if (right.key === "") return 1
+		return left.key.localeCompare(right.key)
+	})
+
+	const metas = await Promise.all(
+		sections.map((section) => {
+			if (section.key === "") return Promise.resolve<MetaFile | null>(null)
+			return loadMeta(join(docsDir, section.key))
+		}),
+	)
+
+	return sections
+		.map((section, index) => {
+			const prefix = section.key ? `${section.key}/` : ""
+			const sorted = sortByMeta(section.items, metas[index]?.pages, prefix)
+			return {
+				title: section.title,
+				items: sorted,
+			}
+		})
+		.filter((section) => section.items.length > 0)
+}
+
+function sectionOrder(pages: string[] | undefined): Map<string, number> {
+	const order = new Map<string, number>()
+	if (!pages) return order
+	for (const page of pages) {
+		const key = groupkey(page)
+		if (!order.has(key)) {
+			order.set(key, order.size)
+		}
+	}
+	return order
+}
+
+function groupkey(slug: string): string {
+	if (!slug || slug === "index") return ""
+	const [head] = slug.split("/")
+	if (!head || head === "index") return ""
+	return head
 }

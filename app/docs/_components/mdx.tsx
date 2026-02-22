@@ -164,7 +164,7 @@ import {
 } from "fromsrc/client"
 import { rehypeAnchors, rehypeSlug, remarkAlerts } from "fromsrc"
 import { MDXRemote } from "next-mdx-remote/rsc"
-import type { ComponentPropsWithoutRef, ReactNode } from "react"
+import { isValidElement, type ComponentPropsWithoutRef, type ReactNode } from "react"
 import remarkGfm from "remark-gfm"
 
 type HeadingProps = ComponentPropsWithoutRef<"h1"> & { children?: ReactNode }
@@ -178,8 +178,21 @@ type PreProps = ComponentPropsWithoutRef<"pre"> & {
 }
 
 function getId(children: ReactNode): string {
-	if (typeof children === "string") {
-		return children.toLowerCase().replace(/\s+/g, "-")
+	const text = nodeText(children).trim()
+	return text
+		.toLowerCase()
+		.replace(/\s+/g, "-")
+		.replace(/[^a-z0-9_-]/g, "")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "")
+}
+
+function nodeText(node: ReactNode): string {
+	if (typeof node === "string" || typeof node === "number") return String(node)
+	if (Array.isArray(node)) return node.map((item) => nodeText(item)).join(" ")
+	if (isValidElement(node)) {
+		const props = node.props as { children?: ReactNode }
+		return nodeText(props.children)
 	}
 	return ""
 }
@@ -188,12 +201,7 @@ const components = {
 	h2: (props: HeadingProps) => <h2 id={getId(props.children)} {...props} />,
 	h3: (props: HeadingProps) => <h3 id={getId(props.children)} {...props} />,
 	h4: (props: HeadingProps) => <h4 id={getId(props.children)} {...props} />,
-	code: (props: CodeProps) => {
-		const text = typeof props.children === "string" ? props.children : ""
-		const isInline = typeof props.children === "string" && !text.includes("\n")
-		if (!isInline) return <code {...props} />
-		return <code {...props} />
-	},
+	code: (props: CodeProps) => <code {...props} />,
 	pre: (props: PreProps) => {
 		const lang = props["data-language"] || ""
 		const title = props["data-title"] || ""

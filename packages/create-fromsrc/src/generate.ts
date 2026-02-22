@@ -52,9 +52,9 @@ export function generate(options: Options) {
 	write(target, "package.json", packagejson(name, framework))
 	write(target, "tsconfig.json", tsconfig(framework))
 	write(target, ".gitignore", gitignore)
-	write(target, "content/docs/index.mdx", welcomemdx)
 
 	if (framework === "next.js") {
+		write(target, "content/docs/index.mdx", welcomemdx)
 		write(target, "next.config.ts", nextconfig)
 		write(target, "next-env.d.ts", nextenv)
 		write(target, "tailwind.config.ts", tailwindconfig)

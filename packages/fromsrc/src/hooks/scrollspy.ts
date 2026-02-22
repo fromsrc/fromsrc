@@ -26,10 +26,11 @@ export function useScrollSpy(ids: string[], options: ScrollSpyOptions = {}): str
 
 		function handleScroll() {
 			const scrollTop = window.scrollY + offset
+			const viewport = window.innerHeight * threshold
 
 			let currentId: string | null = null
 			for (const el of elements) {
-				if (el.offsetTop <= scrollTop) {
+				if (el.offsetTop <= scrollTop + viewport) {
 					currentId = el.id
 				}
 			}

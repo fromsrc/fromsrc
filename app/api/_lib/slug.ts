@@ -4,8 +4,8 @@ import { segmentmdregex, segmentregex } from "@/app/api/_lib/slugpattern";
 const segment = z.string().trim().min(1).max(120).regex(segmentregex);
 const segmentmd = z.string().trim().min(1).max(124).regex(segmentmdregex);
 
-export const slugparams = z.object({ slug: z.array(segment).min(1) });
-export const slugparamsmd = z.object({ slug: z.array(segmentmd).min(1) });
+export const slugparams = z.object({ slug: z.array(segment).default([]) });
+export const slugparamsmd = z.object({ slug: z.array(segmentmd).default([]) });
 
 export function normalizeslug(slug: string[]): string[] {
 	if (slug.length === 0) return slug;

@@ -1,5 +1,3 @@
-"use client"
-
 export type ArrowDirection = "vertical" | "horizontal" | "both"
 
 export interface ArrowNavOptions {

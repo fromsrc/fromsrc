@@ -1,7 +1,7 @@
 {
 	"core": {
-		"size": 123903,
-		"gzip": 34888
+		"size": 124112,
+		"gzip": 34991
 	},
 	"readtime": {
 		"size": 128,
@@ -20,8 +20,8 @@
 		"gzip": 152
 	},
 	"llms": {
-		"size": 351,
-		"gzip": 244
+		"size": 409,
+		"gzip": 278
 	},
 	"openapi": {
 		"size": 4841,

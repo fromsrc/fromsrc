@@ -21,15 +21,16 @@ export function useToc(multi = false): TocState {
 
 	useEffect(() => {
 		function scan() {
-			const elements = document.querySelectorAll("article h2, article h3")
+			const elements = document.querySelectorAll("article h2, article h3, article h4, article h5, article h6")
 			const items: Heading[] = []
 
 			elements.forEach((el) => {
 				if (el.id) {
+					const level = Number(el.tagName.replace("H", ""))
 					items.push({
 						id: el.id,
 						text: el.textContent || "",
-						level: el.tagName === "H2" ? 2 : 3,
+						level: Number.isFinite(level) ? level : 2,
 					})
 				}
 			})

@@ -159,4 +159,9 @@ async function main() {
 	console.log("  bun dev\n")
 }
 
-main()
+main().catch((error) => {
+	close()
+	console.error("\n  failed")
+	console.error(error)
+	process.exit(1)
+})

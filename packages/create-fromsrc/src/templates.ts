@@ -9,7 +9,7 @@ export function packagejson(name: string, framework: Framework): string {
 			node: "^20.19.0 || >=22.12.0",
 		},
 		dependencies: {
-			fromsrc: "latest",
+			fromsrc: "^0.0.0",
 			react: "^19.0.0",
 			"react-dom": "^19.0.0",
 		},
@@ -27,6 +27,8 @@ export function packagejson(name: string, framework: Framework): string {
 				...base,
 				scripts: {
 					dev: "next dev",
+					"dev:up": "bun dev",
+					"dev:status": "echo dev server runs on bun dev",
 					build: "next build",
 					start: "next start",
 					typecheck: "tsc --noEmit",
@@ -53,6 +55,8 @@ export function packagejson(name: string, framework: Framework): string {
 				...base,
 				scripts: {
 					dev: "astro dev",
+					"dev:up": "bun dev",
+					"dev:status": "echo dev server runs on bun dev",
 					build: "astro build",
 					start: "astro preview",
 					typecheck: "tsc --noEmit",
@@ -77,6 +81,8 @@ export function packagejson(name: string, framework: Framework): string {
 				...base,
 				scripts: {
 					dev: "remix vite:dev",
+					"dev:up": "bun dev",
+					"dev:status": "echo dev server runs on bun dev",
 					build: "remix vite:build",
 					start: "remix-serve ./build/server/index.js",
 					typecheck: "tsc --noEmit",
@@ -103,6 +109,8 @@ export function packagejson(name: string, framework: Framework): string {
 				...base,
 				scripts: {
 					dev: "vite",
+					"dev:up": "bun dev",
+					"dev:status": "echo dev server runs on bun dev",
 					build: "vite build",
 					start: "vite preview",
 					typecheck: "tsc --noEmit",
