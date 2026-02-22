@@ -21,6 +21,8 @@ server-side utilities for content loading.
     getAllDocs: { type: "(dir) => Promise<DocMeta[]>", description: "load metadata for all documents" },
     getNavigation: { type: "(dir) => Promise<Section[]>", description: "generate navigation structure" },
     defineContent: { type: "(config) => ContentAPI", description: "create typed content loader" },
+    defineCollection: { type: "(config) => Collection", description: "create typed collection loader" },
+    defineCollections: { type: "(configs) => Record<string, Collection>", description: "create multiple typed collections" },
   }}
 />
 
@@ -121,6 +123,9 @@ react components for building documentation ui.
   </Card>
   <Card title="content api" href="/docs/api/content">
     getDoc, getAllDocs, getNavigation, defineContent
+  </Card>
+  <Card title="collections api" href="/docs/api/collections">
+    defineCollection, defineCollections
   </Card>
   <Card title="components api" href="/docs/api/components">
     props reference for all components

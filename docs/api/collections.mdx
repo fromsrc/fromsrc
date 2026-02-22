@@ -1,0 +1,89 @@
+---
+title: collections api
+description: typed content collections with zod schemas
+order: 4
+---
+
+`defineCollection` and `defineCollections` provide typed collection loaders over `.mdx` files.
+
+## defineCollection
+
+create one typed collection.
+
+```tsx
+import { defineCollection, z } from "fromsrc";
+
+const posts = defineCollection({
+	name: "posts",
+	dir: "content/posts",
+	schema: z.object({
+		title: z.string(),
+		description: z.string().optional(),
+		publishedAt: z.string(),
+		tags: z.array(z.string()).default([]),
+	}),
+});
+```
+
+## defineCollections
+
+create multiple collections in one call.
+
+```tsx
+import { defineCollections, z } from "fromsrc";
+
+const collections = defineCollections({
+	posts: {
+		name: "posts",
+		dir: "content/posts",
+		schema: z.object({
+			title: z.string(),
+			publishedAt: z.string(),
+		}),
+	},
+	changelog: {
+		name: "changelog",
+		dir: "content/changelog",
+		schema: z.object({
+			title: z.string(),
+			version: z.string(),
+		}),
+	},
+});
+```
+
+## returned api
+
+collection instances expose:
+
+- `getAll()`
+- `get(slug)`
+- `count()`
+- `filter(fn)`
+- `sort(key, order?)`
+
+```tsx
+const all = await posts.getAll();
+const one = await posts.get("intro");
+const count = await posts.count();
+const tagged = await posts.filter((item) => item.data.tags.includes("release"));
+const sorted = await posts.sort("slug", "asc");
+```
+
+## type inference
+
+schema fields are inferred through zod.
+
+```tsx
+const first = (await posts.getAll())[0];
+if (first) {
+	first.data.title;
+	first.data.publishedAt;
+}
+```
+
+## notes
+
+- files are scanned recursively under `dir`
+- slugs are file-path based (`nested/page.mdx` -> `nested/page`)
+- frontmatter is validated with `schema.parse`
