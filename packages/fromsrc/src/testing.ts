@@ -71,6 +71,19 @@ export function assertHeadings(
 	content: string,
 	options?: { minCount?: number; maxDepth?: number; sequential?: boolean },
 ) {
+	const ids = [...content.matchAll(/^#{1,6}\s+(.+)$/gm)]
+		.map((match) => {
+			const value = match[1]
+			if (!value) return ""
+			return value.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-")
+		})
+		.filter(Boolean)
+	const seen = new Set<string>()
+	for (const id of ids) {
+		if (seen.has(id)) throw new Error(`duplicate heading id: ${id}`)
+		seen.add(id)
+	}
+
 	const headings = [...content.matchAll(/^(#{1,6})\s+/gm)]
 		.map((m) => m[1]?.length ?? 0)
 		.filter((level) => level > 0)
