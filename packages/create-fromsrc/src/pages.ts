@@ -62,13 +62,18 @@ interface Props {
 export default async function DocPage({ params }: Props) {
 \tconst { slug } = await params
 \tconst path = slug?.join("/") || "index"
-\tconst file = join(process.cwd(), "content", "docs", \`\${path}.mdx\`)
+\tconst direct = join(process.cwd(), "content", "docs", \`\${path}.mdx\`)
+\tconst nested = join(process.cwd(), "content", "docs", path, "index.mdx")
 
 \tlet content: string
 \ttry {
-\t\tcontent = readFileSync(file, "utf-8")
+\t\tcontent = readFileSync(direct, "utf-8")
 \t} catch {
-\t\treturn <p>not found</p>
+\t\ttry {
+\t\t\tcontent = readFileSync(nested, "utf-8")
+\t\t} catch {
+\t\t\treturn <p>not found</p>
+\t\t}
 \t}
 
 \tconst lines = content.split("\\n")
