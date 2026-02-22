@@ -11,11 +11,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 		return send(request, "bad request", cache, 400)
 	}
 	const { slug } = parsed.data
-	const [doc, docs] = await Promise.all([getDoc(slug), getAllDocs()])
+	const doc = await getDoc(slug)
 
 	if (!doc) {
 		return send(request, "not found", cache, 404)
 	}
+	const docs = await getAllDocs()
 
 	const path = slug.join("/")
 	const parent = path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : ""
