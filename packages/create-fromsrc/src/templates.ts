@@ -330,6 +330,55 @@ if (root) {
 `
 }
 
+const docsdata = `const docs = [
+\t{
+\t\ttitle: "getting started",
+\t\tdescription: "build composable docs with full control",
+\t\tsections: [
+\t\t\t{ id: "install", title: "install", body: "bun add fromsrc" },
+\t\t\t{ id: "layout", title: "layout", body: "split primitives and own your ui." },
+\t\t],
+\t},
+]
+`
+
+const docsframe = `\tconst doc = docs[0]
+\treturn (
+\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh", fontFamily: "ui-monospace, monospace" }}>
+\t\t\t<aside style={{ borderRight: "1px solid #1c1c1c", padding: "24px 16px" }}>
+\t\t\t\t<a href="/docs" style={{ display: "block", color: "#fafafa" }}>
+\t\t\t\t\tgetting started
+\t\t\t\t</a>
+\t\t\t</aside>
+\t\t\t<main style={{ padding: 24 }}>
+\t\t\t\t<h1 style={{ marginBottom: 8 }}>{doc.title}</h1>
+\t\t\t\t<p style={{ color: "#737373", marginBottom: 24 }}>{doc.description}</p>
+\t\t\t\t{doc.sections.map((section) => (
+\t\t\t\t\t<section key={section.id} id={section.id} style={{ marginBottom: 20 }}>
+\t\t\t\t\t\t<h2 style={{ marginBottom: 6 }}>{section.title}</h2>
+\t\t\t\t\t\t<p>{section.body}</p>
+\t\t\t\t\t</section>
+\t\t\t\t))}
+\t\t\t</main>
+\t\t\t<aside style={{ borderLeft: "1px solid #1c1c1c", padding: "24px 16px" }}>
+\t\t\t\t{doc.sections.map((section) => (
+\t\t\t\t\t<a key={section.id} href={\`#\${section.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
+\t\t\t\t\t\t{section.title}
+\t\t\t\t\t</a>
+\t\t\t\t))}
+\t\t\t</aside>
+\t\t</div>
+\t)
+`
+
+function shellcode(head: string): string {
+	return `${docsdata}
+
+${head} {
+${docsframe}}
+`
+}
+
 export const browserapp = `const docs = [
 \t{
 \t\tslug: "/docs",
@@ -425,47 +474,7 @@ import { Shell } from "../components/shell"
 export const astroenv = `/// <reference types="astro/client" />
 `
 
-export const astroshell = `const docs = [
-\t{
-\t\ttitle: "getting started",
-\t\tdescription: "build composable docs with full control",
-\t\tsections: [
-\t\t\t{ id: "install", title: "install", body: "bun add fromsrc" },
-\t\t\t{ id: "layout", title: "layout", body: "split primitives and own your ui." },
-\t\t],
-\t},
-]
-
-export function Shell() {
-\tconst doc = docs[0]
-\treturn (
-\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh", fontFamily: "ui-monospace, monospace" }}>
-\t\t\t<aside style={{ borderRight: "1px solid #1c1c1c", padding: "24px 16px" }}>
-\t\t\t\t<a href="/docs" style={{ display: "block", color: "#fafafa" }}>
-\t\t\t\t\tgetting started
-\t\t\t\t</a>
-\t\t\t</aside>
-\t\t\t<main style={{ padding: 24 }}>
-\t\t\t\t<h1 style={{ marginBottom: 8 }}>{doc.title}</h1>
-\t\t\t\t<p style={{ color: "#737373", marginBottom: 24 }}>{doc.description}</p>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<section key={section.id} id={section.id} style={{ marginBottom: 20 }}>
-\t\t\t\t\t\t<h2 style={{ marginBottom: 6 }}>{section.title}</h2>
-\t\t\t\t\t\t<p>{section.body}</p>
-\t\t\t\t\t</section>
-\t\t\t\t))}
-\t\t\t</main>
-\t\t\t<aside style={{ borderLeft: "1px solid #1c1c1c", padding: "24px 16px" }}>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<a key={section.id} href={\`#\${section.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
-\t\t\t\t\t\t{section.title}
-\t\t\t\t\t</a>
-\t\t\t\t))}
-\t\t\t</aside>
-\t\t</div>
-\t)
-}
-`
+export const astroshell = shellcode("export function Shell()")
 
 export const remixviteconfig = `import { vitePlugin as remix } from "@remix-run/dev"
 import { defineConfig } from "vite"
@@ -513,44 +522,4 @@ export default function Index() {
 }
 `
 
-export const remixdocs = `const docs = [
-\t{
-\t\ttitle: "getting started",
-\t\tdescription: "build composable docs with full control",
-\t\tsections: [
-\t\t\t{ id: "install", title: "install", body: "bun add fromsrc" },
-\t\t\t{ id: "layout", title: "layout", body: "split primitives and own your ui." },
-\t\t],
-\t},
-]
-
-export default function Docs() {
-\tconst doc = docs[0]
-\treturn (
-\t\t<div style={{ display: "grid", gridTemplateColumns: "220px 1fr 200px", minHeight: "100vh", fontFamily: "ui-monospace, monospace" }}>
-\t\t\t<aside style={{ borderRight: "1px solid #1c1c1c", padding: "24px 16px" }}>
-\t\t\t\t<a href="/docs" style={{ display: "block", color: "#fafafa" }}>
-\t\t\t\t\tgetting started
-\t\t\t\t</a>
-\t\t\t</aside>
-\t\t\t<main style={{ padding: 24 }}>
-\t\t\t\t<h1 style={{ marginBottom: 8 }}>{doc.title}</h1>
-\t\t\t\t<p style={{ color: "#737373", marginBottom: 24 }}>{doc.description}</p>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<section key={section.id} id={section.id} style={{ marginBottom: 20 }}>
-\t\t\t\t\t\t<h2 style={{ marginBottom: 6 }}>{section.title}</h2>
-\t\t\t\t\t\t<p>{section.body}</p>
-\t\t\t\t\t</section>
-\t\t\t\t))}
-\t\t\t</main>
-\t\t\t<aside style={{ borderLeft: "1px solid #1c1c1c", padding: "24px 16px" }}>
-\t\t\t\t{doc.sections.map((section) => (
-\t\t\t\t\t<a key={section.id} href={\`#\${section.id}\`} style={{ display: "block", marginBottom: 8, color: "#737373" }}>
-\t\t\t\t\t\t{section.title}
-\t\t\t\t\t</a>
-\t\t\t\t))}
-\t\t\t</aside>
-\t\t</div>
-\t)
-}
-`
+export const remixdocs = shellcode("export default function Docs()")
