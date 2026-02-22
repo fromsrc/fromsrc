@@ -61,7 +61,9 @@ const rehypeCode: Plugin<[], Root> = () => {
 			)
 			if (!code) return
 
-			const meta = (code.properties?.["data-meta"] ?? code.properties?.meta ?? "") as string
+			const fromdata = code.properties?.["data-meta"]
+			const frommeta = code.properties?.meta
+			const meta = typeof fromdata === "string" ? fromdata : typeof frommeta === "string" ? frommeta : ""
 			if (!meta) return
 
 			const attrs = parse(meta)

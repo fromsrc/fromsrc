@@ -74,6 +74,16 @@ export function scheduledDraft(frontmatter: Record<string, unknown>): boolean {
 	if (!publishDate) {
 		return false
 	}
-	const date = new Date(publishDate as string)
+	if (
+		typeof publishDate !== "string" &&
+		typeof publishDate !== "number" &&
+		!(publishDate instanceof Date)
+	) {
+		return false
+	}
+	const date = new Date(publishDate)
+	if (Number.isNaN(date.getTime())) {
+		return false
+	}
 	return date.getTime() > Date.now()
 }

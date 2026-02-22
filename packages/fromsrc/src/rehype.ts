@@ -5,7 +5,8 @@ function rehypeAnchors() {
 	return (tree: Root) => {
 		visit(tree, "element", (node: Element) => {
 			if (!["h2", "h3", "h4"].includes(node.tagName)) return
-			const id = node.properties?.id as string | undefined
+			const raw = node.properties?.id
+			const id = typeof raw === "string" ? raw : undefined
 			if (!id) return
 
 			const link: Element = {
