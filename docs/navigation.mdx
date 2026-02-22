@@ -82,22 +82,22 @@ lower numbers appear first. pages without `order` default to 99.
 
 ## sidebar sections
 
-the sidebar groups pages into sections based on folder structure:
+the sidebar groups pages from the navigation tree:
 
-- root-level pages go into "getting started"
-- `components/` pages go into "reference > components"
-- `api/` pages go into "reference > api"
-- `examples/` pages go into "reference > examples"
+- top-level pages stay in one root section
+- nested pages are grouped by their first folder
+- section titles come from folder `_meta.json` `title` when present
 
 ## custom sections
 
-customize section grouping in your sidebar component:
+you can fully customize section grouping in your own sidebar component:
 
 ```tsx
-const sections = {
-  "getting started": ["", "installation", "quickstart"],
-  basics: ["configuration", "theming"],
-  features: ["search", "ai"],
+const groups = new Map<string, SidebarItem[]>()
+
+for (const section of navigation) {
+  const key = section.items[0]?.slug?.split("/")[0] ?? "root"
+  groups.set(key, section.items)
 }
 ```
 

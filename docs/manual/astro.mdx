@@ -6,30 +6,33 @@ description: configure fromsrc in astro apps
 install dependencies:
 
 ```bash
-bun add fromsrc react react-dom
-bun add -D astro @astrojs/react
+bun add fromsrc marked
+bun add -D astro
 ```
 
-enable the react integration:
+use a docs route that reads mdx as raw text and renders html:
 
-```ts
-import react from "@astrojs/react";
-import { defineConfig } from "astro/config";
+```astro
+---
+import { marked } from "marked"
+import doc from "../../content/docs/index.mdx?raw"
+const html = String(marked.parse(doc))
+---
 
-export default defineConfig({
-	integrations: [react()],
-});
+<article set:html={html} />
 ```
 
-wire the adapter in your react docs shell:
+for the default scaffold shape, redirect `/` to `/docs` in `src/pages/index.astro` and render the docs shell in `src/pages/docs.astro`.
+
+if you need adapter-level control for component wiring, use the astro adapter:
 
 ```tsx
-import { AdapterProvider, astroAdapter } from "fromsrc/astro";
-import type { ReactNode } from "react";
+import { AdapterProvider, astroAdapter } from "fromsrc/astro"
+import type { ReactNode } from "react"
 
 export function Providers({ children }: { children: ReactNode }) {
-	return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>;
+	return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>
 }
 ```
 
-render this component in an astro island with `client:load` and keep markdown content in a shared `docs/` directory.
+keep markdown content in `content/docs/` so navigation and ai endpoints stay aligned across frameworks.
