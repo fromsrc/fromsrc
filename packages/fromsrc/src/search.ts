@@ -1,5 +1,5 @@
 import type { SearchDoc } from "./content"
-import { scoreterms, termindex, type Termindex } from "./searchscore"
+import { defaultweights, scoreterms, termindex, type Searchweights, type Termindex } from "./searchscore"
 
 export interface SearchResult {
 	doc: SearchDoc
@@ -12,6 +12,10 @@ export interface SearchResult {
 export interface SearchAdapter {
 	search(query: string, docs: SearchDoc[], limit?: number): SearchResult[] | Promise<SearchResult[]>
 	index?(docs: SearchDoc[]): void | Promise<void>
+}
+
+export interface LocalSearchOptions {
+	weights?: Partial<Searchweights>
 }
 
 interface ContentMatch {
@@ -168,7 +172,13 @@ function push(results: SearchResult[], result: SearchResult, limit: number): voi
 	results[min] = result
 }
 
-export const localSearch: SearchAdapter = {
+export function createLocalSearch(options: LocalSearchOptions = {}): SearchAdapter {
+	const weights: Searchweights = {
+		...defaultweights,
+		...(options.weights ?? {}),
+	}
+
+	return {
 	search(query: string, docs: SearchDoc[], limit = Number.POSITIVE_INFINITY): SearchResult[] {
 		if (!docs || docs.length === 0) return []
 
@@ -197,7 +207,7 @@ export const localSearch: SearchAdapter = {
 				descriptionindex: item.descriptionindex,
 				headingindex: item.headingindex,
 				contentindex: item.contentindex,
-			})
+			}, weights)
 			const exactScore = item.title === normalized || item.slug === normalized ? 30 : 0
 			const score =
 				titleScore +
@@ -222,6 +232,9 @@ export const localSearch: SearchAdapter = {
 		return results
 	},
 }
+}
+
+export const localSearch: SearchAdapter = createLocalSearch()
 
 export function createSearchAdapter<T extends SearchAdapter>(adapter: T): T {
 	return adapter
