@@ -162,7 +162,7 @@ function OpenapiBase({ spec, tag, method, path, group = "none" }: OpenapiProps):
 
 	if (!parsed) return <p className="text-sm text-red-400">invalid openapi specification</p>
 	if (endpoints.length === 0) return <p className="text-sm text-muted">no endpoints found</p>
-	const list = groups(endpoints)
+	const list = group === "tag" ? groups(endpoints) : []
 	const items = list.map(([name, value]) => ({ name, id: tagid(name), count: value.length }))
 
 	return (
