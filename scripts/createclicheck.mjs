@@ -26,8 +26,9 @@ function run(args) {
 	});
 }
 
-const runok = await run(["--name", "sample-docs", "--framework", "next.js", "--yes"]);
+const runok = await run(["--name", "sample-docs", "--framework", "next", "--yes"]);
 const runhelp = await run(["--help"]);
+const runlist = await run(["--list"]);
 const runbad = await run(["--name", "bad-docs", "--framework", "bad", "--yes"]);
 
 const issues = [];
@@ -49,6 +50,10 @@ if (runhelp.code !== 0 || !runhelp.out.includes("usage: create-fromsrc")) {
 	issues.push("cli help output missing or failed");
 }
 
+if (runlist.code !== 0 || !runlist.out.includes("next.js") || !runlist.out.includes("astro")) {
+	issues.push("cli list output missing or failed");
+}
+
 if (runbad.code === 0 || !runbad.out.includes("invalid framework")) {
 	issues.push("cli invalid framework path missing or failed");
 }
@@ -60,6 +65,7 @@ if (issues.length > 0) {
 	for (const issue of issues) console.error(issue);
 	if (runok.err.trim()) console.error(runok.err.trim());
 	if (runhelp.err.trim()) console.error(runhelp.err.trim());
+	if (runlist.err.trim()) console.error(runlist.err.trim());
 	if (runbad.err.trim()) console.error(runbad.err.trim());
 	process.exit(1);
 }

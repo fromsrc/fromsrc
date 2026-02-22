@@ -3,12 +3,20 @@ import { ask, close, select } from "./prompt"
 import type { Framework } from "./templates"
 
 const frameworks = ["next.js", "react-router", "vite", "tanstack", "remix", "astro"] as const
+const aliases = {
+	next: "next.js",
+	rr: "react-router",
+	router: "react-router",
+	ts: "tanstack",
+	tanstackstart: "tanstack",
+} as const
 
 function usage() {
 	console.log("  usage: create-fromsrc [options]")
 	console.log("  options:")
 	console.log("    -n, --name <name>")
 	console.log("    -f, --framework <framework>")
+	console.log("    -l, --list")
 	console.log("    -y, --yes")
 	console.log("    -h, --help")
 	console.log(`  frameworks: ${frameworks.join(", ")}\n`)
@@ -38,7 +46,10 @@ function parseframework(value: string | undefined): Framework | undefined {
 	if (!value) {
 		return undefined
 	}
-	const found = frameworks.find((item) => item === value)
+	const key = value.toLowerCase()
+	const mapped = (aliases as Record<string, Framework | undefined>)[key]
+	const target = mapped ?? value
+	const found = frameworks.find((item) => item === target)
 	return found
 }
 
@@ -48,6 +59,11 @@ async function main() {
 	if (hasflag("help", "h")) {
 		close()
 		usage()
+		return
+	}
+	if (hasflag("list", "l")) {
+		close()
+		console.log(`  ${frameworks.join("\n  ")}\n`)
 		return
 	}
 
