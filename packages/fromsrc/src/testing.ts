@@ -50,9 +50,20 @@ export function assertFrontmatter(content: string, fields: string[]) {
 	const body = match[1]
 	if (!body) throw new Error("invalid frontmatter")
 	const lines = body.split("\n")
-	const keys = lines.map((l) => (l.split(":")[0] ?? "").trim()).filter(Boolean)
+	const values = new Map<string, string>()
+	for (const line of lines) {
+		const index = line.indexOf(":")
+		if (index < 1) continue
+		const key = line.slice(0, index).trim()
+		if (!key) continue
+		if (values.has(key)) throw new Error(`duplicate field: ${key}`)
+		const value = line.slice(index + 1).trim()
+		values.set(key, value)
+	}
 	for (const field of fields) {
-		if (!keys.includes(field)) throw new Error(`missing field: ${field}`)
+		if (!values.has(field)) throw new Error(`missing field: ${field}`)
+		const value = values.get(field) ?? ""
+		if (!value) throw new Error(`empty field: ${field}`)
 	}
 }
 
