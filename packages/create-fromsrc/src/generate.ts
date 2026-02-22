@@ -16,7 +16,8 @@ import {
 	packagejson,
 	nextconfig,
 	postcssconfig,
-	remixindex,
+	remixdocs,
+	remixrootindex,
 	remixroot,
 	remixviteconfig,
 	tailwindconfig,
@@ -71,6 +72,7 @@ export function generate(options: Options) {
 	if (framework === "astro") {
 		write(target, "astro.config.mjs", astroconfig)
 		write(target, "src/pages/index.astro", astropage)
+		write(target, "src/pages/docs.astro", astropage)
 		write(target, "src/components/shell.tsx", astroshell)
 		write(target, "src/styles/global.css", globalscss)
 		write(target, "src/env.d.ts", astroenv)
@@ -80,7 +82,8 @@ export function generate(options: Options) {
 	if (framework === "remix") {
 		write(target, "vite.config.ts", remixviteconfig)
 		write(target, "app/root.tsx", remixroot)
-		write(target, "app/routes/_index.tsx", remixindex)
+		write(target, "app/routes/_index.tsx", remixrootindex)
+		write(target, "app/routes/docs.tsx", remixdocs)
 		return target
 	}
 
