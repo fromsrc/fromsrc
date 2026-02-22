@@ -6,7 +6,6 @@ import { spawn } from "node:child_process";
 const root = process.cwd();
 const bin = join(root, "packages", "create-fromsrc", "dist", "index.js");
 const temp = await mkdtemp(join(tmpdir(), "fromsrc-cli-"));
-const target = join(temp, "sample-docs");
 
 function run(args) {
 	return new Promise((resolve) => {
@@ -26,24 +25,76 @@ function run(args) {
 	});
 }
 
-const runok = await run(["--name", "sample-docs", "--framework", "next", "--yes"]);
 const runhelp = await run(["--help"]);
 const runlist = await run(["--list"]);
 const runbad = await run(["--name", "bad-docs", "--framework", "bad", "--yes"]);
+const cases = [
+	{
+		name: "cli-next",
+		framework: "next.js",
+		files: ["package.json", "next.config.ts", "app/docs/[[...slug]]/page.tsx"],
+	},
+	{
+		name: "cli-react-router",
+		framework: "react-router",
+		files: ["package.json", "index.html", "src/main.tsx"],
+	},
+	{
+		name: "cli-vite",
+		framework: "vite",
+		files: ["package.json", "index.html", "src/main.tsx"],
+	},
+	{
+		name: "cli-tanstack",
+		framework: "tanstack",
+		files: ["package.json", "index.html", "src/main.tsx"],
+	},
+	{
+		name: "cli-remix",
+		framework: "remix",
+		files: ["package.json", "index.html", "src/main.tsx"],
+	},
+	{
+		name: "cli-astro",
+		framework: "astro",
+		files: ["package.json", "astro.config.mjs", "src/pages/index.astro"],
+	},
+]
+const runs = [];
+for (const item of cases) {
+	runs.push({
+		name: item.name,
+		framework: item.framework,
+		result: await run(["--name", item.name, "--framework", item.framework, "--yes"]),
+		files: item.files,
+	})
+}
+const runalias = await run(["--name", "cli-alias-rr", "--framework", "rr", "--yes"]);
 
 const issues = [];
-if (runok.code !== 0) {
-	issues.push(`cli exited with ${runok.code}`);
+for (const item of runs) {
+	if (item.result.code !== 0) {
+		issues.push(`${item.framework}: cli exited with ${item.result.code}`);
+	}
+	if (!item.result.out.includes(`created ${item.name}`)) {
+		issues.push(`${item.framework}: output missing creation confirmation`);
+	}
+	for (const file of item.files) {
+		try {
+			await access(join(temp, item.name, file));
+		} catch {
+			issues.push(`${item.framework}: missing ${file}`);
+		}
+	}
 }
 
+if (runalias.code !== 0) {
+	issues.push(`alias rr: cli exited with ${runalias.code}`);
+}
 try {
-	await access(target);
+	await access(join(temp, "cli-alias-rr", "src", "main.tsx"));
 } catch {
-	issues.push("cli did not create sample-docs directory");
-}
-
-if (!runok.out.includes("created sample-docs")) {
-	issues.push("cli output missing creation confirmation");
+	issues.push("alias rr: missing src/main.tsx");
 }
 
 if (runhelp.code !== 0 || !runhelp.out.includes("usage: create-fromsrc")) {
@@ -63,7 +114,10 @@ await rm(temp, { recursive: true, force: true });
 if (issues.length > 0) {
 	console.error("x create cli validation failed");
 	for (const issue of issues) console.error(issue);
-	if (runok.err.trim()) console.error(runok.err.trim());
+	for (const item of runs) {
+		if (item.result.err.trim()) console.error(item.result.err.trim());
+	}
+	if (runalias.err.trim()) console.error(runalias.err.trim());
 	if (runhelp.err.trim()) console.error(runhelp.err.trim());
 	if (runlist.err.trim()) console.error(runlist.err.trim());
 	if (runbad.err.trim()) console.error(runbad.err.trim());
