@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { adapterpaths, frameworks } from "./frameworkset.mjs";
 
 const root = process.cwd();
-const frameworks = ["next.js", "react-router", "vite", "tanstack", "remix", "astro"];
 const issues = [];
 
 const files = [
@@ -16,11 +16,11 @@ const files = [
 	},
 	{
 		path: "scripts/adaptercheck.mjs",
-		expect: ["fromsrc/next", "fromsrc/react-router", "fromsrc/vite", "fromsrc/tanstack", "fromsrc/remix", "fromsrc/astro"],
+		expect: adapterpaths,
 	},
 	{
 		path: "docs/frameworks.mdx",
-		expect: ["fromsrc/next", "fromsrc/react-router", "fromsrc/vite", "fromsrc/tanstack", "fromsrc/remix", "fromsrc/astro"],
+		expect: adapterpaths,
 	},
 ];
 

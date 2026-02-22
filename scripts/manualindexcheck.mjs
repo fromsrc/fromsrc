@@ -1,21 +1,13 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { manuals } from "./frameworkset.mjs";
 
 const file = join(process.cwd(), "docs", "manual", "index.mdx");
 const text = await readFile(file, "utf8");
 
-const required = [
-	{ title: 'title="next.js"', href: 'href="/docs/manual/next"' },
-	{ title: 'title="react router"', href: 'href="/docs/manual/react-router"' },
-	{ title: 'title="tanstack start"', href: 'href="/docs/manual/tanstack"' },
-	{ title: 'title="vite"', href: 'href="/docs/manual/vite"' },
-	{ title: 'title="remix"', href: 'href="/docs/manual/remix"' },
-	{ title: 'title="astro"', href: 'href="/docs/manual/astro"' },
-];
-
 const issues = [];
-for (const item of required) {
-	if (!text.includes(item.title)) issues.push(`missing ${item.title}`);
+for (const item of manuals) {
+	if (!text.includes(item.card)) issues.push(`missing ${item.card}`);
 	if (!text.includes(item.href)) issues.push(`missing ${item.href}`);
 }
 
@@ -25,4 +17,4 @@ if (issues.length > 0) {
 	process.exit(1);
 }
 
-console.log(`o manual index contract validation passed (${required.length} cards)`);
+console.log(`o manual index contract validation passed (${manuals.length} cards)`);

@@ -1,10 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { frameworks } from "./frameworkset.mjs";
 
 const file = join(process.cwd(), "scripts", "scaffoldsmoke.mjs");
 const text = await readFile(file, "utf8");
-
-const expected = ["next.js", "react-router", "vite", "tanstack", "remix", "astro"];
 
 const match = text.match(/const defaults = \[(.*?)\];/s);
 if (!match || !match[1]) {
@@ -14,8 +13,8 @@ if (!match || !match[1]) {
 }
 
 const parsed = [...match[1].matchAll(/"([^"]+)"/g)].map((entry) => entry[1]);
-const missing = expected.filter((name) => !parsed.includes(name));
-const extra = parsed.filter((name) => !expected.includes(name));
+const missing = frameworks.filter((name) => !parsed.includes(name));
+const extra = parsed.filter((name) => !frameworks.includes(name));
 
 if (missing.length > 0 || extra.length > 0) {
 	console.error("x scaffold smoke framework validation failed");
@@ -24,7 +23,7 @@ if (missing.length > 0 || extra.length > 0) {
 	process.exit(1);
 }
 
-if (parsed.length !== expected.length) {
+if (parsed.length !== frameworks.length) {
 	console.error("x scaffold smoke framework validation failed");
 	console.error(`duplicate or malformed entries detected: ${parsed.join(", ")}`);
 	process.exit(1);
