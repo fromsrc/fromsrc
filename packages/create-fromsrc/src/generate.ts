@@ -11,6 +11,7 @@ import {
 	gitignore,
 	globalscss,
 	type Framework,
+	nextenv,
 	packagejson,
 	nextconfig,
 	postcssconfig,
@@ -54,6 +55,7 @@ export function generate(options: Options) {
 
 	if (framework === "next.js") {
 		write(target, "next.config.ts", nextconfig)
+		write(target, "next-env.d.ts", nextenv)
 		write(target, "tailwind.config.ts", tailwindconfig)
 		write(target, "postcss.config.mjs", postcssconfig)
 		write(target, "app/globals.css", globalscss)

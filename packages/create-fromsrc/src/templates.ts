@@ -202,13 +202,17 @@ export function tsconfig(framework: Framework) {
 				plugins: framework === "next.js" ? [{ name: "next" }] : [],
 				paths: { "@/*": ["./*"] },
 			},
-			include: ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+			include: framework === "next.js" ? ["next-env.d.ts", "**/*.ts", "**/*.tsx"] : ["**/*.ts", "**/*.tsx"],
 			exclude: ["node_modules"],
 		},
 		null,
 		"\t",
 	)
 }
+
+export const nextenv = `/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+`
 
 export const tailwindconfig = `import type { Config } from "tailwindcss"
 

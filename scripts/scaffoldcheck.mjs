@@ -6,9 +6,10 @@ import { generate } from "../packages/create-fromsrc/src/generate";
 const frameworks = [
 	{
 		name: "next.js",
-		files: ["package.json", "next.config.ts", "app/layout.tsx", "app/docs/[[...slug]]/page.tsx"],
+		files: ["package.json", "next.config.ts", "next-env.d.ts", "app/layout.tsx", "app/docs/[[...slug]]/page.tsx"],
 		checks: [
 			{ file: "tsconfig.json", text: "\"jsx\": \"preserve\"" },
+			{ file: "tsconfig.json", text: "\"next-env.d.ts\"" },
 			{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
 		],
 	},
@@ -18,6 +19,7 @@ const frameworks = [
 			checks: [
 				{ file: "src/main.tsx", text: "fromsrc/react-router" },
 				{ file: "tsconfig.json", text: "\"jsx\": \"react-jsx\"" },
+				{ file: "tsconfig.json", text: "\"**/*.ts\"" },
 				{ file: "package.json", text: "\"node\": \"^20.19.0 || >=22.12.0\"" },
 			],
 		},
