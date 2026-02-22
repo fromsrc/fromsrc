@@ -6,7 +6,7 @@ description: configure fromsrc in vite apps
 install dependencies:
 
 ```bash
-bun add fromsrc react-router-dom
+bun add fromsrc react-router
 ```
 
 wire the adapter with optional link override:
@@ -15,7 +15,7 @@ wire the adapter with optional link override:
 "use client";
 
 import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import type { ReactNode } from "react";
 
 const adapter = createadapter({

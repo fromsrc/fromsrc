@@ -97,7 +97,7 @@
 		"@types/mdast": "^4.0.4",
 		"@types/node": "^22.0.0",
 		"@types/react": "^19.0.0",
-		"react-router-dom": "^7.9.5",
+		"react-router": "^7.9.5",
 		"tsup": "^8.5.0",
 		"typescript": "^5.9.0",
 		"unified": "^11.0.5"
@@ -108,7 +108,7 @@
 		"next": ">=14.0.0",
 		"react": ">=18.0.0",
 		"@tanstack/react-router": ">=1.0.0",
-		"react-router-dom": ">=7.0.0"
+		"react-router": ">=7.0.0"
 	},
 	"peerDependenciesMeta": {
 		"@remix-run/react": {
@@ -120,7 +120,7 @@
 		"@tanstack/react-router": {
 			"optional": true
 		},
-		"react-router-dom": {
+		"react-router": {
 			"optional": true
 		}
 	}

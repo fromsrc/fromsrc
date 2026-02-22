@@ -8,7 +8,7 @@ const files = [
 ];
 
 const blocked = [
-	"react-router-dom",
+	"react-router",
 	"@tanstack/react-router",
 	"@remix-run/react",
 ];

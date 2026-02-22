@@ -56,7 +56,7 @@ const list = [
 		code: "import { nextAdapter } from 'fromsrc/next'; export default nextAdapter;",
 		max: 650,
 		maxgzip: 360,
-		block: ["react-router-dom", "@tanstack/react-router", "@remix-run/react"],
+		block: ["\"react-router\"", "@tanstack/react-router", "@remix-run/react"],
 	},
 	{
 		name: "reactrouter",
@@ -70,28 +70,28 @@ const list = [
 		code: "import { tanstackAdapter } from 'fromsrc/tanstack'; export default tanstackAdapter;",
 		max: 650,
 		maxgzip: 350,
-		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@remix-run/react"],
+		block: ["next/link", "next/image", "next/navigation", "\"react-router\"", "@remix-run/react"],
 	},
 	{
 		name: "remix",
 		code: "import { remixAdapter } from 'fromsrc/remix'; export default remixAdapter;",
 		max: 650,
 		maxgzip: 340,
-		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@tanstack/react-router"],
+		block: ["next/link", "next/image", "next/navigation", "\"react-router\"", "@tanstack/react-router"],
 	},
 	{
 		name: "astro",
 		code: "import { astroAdapter } from 'fromsrc/astro'; export default astroAdapter;",
 		max: 1250,
 		maxgzip: 660,
-		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@tanstack/react-router", "@remix-run/react"],
+		block: ["next/link", "next/image", "next/navigation", "\"react-router\"", "@tanstack/react-router", "@remix-run/react"],
 	},
 	{
 		name: "vite",
 		code: "import { viteAdapter } from 'fromsrc/vite'; export default viteAdapter;",
 		max: 1250,
 		maxgzip: 660,
-		block: ["next/link", "next/image", "next/navigation", "react-router-dom", "@tanstack/react-router", "@remix-run/react"],
+		block: ["next/link", "next/image", "next/navigation", "\"react-router\"", "@tanstack/react-router", "@remix-run/react"],
 	},
 ];
 
@@ -104,7 +104,7 @@ const external = [
 	"next/image",
 	"next/link",
 	"next/navigation",
-	"react-router-dom",
+	"react-router",
 	"@tanstack/react-router",
 	"@remix-run/react",
 ];

@@ -71,7 +71,7 @@ const external = [
 	"mermaid",
 	"katex",
 	"@tanstack/react-router",
-	"react-router-dom",
+	"react-router",
 	"@remix-run/react",
 ]
 

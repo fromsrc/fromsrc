@@ -7,7 +7,7 @@ import {
 	Link as RouterLink,
 	useLocation,
 	useNavigate,
-} from "react-router-dom"
+} from "react-router"
 import type { FrameworkAdapter, fromsrcimageprops, fromsrclinkprops } from "./adapter"
 
 function Link({
