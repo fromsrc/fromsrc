@@ -21,12 +21,22 @@ interface McpTool {
 
 interface McpManifest {
 	server: { name: string; version: string }
+	capabilities: {
+		tools: {
+			listChanged: boolean
+		}
+	}
 	tools: McpTool[]
 }
 
 export function generateMcpManifest(config: McpConfig): McpManifest {
 	return {
 		server: { name: config.name, version: config.version },
+		capabilities: {
+			tools: {
+				listChanged: false,
+			},
+		},
 		tools: [
 			{
 				name: "search_docs",

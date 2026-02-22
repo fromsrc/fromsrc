@@ -25,14 +25,19 @@ const source: ContentSource = {
 }
 
 const handler = createMcpHandler(config, source)
-const method = z.object({ method: z.enum(["search_docs", "get_page", "list_pages"]) })
+const method = z.object({ method: z.enum(["search_docs", "get_page", "list_pages", "tools/list", "tools/call"]) })
 const search = z.object({ query: z.string().trim().min(1).max(searchmaxquery) })
 const page = z.object({ slug: z.string().trim().min(1).max(300) })
+const toollist = z.object({ cursor: z.string().trim().min(1).optional() }).optional()
+const toolcall = z.object({
+	name: z.string().trim().min(1).max(128),
+	arguments: z.record(z.unknown()).optional(),
+})
 const rpcid = z.union([z.string(), z.number(), z.null()]).optional()
 const rpcmethod = z.object({
 	jsonrpc: z.literal("2.0"),
 	id: rpcid,
-	method: z.enum(["search_docs", "get_page", "list_pages"]),
+	method: z.enum(["search_docs", "get_page", "list_pages", "tools/list", "tools/call"]),
 	params: z.unknown().optional(),
 })
 
@@ -88,6 +93,17 @@ export async function POST(request: Request) {
 		return Response.json({ jsonrpc: "2.0", id: rid ?? null, error: { code, message } }, { status, headers: cors })
 	}
 
+	function toolresult(
+		text: string,
+		structured?: Record<string, unknown>,
+	): { content: { type: "text"; text: string }[]; structuredContent?: Record<string, unknown>; isError: boolean } {
+		return {
+			content: [{ type: "text", text }],
+			structuredContent: structured,
+			isError: false,
+		}
+	}
+
 	switch (name) {
 		case "search_docs": {
 			const query = search.safeParse(params)
@@ -105,6 +121,38 @@ export async function POST(request: Request) {
 		case "list_pages": {
 			const pages = await handler.listPages()
 			return jsonrpc(pages)
+		}
+		case "tools/list": {
+			const listed = toollist.safeParse(params)
+			if (!listed.success) return jsonerror(-32602, "invalid params")
+			const manifest = generateMcpManifest(config)
+			return jsonrpc({ tools: manifest.tools })
+		}
+		case "tools/call": {
+			const call = toolcall.safeParse(params)
+			if (!call.success) return jsonerror(-32602, "invalid params")
+			const args = call.data.arguments ?? {}
+			switch (call.data.name) {
+				case "search_docs": {
+					const query = search.safeParse(args)
+					if (!query.success) return jsonerror(-32602, "invalid params")
+					const results = await handler.search(query.data.query)
+					return jsonrpc(toolresult(JSON.stringify(results), { results }))
+				}
+				case "get_page": {
+					const slug = page.safeParse(args)
+					if (!slug.success) return jsonerror(-32602, "invalid params")
+					const content = await handler.getPage(slug.data.slug)
+					if (!content) return jsonerror(-32004, "not found", 404)
+					return jsonrpc(toolresult(content, { content }))
+				}
+				case "list_pages": {
+					const pages = await handler.listPages()
+					return jsonrpc(toolresult(JSON.stringify(pages), { pages }))
+				}
+				default:
+					return jsonerror(-32601, "unknown tool")
+			}
 		}
 		default:
 			return jsonerror(-32601, "unknown method")

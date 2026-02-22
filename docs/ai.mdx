@@ -72,6 +72,22 @@ available methods:
 - `search_docs`
 - `get_page`
 - `list_pages`
+- `tools/list`
+- `tools/call`
+
+`tools/call` example:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "2",
+  "method": "tools/call",
+  "params": {
+    "name": "get_page",
+    "arguments": { "slug": "installation" }
+  }
+}
+```
 
 ## implementation
 
