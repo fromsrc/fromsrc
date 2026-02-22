@@ -81,6 +81,21 @@ export const rootschema = {
 	parse: parseroot,
 }
 
+type buncore = {
+	YAML?: {
+		parse: (input: string) => unknown
+	}
+}
+
+function parseyaml(spec: string): unknown {
+	const runtime = globalThis as typeof globalThis & { Bun?: buncore }
+	const parser = runtime.Bun?.YAML?.parse
+	if (!parser) {
+		throw new Error("invalid openapi specification")
+	}
+	return parser(spec)
+}
+
 export function parsespec(spec: string | object): unknown {
 	if (typeof spec === "string") {
 		const text = spec.trim()
@@ -90,7 +105,15 @@ export function parsespec(spec: string | object): unknown {
 		try {
 			return JSON.parse(text)
 		} catch {
-			throw new Error("invalid openapi specification")
+			try {
+				const parsed: unknown = parseyaml(text)
+				if (!isrecord(parsed)) {
+					throw new Error("invalid openapi specification")
+				}
+				return parsed
+			} catch {
+				throw new Error("invalid openapi specification")
+			}
 		}
 	}
 	return spec

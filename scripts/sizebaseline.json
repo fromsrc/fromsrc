@@ -24,8 +24,8 @@
 		"gzip": 278
 	},
 	"openapi": {
-		"size": 4974,
-		"gzip": 1774
+		"size": 5170,
+		"gzip": 1828
 	},
 	"algolia": {
 		"size": 1590,
