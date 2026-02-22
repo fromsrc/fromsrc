@@ -149,6 +149,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			if (error instanceof z.ZodError) {
 				throw error
 			}
+			console.error(`Failed to scan docs in ${config.dir}:`, error)
 			return []
 		}
 
@@ -195,6 +196,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			if (error instanceof z.ZodError) {
 				throw error
 			}
+			console.error(`Failed to load docs in ${config.dir}:`, error)
 			return []
 		}
 
@@ -270,6 +272,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
 			if (error instanceof z.ZodError) {
 				throw error
 			}
+			console.error(`Failed to build search docs in ${config.dir}:`, error)
 			return []
 		}
 
@@ -436,6 +439,7 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
 		if (error instanceof z.ZodError) {
 			throw error
 		}
+		console.error(`Failed to scan docs in ${docsDir}:`, error)
 		return []
 	}
 

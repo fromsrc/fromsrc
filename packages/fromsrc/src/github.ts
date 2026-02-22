@@ -161,7 +161,8 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 				const result = { content, data }
 				fileCache.set(cacheKey, result)
 				return result
-			} catch {
+			} catch (error) {
+				console.error(`github source fetch failed for ${candidate}`, error)
 				continue
 			}
 		}
