@@ -19,6 +19,7 @@
   ✓ composable primitives
   ✓ ai-native (llms.txt, .md endpoints, mcp)
   ✓ fast search (<20ms)
+  ✓ configurable search scoring weights
   ✓ dark mode
   ✓ zero config
 
