@@ -22,10 +22,15 @@ function Image({
 	height,
 	...rest
 }: fromsrcimageprops) {
-	if (typeof width === "number" && typeof height === "number") {
-		return createElement(NextImage, { src, alt, width, height, ...rest })
-	}
-	return createElement("img", { src, alt, width, height, ...rest })
+	const nextWidth = Number(width) > 0 ? Number(width) : 1200
+	const nextHeight = Number(height) > 0 ? Number(height) : 630
+	return createElement(NextImage, {
+		src,
+		alt,
+		width: nextWidth,
+		height: nextHeight,
+		...rest,
+	})
 }
 
 function useNextPathname(): string {

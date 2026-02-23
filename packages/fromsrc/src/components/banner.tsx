@@ -23,17 +23,18 @@ function BannerInner({
 	children,
 	"aria-label": ariaLabel,
 }: BannerProps) {
-	const [mounted, setMounted] = useState(false)
-	const [visible, setVisible] = useState(true)
+	const [visible, setVisible] = useState<boolean | null>(() => {
+		if (!id) return true
+		if (typeof window === "undefined") return null
+		return localStorage.getItem(`banner-${id}`) !== "true"
+	})
 
 	useEffect(() => {
-		setMounted(true)
-		if (id) {
-			const dismissed = localStorage.getItem(`banner-${id}`)
-			if (dismissed === "true") {
-				setVisible(false)
-			}
+		if (!id) {
+			setVisible(true)
+			return
 		}
+		setVisible(localStorage.getItem(`banner-${id}`) !== "true")
 	}, [id])
 
 	const dismiss = useCallback(() => {
@@ -43,7 +44,7 @@ function BannerInner({
 		setVisible(false)
 	}, [id])
 
-	if (!mounted || !visible) return null
+	if (visible !== true) return null
 
 	const base = "sticky top-0 z-40 flex items-center justify-center gap-2 px-4 py-2 text-sm"
 	const styles: Record<BannerVariant, string> = {

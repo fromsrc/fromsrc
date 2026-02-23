@@ -36,8 +36,8 @@
 		"gzip": 760
 	},
 	"next": {
-		"size": 601,
-		"gzip": 322
+		"size": 566,
+		"gzip": 328
 	},
 	"reactrouter": {
 		"size": 421,
