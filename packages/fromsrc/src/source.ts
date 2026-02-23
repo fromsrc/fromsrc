@@ -1,3 +1,4 @@
+import matter from "gray-matter"
 import type { DocMeta, Heading, SearchDoc } from "./content"
 import { z } from "./schema"
 
@@ -48,13 +49,14 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
 			const normalized = slug.length === 0 ? "index" : slug.map((part) => encodeURIComponent(part)).join("/")
 			const res = await fetch(`${rawUrl}/${normalized}`)
 			if (!res.ok) return null
-			const content = await res.text()
+			const source = await res.text()
+			const parsed = parsefrontmatter(source)
 			const docs = await this.list()
 			const item = docs.find((doc) => doc.slug === path || (path === "index" && doc.slug === ""))
-			const data: Record<string, unknown> = {}
+			const data: Record<string, unknown> = { ...parsed.data }
 			if (item?.title) data.title = item.title
 			if (item?.description) data.description = item.description
-			const value = { content, data }
+			const value = { content: parsed.content, data }
 			filecache.set(path, value)
 			return value
 		},
@@ -206,6 +208,16 @@ function headingid(text: string): string {
 		.replace(/[^a-z0-9_-]/g, "")
 		.replace(/-+/g, "-")
 		.replace(/^-|-$/g, "")
+}
+
+function parsefrontmatter(source: string): { content: string; data: Record<string, unknown> } {
+	try {
+		const parsed = matter(source)
+		const data = typeof parsed.data === "object" && parsed.data !== null ? { ...parsed.data } : {}
+		return { content: parsed.content, data }
+	} catch {
+		return { content: source, data: {} }
+	}
 }
 
 function headings(values: string[]): Heading[] | undefined {
