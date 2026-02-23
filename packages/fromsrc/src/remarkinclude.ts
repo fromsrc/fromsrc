@@ -48,8 +48,27 @@ function expand(tree: Root, base: string, max: number, depth: number) {
 	})
 }
 
+function inside(base: string, filepath: string): boolean {
+	const rooted = `${resolve(base)}/`
+	const full = resolve(filepath)
+	return full === resolve(base) || full.startsWith(rooted)
+}
+
 export const remarkInclude: Plugin<[IncludeOptions?], Root> = (options) => {
-	const base = options?.basePath ?? "."
+	const base = resolve(options?.basePath ?? ".")
 	const max = options?.maxDepth ?? 3
-	return (tree) => expand(tree, base, max, 0)
+	return (tree) => {
+		visit(tree, "paragraph", (node: Paragraph) => {
+			if (node.children.length !== 1) return
+			const child = node.children[0] as Text
+			if (child?.type !== "text") return
+			const match = child.value.trim().match(pattern)
+			if (!match?.[1]) return
+			const filepath = resolve(base, match[1])
+			if (!inside(base, filepath)) {
+				child.value = ""
+			}
+		})
+		expand(tree, base, max, 0)
+	}
 }

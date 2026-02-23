@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs"
+import { resolve } from "node:path"
 
 export type ShortcodeDefinition = {
 	name: string
@@ -62,7 +63,9 @@ export const builtinShortcodes: ShortcodeDefinition[] = [
 	}),
 	registerShortcode("include", (attrs) => {
 		try {
-			return attrs.file ? readFileSync(attrs.file, "utf-8") : ""
+			const file = attrs.file
+			if (!file || file.includes("..") || file.startsWith("/")) return ""
+			return readFileSync(resolve(process.cwd(), file), "utf-8")
 		} catch {
 			return ""
 		}

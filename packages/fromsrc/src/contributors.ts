@@ -1,7 +1,7 @@
-import { exec } from "node:child_process"
+import { execFile } from "node:child_process"
 import { promisify } from "node:util"
 
-const run = promisify(exec)
+const run = promisify(execFile)
 
 export type Contributor = {
 	name: string
@@ -18,10 +18,9 @@ export type ContributorConfig = {
 
 export async function getContributors(config: ContributorConfig): Promise<Contributor[]> {
 	try {
-		const { stdout } = await run(
-			`git log --format="%aN|%aE|%aI" -- "${config.file}"`,
-			{ cwd: config.dir },
-		)
+		const { stdout } = await run("git", ["log", '--format=%aN|%aE|%aI', "--", config.file], {
+			cwd: config.dir,
+		})
 		if (!stdout.trim()) return []
 		const exclude = new Set(config.excludeEmails ?? [])
 		const map = new Map<string, Contributor>()
@@ -58,10 +57,9 @@ export async function getEditHistory(
 	config: ContributorConfig,
 ): Promise<{ hash: string; author: string; date: Date; message: string }[]> {
 	try {
-		const { stdout } = await run(
-			`git log --format="%H|%aN|%aI|%s" -- "${config.file}"`,
-			{ cwd: config.dir },
-		)
+		const { stdout } = await run("git", ["log", '--format=%H|%aN|%aI|%s', "--", config.file], {
+			cwd: config.dir,
+		})
 		if (!stdout.trim()) return []
 		return stdout
 			.trim()
