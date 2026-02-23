@@ -13,9 +13,10 @@ export function Hero() {
 
 	const copy = () => {
 		if (!current) return
-		navigator.clipboard.writeText(current.raw)
-		setCopied(true)
-		setTimeout(() => setCopied(false), 2000)
+		navigator.clipboard.writeText(current.raw).then(() => {
+			setCopied(true)
+			setTimeout(() => setCopied(false), 2000)
+		}).catch(() => {})
 	}
 
 	return (

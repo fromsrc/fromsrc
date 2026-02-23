@@ -4,6 +4,7 @@ import {
 	type JSX,
 	type ReactNode,
 	createContext,
+	useEffect,
 	useCallback,
 	useContext,
 	useRef,
@@ -60,6 +61,13 @@ export function ToastProvider({ children }: { children: ReactNode }): JSX.Elemen
 			setToasts((t) => t.filter((x) => x.id !== id))
 		}, duration)
 		timers.current.set(id, timer)
+	}, [])
+
+	useEffect(() => {
+		return () => {
+			for (const timer of timers.current.values()) clearTimeout(timer)
+			timers.current.clear()
+		}
 	}, [])
 
 	return (

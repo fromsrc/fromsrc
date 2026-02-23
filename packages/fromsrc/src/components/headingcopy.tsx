@@ -20,7 +20,7 @@ function HeadingCopy() {
 				setTimeout(() => {
 					target.textContent = original
 				}, 1500)
-			})
+			}).catch(() => {})
 		}
 		document.addEventListener("click", handler)
 		return () => document.removeEventListener("click", handler)

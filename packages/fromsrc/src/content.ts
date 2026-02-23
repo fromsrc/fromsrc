@@ -67,17 +67,13 @@ async function resolveSource(
 		const source = await readCached(filepath)
 		return { source, actualPath: path, filepath }
 	} catch (error) {
-		if (!isnotfound(error)) {
-			console.error(`failed to read ${filepath}`, error)
-		}
+		if (!isnotfound(error)) throw error
 	}
 	try {
 		const source = await readCached(indexPath)
 		return { source, actualPath: `${path}/index`, filepath: indexPath }
 	} catch (error) {
-		if (!isnotfound(error)) {
-			console.error(`failed to read ${indexPath}`, error)
-		}
+		if (!isnotfound(error)) throw error
 	}
 	return null
 }
@@ -608,8 +604,14 @@ function sectionOrder(pages: string[] | undefined): Map<string, number> {
 
 function groupkey(slug: string): string {
 	if (!slug || slug === "index") return ""
-	if (!slug.includes("/")) return ""
+	if (!slug.includes("/")) return slug
 	const [head] = slug.split("/")
 	if (!head || head === "index") return ""
 	return head
+}
+
+export function clearContentCache(): void {
+	fileCache.clear()
+	metaCache.clear()
+	searchCache.clear()
 }

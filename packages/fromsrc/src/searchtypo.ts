@@ -37,7 +37,7 @@ function oneedit(left: string, right: string): boolean {
 }
 
 export function typomatch(term: string, words: string[]): boolean {
-	if (term.length < 4) return false
+	if (term.length < 3) return false
 	for (const word of words) {
 		if (Math.abs(word.length - term.length) > 1) continue
 		if (word === term || oneedit(term, word)) return true

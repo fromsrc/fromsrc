@@ -35,7 +35,12 @@ export function push(url: string): void {
 	if (typeof window === "undefined") {
 		return
 	}
-	const target = new URL(url, window.location.href)
+	let target: URL
+	try {
+		target = new URL(url, window.location.href)
+	} catch {
+		return
+	}
 	if (target.origin !== window.location.origin) {
 		window.location.assign(target.toString())
 		return
@@ -50,4 +55,3 @@ export function back(): void {
 	}
 	window.history.back()
 }
-

@@ -7,9 +7,10 @@ export function Copy({ text, className = "" }: { text: string; className?: strin
 	const [hovered, setHovered] = useState(false)
 
 	const copy = () => {
-		navigator.clipboard.writeText(text)
-		setCopied(true)
-		setTimeout(() => setCopied(false), 1000)
+		navigator.clipboard.writeText(text).then(() => {
+			setCopied(true)
+			setTimeout(() => setCopied(false), 1000)
+		}).catch(() => {})
 	}
 
 	return (

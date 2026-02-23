@@ -15,10 +15,11 @@ function CodeCopyBase({ code, className, timeout = 2000 }: CodeCopyProps): React
 	const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
 	const handleCopy = useCallback((): void => {
-		navigator.clipboard.writeText(code)
-		setCopied(true)
-		if (timer.current) clearTimeout(timer.current)
-		timer.current = setTimeout(() => setCopied(false), timeout)
+		navigator.clipboard.writeText(code).then(() => {
+			setCopied(true)
+			if (timer.current) clearTimeout(timer.current)
+			timer.current = setTimeout(() => setCopied(false), timeout)
+		}).catch(() => {})
 	}, [code, timeout])
 
 	useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])

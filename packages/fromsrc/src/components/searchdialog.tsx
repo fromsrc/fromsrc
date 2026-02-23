@@ -17,12 +17,14 @@ export const SearchDialog = memo(function SearchDialog({
 	open, onClose, onSearch, results, placeholder = "Search docs...", className, loading,
 }: SearchDialogProps): JSX.Element | null {
 	const [query, setQuery] = useState("")
+	const [active, setActive] = useState(-1)
 	const inputRef = useRef<HTMLInputElement>(null)
 	useScrollLock(open)
 
 	useEffect(() => {
 		if (!open) {
 			setQuery("")
+			setActive(-1)
 			return
 		}
 		const handler = (e: KeyboardEvent): void => {
@@ -38,10 +40,31 @@ export const SearchDialog = memo(function SearchDialog({
 	const handleChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			setQuery(e.target.value)
+			setActive(-1)
 			onSearch(e.target.value)
 		},
 		[onSearch],
 	)
+
+	const handleInputKey = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (!results || results.length === 0) return
+		if (e.key === "ArrowDown") {
+			e.preventDefault()
+			setActive((prev) => Math.min(results.length - 1, prev + 1))
+			return
+		}
+		if (e.key === "ArrowUp") {
+			e.preventDefault()
+			setActive((prev) => Math.max(-1, prev - 1))
+			return
+		}
+		if (e.key === "Enter" && active >= 0) {
+			e.preventDefault()
+			const item = results[active]
+			if (!item) return
+			window.location.href = item.href
+		}
+	}, [active, results])
 
 	const handleBackdrop = useCallback(
 		(e: React.MouseEvent) => {
@@ -64,6 +87,7 @@ export const SearchDialog = memo(function SearchDialog({
 					type="text"
 					value={query}
 					onChange={handleChange}
+					onKeyDown={handleInputKey}
 					placeholder={placeholder}
 					className="w-full px-4 py-3 bg-transparent text-fg text-sm placeholder:text-muted border-b border-line focus:outline-none"
 				/>
@@ -73,11 +97,12 @@ export const SearchDialog = memo(function SearchDialog({
 					) : results && results.length === 0 && query.trim() ? (
 						<div className="p-4 text-center text-muted text-sm">no results</div>
 					) : (
-						results?.map((r) => (
+						results?.map((r, i) => (
 							<a
 								key={r.href}
 								href={r.href}
-								className="flex flex-col gap-0.5 px-4 py-2.5 hover:bg-surface transition-colors"
+								onMouseEnter={() => setActive(i)}
+								className={`flex flex-col gap-0.5 px-4 py-2.5 transition-colors ${i === active ? "bg-surface" : "hover:bg-surface"}`}
 							>
 								<div className="flex items-center gap-2">
 									<span className="text-sm text-fg">{r.title}</span>

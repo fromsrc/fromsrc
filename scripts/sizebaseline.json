@@ -1,11 +1,11 @@
 {
 	"core": {
-		"size": 124769,
-		"gzip": 35155
+		"size": 124707,
+		"gzip": 35134
 	},
 	"readtime": {
-		"size": 128,
-		"gzip": 134
+		"size": 151,
+		"gzip": 147
 	},
 	"searchscore": {
 		"size": 1551,
@@ -28,12 +28,12 @@
 		"gzip": 1828
 	},
 	"algolia": {
-		"size": 1590,
-		"gzip": 816
+		"size": 1564,
+		"gzip": 808
 	},
 	"orama": {
-		"size": 1593,
-		"gzip": 752
+		"size": 1595,
+		"gzip": 760
 	},
 	"next": {
 		"size": 601,
@@ -52,11 +52,11 @@
 		"gzip": 290
 	},
 	"astro": {
-		"size": 1175,
-		"gzip": 497
+		"size": 1194,
+		"gzip": 507
 	},
 	"vite": {
-		"size": 1175,
-		"gzip": 498
+		"size": 1194,
+		"gzip": 508
 	}
 }

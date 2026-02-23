@@ -8,3 +8,6 @@ export function siteurl(): string {
 	return normalize(process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://fromsrc.com")
 }
 
+export function repourl(): string {
+	return normalize(process.env.NEXT_PUBLIC_GITHUB_REPO ?? "https://github.com/fromsrc/fromsrc")
+}

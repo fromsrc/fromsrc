@@ -52,7 +52,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
 `
 
 export const docspage = `import { readFile } from "node:fs/promises"
-import { resolve } from "node:path"
+import { isAbsolute, relative, resolve } from "node:path"
 import { MDXRemote } from "next-mdx-remote/rsc"
 
 interface Props {
@@ -67,8 +67,11 @@ export default async function DocPage({ params }: Props) {
 \tconst base = resolve(process.cwd(), "content", "docs")
 \tconst direct = resolve(base, \`\${path}.mdx\`)
 \tconst nested = resolve(base, path, "index.mdx")
-\tconst rooted = \`\${base}/\`
-\tif ((!direct.startsWith(rooted) && direct !== base) || (!nested.startsWith(rooted) && nested !== base)) return <p>not found</p>
+\tconst indocs = (target: string) => {
+\t\tconst rel = relative(base, target)
+\t\treturn rel === "" || (!rel.startsWith("..") && !isAbsolute(rel))
+\t}
+\tif (!indocs(direct) || !indocs(nested)) return <p>not found</p>
 \tlet content = ""
 \ttry {
 \t\tcontent = await readFile(direct, "utf-8")

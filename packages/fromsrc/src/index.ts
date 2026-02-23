@@ -7,6 +7,7 @@ export {
 	type Heading,
 	type SearchDoc,
 	defineContent,
+	clearContentCache,
 	extractHeadings,
 	getAllDocs,
 	getDoc,

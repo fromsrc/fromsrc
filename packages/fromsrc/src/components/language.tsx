@@ -26,6 +26,7 @@ function LanguageSwitchBase({ current, locales, onChange }: LanguageSwitchProps)
 	const [index, setIndex] = useState<number>(0)
 	const ref = useRef<HTMLDivElement>(null)
 	const listboxId = "language-listbox"
+	const active = locales[index]
 
 	const currentLocale = locales.find((l) => l.code === current)
 
@@ -113,7 +114,7 @@ function LanguageSwitchBase({ current, locales, onChange }: LanguageSwitchProps)
 					id={listboxId}
 					role="listbox"
 					aria-label="Available languages"
-					aria-activedescendant={`language-option-${locales[index]?.code}`}
+					aria-activedescendant={active ? `language-option-${active.code}` : undefined}
 					className="absolute right-0 top-full mt-1 min-w-[140px] rounded-md border border-line bg-bg p-1 shadow-lg"
 				>
 					{locales.map((locale, i) => (

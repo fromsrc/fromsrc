@@ -70,7 +70,7 @@ export function rateLimiter(
 
 	return (key: string): RateLimitResult => {
 		const now = Date.now()
-		for (const [item, value] of windows) {
+		for (const [item, value] of [...windows.entries()]) {
 			if (now >= value.resetAt) {
 				windows.delete(item)
 			}

@@ -31,6 +31,13 @@ interface Options {
 	framework: Framework
 }
 
+function validname(name: string): boolean {
+	if (!name) return false
+	if (name === "." || name === "..") return false
+	if (name.includes("/") || name.includes("\\") || name.includes("\0")) return false
+	return /^[a-zA-Z0-9._-]+$/.test(name)
+}
+
 function write(dir: string, file: string, content: string) {
 	const filepath = join(dir, file)
 	const parent = join(filepath, "..")
@@ -42,6 +49,10 @@ function write(dir: string, file: string, content: string) {
 
 export function generate(options: Options) {
 	const { name, framework } = options
+	if (!validname(name)) {
+		console.log(`\n  invalid project name "${name}"`)
+		process.exit(1)
+	}
 	const target = join(process.cwd(), name)
 
 	if (existsSync(target)) {

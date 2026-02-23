@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 import { unstable_noStore as noStore } from "next/cache"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { siteurl } from "@/app/_lib/site"
+import { repourl, siteurl } from "@/app/_lib/site"
 import { MDX } from "../_components/mdx"
 import { getAllDocs, getDoc } from "../_lib/content"
 import { jsonld, neighbors, ogquery, orderdocs } from "../_lib/pageutil"
@@ -14,6 +14,7 @@ type Props = {
 }
 
 const site = siteurl()
+const repo = repourl()
 
 export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
 	const docs = await getAllDocs()
@@ -85,7 +86,7 @@ export default async function DocPage({ params }: Props) {
 						<span>{readTime} min read</span>
 						<span aria-hidden="true">·</span>
 						<a
-							href={`https://github.com/fromsrc/fromsrc/edit/main/docs/${doc.slug || "index"}.mdx`}
+							href={`${repo}/edit/main/docs/${doc.slug || "index"}.mdx`}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-flex items-center gap-1.5 text-muted hover:text-fg transition-colors"

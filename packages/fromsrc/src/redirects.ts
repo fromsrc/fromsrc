@@ -26,9 +26,9 @@ function substitute(destination: string, params: Record<string, string>): string
 	let result = destination
 	for (const [key, value] of Object.entries(params)) {
 		if (key === "*") {
-			result = result.replace("*", value)
+			result = result.split("*").join(value)
 		} else {
-			result = result.replace(`:${key}`, value)
+			result = result.split(`:${key}`).join(value)
 		}
 	}
 	return result

@@ -26,9 +26,8 @@ function normalize(doc: SearchDoc): SearchDoc {
 	}
 }
 
-function fallback(query: string, docs: SearchDoc[], limit: number): SearchResult[] {
-	if (!query.trim()) return docs.slice(0, limit).map((doc) => ({ doc, score: 0 }))
-	return []
+function fallback(docs: SearchDoc[], limit: number): SearchResult[] {
+	return docs.slice(0, limit).map((doc) => ({ doc, score: 0 }))
 }
 
 function parsehits(value: unknown): Record<string, unknown>[] {
@@ -75,7 +74,7 @@ export function createAlgoliaAdapter(config: AlgoliaConfig): SearchAdapter {
 	return {
 		async search(query: string, docs: SearchDoc[], limit = 8): Promise<SearchResult[]> {
 			const value = query.trim()
-			if (!value) return fallback(value, docs, limit)
+			if (!value) return fallback(docs, limit)
 			const url = `https://${config.appid}-dsn.algolia.net/1/indexes/${encodeURIComponent(config.index)}/query`
 			const response = await fetch(url, {
 				method: "POST",

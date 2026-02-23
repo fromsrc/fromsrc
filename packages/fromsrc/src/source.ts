@@ -49,7 +49,12 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
 			const res = await fetch(`${rawUrl}/${normalized}`)
 			if (!res.ok) return null
 			const content = await res.text()
-			const value = { content, data: {} }
+			const docs = await this.list()
+			const item = docs.find((doc) => doc.slug === path || (path === "index" && doc.slug === ""))
+			const data: Record<string, unknown> = {}
+			if (item?.title) data.title = item.title
+			if (item?.description) data.description = item.description
+			const value = { content, data }
 			filecache.set(path, value)
 			return value
 		},

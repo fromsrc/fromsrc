@@ -103,7 +103,7 @@ async function request(url: string, headers: Record<string, string>): Promise<Re
 		}
 		await sleep(waitms(res, attempt))
 	}
-	return fetch(url, { headers })
+	return new Response(null, { status: 429 })
 }
 
 export function createGithubSource(config: GithubSourceConfig): ContentSource {
@@ -227,7 +227,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
 					const slug = rawSlug === "index" ? "" : rawSlug
 				const fallbackTitle = slug === "" ? "index" : (slug.split("/").pop() ?? slug)
 				paths[slug] = item.path
-				return { slug, title: fallbackTitle, description: fallbackTitle }
+				return { slug, title: fallbackTitle }
 			})
 
 			pathCache.set("paths", paths)

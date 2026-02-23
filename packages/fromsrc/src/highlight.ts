@@ -50,18 +50,28 @@ export function generateSnippet(text: string, query: string, options?: SnippetOp
 
 export function highlightHtml(text: string, query: string): string {
 	if (!query) return escape(text)
+	const terms = tokenize(query).map((term) => term.toLowerCase()).filter(Boolean)
+	if (terms.length === 0) return escape(text)
 	const result: string[] = []
 	const lower = text.toLowerCase()
-	const q = query.toLowerCase()
 	let last = 0
 	let pos = 0
 	while (pos < lower.length) {
-		const idx = lower.indexOf(q, pos)
-		if (idx === -1) break
-		result.push(escape(text.slice(last, idx)))
-		result.push(`<mark>${escape(text.slice(idx, idx + q.length))}</mark>`)
-		last = idx + q.length
-		pos = idx + 1
+		let nearest = -1
+		let match = ""
+		for (const term of terms) {
+			const idx = lower.indexOf(term, pos)
+			if (idx === -1) continue
+			if (nearest === -1 || idx < nearest) {
+				nearest = idx
+				match = term
+			}
+		}
+		if (nearest === -1 || !match) break
+		result.push(escape(text.slice(last, nearest)))
+		result.push(`<mark>${escape(text.slice(nearest, nearest + match.length))}</mark>`)
+		last = nearest + match.length
+		pos = nearest + 1
 	}
 	result.push(escape(text.slice(last)))
 	return result.join("")

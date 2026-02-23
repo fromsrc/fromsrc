@@ -20,8 +20,6 @@ export interface IndexConfig {
 	minLength?: number
 }
 
-type jsonrecord = Record<string, unknown>
-
 const DEFAULT_STOPS = new Set([
 	"the", "a", "an", "is", "are", "was", "were", "in", "on", "at",
 	"to", "for", "of", "and", "or", "but", "not", "with", "this", "that",
@@ -83,9 +81,9 @@ export function removeDocument(index: SearchIndex, path: string): void {
 	const replace = (token: string, from: number, to: number) => {
 		const entries = index.terms.get(token)
 		if (!entries) return
-		const position = entries.indexOf(from)
-		if (position === -1) return
-		entries[position] = to
+		for (let i = 0; i < entries.length; i++) {
+			if (entries[i] === from) entries[i] = to
+		}
 	}
 	for (const token of new Set(tokenize(doctext(doc), index.config))) {
 		remove(token, idx)
@@ -133,7 +131,7 @@ export function serializeIndex(index: SearchIndex): string {
 	})
 }
 
-function isrecord(value: unknown): value is jsonrecord {
+function isrecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null
 }
 

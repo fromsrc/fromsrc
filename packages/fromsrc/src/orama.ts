@@ -20,6 +20,7 @@ type hit = {
 	score?: number
 	document?: hit
 }
+const MAX_DEPTH = 10
 
 function isrecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null
@@ -33,9 +34,10 @@ function getnumber(value: unknown): number | undefined {
 	return typeof value === "number" ? value : undefined
 }
 
-function parsehit(value: unknown): hit | null {
+function parsehit(value: unknown, depth = 0): hit | null {
 	if (!isrecord(value)) return null
-	const nested = isrecord(value.document) ? parsehit(value.document) : null
+	if (depth > MAX_DEPTH) return null
+	const nested = isrecord(value.document) ? parsehit(value.document, depth + 1) : null
 	const document = nested ?? undefined
 	return {
 		slug: getstring(value.slug),
@@ -68,9 +70,8 @@ function normalize(doc: SearchDoc): SearchDoc {
 	}
 }
 
-function fallback(query: string, docs: SearchDoc[], limit: number): SearchResult[] {
-	if (!query.trim()) return docs.slice(0, limit).map((doc) => ({ doc, score: 0 }))
-	return []
+function fallback(docs: SearchDoc[], limit: number): SearchResult[] {
+	return docs.slice(0, limit).map((doc) => ({ doc, score: 0 }))
 }
 
 function maphit(entry: hit, index: number, total: number): SearchResult | null {
@@ -96,7 +97,7 @@ export function createOramaAdapter(config: OramaConfig): SearchAdapter {
 	return {
 		async search(query: string, docs: SearchDoc[], limit = 8): Promise<SearchResult[]> {
 			const value = query.trim()
-			if (!value) return fallback(value, docs, limit)
+			if (!value) return fallback(docs, limit)
 			const response = await fetch(config.endpoint, {
 				method: "POST",
 				headers: {

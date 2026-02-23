@@ -9,7 +9,7 @@ export function packagejson(name: string, framework: Framework): string {
 			node: "^20.19.0 || >=22.12.0",
 		},
 		dependencies: {
-			fromsrc: "^0.0.0",
+			fromsrc: "latest",
 			react: "^19.0.0",
 			"react-dom": "^19.0.0",
 		},

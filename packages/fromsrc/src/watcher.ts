@@ -1,6 +1,8 @@
 import { existsSync, readdirSync, watch } from "node:fs"
 import type { FSWatcher } from "node:fs"
 import { extname, join, relative } from "node:path"
+import { clearContentCache } from "./content"
+import { clearMetaCache } from "./meta"
 
 export interface WatcherConfig {
 	dir: string
@@ -87,4 +89,7 @@ export function createWatcher(config: WatcherConfig) {
 	}
 }
 
-export function clearAllCaches() { console.log("[fromsrc] caches cleared") }
+export function clearAllCaches() {
+	clearContentCache()
+	clearMetaCache()
+}
