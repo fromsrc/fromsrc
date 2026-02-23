@@ -14,7 +14,14 @@ export interface IncludeOptions {
 const pattern = /^@include\s+(.+)$/
 const parser = unified().use(remarkParse)
 
-function expand(tree: Root, base: string, max: number, depth: number) {
+function inside(rootDir: string, filepath: string): boolean {
+	const root = resolve(rootDir)
+	const full = resolve(filepath)
+	const rooted = `${root}/`
+	return full === root || full.startsWith(rooted)
+}
+
+function expand(tree: Root, rootDir: string, base: string, max: number, depth: number) {
 	if (depth > max) return
 
 	visit(tree, "paragraph", (node: Paragraph, index, parent) => {
@@ -30,6 +37,9 @@ function expand(tree: Root, base: string, max: number, depth: number) {
 		const includePath = match[1]
 		if (!includePath) return
 		const filepath = resolve(base, includePath)
+		if (!inside(rootDir, filepath)) {
+			return
+		}
 		let content: string
 
 		try {
@@ -44,31 +54,12 @@ function expand(tree: Root, base: string, max: number, depth: number) {
 		parent.children.splice(index, 1, ...(nodes as typeof parent.children))
 
 		const subtree: Root = { type: "root", children: nodes }
-		expand(subtree, dirname(filepath), max, depth + 1)
+		expand(subtree, rootDir, dirname(filepath), max, depth + 1)
 	})
 }
 
-function inside(base: string, filepath: string): boolean {
-	const rooted = `${resolve(base)}/`
-	const full = resolve(filepath)
-	return full === resolve(base) || full.startsWith(rooted)
-}
-
 export const remarkInclude: Plugin<[IncludeOptions?], Root> = (options) => {
-	const base = resolve(options?.basePath ?? ".")
+	const rootDir = resolve(options?.basePath ?? ".")
 	const max = options?.maxDepth ?? 3
-	return (tree) => {
-		visit(tree, "paragraph", (node: Paragraph) => {
-			if (node.children.length !== 1) return
-			const child = node.children[0] as Text
-			if (child?.type !== "text") return
-			const match = child.value.trim().match(pattern)
-			if (!match?.[1]) return
-			const filepath = resolve(base, match[1])
-			if (!inside(base, filepath)) {
-				child.value = ""
-			}
-		})
-		expand(tree, base, max, 0)
-	}
+	return (tree) => expand(tree, rootDir, rootDir, max, 0)
 }

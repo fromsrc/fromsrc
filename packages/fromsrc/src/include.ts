@@ -11,7 +11,14 @@ export interface IncludeOptions {
 
 const pattern = /^@include\s+(.+)$/
 
-function expand(tree: Root, baseDir: string, maxDepth: number, depth: number) {
+function inside(rootDir: string, filepath: string): boolean {
+	const root = resolve(rootDir)
+	const full = resolve(filepath)
+	const rooted = `${root}/`
+	return full === root || full.startsWith(rooted)
+}
+
+function expand(tree: Root, rootDir: string, baseDir: string, maxDepth: number, depth: number) {
 	if (depth > maxDepth) return
 
 	visit(tree, "paragraph", (node: Paragraph, index, parent) => {
@@ -27,6 +34,10 @@ function expand(tree: Root, baseDir: string, maxDepth: number, depth: number) {
 		const includePath = match[1]
 		if (!includePath) return
 		const filepath = resolve(baseDir, includePath)
+		if (!inside(rootDir, filepath)) {
+			console.warn(`fromsrc: include blocked outside root: ${filepath}`)
+			return
+		}
 		let content: string
 
 		try {
@@ -48,31 +59,12 @@ function expand(tree: Root, baseDir: string, maxDepth: number, depth: number) {
 		parent.children.splice(index, 1, ...paragraphs)
 
 		const subtree: Root = { type: "root", children: paragraphs }
-		expand(subtree, dirname(filepath), maxDepth, depth + 1)
+		expand(subtree, rootDir, dirname(filepath), maxDepth, depth + 1)
 	})
 }
 
-function inside(baseDir: string, filepath: string): boolean {
-	const rooted = `${resolve(baseDir)}/`
-	const full = resolve(filepath)
-	return full === resolve(baseDir) || full.startsWith(rooted)
-}
-
 export const remarkInclude: Plugin<[IncludeOptions?], Root> = (options) => {
-	const baseDir = resolve(options?.baseDir ?? ".")
+	const rootDir = resolve(options?.baseDir ?? ".")
 	const maxDepth = options?.maxDepth ?? 3
-	return (tree) => {
-		visit(tree, "paragraph", (node: Paragraph) => {
-			if (node.children.length !== 1) return
-			const child = node.children[0] as Text
-			if (child?.type !== "text") return
-			const match = child.value.trim().match(pattern)
-			if (!match?.[1]) return
-			const filepath = resolve(baseDir, match[1])
-			if (!inside(baseDir, filepath)) {
-				child.value = ""
-			}
-		})
-		expand(tree, baseDir, maxDepth, 0)
-	}
+	return (tree) => expand(tree, rootDir, rootDir, maxDepth, 0)
 }
