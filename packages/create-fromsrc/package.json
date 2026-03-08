@@ -2,6 +2,14 @@
 	"name": "create-fromsrc",
 	"version": "0.0.1",
 	"description": "create a new fromsrc documentation site",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/fromsrc/fromsrc"
+	},
+	"homepage": "https://github.com/fromsrc/fromsrc",
+	"bugs": {
+		"url": "https://github.com/fromsrc/fromsrc/issues"
+	},
 	"type": "module",
 	"bin": {
 		"create-fromsrc": "dist/index.js"
