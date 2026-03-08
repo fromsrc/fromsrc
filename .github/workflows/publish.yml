@@ -74,10 +74,17 @@ jobs:
           title="v$version"
           notes=$(cat <<EOF
           fromsrc $title
-
-          published packages
+          
+          packages
           - fromsrc@$version
           - create-fromsrc@$version
+
+          source
+          - commit: $target
+
+          notes
+          - published from github actions
+
           EOF
           )
           if gh release view "$title" >/dev/null 2>&1; then
