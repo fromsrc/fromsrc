@@ -1,10 +1,10 @@
 {
 	"name": "fromsrc",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "documentation framework for developers",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/fromsrc/fromsrc"
+		"url": "git+https://github.com/fromsrc/fromsrc.git"
 	},
 	"homepage": "https://github.com/fromsrc/fromsrc",
 	"bugs": {
