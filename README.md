@@ -8,37 +8,44 @@
 ```bash
 > what is this?
 
-  mdx with full control. no abstractions.
-  composable primitives you own.
-  ai-native from the start.
+  mdx docs from your own files.
+  typed frontmatter. composable primitives.
+  ai-native outputs built in.
 
 > features?
 
   ✓ mdx with full control
-  ✓ incremental builds
-  ✓ composable primitives
-  ✓ ai-native (llms.txt, .md endpoints, mcp)
-  ✓ fast search (<20ms)
-  ✓ configurable search scoring weights
-  ✓ dark mode
-  ✓ zero config
+  ✓ typed schemas with zod
+  ✓ local search with heading support
+  ✓ ai-native routes (llms.txt, raw markdown, mcp)
+  ✓ framework adapters
+  ✓ scaffold cli
+
+> frameworks?
+
+  next.js
+  astro
+  remix
+  react-router
+  vite
+  tanstack
 
 > ai-native?
 
   /docs/intro        → rendered page
   /api/raw/intro     → raw markdown
-  /api/llms/intro    → page for ai
-  /llms.txt          → all docs for ai
-
-> stack?
-
-  next.js · tailwind · mdx
+  /api/llms/intro    → ai-ready page
+  /llms.txt          → docs index for ai
+  /llms-full.txt     → full docs for ai
+  /api/mcp           → mcp endpoint
 
 > install?
 
   bunx create-fromsrc
   bunx create-fromsrc --name my-docs --framework next.js --yes
   bunx create-fromsrc --list
+
+  bun add fromsrc
 
 > links?
 
