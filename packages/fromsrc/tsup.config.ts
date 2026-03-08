@@ -82,12 +82,12 @@ export default defineConfig([
 			"src/**/*.tsx",
 		],
 		format: ["esm"],
-			bundle: false,
-			treeshake: true,
-			dts: true,
-			silent: true,
-			splitting: false,
-		clean: false,
+		bundle: false,
+		treeshake: true,
+		dts: true,
+		silent: true,
+		splitting: false,
+		clean: true,
 		external,
 		onSuccess: async () => {
 			finish()
