@@ -1,195 +1,251 @@
-"use client"
+"use client";
 
 import {
-	createContext,
-	memo,
-	type ReactNode,
-	useCallback,
-	useContext,
-	useEffect,
-	useId,
-	useMemo,
-	useRef,
-	useState,
-} from "react"
+  createContext,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { ReactNode } from "react";
 
-const key = "fromsrc-code-lang"
+const key = "fromsrc-code-lang";
 
 interface codegroupcontext {
-	active: string
-	set: (value: string) => void
-	add: (value: string) => void
-	remove: (value: string) => void
-	list: string[]
-	prefix: string
+  active: string;
+  set: (value: string) => void;
+  add: (value: string) => void;
+  remove: (value: string) => void;
+  list: string[];
+  prefix: string;
 }
 
-const context = createContext<codegroupcontext | null>(null)
+const context = createContext<codegroupcontext | null>(null);
 
 export interface CodeGroupProps {
-	children: ReactNode
-	defaultValue?: string
-	group?: string
-	persist?: boolean
+  children: ReactNode;
+  defaultValue?: string;
+  group?: string;
+  persist?: boolean;
 }
 
 export interface CodeTabProps {
-	value: string
-	label: string
-	children: ReactNode
+  value: string;
+  label: string;
+  children: ReactNode;
 }
 
 export interface CodeTabsProps {
-	children: ReactNode
+  children: ReactNode;
 }
 
 function safe(value: string): string {
-	return value.replace(/[^a-z0-9_-]/gi, "-").toLowerCase()
+  return value.replaceAll(/[^a-z0-9_-]/gi, "-").toLowerCase();
 }
 
 export function CodeGroup({
-	children,
-	defaultValue,
-	group,
-	persist = true,
+  children,
+  defaultValue,
+  group,
+  persist = true,
 }: CodeGroupProps): ReactNode {
-	const [active, rawset] = useState(defaultValue ?? "")
-	const [list, setlist] = useState<string[]>([])
-	const groupid = group?.trim() || "global"
-	const basekey = `${key}:${groupid}`
-	const signature = useMemo(
-		() => (list.length === 0 ? "default" : list.map((value) => safe(value)).join("|")),
-		[list],
-	)
-	const storekey = `${basekey}:${signature}`
-	const eventkey = `${basekey}:event`
-	const uid = useId().replace(/[:]/g, "")
+  const [active, rawset] = useState(defaultValue ?? "");
+  const [list, setlist] = useState<string[]>([]);
+  const groupid = group?.trim() || "global";
+  const basekey = `${key}:${groupid}`;
+  const signature = useMemo(
+    () =>
+      list.length === 0
+        ? "default"
+        : list.map((value) => safe(value)).join("|"),
+    [list]
+  );
+  const storekey = `${basekey}:${signature}`;
+  const eventkey = `${basekey}:event`;
+  const uid = useId().replaceAll(/[:]/g, "");
 
-	const add = useCallback((value: string): void => {
-		setlist((items) => (items.includes(value) ? items : [...items, value]))
-	}, [])
+  const add = useCallback((value: string): void => {
+    setlist((items) => (items.includes(value) ? items : [...items, value]));
+  }, []);
 
-	const remove = useCallback((value: string): void => {
-		setlist((items) => items.filter((item) => item !== value))
-	}, [])
+  const remove = useCallback((value: string): void => {
+    setlist((items) => items.filter((item) => item !== value));
+  }, []);
 
-	useEffect(() => {
-		if (list.length === 0) return
-		if (persist) {
-			try {
-				const stored = localStorage.getItem(storekey)
-				if (stored && list.includes(stored)) {
-					if (stored !== active) rawset(stored)
-					return
-				}
-				const fallback = localStorage.getItem(basekey)
-				if (fallback && list.includes(fallback)) {
-					if (fallback !== active) rawset(fallback)
-					return
-				}
-			} catch {}
-		}
-		if (active && list.includes(active)) return
-		const first = list[0] ?? ""
-		rawset(defaultValue && list.includes(defaultValue) ? defaultValue : first)
-	}, [active, basekey, defaultValue, list, persist, storekey])
+  useEffect(() => {
+    if (list.length === 0) {
+      return;
+    }
+    if (persist) {
+      try {
+        const stored = localStorage.getItem(storekey);
+        if (stored && list.includes(stored)) {
+          if (stored !== active) {
+            rawset(stored);
+          }
+          return;
+        }
+        const fallback = localStorage.getItem(basekey);
+        if (fallback && list.includes(fallback)) {
+          if (fallback !== active) {
+            rawset(fallback);
+          }
+          return;
+        }
+      } catch {}
+    }
+    if (active && list.includes(active)) {
+      return;
+    }
+    const first = list[0] ?? "";
+    rawset(defaultValue && list.includes(defaultValue) ? defaultValue : first);
+  }, [active, basekey, defaultValue, list, persist, storekey]);
 
-	useEffect(() => {
-		if (!persist) return
-		const handler = (event: Event): void => {
-			const value = (event as CustomEvent<string>).detail
-			if (typeof value === "string" && list.includes(value)) rawset(value)
-		}
-		window.addEventListener(eventkey, handler)
-		return () => window.removeEventListener(eventkey, handler)
-	}, [eventkey, list, persist])
+  useEffect(() => {
+    if (!persist) {
+      return;
+    }
+    const handler = (event: Event): void => {
+      const value = (event as CustomEvent<string>).detail;
+      if (typeof value === "string" && list.includes(value)) {
+        rawset(value);
+      }
+    };
+    window.addEventListener(eventkey, handler);
+    return () => window.removeEventListener(eventkey, handler);
+  }, [eventkey, list, persist]);
 
-	const set = useCallback(
-		(value: string): void => {
-			rawset(value)
-			if (!persist) return
-			try {
-				localStorage.setItem(basekey, value)
-				localStorage.setItem(storekey, value)
-			} catch {}
-			window.dispatchEvent(new CustomEvent(eventkey, { detail: value }))
-		},
-		[basekey, eventkey, persist, storekey],
-	)
+  const set = useCallback(
+    (value: string): void => {
+      rawset(value);
+      if (!persist) {
+        return;
+      }
+      try {
+        localStorage.setItem(basekey, value);
+        localStorage.setItem(storekey, value);
+      } catch {}
+      window.dispatchEvent(new CustomEvent(eventkey, { detail: value }));
+    },
+    [basekey, eventkey, persist, storekey]
+  );
 
-	return (
-		<context.Provider value={{ active, set, add, remove, list, prefix: `code-${uid}` }}>
-			<div className="my-4 rounded-lg border border-white/10 overflow-hidden">{children}</div>
-		</context.Provider>
-	)
+  return (
+    <context.Provider
+      value={{ active, add, list, prefix: `code-${uid}`, remove, set }}
+    >
+      <div className="my-4 rounded-lg border border-white/10 overflow-hidden">
+        {children}
+      </div>
+    </context.Provider>
+  );
 }
 
 export function CodeTab({ value, label, children }: CodeTabProps): ReactNode {
-	const ctx = useContext(context)
-	if (!ctx) return null
-	const add = ctx.add
-	const remove = ctx.remove
+  const ctx = useContext(context);
+  if (!ctx) {
+    return null;
+  }
+  const { add } = ctx;
+  const { remove } = ctx;
 
-	useEffect(() => {
-		add(value)
-		return () => remove(value)
-	}, [add, remove, value])
+  useEffect(() => {
+    add(value);
+    return () => remove(value);
+  }, [add, remove, value]);
 
-	const isactive = ctx.active === value || (!ctx.active && ctx.list[0] === value)
-	const tabid = `${ctx.prefix}-tab-${safe(value)}`
-	const panelid = `${ctx.prefix}-panel-${safe(value)}`
+  const isactive =
+    ctx.active === value || (!ctx.active && ctx.list[0] === value);
+  const tabid = `${ctx.prefix}-tab-${safe(value)}`;
+  const panelid = `${ctx.prefix}-panel-${safe(value)}`;
 
-	return (
-		<>
-			<button
-				type="button"
-				role="tab"
-				id={tabid}
-				data-value={value}
-				aria-selected={isactive}
-				aria-controls={panelid}
-				tabIndex={isactive ? 0 : -1}
-				onClick={() => ctx.set(value)}
-				className={`px-4 py-2 text-sm font-medium border-b ${isactive ? "border-fg/30 text-fg bg-fg/5" : "border-transparent text-fg/60 hover:text-fg"}`}
-			>
-				{label}
-			</button>
-			{isactive && (
-				<div role="tabpanel" id={panelid} aria-labelledby={tabid} className="[&>pre]:!mt-0 [&>pre]:!rounded-t-none">
-					{children}
-				</div>
-			)}
-		</>
-	)
+  return (
+    <>
+      <button
+        type="button"
+        role="tab"
+        id={tabid}
+        data-value={value}
+        aria-selected={isactive}
+        aria-controls={panelid}
+        tabIndex={isactive ? 0 : -1}
+        onClick={() => ctx.set(value)}
+        className={`px-4 py-2 text-sm font-medium border-b ${isactive ? "border-fg/30 text-fg bg-fg/5" : "border-transparent text-fg/60 hover:text-fg"}`}
+      >
+        {label}
+      </button>
+      {isactive && (
+        <div
+          role="tabpanel"
+          id={panelid}
+          aria-labelledby={tabid}
+          className="[&>pre]:!mt-0 [&>pre]:!rounded-t-none"
+        >
+          {children}
+        </div>
+      )}
+    </>
+  );
 }
 
-export const CodeTabs = memo(function CodeTabs({ children }: CodeTabsProps): ReactNode {
-	const ctx = useContext(context)
-	const ref = useRef<HTMLDivElement>(null)
+export const CodeTabs = memo(function CodeTabs({
+  children,
+}: CodeTabsProps): ReactNode {
+  const ctx = useContext(context);
+  const ref = useRef<HTMLDivElement>(null);
 
-	const onkey = useCallback(
-		(event: React.KeyboardEvent<HTMLDivElement>): void => {
-			if (!ctx || ctx.list.length === 0) return
-			const current = Math.max(0, ctx.list.indexOf(ctx.active || ctx.list[0] || ""))
-			let next = current
-			if (event.key === "ArrowRight") next = Math.min(ctx.list.length - 1, current + 1)
-			if (event.key === "ArrowLeft") next = Math.max(0, current - 1)
-			if (event.key === "Home") next = 0
-			if (event.key === "End") next = ctx.list.length - 1
-			if (next === current) return
-			event.preventDefault()
-			const value = ctx.list[next]
-			if (!value) return
-			ctx.set(value)
-			const button = ref.current?.querySelector<HTMLButtonElement>(`button[data-value="${value}"]`)
-			button?.focus()
-		},
-		[ctx],
-	)
+  const onkey = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>): void => {
+      if (!ctx || ctx.list.length === 0) {
+        return;
+      }
+      const current = Math.max(
+        0,
+        ctx.list.indexOf(ctx.active || ctx.list[0] || "")
+      );
+      let next = current;
+      if (event.key === "ArrowRight") {
+        next = Math.min(ctx.list.length - 1, current + 1);
+      }
+      if (event.key === "ArrowLeft") {
+        next = Math.max(0, current - 1);
+      }
+      if (event.key === "Home") {
+        next = 0;
+      }
+      if (event.key === "End") {
+        next = ctx.list.length - 1;
+      }
+      if (next === current) {
+        return;
+      }
+      event.preventDefault();
+      const value = ctx.list[next];
+      if (!value) {
+        return;
+      }
+      ctx.set(value);
+      const button = ref.current?.querySelector<HTMLButtonElement>(
+        `button[data-value="${value}"]`
+      );
+      button?.focus();
+    },
+    [ctx]
+  );
 
-	return (
-		<div ref={ref} role="tablist" aria-label="code examples" onKeyDown={onkey} className="flex border-b border-white/10 bg-bg">
-			{children}
-		</div>
-	)
-})
+  return (
+    <div
+      ref={ref}
+      role="tablist"
+      aria-label="code examples"
+      onKeyDown={onkey}
+      className="flex border-b border-white/10 bg-bg"
+    >
+      {children}
+    </div>
+  );
+});

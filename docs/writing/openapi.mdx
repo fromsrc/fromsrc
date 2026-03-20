@@ -66,10 +66,10 @@ filter by tag, method, or path substring:
 for larger specs, load json and pass it to `Openapi`:
 
 ```tsx
-import spec from "./openapi.json"
+import spec from "./openapi.json";
 
 export default function Page() {
-  return <Openapi spec={spec} />
+  return <Openapi spec={spec} />;
 }
 ```
 
@@ -78,7 +78,7 @@ export default function Page() {
 for parse-only flows, import the parser from the dedicated subpath:
 
 ```ts
-import { parseOpenApi } from "fromsrc/openapi"
+import { parseOpenApi } from "fromsrc/openapi";
 
-const parsed = parseOpenApi(spec)
+const parsed = parseOpenApi(spec);
 ```

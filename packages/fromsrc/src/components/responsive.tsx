@@ -1,114 +1,127 @@
-"use client"
+"use client";
 
-import { type ReactNode, memo } from "react"
+import { memo } from "react";
+import type { ReactNode } from "react";
 
 /**
  * Props for the Show component that controls visibility at breakpoints
  */
 interface ShowProps {
-	above?: "sm" | "md" | "lg" | "xl"
-	below?: "sm" | "md" | "lg" | "xl"
-	children: ReactNode
+  above?: "sm" | "md" | "lg" | "xl";
+  below?: "sm" | "md" | "lg" | "xl";
+  children: ReactNode;
 }
 
 const aboveClasses = {
-	sm: "hidden sm:block",
-	md: "hidden md:block",
-	lg: "hidden lg:block",
-	xl: "hidden xl:block",
-}
+  lg: "hidden lg:block",
+  md: "hidden md:block",
+  sm: "hidden sm:block",
+  xl: "hidden xl:block",
+};
 
 const belowClasses = {
-	sm: "sm:hidden",
-	md: "md:hidden",
-	lg: "lg:hidden",
-	xl: "xl:hidden",
-}
+  lg: "lg:hidden",
+  md: "md:hidden",
+  sm: "sm:hidden",
+  xl: "xl:hidden",
+};
 
-export const Show = memo(function Show({ above, below, children }: ShowProps): ReactNode {
-	let className = ""
+export const Show = memo(function Show({
+  above,
+  below,
+  children,
+}: ShowProps): ReactNode {
+  let className = "";
 
-	if (above) {
-		className = aboveClasses[above]
-	} else if (below) {
-		className = belowClasses[below]
-	}
+  if (above) {
+    className = aboveClasses[above];
+  } else if (below) {
+    className = belowClasses[below];
+  }
 
-	return <div className={className}>{children}</div>
-})
+  return <div className={className}>{children}</div>;
+});
 
 /**
  * Props for the Grid component that creates responsive grid layouts
  */
 interface GridProps {
-	cols?: 1 | 2 | 3 | 4
-	gap?: "sm" | "md" | "lg"
-	children: ReactNode
+  cols?: 1 | 2 | 3 | 4;
+  gap?: "sm" | "md" | "lg";
+  children: ReactNode;
 }
 
 const colClasses = {
-	1: "grid-cols-1",
-	2: "grid-cols-1 md:grid-cols-2",
-	3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-	4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
-}
+  1: "grid-cols-1",
+  2: "grid-cols-1 md:grid-cols-2",
+  3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+  4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
+};
 
 const gapClasses = {
-	sm: "gap-2",
-	md: "gap-4",
-	lg: "gap-6",
-}
+  lg: "gap-6",
+  md: "gap-4",
+  sm: "gap-2",
+};
 
-export const Grid = memo(function Grid({ cols = 2, gap = "md", children }: GridProps): ReactNode {
-	return <div className={`grid ${colClasses[cols]} ${gapClasses[gap]} my-6`}>{children}</div>
-})
+export const Grid = memo(function Grid({
+  cols = 2,
+  gap = "md",
+  children,
+}: GridProps): ReactNode {
+  return (
+    <div className={`grid ${colClasses[cols]} ${gapClasses[gap]} my-6`}>
+      {children}
+    </div>
+  );
+});
 
 /**
  * Props for the Flex component that creates flexible box layouts
  */
 interface FlexProps {
-	direction?: "row" | "col"
-	align?: "start" | "center" | "end" | "stretch"
-	justify?: "start" | "center" | "end" | "between"
-	gap?: "sm" | "md" | "lg"
-	wrap?: boolean
-	children: ReactNode
+  direction?: "row" | "col";
+  align?: "start" | "center" | "end" | "stretch";
+  justify?: "start" | "center" | "end" | "between";
+  gap?: "sm" | "md" | "lg";
+  wrap?: boolean;
+  children: ReactNode;
 }
 
 const directionClasses = {
-	row: "flex-row",
-	col: "flex-col",
-}
+  col: "flex-col",
+  row: "flex-row",
+};
 
 const alignClasses = {
-	start: "items-start",
-	center: "items-center",
-	end: "items-end",
-	stretch: "items-stretch",
-}
+  center: "items-center",
+  end: "items-end",
+  start: "items-start",
+  stretch: "items-stretch",
+};
 
 const justifyClasses = {
-	start: "justify-start",
-	center: "justify-center",
-	end: "justify-end",
-	between: "justify-between",
-}
+  between: "justify-between",
+  center: "justify-center",
+  end: "justify-end",
+  start: "justify-start",
+};
 
 export const Flex = memo(function Flex({
-	direction = "row",
-	align = "start",
-	justify = "start",
-	gap = "md",
-	wrap = false,
-	children,
+  direction = "row",
+  align = "start",
+  justify = "start",
+  gap = "md",
+  wrap = false,
+  children,
 }: FlexProps): ReactNode {
-	return (
-		<div
-			className={`flex ${directionClasses[direction]} ${alignClasses[align]} ${justifyClasses[justify]} ${gapClasses[gap]} ${wrap ? "flex-wrap" : ""} my-4`}
-		>
-			{children}
-		</div>
-	)
-})
+  return (
+    <div
+      className={`flex ${directionClasses[direction]} ${alignClasses[align]} ${justifyClasses[justify]} ${gapClasses[gap]} ${wrap ? "flex-wrap" : ""} my-4`}
+    >
+      {children}
+    </div>
+  );
+});
 
-export type { ShowProps, GridProps, FlexProps }
+export type { ShowProps, GridProps, FlexProps };

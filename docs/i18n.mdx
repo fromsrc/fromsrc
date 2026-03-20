@@ -65,7 +65,7 @@ de.docs.example.com/guide
 ## language switcher
 
 ```tsx
-import { LanguageSwitch } from "fromsrc/client"
+import { LanguageSwitch } from "fromsrc/client";
 
 <LanguageSwitch
   current="en"
@@ -75,7 +75,7 @@ import { LanguageSwitch } from "fromsrc/client"
     { code: "de", label: "Deutsch" },
   ]}
   onChange={(locale) => router.push(`/${locale}${pathname}`)}
-/>
+/>;
 ```
 
 ## rtl support
@@ -99,8 +99,8 @@ load localized content dynamically:
 
 ```ts
 export async function getDocs(locale: string) {
-  const files = await glob(`docs/${locale}/**/*.mdx`)
-  return files.map(file => loadDoc(file))
+  const files = await glob(`docs/${locale}/**/*.mdx`);
+  return files.map((file) => loadDoc(file));
 }
 ```
 
@@ -110,11 +110,11 @@ fall back to default locale when translation missing:
 
 ```ts
 async function getDoc(locale: string, slug: string) {
-  const localizedPath = `docs/${locale}/${slug}.mdx`
-  const defaultPath = `docs/en/${slug}.mdx`
+  const localizedPath = `docs/${locale}/${slug}.mdx`;
+  const defaultPath = `docs/en/${slug}.mdx`;
 
-  const exists = await Bun.file(localizedPath).exists()
-  return loadDoc(exists ? localizedPath : defaultPath)
+  const exists = await Bun.file(localizedPath).exists();
+  return loadDoc(exists ? localizedPath : defaultPath);
 }
 ```
 
@@ -145,7 +145,7 @@ localize page metadata:
 
 ```tsx
 export async function generateMetadata({ params }) {
-  const doc = await getDoc(params.locale, params.slug)
+  const doc = await getDoc(params.locale, params.slug);
   return {
     title: doc.title,
     description: doc.description,
@@ -153,9 +153,9 @@ export async function generateMetadata({ params }) {
       languages: {
         en: `/en/${params.slug}`,
         fr: `/fr/${params.slug}`,
-      }
-    }
-  }
+      },
+    },
+  };
 }
 ```
 
@@ -164,11 +164,11 @@ export async function generateMetadata({ params }) {
 index each locale separately:
 
 ```ts
-const enIndex = createSearchIndex(enDocs)
-const frIndex = createSearchIndex(frDocs)
+const enIndex = createSearchIndex(enDocs);
+const frIndex = createSearchIndex(frDocs);
 
 function search(query: string, locale: string) {
-  const index = locale === "fr" ? frIndex : enIndex
-  return index.search(query)
+  const index = locale === "fr" ? frIndex : enIndex;
+  return index.search(query);
 }
 ```

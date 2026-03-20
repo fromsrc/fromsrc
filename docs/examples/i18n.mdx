@@ -30,11 +30,11 @@ serve documentation in multiple languages.
 create locale-aware content:
 
 ```tsx
-import { defineContent, z } from "fromsrc"
+import { defineContent, z } from "fromsrc";
 
-const locales = ["en", "ja", "zh"] as const
+const locales = ["en", "ja", "zh"] as const;
 
-type Locale = typeof locales[number]
+type Locale = (typeof locales)[number];
 
 export function createLocalizedContent(locale: Locale) {
   return defineContent({
@@ -44,12 +44,12 @@ export function createLocalizedContent(locale: Locale) {
       description: z.string().optional(),
       order: z.number().optional(),
     }),
-  })
+  });
 }
 
-export const en = createLocalizedContent("en")
-export const ja = createLocalizedContent("ja")
-export const zh = createLocalizedContent("zh")
+export const en = createLocalizedContent("en");
+export const ja = createLocalizedContent("ja");
+export const zh = createLocalizedContent("zh");
 ```
 
 ## route structure
@@ -71,71 +71,71 @@ use next.js dynamic segments:
 ## page component
 
 ```tsx
-import { notFound } from "next/navigation"
-import { en, ja, zh } from "@/lib/content"
-import { MDX } from "@/components/mdx"
+import { notFound } from "next/navigation";
+import { en, ja, zh } from "@/lib/content";
+import { MDX } from "@/components/mdx";
 
-const content = { en, ja, zh }
+const content = { en, ja, zh };
 
 interface Props {
-  params: Promise<{ locale: string; slug: string[] }>
+  params: Promise<{ locale: string; slug: string[] }>;
 }
 
 export async function generateStaticParams() {
-  const locales = ["en", "ja", "zh"]
-  const params = []
+  const locales = ["en", "ja", "zh"];
+  const params = [];
 
   for (const locale of locales) {
-    const docs = await content[locale].getAllDocs()
+    const docs = await content[locale].getAllDocs();
     for (const doc of docs) {
-      params.push({ locale, slug: doc.slug })
+      params.push({ locale, slug: doc.slug });
     }
   }
 
-  return params
+  return params;
 }
 
 export default async function DocPage({ params }: Props) {
-  const { locale, slug } = await params
+  const { locale, slug } = await params;
 
-  if (!content[locale]) notFound()
+  if (!content[locale]) notFound();
 
-  const doc = await content[locale].getDoc(slug)
-  if (!doc) notFound()
+  const doc = await content[locale].getDoc(slug);
+  if (!doc) notFound();
 
   return (
     <article>
       <h1>{doc.title}</h1>
       <MDX source={doc.content} />
     </article>
-  )
+  );
 }
 ```
 
 ## locale switcher
 
 ```tsx
-"use client"
+"use client";
 
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation";
 
 const locales = [
   { code: "en", name: "english" },
   { code: "ja", name: "japanese" },
   { code: "zh", name: "chinese" },
-]
+];
 
 export function LocaleSwitcher() {
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
 
-  const current = locales.find((l) => pathname.startsWith(`/${l.code}`))
+  const current = locales.find((l) => pathname.startsWith(`/${l.code}`));
 
   const switchLocale = (code: string) => {
-    const segments = pathname.split("/")
-    segments[1] = code
-    router.push(segments.join("/"))
-  }
+    const segments = pathname.split("/");
+    segments[1] = code;
+    router.push(segments.join("/"));
+  };
 
   return (
     <select
@@ -149,7 +149,7 @@ export function LocaleSwitcher() {
         </option>
       ))}
     </select>
-  )
+  );
 }
 ```
 
@@ -158,25 +158,25 @@ export function LocaleSwitcher() {
 redirect based on accept-language header:
 
 ```tsx
-import { NextRequest } from "next/server"
+import { NextRequest } from "next/server";
 
-const locales = ["en", "ja", "zh"]
-const defaultLocale = "en"
+const locales = ["en", "ja", "zh"];
+const defaultLocale = "en";
 
 export async function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname
+  const pathname = request.nextUrl.pathname;
 
   const hasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  )
+  );
 
-  if (hasLocale) return
+  if (hasLocale) return;
 
-  const acceptLanguage = request.headers.get("accept-language") || ""
-  const preferred = acceptLanguage.split(",")[0].split("-")[0]
-  const locale = locales.includes(preferred) ? preferred : defaultLocale
+  const acceptLanguage = request.headers.get("accept-language") || "";
+  const preferred = acceptLanguage.split(",")[0].split("-")[0];
+  const locale = locales.includes(preferred) ? preferred : defaultLocale;
 
-  return Response.redirect(new URL(`/${locale}${pathname}`, request.url))
+  return Response.redirect(new URL(`/${locale}${pathname}`, request.url));
 }
 ```
 
@@ -207,10 +207,10 @@ const translations = {
     prev: "back",
     next: "next",
   },
-}
+};
 
 export function useTranslations(locale: string) {
-  return translations[locale] || translations.en
+  return translations[locale] || translations.en;
 }
 ```
 
@@ -218,8 +218,8 @@ export function useTranslations(locale: string) {
 
 ```tsx
 export async function generateMetadata({ params }: Props) {
-  const { locale, slug } = await params
-  const doc = await content[locale].getDoc(slug)
+  const { locale, slug } = await params;
+  const doc = await content[locale].getDoc(slug);
 
   return {
     title: doc?.title,
@@ -229,7 +229,7 @@ export async function generateMetadata({ params }: Props) {
         locales.map((l) => [l, `/${l}/docs/${slug.join("/")}`])
       ),
     },
-  }
+  };
 }
 ```
 
@@ -238,15 +238,15 @@ export async function generateMetadata({ params }: Props) {
 handle right-to-left languages:
 
 ```tsx
-const rtlLocales = ["ar", "he", "fa"]
+const rtlLocales = ["ar", "he", "fa"];
 
 export function DocLayout({ locale, children }) {
-  const dir = rtlLocales.includes(locale) ? "rtl" : "ltr"
+  const dir = rtlLocales.includes(locale) ? "rtl" : "ltr";
 
   return (
     <html lang={locale} dir={dir}>
       <body>{children}</body>
     </html>
-  )
+  );
 }
 ```

@@ -50,17 +50,14 @@ const [rating, setRating] = useState(3)
 works with form libraries:
 
 ```tsx
-<Rating
-  value={formState.rating}
-  onChange={(v) => setFormValue("rating", v)}
-/>
+<Rating value={formState.rating} onChange={(v) => setFormValue("rating", v)} />
 ```
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| value | number | 0 | current rating |
-| max | number | 5 | maximum stars |
-| onChange | (value: number) => void | - | change callback |
-| readonly | boolean | false | disable interaction |
+| prop     | type                    | default | description         |
+| -------- | ----------------------- | ------- | ------------------- |
+| value    | number                  | 0       | current rating      |
+| max      | number                  | 5       | maximum stars       |
+| onChange | (value: number) => void | -       | change callback     |
+| readonly | boolean                 | false   | disable interaction |

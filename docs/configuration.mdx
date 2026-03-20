@@ -9,7 +9,7 @@ order: 3
 create a config file in your project root:
 
 ```typescript
-import { defineConfig } from "fromsrc"
+import { defineConfig } from "fromsrc";
 
 export default defineConfig({
   title: "my docs",
@@ -26,7 +26,7 @@ export default defineConfig({
   theme: {
     defaultTheme: "dark",
   },
-})
+});
 ```
 
 ## options
@@ -37,7 +37,7 @@ the site title shown in the header and metadata.
 
 ```typescript
 {
-  title: "my docs"
+  title: "my docs";
 }
 ```
 
@@ -47,7 +47,7 @@ default meta description for pages without one.
 
 ```typescript
 {
-  description: "documentation for my project"
+  description: "documentation for my project";
 }
 ```
 
@@ -63,7 +63,7 @@ generate navigation from your file structure automatically.
 ```typescript
 {
   navigation: {
-    auto: true
+    auto: true;
   }
 }
 ```
@@ -79,7 +79,7 @@ define navigation items manually for full control.
     items: [
       { title: "introduction", href: "/docs" },
       { title: "installation", href: "/docs/installation" },
-    ]
+    ];
   }
 }
 ```
@@ -91,19 +91,17 @@ define navigation items manually for full control.
 
 configure search behavior:
 
-| option | type | description |
-|--------|------|-------------|
-| enabled | boolean | enable/disable search |
-| placeholder | string | search input placeholder |
+| option      | type    | description              |
+| ----------- | ------- | ------------------------ |
+| enabled     | boolean | enable/disable search    |
+| placeholder | string  | search input placeholder |
 
 ### theme
 
 configure theming:
 
-| option | type | description |
-|--------|------|-------------|
+| option       | type              | description          |
+| ------------ | ----------------- | -------------------- |
 | defaultTheme | "dark" \| "light" | default color scheme |
 
-<Callout type="tip">
-fromsrc uses dark mode by default.
-</Callout>
+<Callout type="tip">fromsrc uses dark mode by default.</Callout>

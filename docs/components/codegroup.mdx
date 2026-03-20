@@ -30,20 +30,20 @@ group code blocks with tabs for different languages or examples.
 ## live
 
 <CodeGroup group="pm" defaultValue="bun" persist>
-	<CodeTabs>
-		<CodeTab value="bun" label="bun" />
-		<CodeTab value="npm" label="npm" />
-		<CodeTab value="pnpm" label="pnpm" />
-	</CodeTabs>
-	<CodeTab value="bun" label="bun">
-		<CodeBlock lang="bash">bun add fromsrc</CodeBlock>
-	</CodeTab>
-	<CodeTab value="npm" label="npm">
-		<CodeBlock lang="bash">npm install fromsrc</CodeBlock>
-	</CodeTab>
-	<CodeTab value="pnpm" label="pnpm">
-		<CodeBlock lang="bash">pnpm add fromsrc</CodeBlock>
-	</CodeTab>
+  <CodeTabs>
+    <CodeTab value="bun" label="bun" />
+    <CodeTab value="npm" label="npm" />
+    <CodeTab value="pnpm" label="pnpm" />
+  </CodeTabs>
+  <CodeTab value="bun" label="bun">
+    <CodeBlock lang="bash">bun add fromsrc</CodeBlock>
+  </CodeTab>
+  <CodeTab value="npm" label="npm">
+    <CodeBlock lang="bash">npm install fromsrc</CodeBlock>
+  </CodeTab>
+  <CodeTab value="pnpm" label="pnpm">
+    <CodeBlock lang="bash">pnpm add fromsrc</CodeBlock>
+  </CodeTab>
 </CodeGroup>
 
 ## components
@@ -52,11 +52,11 @@ group code blocks with tabs for different languages or examples.
 
 container for tabbed code blocks.
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| defaultValue | string | - | initially active tab |
-| group | string | "global" | shared persistence key |
-| persist | boolean | true | store selected tab in local storage |
+| prop         | type    | default  | description                         |
+| ------------ | ------- | -------- | ----------------------------------- |
+| defaultValue | string  | -        | initially active tab                |
+| group        | string  | "global" | shared persistence key              |
+| persist      | boolean | true     | store selected tab in local storage |
 
 ### codetabs
 
@@ -66,14 +66,14 @@ container for tab buttons.
 
 individual tab button and content.
 
-| prop | type | default | description |
-|------|------|---------|-------------|
+| prop  | type   | default  | description       |
+| ----- | ------ | -------- | ----------------- |
 | value | string | required | unique identifier |
-| label | string | required | tab label text |
+| label | string | required | tab label text    |
 
 ## keyboard
 
-| key | action |
-|-----|--------|
+| key                        | action              |
+| -------------------------- | ------------------- |
 | `ArrowLeft` / `ArrowRight` | previous / next tab |
-| `Home` / `End` | first / last tab |
+| `Home` / `End`             | first / last tab    |

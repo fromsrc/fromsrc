@@ -4,7 +4,7 @@ description: configure page tree and sidebar navigation
 order: 8
 ---
 
-import { Files, Folder, File } from "fromsrc/client"
+import { Files, Folder, File } from "fromsrc/client";
 
 # navigation
 
@@ -34,12 +34,7 @@ use `_meta.json` files to control page ordering and section titles.
 ```json
 {
   "title": "documentation",
-  "pages": [
-    "index",
-    "installation",
-    "quickstart",
-    "configuration"
-  ]
+  "pages": ["index", "installation", "quickstart", "configuration"]
 }
 ```
 
@@ -93,11 +88,11 @@ the sidebar groups pages from the navigation tree:
 you can fully customize section grouping in your own sidebar component:
 
 ```tsx
-const groups = new Map<string, SidebarItem[]>()
+const groups = new Map<string, SidebarItem[]>();
 
 for (const section of navigation) {
-  const key = section.items[0]?.slug?.split("/")[0] ?? "root"
-  groups.set(key, section.items)
+  const key = section.items[0]?.slug?.split("/")[0] ?? "root";
+  groups.set(key, section.items);
 }
 ```
 
@@ -106,13 +101,13 @@ for (const section of navigation) {
 add icons to sidebar items via the icons map:
 
 ```tsx
-import { BookOpen, Download, Rocket } from "lucide-react"
+import { BookOpen, Download, Rocket } from "lucide-react";
 
 const icons = {
   introduction: <BookOpen size={14} />,
   installation: <Download size={14} />,
   quickstart: <Rocket size={14} />,
-}
+};
 ```
 
 ## collapsible folders
@@ -131,8 +126,5 @@ folders can be collapsed in the sidebar. use `defaultOpen` to control initial st
 use `defaultOpenLevel` on the Sidebar component to auto-expand folders to a certain depth:
 
 ```tsx
-<Sidebar
-  navigation={navigation}
-  defaultOpenLevel={1}
-/>
+<Sidebar navigation={navigation} defaultOpenLevel={1} />
 ```

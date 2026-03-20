@@ -25,38 +25,44 @@ bun add mermaid
 ### flowchart
 
 ```mdx
-<Mermaid chart={`
+<Mermaid
+  chart={`
 graph TD
     A[start] --> B{decision}
     B -->|yes| C[action]
     B -->|no| D[end]
-`} />
+`}
+/>
 ```
 
 ### sequence diagram
 
 ```mdx
-<Mermaid chart={`
+<Mermaid
+  chart={`
 sequenceDiagram
     participant A as client
     participant B as server
     A->>B: request
     B-->>A: response
-`} />
+`}
+/>
 ```
 
 ### entity relationship
 
 ```mdx
-<Mermaid chart={`
+<Mermaid
+  chart={`
 erDiagram
     USER ||--o{ POST : writes
     POST ||--|{ COMMENT : has
-`} />
+`}
+/>
 ```
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
+| prop  | type   | default  | description          |
+| ----- | ------ | -------- | -------------------- |
 | chart | string | required | mermaid diagram code |

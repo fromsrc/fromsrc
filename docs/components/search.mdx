@@ -36,11 +36,31 @@ const docs = await getAllDocs()
 
 <TypeTable
   data={{
-    docs: { type: "DocMeta[]", required: true, description: "array of docs to search" },
-    basePath: { type: "string", default: "/docs", description: "base path for result links" },
-    hidden: { type: "boolean", default: "false", description: "hide trigger button, only show modal" },
-    adapter: { type: "SearchAdapter", default: "localSearch", description: "custom search adapter" },
-    debounce: { type: "number", default: "100", description: "debounce delay in milliseconds" },
+    docs: {
+      type: "DocMeta[]",
+      required: true,
+      description: "array of docs to search",
+    },
+    basePath: {
+      type: "string",
+      default: "/docs",
+      description: "base path for result links",
+    },
+    hidden: {
+      type: "boolean",
+      default: "false",
+      description: "hide trigger button, only show modal",
+    },
+    adapter: {
+      type: "SearchAdapter",
+      default: "localSearch",
+      description: "custom search adapter",
+    },
+    debounce: {
+      type: "number",
+      default: "100",
+      description: "debounce delay in milliseconds",
+    },
   }}
 />
 
@@ -80,39 +100,44 @@ create custom search adapters for external services or advanced search.
 
 ```ts
 interface SearchAdapter {
-  search(query: string, docs: SearchDoc[]): SearchResult[] | Promise<SearchResult[]>
-  index?(docs: SearchDoc[]): void | Promise<void>
+  search(
+    query: string,
+    docs: SearchDoc[]
+  ): SearchResult[] | Promise<SearchResult[]>;
+  index?(docs: SearchDoc[]): void | Promise<void>;
 }
 
 interface SearchResult {
-  doc: SearchDoc
-  score: number
-  snippet?: string
+  doc: SearchDoc;
+  score: number;
+  snippet?: string;
 }
 ```
 
 ### custom adapter
 
 ```ts
-import { createSearchAdapter } from "fromsrc"
+import { createSearchAdapter } from "fromsrc";
 
 const algoliaAdapter = createSearchAdapter({
   search(query, docs) {
-    const results = algoliaIndex.search(query)
-    return results.map(hit => ({
-      doc: docs.find(d => d.slug === hit.objectID)!,
+    const results = algoliaIndex.search(query);
+    return results.map((hit) => ({
+      doc: docs.find((d) => d.slug === hit.objectID)!,
       score: hit._score,
       snippet: hit._highlightResult?.content?.value,
-    }))
+    }));
   },
   async index(docs) {
-    await algoliaIndex.saveObjects(docs.map(d => ({
-      objectID: d.slug,
-      title: d.title,
-      content: d.content,
-    })))
+    await algoliaIndex.saveObjects(
+      docs.map((d) => ({
+        objectID: d.slug,
+        title: d.title,
+        content: d.content,
+      }))
+    );
   },
-})
+});
 ```
 
 ### usage

@@ -1,63 +1,67 @@
-"use client"
+"use client";
 
-import { useMemo } from "react"
-import type { DocMeta } from "../content"
-import type { SidebarFolder, SidebarItem, SidebarSection } from "../components/sidebar"
+import { useMemo } from "react";
+
+import type {
+  SidebarFolder,
+  SidebarItem,
+  SidebarSection,
+} from "../components/sidebar";
+import type { DocMeta } from "../content";
 
 export interface PageLink {
-	href: string
-	title: string
+  href: string;
+  title: string;
 }
 
 export interface PaginationResult {
-	prev: PageLink | null
-	next: PageLink | null
-	pages: PageLink[]
-	index: number
+  prev: PageLink | null;
+  next: PageLink | null;
+  pages: PageLink[];
+  index: number;
 }
 
-const cache = new Map<string, PageLink[]>()
+const cache = new Map<string, PageLink[]>();
 
-function flatten(
-	sections: SidebarSection[],
-	basePath: string,
-): PageLink[] {
-	const key = JSON.stringify({ sections, basePath })
-	const cached = cache.get(key)
-	if (cached) return cached
+function flatten(sections: SidebarSection[], basePath: string): PageLink[] {
+  const key = JSON.stringify({ basePath, sections });
+  const cached = cache.get(key);
+  if (cached) {
+    return cached;
+  }
 
-	const pages: PageLink[] = []
+  const pages: PageLink[] = [];
 
-	function walk(items: (SidebarItem | SidebarFolder | DocMeta)[]) {
-		for (const item of items) {
-			if (!("type" in item)) {
-				pages.push({
-					href: item.slug ? `${basePath}/${item.slug}` : basePath,
-					title: item.title,
-				})
-			} else if (item.type === "item") {
-				pages.push({
-					href: item.href,
-					title: item.title,
-				})
-			} else if (item.type === "folder") {
-				if (item.href) {
-					pages.push({
-						href: item.href,
-						title: item.title,
-					})
-				}
-				walk(item.items)
-			}
-		}
-	}
+  function walk(items: (SidebarItem | SidebarFolder | DocMeta)[]) {
+    for (const item of items) {
+      if (!("type" in item)) {
+        pages.push({
+          href: item.slug ? `${basePath}/${item.slug}` : basePath,
+          title: item.title,
+        });
+      } else if (item.type === "item") {
+        pages.push({
+          href: item.href,
+          title: item.title,
+        });
+      } else if (item.type === "folder") {
+        if (item.href) {
+          pages.push({
+            href: item.href,
+            title: item.title,
+          });
+        }
+        walk(item.items);
+      }
+    }
+  }
 
-	for (const section of sections) {
-		walk(section.items)
-	}
+  for (const section of sections) {
+    walk(section.items);
+  }
 
-	cache.set(key, pages)
-	return pages
+  cache.set(key, pages);
+  return pages;
 }
 
 /**
@@ -68,17 +72,20 @@ function flatten(
  * @returns Object containing prev/next links, all pages, and current index
  */
 export function usePagination(
-	navigation: SidebarSection[],
-	pathname: string,
-	basePath = "/docs",
+  navigation: SidebarSection[],
+  pathname: string,
+  basePath = "/docs"
 ): PaginationResult {
-	return useMemo(() => {
-		const pages = flatten(navigation, basePath)
-		const index = pages.findIndex((p) => p.href === pathname)
+  return useMemo(() => {
+    const pages = flatten(navigation, basePath);
+    const index = pages.findIndex((p) => p.href === pathname);
 
-		const prev = index > 0 ? pages[index - 1] ?? null : null
-		const next = index >= 0 && index < pages.length - 1 ? pages[index + 1] ?? null : null
+    const prev = index > 0 ? (pages[index - 1] ?? null) : null;
+    const next =
+      index !== -1 && index < pages.length - 1
+        ? (pages[index + 1] ?? null)
+        : null;
 
-		return { prev, next, pages, index }
-	}, [navigation, pathname, basePath])
+    return { index, next, pages, prev };
+  }, [navigation, pathname, basePath]);
 }

@@ -52,39 +52,43 @@ animate text appearing character by character:
 
 ```mdx
 <Terminal>
-  <Line><Typed text="bunx create-fromsrc my-docs" speed={30} /></Line>
+  <Line>
+    <Typed text="bunx create-fromsrc my-docs" speed={30} />
+  </Line>
 </Terminal>
 ```
 
 <Terminal>
-  <Line><Typed text="bunx create-fromsrc my-docs" speed={30} /></Line>
+  <Line>
+    <Typed text="bunx create-fromsrc my-docs" speed={30} />
+  </Line>
 </Terminal>
 
 ## props
 
 ### terminal
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| title | string | "Terminal" | window title |
-| children | ReactNode | - | content |
+| prop     | type      | default    | description  |
+| -------- | --------- | ---------- | ------------ |
+| title    | string    | "Terminal" | window title |
+| children | ReactNode | -          | content      |
 
 ### line
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| prompt | string | "$" | prompt character |
-| children | ReactNode | - | command text |
+| prop     | type      | default | description      |
+| -------- | --------- | ------- | ---------------- |
+| prompt   | string    | "$"     | prompt character |
+| children | ReactNode | -       | command text     |
 
 ### output
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| children | ReactNode | - | output text |
+| prop     | type      | default | description |
+| -------- | --------- | ------- | ----------- |
+| children | ReactNode | -       | output text |
 
 ### typed
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| text | string | - | text to animate |
-| speed | number | 50 | ms per character |
+| prop  | type   | default | description      |
+| ----- | ------ | ------- | ---------------- |
+| text  | string | -       | text to animate  |
+| speed | number | 50      | ms per character |

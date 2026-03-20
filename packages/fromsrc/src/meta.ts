@@ -1,97 +1,112 @@
-import { readFile } from "node:fs/promises"
-import { join } from "node:path"
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export interface MetaFile {
-	title?: string
-	icon?: string
-	pages?: string[]
+  title?: string;
+  icon?: string;
+  pages?: string[];
 }
 
 export interface PageTreeItem {
-	type: "page" | "folder" | "separator"
-	slug?: string
-	title: string
-	icon?: string
-	children?: PageTreeItem[]
+  type: "page" | "folder" | "separator";
+  slug?: string;
+  title: string;
+  icon?: string;
+  children?: PageTreeItem[];
 }
 
-const metaCache = new Map<string, MetaFile | null>()
-const isProduction = () => process.env.NODE_ENV === "production"
+const metaCache = new Map<string, MetaFile | null>();
+const isProduction = () => process.env.NODE_ENV === "production";
 
 function isrecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null
+  return typeof value === "object" && value !== null;
 }
 
 function isMetaFile(data: unknown): data is MetaFile {
-	if (!isrecord(data)) return false
-	const obj = data
-	if (obj.title !== undefined && typeof obj.title !== "string") return false
-	if (obj.icon !== undefined && typeof obj.icon !== "string") return false
-	if (obj.pages !== undefined && !Array.isArray(obj.pages)) return false
-	if (Array.isArray(obj.pages) && !obj.pages.every((p) => typeof p === "string")) return false
-	return true
+  if (!isrecord(data)) {
+    return false;
+  }
+  const obj = data;
+  if (obj.title !== undefined && typeof obj.title !== "string") {
+    return false;
+  }
+  if (obj.icon !== undefined && typeof obj.icon !== "string") {
+    return false;
+  }
+  if (obj.pages !== undefined && !Array.isArray(obj.pages)) {
+    return false;
+  }
+  if (
+    Array.isArray(obj.pages) &&
+    !obj.pages.every((p) => typeof p === "string")
+  ) {
+    return false;
+  }
+  return true;
 }
 
 export async function loadMeta(dir: string): Promise<MetaFile | null> {
-	if (isProduction()) {
-		const cached = metaCache.get(dir)
-		if (cached !== undefined) return cached
-	}
+  if (isProduction()) {
+    const cached = metaCache.get(dir);
+    if (cached !== undefined) {
+      return cached;
+    }
+  }
 
-	const filepath = join(dir, "_meta.json")
+  const filepath = join(dir, "_meta.json");
 
-	try {
-		const content = await readFile(filepath, "utf-8")
-		const data: unknown = JSON.parse(content)
-		if (!isMetaFile(data)) {
-			if (isProduction()) {
-				metaCache.set(dir, null)
-			}
-			return null
-		}
-		if (isProduction()) {
-			metaCache.set(dir, data)
-		}
-		return data
-	} catch {
-		if (isProduction()) {
-			metaCache.set(dir, null)
-		}
-		return null
-	}
+  try {
+    const content = await readFile(filepath, "utf8");
+    const data: unknown = JSON.parse(content);
+    if (!isMetaFile(data)) {
+      if (isProduction()) {
+        metaCache.set(dir, null);
+      }
+      return null;
+    }
+    if (isProduction()) {
+      metaCache.set(dir, data);
+    }
+    return data;
+  } catch {
+    if (isProduction()) {
+      metaCache.set(dir, null);
+    }
+    return null;
+  }
 }
 
 export function sortByMeta<T extends { slug: string }>(
-	items: T[],
-	pages: string[] | undefined,
-	prefix: string,
+  items: T[],
+  pages: string[] | undefined,
+  prefix: string
 ): T[] {
-	if (!pages || pages.length === 0) {
-		return items
-	}
+  if (!pages || pages.length === 0) {
+    return items;
+  }
 
-	const order = new Map<string, number>()
-	pages.forEach((page, i) => {
-		if (!page.startsWith("---")) {
-			order.set(page, i)
-		}
-	})
+  const order = new Map<string, number>();
+  pages.forEach((page, i) => {
+    if (!page.startsWith("---")) {
+      order.set(page, i);
+    }
+  });
 
-	return [...items].sort((a, b) => {
-		const aName = getBasename(a.slug, prefix)
-		const bName = getBasename(b.slug, prefix)
-		const aOrder = order.get(aName) ?? 999
-		const bOrder = order.get(bName) ?? 999
-		return aOrder - bOrder
-	})
+  return [...items].toSorted((a, b) => {
+    const aName = getBasename(a.slug, prefix);
+    const bName = getBasename(b.slug, prefix);
+    const aOrder = order.get(aName) ?? 999;
+    const bOrder = order.get(bName) ?? 999;
+    return aOrder - bOrder;
+  });
 }
 
 function getBasename(slug: string, prefix: string): string {
-	const relative = prefix ? slug.replace(prefix, "") : slug
-	const parts = relative.split("/")
-	return parts[0] || "index"
+  const relative = prefix ? slug.replace(prefix, "") : slug;
+  const parts = relative.split("/");
+  return parts[0] || "index";
 }
 
 export function clearMetaCache() {
-	metaCache.clear()
+  metaCache.clear();
 }

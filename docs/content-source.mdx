@@ -14,7 +14,7 @@ use `defineContent` for local filesystem docs:
 import { defineContent } from "fromsrc";
 
 export const content = defineContent({
-	dir: "docs",
+  dir: "docs",
 });
 ```
 
@@ -26,7 +26,7 @@ use `createRemoteSource` when docs are hosted on a remote fromsrc site:
 import { createRemoteSource } from "fromsrc";
 
 const source = createRemoteSource({
-	baseUrl: "https://fromsrc.com",
+  baseUrl: "https://fromsrc.com",
 });
 ```
 
@@ -45,10 +45,10 @@ use `createGithubSource` to read docs directly from a repository:
 import { createGithubSource } from "fromsrc";
 
 const source = createGithubSource({
-	owner: "fromsrc",
-	repo: "fromsrc",
-	branch: "main",
-	path: "docs",
+  owner: "fromsrc",
+  repo: "fromsrc",
+  branch: "main",
+  path: "docs",
 });
 ```
 
@@ -68,11 +68,11 @@ import { createMcpHandler, createRemoteSource } from "fromsrc";
 const source = createRemoteSource({ baseUrl: "https://fromsrc.com" });
 
 const mcp = createMcpHandler(
-	{
-		name: "fromsrc",
-		version: "0.0.0",
-		baseUrl: "https://fromsrc.com",
-	},
-	source,
+  {
+    name: "fromsrc",
+    version: "0.0.0",
+    baseUrl: "https://fromsrc.com",
+  },
+  source
 );
 ```

@@ -9,12 +9,12 @@ the codeblock component renders code with syntax highlighting, language icons, a
 ## usage
 
 ```tsx
-import { CodeBlock } from "fromsrc/client"
+import { CodeBlock } from "fromsrc/client";
 
 <CodeBlock lang="typescript">
-{`const greeting = "hello world"
+  {`const greeting = "hello world"
 console.log(greeting)`}
-</CodeBlock>
+</CodeBlock>;
 ```
 
 ## with title
@@ -23,7 +23,7 @@ add a title to display in the header:
 
 ```tsx
 <CodeBlock lang="typescript" title="app.ts">
-{`export function main() {
+  {`export function main() {
   console.log("starting...")
 }`}
 </CodeBlock>
@@ -49,12 +49,12 @@ the copy button appears in the header when a title or language is set. without a
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| children | ReactNode | required | code content to display |
-| lang | string | - | language for icon and label |
-| title | string | - | title shown in header |
-| lines | boolean | false | show line numbers |
+| prop     | type      | default  | description                 |
+| -------- | --------- | -------- | --------------------------- |
+| children | ReactNode | required | code content to display     |
+| lang     | string    | -        | language for icon and label |
+| title    | string    | -        | title shown in header       |
+| lines    | boolean   | false    | show line numbers           |
 
 ## twoslash integration
 

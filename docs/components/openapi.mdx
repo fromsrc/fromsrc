@@ -28,13 +28,13 @@ render grouped endpoint docs from an openapi spec.
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| spec | string \| object | required | json string or object spec |
-| tag | string | - | exact tag filter |
-| method | string | - | exact method filter |
-| path | string | - | path substring filter |
-| group | `"none" \| "tag"` | `"none"` | render endpoints in tag sections |
+| prop   | type              | default  | description                      |
+| ------ | ----------------- | -------- | -------------------------------- |
+| spec   | string \| object  | required | json string or object spec       |
+| tag    | string            | -        | exact tag filter                 |
+| method | string            | -        | exact method filter              |
+| path   | string            | -        | path substring filter            |
+| group  | `"none" \| "tag"` | `"none"` | render endpoints in tag sections |
 
 grouped mode shows a per-tag endpoint count and uses stable method ordering:
 `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `HEAD`, `TRACE`.
@@ -45,14 +45,16 @@ when grouped mode is enabled, fromsrc also renders quick-jump tag chips at the t
 `Openapischema` renders nested request/response shapes.
 
 ```mdx
-<Openapischema schema={{
-  type: "object",
-  required: ["id"],
-  properties: {
-    id: { type: "string" },
-    total: { type: "number" },
-  },
-}} />
+<Openapischema
+  schema={{
+    type: "object",
+    required: ["id"],
+    properties: {
+      id: { type: "string" },
+      total: { type: "number" },
+    },
+  }}
+/>
 ```
 
 <Openapischema

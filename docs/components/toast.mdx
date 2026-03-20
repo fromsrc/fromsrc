@@ -11,14 +11,10 @@ lightweight toast notifications for user feedback.
 wrap your app with the toast provider:
 
 ```tsx
-import { ToastProvider } from "fromsrc/client"
+import { ToastProvider } from "fromsrc/client";
 
 export default function Layout({ children }) {
-  return (
-    <ToastProvider>
-      {children}
-    </ToastProvider>
-  )
+  return <ToastProvider>{children}</ToastProvider>;
 }
 ```
 
@@ -27,19 +23,23 @@ export default function Layout({ children }) {
 use the `useToast` hook to trigger notifications:
 
 ```tsx
-import { useToast } from "fromsrc/client"
+import { useToast } from "fromsrc/client";
 
 function SaveButton() {
-  const { add } = useToast()
+  const { add } = useToast();
 
   return (
-    <button onClick={() => add({
-      type: "success",
-      message: "changes saved"
-    })}>
+    <button
+      onClick={() =>
+        add({
+          type: "success",
+          message: "changes saved",
+        })
+      }
+    >
       save
     </button>
-  )
+  );
 }
 ```
 
@@ -48,25 +48,25 @@ function SaveButton() {
 ### info
 
 ```tsx
-add({ type: "info", message: "new version available" })
+add({ type: "info", message: "new version available" });
 ```
 
 ### success
 
 ```tsx
-add({ type: "success", message: "file uploaded" })
+add({ type: "success", message: "file uploaded" });
 ```
 
 ### warning
 
 ```tsx
-add({ type: "warning", message: "low storage" })
+add({ type: "warning", message: "low storage" });
 ```
 
 ### error
 
 ```tsx
-add({ type: "error", message: "connection failed" })
+add({ type: "error", message: "connection failed" });
 ```
 
 ## custom duration
@@ -77,8 +77,8 @@ toasts auto-dismiss after 3 seconds by default:
 add({
   type: "info",
   message: "processing...",
-  duration: 5000
-})
+  duration: 5000,
+});
 ```
 
 ## manual dismiss
@@ -86,27 +86,27 @@ add({
 use `remove` to dismiss a toast early:
 
 ```tsx
-const { toasts, remove } = useToast()
+const { toasts, remove } = useToast();
 
-toasts.map(toast => (
+toasts.map((toast) => (
   <button onClick={() => remove(toast.id)}>dismiss</button>
-))
+));
 ```
 
 ## props
 
 ### toast
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| message | string | required | notification text |
-| type | "info" \| "success" \| "warning" \| "error" | required | toast style |
-| duration | number | 3000 | auto-dismiss time in ms |
+| prop     | type                                        | default  | description             |
+| -------- | ------------------------------------------- | -------- | ----------------------- |
+| message  | string                                      | required | notification text       |
+| type     | "info" \| "success" \| "warning" \| "error" | required | toast style             |
+| duration | number                                      | 3000     | auto-dismiss time in ms |
 
 ### useToast
 
-| property | type | description |
-|----------|------|-------------|
-| toasts | Toast[] | current active toasts |
-| add | (toast) => void | show a new toast |
-| remove | (id) => void | dismiss a toast |
+| property | type            | description           |
+| -------- | --------------- | --------------------- |
+| toasts   | Toast[]         | current active toasts |
+| add      | (toast) => void | show a new toast      |
+| remove   | (id) => void    | dismiss a toast       |

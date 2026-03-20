@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+
 import { isclientdirective } from "./clientutil.mjs";
 import { clientkeys } from "./entryset.mjs";
 
@@ -11,26 +12,30 @@ const map = pkg.exports ?? {};
 
 const issues = [];
 for (const key of clientkeys) {
-	const entry = map[key];
-	if (!entry || typeof entry !== "object" || typeof entry.import !== "string") {
-		issues.push(`missing import export for ${key}`);
-		continue;
-	}
-	const file = path.join(root, "packages", "fromsrc", entry.import);
-	try {
-		const content = await readFile(file, "utf8");
-		if (!isclientdirective(content)) {
-			issues.push(`${key} dist entry missing use client directive`);
-		}
-	} catch {
-		issues.push(`${key} dist entry missing`);
-	}
+  const entry = map[key];
+  if (!entry || typeof entry !== "object" || typeof entry.import !== "string") {
+    issues.push(`missing import export for ${key}`);
+    continue;
+  }
+  const file = path.join(root, "packages", "fromsrc", entry.import);
+  try {
+    const content = await readFile(file, "utf8");
+    if (!isclientdirective(content)) {
+      issues.push(`${key} dist entry missing use client directive`);
+    }
+  } catch {
+    issues.push(`${key} dist entry missing`);
+  }
 }
 
 if (issues.length > 0) {
-	console.error("x client directive validation failed");
-	for (const issue of issues) console.error(issue);
-	process.exit(1);
+  console.error("x client directive validation failed");
+  for (const issue of issues) {
+    console.error(issue);
+  }
+  process.exit(1);
 }
 
-console.log(`o client directive validation passed (${clientkeys.length} entries)`);
+console.log(
+  `o client directive validation passed (${clientkeys.length} entries)`
+);

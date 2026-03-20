@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export interface MousePosition {
-	x: number
-	y: number
+  x: number;
+  y: number;
 }
 
 export function useMousePosition(): MousePosition {
-	const [position, setPosition] = useState<MousePosition>({ x: 0, y: 0 })
+  const [position, setPosition] = useState<MousePosition>({ x: 0, y: 0 });
 
-	useEffect(() => {
-		function handler(e: MouseEvent) {
-			setPosition({ x: e.clientX, y: e.clientY })
-		}
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      setPosition({ x: e.clientX, y: e.clientY });
+    }
 
-		window.addEventListener("mousemove", handler, { passive: true })
-		return () => window.removeEventListener("mousemove", handler)
-	}, [])
+    window.addEventListener("mousemove", handler, { passive: true });
+    return () => window.removeEventListener("mousemove", handler);
+  }, []);
 
-	return position
+  return position;
 }

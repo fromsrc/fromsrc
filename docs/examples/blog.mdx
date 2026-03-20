@@ -24,7 +24,7 @@ add a blog alongside your documentation using the same content system.
 add blog-specific fields to your frontmatter:
 
 ```tsx
-import { defineContent, extendSchema, z } from "fromsrc"
+import { defineContent, extendSchema, z } from "fromsrc";
 
 const blog = defineContent({
   dir: "blog",
@@ -33,10 +33,10 @@ const blog = defineContent({
     date: z.string(),
     tags: z.array(z.string()).optional(),
   }),
-})
+});
 
-export const getBlogPost = blog.getDoc
-export const getAllPosts = blog.getAllDocs
+export const getBlogPost = blog.getDoc;
+export const getAllPosts = blog.getAllDocs;
 ```
 
 ## blog post frontmatter
@@ -58,11 +58,11 @@ tags:
 create `app/blog/page.tsx`:
 
 ```tsx
-import Link from "next/link"
-import { getAllPosts } from "@/lib/blog"
+import Link from "next/link";
+import { getAllPosts } from "@/lib/blog";
 
 export default async function BlogIndex() {
-  const posts = await getAllPosts()
+  const posts = await getAllPosts();
 
   return (
     <div className="max-w-2xl mx-auto py-12 px-4">
@@ -74,9 +74,7 @@ export default async function BlogIndex() {
             href={`/blog/${post.slug}`}
             className="block group"
           >
-            <h2 className="text-lg group-hover:text-accent">
-              {post.title}
-            </h2>
+            <h2 className="text-lg group-hover:text-accent">{post.title}</h2>
             <p className="text-sm text-muted">
               {post.date} · {post.author}
             </p>
@@ -84,7 +82,7 @@ export default async function BlogIndex() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 ```
 
@@ -93,24 +91,24 @@ export default async function BlogIndex() {
 create `app/blog/[slug]/page.tsx`:
 
 ```tsx
-import { notFound } from "next/navigation"
-import { getBlogPost, getAllPosts } from "@/lib/blog"
-import { MDX } from "@/components/mdx"
+import { notFound } from "next/navigation";
+import { getBlogPost, getAllPosts } from "@/lib/blog";
+import { MDX } from "@/components/mdx";
 
 interface Props {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts()
-  return posts.map((post) => ({ slug: post.slug }))
+  const posts = await getAllPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export default async function BlogPost({ params }: Props) {
-  const { slug } = await params
-  const post = await getBlogPost([slug])
+  const { slug } = await params;
+  const post = await getBlogPost([slug]);
 
-  if (!post) notFound()
+  if (!post) notFound();
 
   return (
     <article className="max-w-2xl mx-auto py-12 px-4">
@@ -124,7 +122,7 @@ export default async function BlogPost({ params }: Props) {
         <MDX source={post.content} />
       </div>
     </article>
-  )
+  );
 }
 ```
 
@@ -133,11 +131,11 @@ export default async function BlogPost({ params }: Props) {
 add an rss feed at `app/blog/feed.xml/route.ts`:
 
 ```tsx
-import { getAllPosts } from "@/lib/blog"
+import { getAllPosts } from "@/lib/blog";
 
 export async function GET() {
-  const posts = await getAllPosts()
-  const baseUrl = "https://example.com"
+  const posts = await getAllPosts();
+  const baseUrl = "https://example.com";
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
@@ -145,18 +143,22 @@ export async function GET() {
     <title>my blog</title>
     <link>${baseUrl}/blog</link>
     <description>updates and announcements</description>
-    ${posts.map((post) => `
+    ${posts
+      .map(
+        (post) => `
     <item>
       <title>${post.title}</title>
       <link>${baseUrl}/blog/${post.slug}</link>
       <description>${post.description || ""}</description>
     </item>
-    `).join("")}
+    `
+      )
+      .join("")}
   </channel>
-</rss>`
+</rss>`;
 
   return new Response(rss, {
     headers: { "Content-Type": "application/xml" },
-  })
+  });
 }
 ```

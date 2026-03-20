@@ -9,9 +9,9 @@ animated typewriter effect that cycles through words.
 ## usage
 
 ```tsx
-import { Typewriter } from "fromsrc/client"
+import { Typewriter } from "fromsrc/client";
 
-<Typewriter words={["developer", "designer", "creator"]} />
+<Typewriter words={["developer", "designer", "creator"]} />;
 ```
 
 ## speed
@@ -29,10 +29,7 @@ adjust typing speed in milliseconds:
 time before deleting and typing next word:
 
 ```tsx
-<Typewriter
-  words={["hello", "world"]}
-  delay={3000}
-/>
+<Typewriter words={["hello", "world"]} delay={3000} />
 ```
 
 ## loop
@@ -40,10 +37,7 @@ time before deleting and typing next word:
 disable looping to stop after last word:
 
 ```tsx
-<Typewriter
-  words={["first", "second", "final"]}
-  loop={false}
-/>
+<Typewriter words={["first", "second", "final"]} loop={false} />
 ```
 
 ## with text
@@ -58,9 +52,9 @@ combine with static text:
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
+| prop  | type     | default  | description            |
+| ----- | -------- | -------- | ---------------------- |
 | words | string[] | required | words to cycle through |
-| speed | number | 100 | typing speed in ms |
-| delay | number | 2000 | pause before deleting |
-| loop | boolean | true | loop after last word |
+| speed | number   | 100      | typing speed in ms     |
+| delay | number   | 2000     | pause before deleting  |
+| loop  | boolean  | true     | loop after last word   |

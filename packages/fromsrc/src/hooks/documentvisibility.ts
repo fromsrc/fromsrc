@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-export type VisibilityState = "visible" | "hidden"
+export type VisibilityState = "visible" | "hidden";
 
 function tovisibility(value: string): VisibilityState {
-	return value === "hidden" ? "hidden" : "visible"
+  return value === "hidden" ? "hidden" : "visible";
 }
 
 export function useDocumentVisibility(): VisibilityState {
-	const [state, setState] = useState<VisibilityState>("visible")
+  const [state, setState] = useState<VisibilityState>("visible");
 
-	useEffect(() => {
-		function handler() {
-			setState(tovisibility(document.visibilityState))
-		}
+  useEffect(() => {
+    function handler() {
+      setState(tovisibility(document.visibilityState));
+    }
 
-		document.addEventListener("visibilitychange", handler)
-		return () => document.removeEventListener("visibilitychange", handler)
-	}, [])
+    document.addEventListener("visibilitychange", handler);
+    return () => document.removeEventListener("visibilitychange", handler);
+  }, []);
 
-	return state
+  return state;
 }

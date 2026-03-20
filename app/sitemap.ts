@@ -1,29 +1,37 @@
-import { getAllDocs, lastModifiedAll } from "fromsrc"
-import type { MetadataRoute } from "next"
-import { join } from "node:path"
-import { siteurl } from "./_lib/site"
+import { join } from "node:path";
 
-const base = siteurl()
-const docsDir = join(process.cwd(), "docs")
+import { getAllDocs, lastModifiedAll } from "fromsrc";
+import type { MetadataRoute } from "next";
+
+import { siteurl } from "./_lib/site";
+
+const base = siteurl();
+const docsDir = join(process.cwd(), "docs");
 
 function filepath(slug: string): string {
-	return join(docsDir, `${slug === "" ? "index" : slug}.mdx`)
+  return join(docsDir, `${slug === "" ? "index" : slug}.mdx`);
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const docs = await getAllDocs(docsDir)
-	const paths = docs.map((doc) => filepath(doc.slug))
-	const dates = lastModifiedAll(paths)
+  const docs = await getAllDocs(docsDir);
+  const paths = docs.map((doc) => filepath(doc.slug));
+  const dates = lastModifiedAll(paths);
 
-	const docEntries: MetadataRoute.Sitemap = docs.map((doc) => ({
-		url: `${base}/docs${doc.slug ? `/${doc.slug}` : ""}`,
-		lastModified: dates.get(filepath(doc.slug)) ?? new Date(),
-		changeFrequency: doc.slug.startsWith("api/") ? "weekly" : "monthly",
-		priority: doc.slug === "" ? 0.9 : doc.slug.startsWith("components/") ? 0.7 : 0.8,
-	}))
+  const docEntries: MetadataRoute.Sitemap = docs.map((doc) => ({
+    changeFrequency: doc.slug.startsWith("api/") ? "weekly" : "monthly",
+    lastModified: dates.get(filepath(doc.slug)) ?? new Date(),
+    priority:
+      doc.slug === "" ? 0.9 : (doc.slug.startsWith("components/") ? 0.7 : 0.8),
+    url: `${base}/docs${doc.slug ? `/${doc.slug}` : ""}`,
+  }));
 
-	return [
-		{ url: base, lastModified: new Date(), changeFrequency: "monthly", priority: 1 },
-		...docEntries,
-	]
+  return [
+    {
+      changeFrequency: "monthly",
+      lastModified: new Date(),
+      priority: 1,
+      url: base,
+    },
+    ...docEntries,
+  ];
 }

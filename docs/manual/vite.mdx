@@ -17,12 +17,12 @@ import { Link } from "react-router";
 import type { ReactNode } from "react";
 
 const adapter = createadapter({
-	...viteAdapter,
-	Link: ({ href, children }) => <Link to={href}>{children}</Link>,
+  ...viteAdapter,
+  Link: ({ href, children }) => <Link to={href}>{children}</Link>,
 });
 
 export function Providers({ children }: { children: ReactNode }) {
-	return <AdapterProvider adapter={adapter}>{children}</AdapterProvider>;
+  return <AdapterProvider adapter={adapter}>{children}</AdapterProvider>;
 }
 ```
 

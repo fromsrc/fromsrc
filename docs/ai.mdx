@@ -17,7 +17,7 @@ https://your-docs.com/llms.txt
 this endpoint combines all pages into one text file with clear section markers.
 
 <Callout type="info">
-llms.txt is an emerging standard for making content accessible to ai systems.
+  llms.txt is an emerging standard for making content accessible to ai systems.
 </Callout>
 
 ## per-page endpoints
@@ -126,23 +126,23 @@ resource slugs are normalized lowercase kebab-case paths (for example `fromsrc:/
 create `app/llms.txt/route.ts`:
 
 ```typescript
-import { getAllDocs, getDoc } from "fromsrc"
+import { getAllDocs, getDoc } from "fromsrc";
 
 export async function GET() {
-  const docs = await getAllDocs("docs")
-  const sections: string[] = []
+  const docs = await getAllDocs("docs");
+  const sections: string[] = [];
 
   for (const meta of docs) {
-    const slug = meta.slug ? meta.slug.split("/") : []
-    const doc = await getDoc("docs", slug)
+    const slug = meta.slug ? meta.slug.split("/") : [];
+    const doc = await getDoc("docs", slug);
     if (doc) {
-      sections.push(`# ${doc.title}\n\n${doc.content}`)
+      sections.push(`# ${doc.title}\n\n${doc.content}`);
     }
   }
 
   return new Response(sections.join("\n\n---\n\n"), {
     headers: { "Content-Type": "text/plain" },
-  })
+  });
 }
 ```
 
@@ -152,20 +152,20 @@ use next.js proxy to serve `.md` files:
 
 ```typescript
 // proxy.ts
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const accept = request.headers.get("accept") ?? ""
+  const { pathname } = request.nextUrl;
+  const accept = request.headers.get("accept") ?? "";
   if (pathname === "/docs.md" || pathname.endsWith(".md")) {
-    const slug = pathname.replace("/docs/", "").replace(".md", "")
-    return NextResponse.rewrite(new URL(`/api/raw/${slug}`, request.url))
+    const slug = pathname.replace("/docs/", "").replace(".md", "");
+    return NextResponse.rewrite(new URL(`/api/raw/${slug}`, request.url));
   }
   if (pathname.startsWith("/docs/") && accept.includes("text/markdown")) {
-    const slug = pathname.replace("/docs/", "")
-    return NextResponse.rewrite(new URL(`/api/raw/${slug}`, request.url))
+    const slug = pathname.replace("/docs/", "");
+    return NextResponse.rewrite(new URL(`/api/raw/${slug}`, request.url));
   }
-  return NextResponse.next()
+  return NextResponse.next();
 }
 ```
 

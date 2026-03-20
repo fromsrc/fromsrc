@@ -1,95 +1,107 @@
-import type { Root } from "mdast"
-import type { Plugin } from "unified"
+import type { Root } from "mdast";
+import type { Plugin } from "unified";
 
 interface AstNode {
-	type: string
-	name?: string
-	children?: AstNode[]
-	value?: string
-	attributes?: AstAttr[]
-	data?: Record<string, unknown>
+  type: string;
+  name?: string;
+  children?: AstNode[];
+  value?: string;
+  attributes?: AstAttr[];
+  data?: Record<string, unknown>;
 }
 
-type AstAttr = {
-	type: "mdxJsxAttribute"
-	name: string
-	value?: string
+interface AstAttr {
+  type: "mdxJsxAttribute";
+  name: string;
+  value?: string;
 }
 
 function text(n: AstNode): string {
-	return n.value ?? n.children?.map(text).join("") ?? ""
+  return n.value ?? n.children?.map(text).join("") ?? "";
 }
 
 function para(node: AstNode, re: RegExp) {
-	return node.type === "paragraph" ? text(node).trim().match(re) : null
+  return node.type === "paragraph" ? text(node).trim().match(re) : null;
 }
 
 const isColumnsOpen = (n: AstNode) => {
-	const m = para(n, /^:::\s*columns(?:\s+(\d+))?$/)
-	return m ? { count: m[1] } : null
-}
+  const m = para(n, /^:::\s*columns(?:\s+(\d+))?$/);
+  return m ? { count: m[1] } : null;
+};
 
-const isColumnOpen = (n: AstNode) => !!para(n, /^:::\s*column$/)
-const isClose = (n: AstNode) => !!para(n, /^:::$/)
+const isColumnOpen = (n: AstNode) => !!para(n, /^:::\s*column$/);
+const isClose = (n: AstNode) => !!para(n, /^:::$/);
 
 function mdx(name: string, attrs: AstAttr[], children: AstNode[]): AstNode {
-	return {
-		type: "mdxJsxFlowElement",
-		name,
-		attributes: attrs,
-		children,
-		data: { _mdxExplicitJsx: true },
-	}
+  return {
+    attributes: attrs,
+    children,
+    data: { _mdxExplicitJsx: true },
+    name,
+    type: "mdxJsxFlowElement",
+  };
 }
 
 function processChildren(nodes: AstNode[]): AstNode[] {
-	const result: AstNode[] = []
-	let i = 0
+  const result: AstNode[] = [];
+  let i = 0;
 
-	while (i < nodes.length) {
-		const node = nodes[i]
-		if (!node) {
-			i++
-			continue
-		}
-		const open = isColumnsOpen(node)
-		if (!open) {
-			if (node.children) node.children = processChildren(node.children)
-			result.push(node)
-			i++
-			continue
-		}
+  while (i < nodes.length) {
+    const node = nodes[i];
+    if (!node) {
+      i++;
+      continue;
+    }
+    const open = isColumnsOpen(node);
+    if (!open) {
+      if (node.children) {
+        node.children = processChildren(node.children);
+      }
+      result.push(node);
+      i++;
+      continue;
+    }
 
-		const attrs: AstAttr[] = []
-		if (open.count) {
-			attrs.push({ type: "mdxJsxAttribute", name: "count", value: open.count })
-		}
+    const attrs: AstAttr[] = [];
+    if (open.count) {
+      attrs.push({ name: "count", type: "mdxJsxAttribute", value: open.count });
+    }
 
-		const columns: AstNode[] = []
-		let current: AstNode[] | null = null
-		i++
+    const columns: AstNode[] = [];
+    let current: AstNode[] | null = null;
+    i++;
 
-		while (i < nodes.length) {
-			const child = nodes[i]
-			if (!child || isClose(child)) break
-			if (isColumnOpen(child)) {
-				if (current) columns.push(mdx("Column", [], current))
-				current = []
-			} else if (current) {
-				current.push(child)
-			}
-			i++
-		}
+    while (i < nodes.length) {
+      const child = nodes[i];
+      if (!child || isClose(child)) {
+        break;
+      }
+      if (isColumnOpen(child)) {
+        if (current) {
+          columns.push(mdx("Column", [], current));
+        }
+        current = [];
+      } else if (current) {
+        current.push(child);
+      }
+      i++;
+    }
 
-		if (current) columns.push(mdx("Column", [], current))
-		if (i < nodes.length) i++
-		result.push(mdx("Columns", attrs, columns))
-	}
+    if (current) {
+      columns.push(mdx("Column", [], current));
+    }
+    if (i < nodes.length) {
+      i++;
+    }
+    result.push(mdx("Columns", attrs, columns));
+  }
 
-	return result
+  return result;
 }
 
 export const remarkColumns: Plugin<[], Root> = () => (tree) => {
-	const root = tree as AstNode
-	if (root.children) root.children = processChildren(root.children)
-}
+  const root = tree as AstNode;
+  if (root.children) {
+    root.children = processChildren(root.children);
+  }
+};

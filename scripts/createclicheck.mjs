@@ -1,7 +1,8 @@
+import { spawn } from "node:child_process";
 import { access, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { spawn } from "node:child_process";
+
 import { frameworks } from "./frameworkset.mjs";
 
 const root = process.cwd();
@@ -9,249 +10,366 @@ const bin = join(root, "packages", "create-fromsrc", "dist", "index.js");
 const temp = await mkdtemp(join(tmpdir(), "fromsrc-cli-"));
 
 function run(args) {
-	return new Promise((resolve) => {
-		const child = spawn("node", [bin, ...args], { cwd: temp, stdio: ["pipe", "pipe", "pipe"] });
-		let out = "";
-		let err = "";
-		child.stdout.on("data", (chunk) => {
-			out += String(chunk);
-		});
-		child.stderr.on("data", (chunk) => {
-			err += String(chunk);
-		});
-		child.on("close", (code) => {
-			resolve({ code, out, err });
-		});
-		child.stdin.end();
-	});
+  return new Promise((resolve) => {
+    const child = spawn("node", [bin, ...args], {
+      cwd: temp,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+    let out = "";
+    let err = "";
+    child.stdout.on("data", (chunk) => {
+      out += String(chunk);
+    });
+    child.stderr.on("data", (chunk) => {
+      err += String(chunk);
+    });
+    child.on("close", (code) => {
+      resolve({ code, err, out });
+    });
+    child.stdin.end();
+  });
 }
 
 const runhelp = await run(["--help"]);
 const runlist = await run(["--list"]);
 const runbad = await run(["--name", "bad-docs", "--framework", "bad", "--yes"]);
-const runpositional = await run(["cli-positional", "--framework", "next.js", "--yes"]);
-const runcase = await run(["--name", "cli-case-next", "--framework", "Next.js", "--yes"]);
+const runpositional = await run([
+  "cli-positional",
+  "--framework",
+  "next.js",
+  "--yes",
+]);
+const runcase = await run([
+  "--name",
+  "cli-case-next",
+  "--framework",
+  "Next.js",
+  "--yes",
+]);
 const runmissingname = await run(["--name"]);
 const runmissingframework = await run(["--framework"]);
 const runmissingnameequals = await run(["--name="]);
 const runmissingframeworkequals = await run(["--framework="]);
 const rununknown = await run(["--wat"]);
-const runequals = await run(["--name=cli-equals", "--framework=react-router", "--yes"]);
+const runequals = await run([
+  "--name=cli-equals",
+  "--framework=react-router",
+  "--yes",
+]);
 const cases = [
-	{
-		name: "cli-next",
-		framework: "next.js",
-		files: ["package.json", "next.config.ts", "app/docs/[[...slug]]/page.tsx"],
-	},
-	{
-		name: "cli-react-router",
-		framework: "react-router",
-		files: ["package.json", "index.html", "src/main.tsx"],
-	},
-	{
-		name: "cli-vite",
-		framework: "vite",
-		files: ["package.json", "index.html", "src/main.tsx"],
-	},
-	{
-		name: "cli-tanstack",
-		framework: "tanstack",
-		files: ["package.json", "index.html", "src/main.tsx"],
-	},
-	{
-		name: "cli-remix",
-		framework: "remix",
-		files: ["package.json", "vite.config.ts", "app/root.tsx", "app/routes/_index.tsx"],
-	},
-	{
-		name: "cli-astro",
-		framework: "astro",
-		files: ["package.json", "astro.config.mjs", "src/pages/index.astro", "src/pages/docs.astro", "content/docs/index.mdx"],
-	},
-]
+  {
+    files: ["package.json", "next.config.ts", "app/docs/[[...slug]]/page.tsx"],
+    framework: "next.js",
+    name: "cli-next",
+  },
+  {
+    files: ["package.json", "index.html", "src/main.tsx"],
+    framework: "react-router",
+    name: "cli-react-router",
+  },
+  {
+    files: ["package.json", "index.html", "src/main.tsx"],
+    framework: "vite",
+    name: "cli-vite",
+  },
+  {
+    files: ["package.json", "index.html", "src/main.tsx"],
+    framework: "tanstack",
+    name: "cli-tanstack",
+  },
+  {
+    files: [
+      "package.json",
+      "vite.config.ts",
+      "app/root.tsx",
+      "app/routes/_index.tsx",
+    ],
+    framework: "remix",
+    name: "cli-remix",
+  },
+  {
+    files: [
+      "package.json",
+      "astro.config.mjs",
+      "src/pages/index.astro",
+      "src/pages/docs.astro",
+      "content/docs/index.mdx",
+    ],
+    framework: "astro",
+    name: "cli-astro",
+  },
+];
 const runs = [];
 for (const item of cases) {
-	runs.push({
-		name: item.name,
-		framework: item.framework,
-		result: await run(["--name", item.name, "--framework", item.framework, "--yes"]),
-		files: item.files,
-	})
+  runs.push({
+    files: item.files,
+    framework: item.framework,
+    name: item.name,
+    result: await run([
+      "--name",
+      item.name,
+      "--framework",
+      item.framework,
+      "--yes",
+    ]),
+  });
 }
-const runalias = await run(["--name", "cli-alias-rr", "--framework", "rr", "--yes"]);
-const runaliasfull = await run(["--name", "cli-alias-reactrouter", "--framework", "reactrouter", "--yes"]);
-const runaliasnextjs = await run(["--name", "cli-alias-nextjs", "--framework", "nextjs", "--yes"]);
-const runaliastanstack = await run(["--name", "cli-alias-tanstackstart", "--framework", "tanstackstart", "--yes"]);
-const runaliasts = await run(["--name", "cli-alias-ts", "--framework", "ts", "--yes"]);
+const runalias = await run([
+  "--name",
+  "cli-alias-rr",
+  "--framework",
+  "rr",
+  "--yes",
+]);
+const runaliasfull = await run([
+  "--name",
+  "cli-alias-reactrouter",
+  "--framework",
+  "reactrouter",
+  "--yes",
+]);
+const runaliasnextjs = await run([
+  "--name",
+  "cli-alias-nextjs",
+  "--framework",
+  "nextjs",
+  "--yes",
+]);
+const runaliastanstack = await run([
+  "--name",
+  "cli-alias-tanstackstart",
+  "--framework",
+  "tanstackstart",
+  "--yes",
+]);
+const runaliasts = await run([
+  "--name",
+  "cli-alias-ts",
+  "--framework",
+  "ts",
+  "--yes",
+]);
 
 const issues = [];
 const caseframeworks = [...new Set(cases.map((item) => item.framework))];
-const missingframeworks = frameworks.filter((name) => !caseframeworks.includes(name));
-const extraframeworks = caseframeworks.filter((name) => !frameworks.includes(name));
+const missingframeworks = frameworks.filter(
+  (name) => !caseframeworks.includes(name)
+);
+const extraframeworks = caseframeworks.filter(
+  (name) => !frameworks.includes(name)
+);
 
 if (missingframeworks.length > 0 || extraframeworks.length > 0) {
-	for (const name of missingframeworks) {
-		issues.push(`cases missing framework ${name}`);
-	}
-	for (const name of extraframeworks) {
-		issues.push(`cases include unexpected framework ${name}`);
-	}
+  for (const name of missingframeworks) {
+    issues.push(`cases missing framework ${name}`);
+  }
+  for (const name of extraframeworks) {
+    issues.push(`cases include unexpected framework ${name}`);
+  }
 }
 
 for (const item of runs) {
-	if (item.result.code !== 0) {
-		issues.push(`${item.framework}: cli exited with ${item.result.code}`);
-	}
-	if (!item.result.out.includes(`created ${item.name}`)) {
-		issues.push(`${item.framework}: output missing creation confirmation`);
-	}
-	for (const file of item.files) {
-		try {
-			await access(join(temp, item.name, file));
-		} catch {
-			issues.push(`${item.framework}: missing ${file}`);
-		}
-	}
-	try {
-		const raw = await readFile(join(temp, item.name, "package.json"), "utf8");
-		const parsed = JSON.parse(raw);
-		if (parsed?.scripts?.typecheck !== "tsc --noEmit") {
-			issues.push(`${item.framework}: package.json missing typecheck script`);
-		}
-		if (parsed?.devDependencies?.["@types/react-dom"] !== "^19.0.0") {
-			issues.push(`${item.framework}: package.json missing @types/react-dom`);
-		}
-	} catch {
-		issues.push(`${item.framework}: package.json unreadable`);
-	}
+  if (item.result.code !== 0) {
+    issues.push(`${item.framework}: cli exited with ${item.result.code}`);
+  }
+  if (!item.result.out.includes(`created ${item.name}`)) {
+    issues.push(`${item.framework}: output missing creation confirmation`);
+  }
+  for (const file of item.files) {
+    try {
+      await access(join(temp, item.name, file));
+    } catch {
+      issues.push(`${item.framework}: missing ${file}`);
+    }
+  }
+  try {
+    const raw = await readFile(join(temp, item.name, "package.json"), "utf8");
+    const parsed = JSON.parse(raw);
+    if (parsed?.scripts?.typecheck !== "tsc --noEmit") {
+      issues.push(`${item.framework}: package.json missing typecheck script`);
+    }
+    if (parsed?.devDependencies?.["@types/react-dom"] !== "^19.0.0") {
+      issues.push(`${item.framework}: package.json missing @types/react-dom`);
+    }
+  } catch {
+    issues.push(`${item.framework}: package.json unreadable`);
+  }
 }
 
 if (runalias.code !== 0) {
-	issues.push(`alias rr: cli exited with ${runalias.code}`);
+  issues.push(`alias rr: cli exited with ${runalias.code}`);
 }
 try {
-	await access(join(temp, "cli-alias-rr", "src", "main.tsx"));
+  await access(join(temp, "cli-alias-rr", "src", "main.tsx"));
 } catch {
-	issues.push("alias rr: missing src/main.tsx");
+  issues.push("alias rr: missing src/main.tsx");
 }
 if (runaliasfull.code !== 0) {
-	issues.push(`alias reactrouter: cli exited with ${runaliasfull.code}`);
+  issues.push(`alias reactrouter: cli exited with ${runaliasfull.code}`);
 }
 try {
-	await access(join(temp, "cli-alias-reactrouter", "src", "main.tsx"));
+  await access(join(temp, "cli-alias-reactrouter", "src", "main.tsx"));
 } catch {
-	issues.push("alias reactrouter: missing src/main.tsx");
+  issues.push("alias reactrouter: missing src/main.tsx");
 }
 if (runaliasnextjs.code !== 0) {
-	issues.push(`alias nextjs: cli exited with ${runaliasnextjs.code}`);
+  issues.push(`alias nextjs: cli exited with ${runaliasnextjs.code}`);
 }
 try {
-	await access(join(temp, "cli-alias-nextjs", "next.config.ts"));
+  await access(join(temp, "cli-alias-nextjs", "next.config.ts"));
 } catch {
-	issues.push("alias nextjs: missing next.config.ts");
+  issues.push("alias nextjs: missing next.config.ts");
 }
 if (runaliastanstack.code !== 0) {
-	issues.push(`alias tanstackstart: cli exited with ${runaliastanstack.code}`);
+  issues.push(`alias tanstackstart: cli exited with ${runaliastanstack.code}`);
 }
 try {
-	await access(join(temp, "cli-alias-tanstackstart", "src", "main.tsx"));
+  await access(join(temp, "cli-alias-tanstackstart", "src", "main.tsx"));
 } catch {
-	issues.push("alias tanstackstart: missing src/main.tsx");
+  issues.push("alias tanstackstart: missing src/main.tsx");
 }
 if (runaliasts.code !== 0) {
-	issues.push(`alias ts: cli exited with ${runaliasts.code}`);
+  issues.push(`alias ts: cli exited with ${runaliasts.code}`);
 }
 try {
-	await access(join(temp, "cli-alias-ts", "src", "main.tsx"));
+  await access(join(temp, "cli-alias-ts", "src", "main.tsx"));
 } catch {
-	issues.push("alias ts: missing src/main.tsx");
+  issues.push("alias ts: missing src/main.tsx");
 }
 if (runcase.code !== 0) {
-	issues.push(`case-insensitive next.js: cli exited with ${runcase.code}`);
+  issues.push(`case-insensitive next.js: cli exited with ${runcase.code}`);
 }
 try {
-	await access(join(temp, "cli-case-next", "next.config.ts"));
+  await access(join(temp, "cli-case-next", "next.config.ts"));
 } catch {
-	issues.push("case-insensitive next.js: missing next.config.ts");
+  issues.push("case-insensitive next.js: missing next.config.ts");
 }
 
 if (runhelp.code !== 0 || !runhelp.out.includes("usage: create-fromsrc")) {
-	issues.push("cli help output missing or failed");
+  issues.push("cli help output missing or failed");
 }
 
 if (runlist.code !== 0) {
-	issues.push("cli list output missing or failed");
+  issues.push("cli list output missing or failed");
 }
 for (const framework of frameworks) {
-	if (!runlist.out.includes(framework)) {
-		issues.push(`cli list missing ${framework}`);
-	}
+  if (!runlist.out.includes(framework)) {
+    issues.push(`cli list missing ${framework}`);
+  }
 }
 
 if (runbad.code === 0 || !runbad.out.includes("invalid framework")) {
-	issues.push("cli invalid framework path missing or failed");
-}
-if (runmissingname.code === 0 || !runmissingname.out.includes("missing value for --name")) {
-	issues.push("cli missing --name value path missing or failed");
-}
-if (runmissingframework.code === 0 || !runmissingframework.out.includes("missing value for --framework")) {
-	issues.push("cli missing --framework value path missing or failed");
-}
-if (runmissingnameequals.code === 0 || !runmissingnameequals.out.includes("missing value for --name")) {
-	issues.push("cli missing --name= value path missing or failed");
+  issues.push("cli invalid framework path missing or failed");
 }
 if (
-	runmissingframeworkequals.code === 0 ||
-	!runmissingframeworkequals.out.includes("missing value for --framework")
+  runmissingname.code === 0 ||
+  !runmissingname.out.includes("missing value for --name")
 ) {
-	issues.push("cli missing --framework= value path missing or failed");
+  issues.push("cli missing --name value path missing or failed");
+}
+if (
+  runmissingframework.code === 0 ||
+  !runmissingframework.out.includes("missing value for --framework")
+) {
+  issues.push("cli missing --framework value path missing or failed");
+}
+if (
+  runmissingnameequals.code === 0 ||
+  !runmissingnameequals.out.includes("missing value for --name")
+) {
+  issues.push("cli missing --name= value path missing or failed");
+}
+if (
+  runmissingframeworkequals.code === 0 ||
+  !runmissingframeworkequals.out.includes("missing value for --framework")
+) {
+  issues.push("cli missing --framework= value path missing or failed");
 }
 if (rununknown.code === 0 || !rununknown.out.includes("unknown option")) {
-	issues.push("cli unknown option path missing or failed");
+  issues.push("cli unknown option path missing or failed");
 }
 if (runequals.code !== 0 || !runequals.out.includes("created cli-equals")) {
-	issues.push("cli equals syntax path missing or failed");
+  issues.push("cli equals syntax path missing or failed");
 }
 try {
-	await access(join(temp, "cli-equals", "src", "main.tsx"));
+  await access(join(temp, "cli-equals", "src", "main.tsx"));
 } catch {
-	issues.push("cli equals syntax did not create project");
+  issues.push("cli equals syntax did not create project");
 }
 
-if (runpositional.code !== 0 || !runpositional.out.includes("created cli-positional")) {
-	issues.push("cli positional name path missing or failed");
+if (
+  runpositional.code !== 0 ||
+  !runpositional.out.includes("created cli-positional")
+) {
+  issues.push("cli positional name path missing or failed");
 }
 try {
-	await access(join(temp, "cli-positional", "package.json"));
+  await access(join(temp, "cli-positional", "package.json"));
 } catch {
-	issues.push("cli positional name did not create project");
+  issues.push("cli positional name did not create project");
 }
 
-await rm(temp, { recursive: true, force: true });
+await rm(temp, { force: true, recursive: true });
 
 if (issues.length > 0) {
-	console.error("x create cli validation failed");
-	for (const issue of issues) console.error(issue);
-	for (const item of runs) {
-		if (item.result.err.trim()) console.error(item.result.err.trim());
-	}
-	if (runalias.err.trim()) console.error(runalias.err.trim());
-	if (runaliasfull.err.trim()) console.error(runaliasfull.err.trim());
-	if (runaliasnextjs.err.trim()) console.error(runaliasnextjs.err.trim());
-	if (runaliastanstack.err.trim()) console.error(runaliastanstack.err.trim());
-	if (runaliasts.err.trim()) console.error(runaliasts.err.trim());
-	if (runcase.err.trim()) console.error(runcase.err.trim());
-	if (runhelp.err.trim()) console.error(runhelp.err.trim());
-	if (runlist.err.trim()) console.error(runlist.err.trim());
-	if (runbad.err.trim()) console.error(runbad.err.trim());
-	if (runmissingname.err.trim()) console.error(runmissingname.err.trim());
-	if (runmissingframework.err.trim()) console.error(runmissingframework.err.trim());
-	if (runmissingnameequals.err.trim()) console.error(runmissingnameequals.err.trim());
-	if (runmissingframeworkequals.err.trim()) console.error(runmissingframeworkequals.err.trim());
-	if (rununknown.err.trim()) console.error(rununknown.err.trim());
-	if (runequals.err.trim()) console.error(runequals.err.trim());
-	if (runpositional.err.trim()) console.error(runpositional.err.trim());
-	process.exit(1);
+  console.error("x create cli validation failed");
+  for (const issue of issues) {
+    console.error(issue);
+  }
+  for (const item of runs) {
+    if (item.result.err.trim()) {
+      console.error(item.result.err.trim());
+    }
+  }
+  if (runalias.err.trim()) {
+    console.error(runalias.err.trim());
+  }
+  if (runaliasfull.err.trim()) {
+    console.error(runaliasfull.err.trim());
+  }
+  if (runaliasnextjs.err.trim()) {
+    console.error(runaliasnextjs.err.trim());
+  }
+  if (runaliastanstack.err.trim()) {
+    console.error(runaliastanstack.err.trim());
+  }
+  if (runaliasts.err.trim()) {
+    console.error(runaliasts.err.trim());
+  }
+  if (runcase.err.trim()) {
+    console.error(runcase.err.trim());
+  }
+  if (runhelp.err.trim()) {
+    console.error(runhelp.err.trim());
+  }
+  if (runlist.err.trim()) {
+    console.error(runlist.err.trim());
+  }
+  if (runbad.err.trim()) {
+    console.error(runbad.err.trim());
+  }
+  if (runmissingname.err.trim()) {
+    console.error(runmissingname.err.trim());
+  }
+  if (runmissingframework.err.trim()) {
+    console.error(runmissingframework.err.trim());
+  }
+  if (runmissingnameequals.err.trim()) {
+    console.error(runmissingnameequals.err.trim());
+  }
+  if (runmissingframeworkequals.err.trim()) {
+    console.error(runmissingframeworkequals.err.trim());
+  }
+  if (rununknown.err.trim()) {
+    console.error(rununknown.err.trim());
+  }
+  if (runequals.err.trim()) {
+    console.error(runequals.err.trim());
+  }
+  if (runpositional.err.trim()) {
+    console.error(runpositional.err.trim());
+  }
+  process.exit(1);
 }
 
 console.log("o create cli validation passed");

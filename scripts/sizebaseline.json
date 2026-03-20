@@ -1,62 +1,62 @@
 {
-	"core": {
-		"size": 124707,
-		"gzip": 35134
-	},
-	"readtime": {
-		"size": 151,
-		"gzip": 147
-	},
-	"searchscore": {
-		"size": 1551,
-		"gzip": 638
-	},
-	"searchindex": {
-		"size": 1365,
-		"gzip": 694
-	},
-	"searchpolicy": {
-		"size": 175,
-		"gzip": 152
-	},
-	"llms": {
-		"size": 514,
-		"gzip": 340
-	},
-	"openapi": {
-		"size": 5170,
-		"gzip": 1828
-	},
-	"algolia": {
-		"size": 1564,
-		"gzip": 808
-	},
-	"orama": {
-		"size": 1595,
-		"gzip": 760
-	},
-	"next": {
-		"size": 566,
-		"gzip": 328
-	},
-	"reactrouter": {
-		"size": 421,
-		"gzip": 271
-	},
-	"tanstack": {
-		"size": 495,
-		"gzip": 310
-	},
-	"remix": {
-		"size": 452,
-		"gzip": 290
-	},
-	"astro": {
-		"size": 1194,
-		"gzip": 507
-	},
-	"vite": {
-		"size": 1194,
-		"gzip": 508
-	}
+  "core": {
+    "size": 124707,
+    "gzip": 35134
+  },
+  "readtime": {
+    "size": 151,
+    "gzip": 147
+  },
+  "searchscore": {
+    "size": 1551,
+    "gzip": 638
+  },
+  "searchindex": {
+    "size": 1365,
+    "gzip": 694
+  },
+  "searchpolicy": {
+    "size": 175,
+    "gzip": 152
+  },
+  "llms": {
+    "size": 514,
+    "gzip": 340
+  },
+  "openapi": {
+    "size": 5170,
+    "gzip": 1828
+  },
+  "algolia": {
+    "size": 1564,
+    "gzip": 808
+  },
+  "orama": {
+    "size": 1595,
+    "gzip": 760
+  },
+  "next": {
+    "size": 566,
+    "gzip": 328
+  },
+  "reactrouter": {
+    "size": 421,
+    "gzip": 271
+  },
+  "tanstack": {
+    "size": 495,
+    "gzip": 310
+  },
+  "remix": {
+    "size": 452,
+    "gzip": 290
+  },
+  "astro": {
+    "size": 1194,
+    "gzip": 507
+  },
+  "vite": {
+    "size": 1194,
+    "gzip": 508
+  }
 }

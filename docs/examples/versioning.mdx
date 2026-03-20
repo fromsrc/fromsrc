@@ -55,11 +55,11 @@ keep all versions in a single branch:
 ### content loader
 
 ```tsx
-import { defineContent, z } from "fromsrc"
+import { defineContent, z } from "fromsrc";
 
-const versions = ["v2", "v1"] as const
+const versions = ["v2", "v1"] as const;
 
-type Version = typeof versions[number]
+type Version = (typeof versions)[number];
 
 export function createVersionedContent(version: Version) {
   return defineContent({
@@ -69,34 +69,33 @@ export function createVersionedContent(version: Version) {
       description: z.string().optional(),
       order: z.number().optional(),
     }),
-  })
+  });
 }
 ```
 
 ### version switcher
 
 ```tsx
-"use client"
+"use client";
 
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation";
 
-const versions = ["v2", "v1"]
+const versions = ["v2", "v1"];
 
 export function VersionSwitcher() {
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const currentVersion = versions.find((v) =>
-    pathname.includes(`/docs/${v}`)
-  ) || versions[0]
+  const currentVersion =
+    versions.find((v) => pathname.includes(`/docs/${v}`)) || versions[0];
 
   const switchVersion = (version: string) => {
     const newPath = pathname.replace(
       `/docs/${currentVersion}`,
       `/docs/${version}`
-    )
-    router.push(newPath)
-  }
+    );
+    router.push(newPath);
+  };
 
   return (
     <select
@@ -110,7 +109,7 @@ export function VersionSwitcher() {
         </option>
       ))}
     </select>
-  )
+  );
 }
 ```
 
@@ -142,23 +141,26 @@ const schema = extendSchema({
   version: z.string(),
   deprecated: z.boolean().optional(),
   replacement: z.string().optional(),
-})
+});
 ```
 
 ### deprecation notice
 
 ```tsx
 function DeprecationBanner({ doc }) {
-  if (!doc.data.deprecated) return null
+  if (!doc.data.deprecated) return null;
 
   return (
     <Callout type="warning">
       this endpoint is deprecated.
       {doc.data.replacement && (
-        <> use <Link href={doc.data.replacement}>the new version</Link>.</>
+        <>
+          {" "}
+          use <Link href={doc.data.replacement}>the new version</Link>.
+        </>
       )}
     </Callout>
-  )
+  );
 }
 ```
 

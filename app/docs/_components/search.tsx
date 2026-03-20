@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Search } from "fromsrc/client"
+import { Search } from "fromsrc/client";
 
 export function SearchModal() {
-	return <Search basePath="/docs" endpoint="/api/search" hidden />
+  return <Search basePath="/docs" endpoint="/api/search" hidden />;
 }

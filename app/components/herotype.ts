@@ -1,12 +1,12 @@
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 
-export type line = {
-	num: number
-	content: ReactNode
+export interface line {
+  num: number;
+  content: ReactNode;
 }
 
-export type file = {
-	name: string
-	lines: line[]
-	raw: string
+export interface file {
+  name: string;
+  lines: line[];
+  raw: string;
 }

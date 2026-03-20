@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useCallback, useState } from "react"
+import { useCallback, useState } from "react";
 
 export type ToggleResult = [
-	open: boolean,
-	toggle: () => void,
-	setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-]
+  open: boolean,
+  toggle: () => void,
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+];
 
 /**
  * Hook for managing toggle state
@@ -14,9 +14,9 @@ export type ToggleResult = [
  * @returns Tuple of [open, toggle, setOpen]
  */
 export function useToggle(defaultOpen: boolean = false): ToggleResult {
-	const [open, setOpen] = useState(defaultOpen)
+  const [open, setOpen] = useState(defaultOpen);
 
-	const toggle = useCallback(() => setOpen((prev) => !prev), [])
+  const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
-	return [open, toggle, setOpen]
+  return [open, toggle, setOpen];
 }

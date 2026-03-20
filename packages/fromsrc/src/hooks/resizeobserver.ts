@@ -1,36 +1,38 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react";
 
 export interface ElementSize {
-	width: number
-	height: number
+  width: number;
+  height: number;
 }
 
 export function useResizeObserver<T extends HTMLElement>(): [
-	React.RefObject<T | null>,
-	ElementSize,
+  React.RefObject<T | null>,
+  ElementSize,
 ] {
-	const ref = useRef<T | null>(null)
-	const [size, setSize] = useState<ElementSize>({ width: 0, height: 0 })
+  const ref = useRef<T | null>(null);
+  const [size, setSize] = useState<ElementSize>({ height: 0, width: 0 });
 
-	useEffect(() => {
-		const el = ref.current
-		if (!el) return
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) {
+      return;
+    }
 
-		const observer = new ResizeObserver((entries) => {
-			const entry = entries[0]
-			if (entry) {
-				setSize({
-					width: entry.contentRect.width,
-					height: entry.contentRect.height,
-				})
-			}
-		})
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) {
+        setSize({
+          height: entry.contentRect.height,
+          width: entry.contentRect.width,
+        });
+      }
+    });
 
-		observer.observe(el)
-		return () => observer.disconnect()
-	}, [])
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
-	return [ref, size]
+  return [ref, size];
 }

@@ -1,108 +1,108 @@
-"use client"
+"use client";
 
-import type { ReactElement } from "react"
-import { memo, useEffect, useId, useState } from "react"
+import type { ReactElement } from "react";
+import { memo, useEffect, useId, useState } from "react";
 
 /**
  * Props for the Mermaid diagram component
  */
 export interface MermaidProps {
-	/** Mermaid diagram definition string */
-	chart: string
-	/** Accessible label describing the diagram */
-	label?: string
+  /** Mermaid diagram definition string */
+  chart: string;
+  /** Accessible label describing the diagram */
+  label?: string;
 }
 
 /**
  * Configuration options for mermaid initialization
  */
 function MermaidBase({ chart, label }: MermaidProps): ReactElement {
-	const id = useId()
-	const [svg, setSvg] = useState<string>("")
-	const [error, setError] = useState<boolean>(false)
+  const id = useId();
+  const [svg, setSvg] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
 
-	useEffect(() => {
-		if (!chart.trim()) {
-			setError(true)
-			return
-		}
+  useEffect(() => {
+    if (!chart.trim()) {
+      setError(true);
+      return;
+    }
 
-		let mounted = true
+    let mounted = true;
 
-		async function render() {
-			try {
-				const module = await import("mermaid" as string)
-				const mermaid = module.default as {
-					initialize(config: {
-						startOnLoad: boolean
-						securityLevel: "strict" | "loose" | "antiscript" | "sandbox"
-						fontFamily: string
-						theme: "default" | "forest" | "dark" | "neutral" | "base"
-					}): void
-					render(id: string, code: string): Promise<{ svg: string }>
-				}
-				mermaid.initialize({
-					startOnLoad: false,
-					securityLevel: "loose",
-					fontFamily: "inherit",
-					theme: "dark",
-				})
+    async function render() {
+      try {
+        const module = await import("mermaid" as string);
+        const mermaid = module.default as {
+          initialize(config: {
+            startOnLoad: boolean;
+            securityLevel: "strict" | "loose" | "antiscript" | "sandbox";
+            fontFamily: string;
+            theme: "default" | "forest" | "dark" | "neutral" | "base";
+          }): void;
+          render(id: string, code: string): Promise<{ svg: string }>;
+        };
+        mermaid.initialize({
+          fontFamily: "inherit",
+          securityLevel: "loose",
+          startOnLoad: false,
+          theme: "dark",
+        });
 
-				const { svg: rendered } = await mermaid.render(
-					id.replace(/:/g, ""),
-					chart.replaceAll("\\n", "\n"),
-				)
+        const { svg: rendered } = await mermaid.render(
+          id.replaceAll(':', ""),
+          chart.replaceAll("\\n", "\n")
+        );
 
-				if (mounted) {
-					setSvg(rendered)
-					setError(false)
-				}
-			} catch {
-				if (mounted) {
-					setError(true)
-				}
-			}
-		}
+        if (mounted) {
+          setSvg(rendered);
+          setError(false);
+        }
+      } catch {
+        if (mounted) {
+          setError(true);
+        }
+      }
+    }
 
-		render()
-		return () => {
-			mounted = false
-		}
-	}, [chart, id])
+    render();
+    return () => {
+      mounted = false;
+    };
+  }, [chart, id]);
 
-	if (error) {
-		return (
-			<div
-				role="alert"
-				aria-live="assertive"
-				className="my-4 p-4 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm"
-			>
-				error
-			</div>
-		)
-	}
+  if (error) {
+    return (
+      <div
+        role="alert"
+        aria-live="assertive"
+        className="my-4 p-4 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm"
+      >
+        error
+      </div>
+    );
+  }
 
-	if (!svg) {
-		return (
-			<div
-				role="status"
-				aria-label="loading diagram"
-				aria-busy="true"
-				className="my-4 p-8 rounded-lg border border-line bg-surface/30 animate-pulse"
-			>
-				<div className="h-32 bg-surface/50 rounded" aria-hidden="true" />
-			</div>
-		)
-	}
+  if (!svg) {
+    return (
+      <div
+        role="status"
+        aria-label="loading diagram"
+        aria-busy="true"
+        className="my-4 p-8 rounded-lg border border-line bg-surface/30 animate-pulse"
+      >
+        <div className="h-32 bg-surface/50 rounded" aria-hidden="true" />
+      </div>
+    );
+  }
 
-	return (
-		<figure
-			role="img"
-			aria-label={label || "diagram"}
-			className="my-4 overflow-x-auto [&_svg]:mx-auto"
-			dangerouslySetInnerHTML={{ __html: svg }}
-		/>
-	)
+  return (
+    <figure
+      role="img"
+      aria-label={label || "diagram"}
+      className="my-4 overflow-x-auto [&_svg]:mx-auto"
+      dangerouslySetInnerHTML={{ __html: svg }}
+    />
+  );
 }
 
-export const Mermaid = memo(MermaidBase)
+export const Mermaid = memo(MermaidBase);

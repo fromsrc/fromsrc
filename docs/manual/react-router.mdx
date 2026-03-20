@@ -16,7 +16,9 @@ import { AdapterProvider, reactRouterAdapter } from "fromsrc/react-router";
 import type { ReactNode } from "react";
 
 export function Providers({ children }: { children: ReactNode }) {
-	return <AdapterProvider adapter={reactRouterAdapter}>{children}</AdapterProvider>;
+  return (
+    <AdapterProvider adapter={reactRouterAdapter}>{children}</AdapterProvider>
+  );
 }
 ```
 
@@ -26,7 +28,7 @@ mount in your app root:
 import { Providers } from "./providers";
 
 export function AppRoot({ children }: { children: React.ReactNode }) {
-	return <Providers>{children}</Providers>;
+  return <Providers>{children}</Providers>;
 }
 ```
 

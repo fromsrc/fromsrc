@@ -9,9 +9,7 @@ wrap images for click-to-zoom functionality.
 ## usage
 
 ```mdx
-<Zoom>
-  ![screenshot](/screenshot.png)
-</Zoom>
+<Zoom>![screenshot](/screenshot.png)</Zoom>
 ```
 
 click the image to zoom, click again or press escape to close.
@@ -19,7 +17,7 @@ click the image to zoom, click again or press escape to close.
 ## with next/image
 
 ```mdx
-import Image from "next/image"
+import Image from "next/image";
 
 <Zoom>
   <Image src="/logo.png" width={200} height={100} alt="logo" />
@@ -28,6 +26,6 @@ import Image from "next/image"
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| className | string | - | additional classes |
+| prop      | type   | default | description        |
+| --------- | ------ | ------- | ------------------ |
+| className | string | -       | additional classes |

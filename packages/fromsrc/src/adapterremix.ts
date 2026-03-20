@@ -1,45 +1,41 @@
-"use client"
+"use client";
 
-import { createElement } from "react"
-import { Link as RemixLink, useLocation, useNavigate } from "@remix-run/react"
-import type { FrameworkAdapter, fromsrcimageprops, fromsrclinkprops } from "./adapter"
+import { Link as RemixLink, useLocation, useNavigate } from "@remix-run/react";
+import { createElement } from "react";
 
-function Link({
-	href,
-	children,
-	prefetch,
-	...rest
-}: fromsrclinkprops) {
-	return createElement(
-		RemixLink,
-		{ to: href, prefetch: prefetch ? "intent" : "none", ...rest },
-		children,
-	)
+import type {
+  FrameworkAdapter,
+  fromsrcimageprops,
+  fromsrclinkprops,
+} from "./adapter";
+
+function Link({ href, children, prefetch, ...rest }: fromsrclinkprops) {
+  return createElement(
+    RemixLink,
+    { prefetch: prefetch ? "intent" : "none", to: href, ...rest },
+    children
+  );
 }
 
-function Image({
-	src,
-	alt,
-	...rest
-}: fromsrcimageprops) {
-	return createElement("img", { src, alt, ...rest })
+function Image({ src, alt, ...rest }: fromsrcimageprops) {
+  return createElement("img", { alt, src, ...rest });
 }
 
 function useRemixPathname(): string {
-	return useLocation().pathname
+  return useLocation().pathname;
 }
 
 function useRemixRouter() {
-	const navigate = useNavigate()
-	return {
-		push: (url: string) => navigate(url),
-		back: () => navigate(-1),
-	}
+  const navigate = useNavigate();
+  return {
+    back: () => navigate(-1),
+    push: (url: string) => navigate(url),
+  };
 }
 
 export const remixAdapter: FrameworkAdapter = {
-	Link,
-	Image,
-	usePathname: useRemixPathname,
-	useRouter: useRemixRouter,
-}
+  Image,
+  Link,
+  usePathname: useRemixPathname,
+  useRouter: useRemixRouter,
+};

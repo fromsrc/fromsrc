@@ -83,7 +83,7 @@ const columns = [
     header: "language",
     render: (value) => <Badge>{value}</Badge>,
   },
-]
+];
 ```
 
 ## responsive
@@ -96,7 +96,7 @@ const columns = [
   { key: "stars", header: "stars" },
   { key: "language", header: "language", hideOnMobile: true },
   { key: "license", header: "license", hideOnMobile: true },
-]
+];
 ```
 
 <Table
@@ -166,32 +166,32 @@ set fixed widths:
 const columns = [
   { key: "name", header: "name", width: "200px" },
   { key: "stars", header: "stars", width: "100px" },
-]
+];
 ```
 
 ## props
 
 ### table
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| data | T[] | - | array of row objects |
-| columns | TableColumn[] | - | column definitions |
-| defaultSort | string | - | initial sort column key |
-| defaultDirection | "asc" \| "desc" | "asc" | initial sort direction |
-| striped | boolean | false | alternating row colors |
-| hoverable | boolean | true | row hover effect |
-| compact | boolean | false | reduced padding |
-| caption | string | - | accessible table description |
-| className | string | - | additional css classes |
+| prop             | type            | default | description                  |
+| ---------------- | --------------- | ------- | ---------------------------- |
+| data             | T[]             | -       | array of row objects         |
+| columns          | TableColumn[]   | -       | column definitions           |
+| defaultSort      | string          | -       | initial sort column key      |
+| defaultDirection | "asc" \| "desc" | "asc"   | initial sort direction       |
+| striped          | boolean         | false   | alternating row colors       |
+| hoverable        | boolean         | true    | row hover effect             |
+| compact          | boolean         | false   | reduced padding              |
+| caption          | string          | -       | accessible table description |
+| className        | string          | -       | additional css classes       |
 
 ### tablecolumn
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| key | string | - | property name from data |
-| header | string | - | column header text |
-| sortable | boolean | false | enable sorting |
-| width | string | - | fixed column width |
-| render | function | - | custom cell renderer |
-| hideOnMobile | boolean | false | hide on small screens |
+| prop         | type     | default | description             |
+| ------------ | -------- | ------- | ----------------------- |
+| key          | string   | -       | property name from data |
+| header       | string   | -       | column header text      |
+| sortable     | boolean  | false   | enable sorting          |
+| width        | string   | -       | fixed column width      |
+| render       | function | -       | custom cell renderer    |
+| hideOnMobile | boolean  | false   | hide on small screens   |

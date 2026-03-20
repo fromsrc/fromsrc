@@ -47,29 +47,29 @@ document multiple packages in a monorepo with a unified docs site.
 create a content loader for each package:
 
 ```tsx
-import { defineContent, z } from "fromsrc"
+import { defineContent, z } from "fromsrc";
 
 const packageSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   order: z.number().optional(),
   package: z.string().optional(),
-})
+});
 
 export const core = defineContent({
   dir: "docs/core",
   schema: packageSchema,
-})
+});
 
 export const react = defineContent({
   dir: "docs/react",
   schema: packageSchema,
-})
+});
 
 export const cli = defineContent({
   dir: "docs/cli",
   schema: packageSchema,
-})
+});
 ```
 
 ## unified navigation
@@ -77,21 +77,21 @@ export const cli = defineContent({
 combine package navigations:
 
 ```tsx
-import { core, react, cli } from "@/lib/content"
+import { core, react, cli } from "@/lib/content";
 
 export async function getUnifiedNavigation() {
   const [coreNav, reactNav, cliNav] = await Promise.all([
     core.getNavigation(),
     react.getNavigation(),
     cli.getNavigation(),
-  ])
+  ]);
 
   return [
     { title: "overview", items: [{ slug: "", title: "introduction" }] },
     { title: "core", items: coreNav.flatMap((s) => s.items) },
     { title: "react", items: reactNav.flatMap((s) => s.items) },
     { title: "cli", items: cliNav.flatMap((s) => s.items) },
-  ]
+  ];
 }
 ```
 
@@ -100,24 +100,24 @@ export async function getUnifiedNavigation() {
 add tabs to switch between packages:
 
 ```tsx
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const packages = [
   { name: "core", href: "/docs/core" },
   { name: "react", href: "/docs/react" },
   { name: "cli", href: "/docs/cli" },
-]
+];
 
 export function PackageTabs() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <div className="flex gap-1 border-b border-line mb-6">
       {packages.map((pkg) => {
-        const active = pathname.startsWith(pkg.href)
+        const active = pathname.startsWith(pkg.href);
         return (
           <Link
             key={pkg.name}
@@ -130,10 +130,10 @@ export function PackageTabs() {
           >
             {pkg.name}
           </Link>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 ```
 
@@ -150,7 +150,7 @@ see the <Link href="/docs/core/api">core api</Link> for the base implementation.
 reuse mdx components across packages:
 
 ```tsx
-import { Callout, CodeBlock, TypeTable } from "fromsrc/client"
+import { Callout, CodeBlock, TypeTable } from "fromsrc/client";
 
 export const components = {
   Callout,
@@ -159,7 +159,7 @@ export const components = {
   PackageLink: ({ pkg, path, children }) => (
     <Link href={`/docs/${pkg}/${path}`}>{children}</Link>
   ),
-}
+};
 ```
 
 ## auto-generated docs
@@ -167,18 +167,18 @@ export const components = {
 extract api docs from package exports:
 
 ```tsx
-import { readFileSync } from "fs"
-import { parse } from "@typescript-eslint/parser"
+import { readFileSync } from "fs";
+import { parse } from "@typescript-eslint/parser";
 
 export function extractExports(packagePath: string) {
-  const indexPath = `packages/${packagePath}/src/index.ts`
-  const source = readFileSync(indexPath, "utf-8")
-  const ast = parse(source, { sourceType: "module" })
+  const indexPath = `packages/${packagePath}/src/index.ts`;
+  const source = readFileSync(indexPath, "utf-8");
+  const ast = parse(source, { sourceType: "module" });
 
   return ast.body
     .filter((node) => node.type === "ExportNamedDeclaration")
     .map((node) => node.declaration?.id?.name)
-    .filter(Boolean)
+    .filter(Boolean);
 }
 ```
 

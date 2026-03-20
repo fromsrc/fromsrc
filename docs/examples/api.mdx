@@ -29,7 +29,7 @@ build api reference documentation with endpoints, parameters, and responses.
 add api-specific frontmatter fields:
 
 ```tsx
-import { defineContent, extendSchema, z } from "fromsrc"
+import { defineContent, extendSchema, z } from "fromsrc";
 
 const api = defineContent({
   dir: "docs/api",
@@ -38,10 +38,10 @@ const api = defineContent({
     path: z.string().optional(),
     auth: z.boolean().optional(),
   }),
-})
+});
 
-export const getApiDoc = api.getDoc
-export const getAllApiDocs = api.getAllDocs
+export const getApiDoc = api.getDoc;
+export const getAllApiDocs = api.getAllDocs;
 ```
 
 ## endpoint documentation
@@ -59,8 +59,18 @@ auth: true
 
 <Endpoint method="POST" path="/api/users" description="create a new user">
   <Param name="name" type="string" required description="user's display name" />
-  <Param name="email" type="string" required description="unique email address" />
-  <Param name="password" type="string" required description="at least 8 characters" />
+  <Param
+    name="email"
+    type="string"
+    required
+    description="unique email address"
+  />
+  <Param
+    name="password"
+    type="string"
+    required
+    description="at least 8 characters"
+  />
   <Param name="role" type="string" description="user or admin" />
 </Endpoint>
 
@@ -68,10 +78,10 @@ auth: true
 
 {/* codeblock lang="json" */}
 {
-  "name": "john",
-  "email": "john@example.com",
-  "password": "secretpass",
-  "role": "user"
+"name": "john",
+"email": "john@example.com",
+"password": "secretpass",
+"role": "user"
 }
 
 ## responses
@@ -94,18 +104,21 @@ auth: true
 create `app/api/page.tsx`:
 
 ```tsx
-import Link from "next/link"
-import { getAllApiDocs } from "@/lib/api"
+import Link from "next/link";
+import { getAllApiDocs } from "@/lib/api";
 
 export default async function ApiIndex() {
-  const docs = await getAllApiDocs()
+  const docs = await getAllApiDocs();
 
-  const grouped = docs.reduce((acc, doc) => {
-    const section = doc.slug[0] || "overview"
-    if (!acc[section]) acc[section] = []
-    acc[section].push(doc)
-    return acc
-  }, {} as Record<string, typeof docs>)
+  const grouped = docs.reduce(
+    (acc, doc) => {
+      const section = doc.slug[0] || "overview";
+      if (!acc[section]) acc[section] = [];
+      acc[section].push(doc);
+      return acc;
+    },
+    {} as Record<string, typeof docs>
+  );
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4">
@@ -137,7 +150,7 @@ export default async function ApiIndex() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -173,12 +186,12 @@ show authentication requirements:
 
 ```tsx
 function AuthBadge({ required }: { required?: boolean }) {
-  if (!required) return null
+  if (!required) return null;
   return (
     <Badge variant="outline" className="text-xs">
       requires auth
     </Badge>
-  )
+  );
 }
 ```
 
@@ -186,8 +199,8 @@ use in your api layout:
 
 ```tsx
 export default async function ApiLayout({ params, children }) {
-  const { slug } = await params
-  const doc = await getApiDoc(slug)
+  const { slug } = await params;
+  const doc = await getApiDoc(slug);
 
   return (
     <div>
@@ -197,6 +210,6 @@ export default async function ApiLayout({ params, children }) {
       </div>
       {children}
     </div>
-  )
+  );
 }
 ```

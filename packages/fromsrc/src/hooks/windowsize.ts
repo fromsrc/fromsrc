@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export interface WindowSize {
-	width: number
-	height: number
+  width: number;
+  height: number;
 }
 
 export function useWindowSize(): WindowSize {
-	const [size, setSize] = useState<WindowSize>({ width: 0, height: 0 })
+  const [size, setSize] = useState<WindowSize>({ height: 0, width: 0 });
 
-	useEffect(() => {
-		function update() {
-			setSize({ width: window.innerWidth, height: window.innerHeight })
-		}
+  useEffect(() => {
+    function update() {
+      setSize({ height: window.innerHeight, width: window.innerWidth });
+    }
 
-		update()
-		window.addEventListener("resize", update, { passive: true })
-		return () => window.removeEventListener("resize", update)
-	}, [])
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
-	return size
+  return size;
 }

@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation"
+import { redirect } from "next/navigation";
 
-export async function GET() {
-	redirect("/llms-full.txt")
+export function GET() {
+  redirect("/llms-full.txt");
 }

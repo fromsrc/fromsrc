@@ -37,13 +37,13 @@ description: version history and release notes
     <Change type="fixed">anchor link scroll offset</Change>
   </Release>
 
-  <Release version="2.0.0" date="2026-01-15">
-    <Change type="added">dark mode support</Change>
-    <Change type="added">i18n support</Change>
-    <Change type="changed">new sidebar design</Change>
-    <Change type="removed">legacy search api</Change>
-    <Change type="security">updated dependencies</Change>
-  </Release>
+<Release version="2.0.0" date="2026-01-15">
+  <Change type="added">dark mode support</Change>
+  <Change type="added">i18n support</Change>
+  <Change type="changed">new sidebar design</Change>
+  <Change type="removed">legacy search api</Change>
+  <Change type="security">updated dependencies</Change>
+</Release>
 
   <Release version="1.5.0" date="2026-01-01">
     <Change type="added">table of contents component</Change>
@@ -58,20 +58,20 @@ description: version history and release notes
 create `app/changelog/page.tsx`:
 
 ```tsx
-import { MDX } from "@/components/mdx"
-import { readFileSync } from "fs"
-import { join } from "path"
+import { MDX } from "@/components/mdx";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 export const metadata = {
   title: "changelog",
   description: "version history and release notes",
-}
+};
 
 export default function ChangelogPage() {
   const content = readFileSync(
     join(process.cwd(), "content/changelog.mdx"),
     "utf-8"
-  )
+  );
 
   return (
     <div className="max-w-2xl mx-auto py-12 px-4">
@@ -79,7 +79,7 @@ export default function ChangelogPage() {
       <p className="text-muted mb-8">version history and release notes</p>
       <MDX source={content} />
     </div>
-  )
+  );
 }
 ```
 
@@ -97,7 +97,7 @@ const releases = [
       { type: "fixed", text: "scroll behavior" },
     ],
   },
-]
+];
 
 export default function ChangelogPage() {
   return (
@@ -105,15 +105,21 @@ export default function ChangelogPage() {
       <h1 className="text-2xl font-medium mb-8">changelog</h1>
       <Changelog>
         {releases.map((release) => (
-          <Release key={release.version} version={release.version} date={release.date}>
+          <Release
+            key={release.version}
+            version={release.version}
+            date={release.date}
+          >
             {release.changes.map((change, i) => (
-              <Change key={i} type={change.type}>{change.text}</Change>
+              <Change key={i} type={change.type}>
+                {change.text}
+              </Change>
             ))}
           </Release>
         ))}
       </Changelog>
     </div>
-  )
+  );
 }
 ```
 
@@ -122,10 +128,10 @@ export default function ChangelogPage() {
 add an rss feed for changelog subscribers at `app/changelog/feed.xml/route.ts`:
 
 ```tsx
-import { releases } from "@/lib/changelog"
+import { releases } from "@/lib/changelog";
 
 export async function GET() {
-  const baseUrl = "https://example.com"
+  const baseUrl = "https://example.com";
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
@@ -133,20 +139,24 @@ export async function GET() {
     <title>changelog</title>
     <link>${baseUrl}/changelog</link>
     <description>version history and release notes</description>
-    ${releases.map((release) => `
+    ${releases
+      .map(
+        (release) => `
     <item>
       <title>v${release.version}</title>
       <link>${baseUrl}/changelog#${release.version}</link>
       <pubDate>${new Date(release.date).toUTCString()}</pubDate>
       <description>${release.changes.map((c) => `${c.type}: ${c.text}`).join(", ")}</description>
     </item>
-    `).join("")}
+    `
+      )
+      .join("")}
   </channel>
-</rss>`
+</rss>`;
 
   return new Response(rss, {
     headers: { "Content-Type": "application/xml" },
-  })
+  });
 }
 ```
 
@@ -165,14 +175,14 @@ add to your header or footer:
 show current version in your docs:
 
 ```tsx
-import { releases } from "@/lib/changelog"
+import { releases } from "@/lib/changelog";
 
 export function VersionBadge() {
-  const latest = releases[0]
+  const latest = releases[0];
   return (
     <Link href="/changelog" className="text-xs text-muted hover:text-fg">
       v{latest.version}
     </Link>
-  )
+  );
 }
 ```

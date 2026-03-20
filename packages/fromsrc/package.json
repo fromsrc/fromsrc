@@ -1,139 +1,139 @@
 {
-	"name": "fromsrc",
-	"version": "0.0.2",
-	"description": "documentation framework for developers",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/fromsrc/fromsrc.git"
-	},
-	"homepage": "https://github.com/fromsrc/fromsrc",
-	"bugs": {
-		"url": "https://github.com/fromsrc/fromsrc/issues"
-	},
-	"type": "module",
-	"sideEffects": false,
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
-		},
-		"./client": {
-			"types": "./dist/client.d.ts",
-			"import": "./dist/client.js"
-		},
-		"./next": {
-			"types": "./dist/next.d.ts",
-			"import": "./dist/next.js"
-		},
-		"./react-router": {
-			"types": "./dist/reactrouter.d.ts",
-			"import": "./dist/reactrouter.js"
-		},
-		"./vite": {
-			"types": "./dist/vite.d.ts",
-			"import": "./dist/vite.js"
-		},
-		"./tanstack": {
-			"types": "./dist/tanstack.d.ts",
-			"import": "./dist/tanstack.js"
-		},
-		"./remix": {
-			"types": "./dist/remix.d.ts",
-			"import": "./dist/remix.js"
-		},
-		"./astro": {
-			"types": "./dist/astro.d.ts",
-			"import": "./dist/astro.js"
-		},
-		"./readtime": {
-			"types": "./dist/readtime.d.ts",
-			"import": "./dist/readtime.js"
-		},
-		"./searchscore": {
-			"types": "./dist/searchscore.d.ts",
-			"import": "./dist/searchscore.js"
-		},
-		"./searchindex": {
-			"types": "./dist/searchindex.d.ts",
-			"import": "./dist/searchindex.js"
-		},
-		"./searchpolicy": {
-			"types": "./dist/searchpolicy.d.ts",
-			"import": "./dist/searchpolicy.js"
-		},
-		"./llms": {
-			"types": "./dist/llms.d.ts",
-			"import": "./dist/llms.js"
-		},
-		"./openapi": {
-			"types": "./dist/openapi.d.ts",
-			"import": "./dist/openapi.js"
-		},
-		"./algolia": {
-			"types": "./dist/algolia.d.ts",
-			"import": "./dist/algolia.js"
-		},
-		"./orama": {
-			"types": "./dist/orama.d.ts",
-			"import": "./dist/orama.js"
-		},
-		"./styles/reset.css": "./styles/reset.css"
-	},
-	"files": [
-		"dist",
-		"styles"
-	],
-	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch"
-	},
-	"dependencies": {
-		"@mdx-js/mdx": "^3.1.0",
-		"@shikijs/rehype": "^3.0.0",
-		"@shikijs/transformers": "^3.22.0",
-		"gray-matter": "^4.0.3",
-		"next-mdx-remote": "^6.0.0",
-		"remark-gfm": "^4.0.1",
-		"shiki": "^3.0.0",
-		"unist-util-visit": "^5.1.0",
-		"zod": "^3.24.0"
-	},
-	"devDependencies": {
-		"@remix-run/react": "^2.17.1",
-		"@tanstack/react-router": "^1.133.42",
-		"@types/hast": "^3.0.4",
-		"@types/mdast": "^4.0.4",
-		"@types/node": "^22.0.0",
-		"@types/react": "^19.0.0",
-		"react-router": "^7.9.5",
-		"tsup": "^8.5.0",
-		"typescript": "^5.9.0",
-		"unified": "^11.0.5"
-	},
-	"peerDependencies": {
-		"@remix-run/react": ">=2.0.0",
-		"mermaid": ">=10.0.0",
-		"katex": ">=0.16.0",
-		"next": ">=14.0.0",
-		"react": ">=18.0.0",
-		"@tanstack/react-router": ">=1.0.0",
-		"react-router": ">=7.0.0"
-	},
-	"peerDependenciesMeta": {
-		"@remix-run/react": {
-			"optional": true
-		},
-		"mermaid": {
-			"optional": true
-		},
-		"katex": {
-			"optional": true
-		},
-		"@tanstack/react-router": {
-			"optional": true
-		},
-		"react-router": {
-			"optional": true
-		}
-	}
+  "name": "fromsrc",
+  "version": "0.0.21",
+  "description": "documentation framework for developers",
+  "homepage": "https://github.com/fromsrc/fromsrc",
+  "bugs": {
+    "url": "https://github.com/fromsrc/fromsrc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fromsrc/fromsrc.git"
+  },
+  "files": [
+    "dist",
+    "styles"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js"
+    },
+    "./react-router": {
+      "types": "./dist/reactrouter.d.ts",
+      "import": "./dist/reactrouter.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js"
+    },
+    "./tanstack": {
+      "types": "./dist/tanstack.d.ts",
+      "import": "./dist/tanstack.js"
+    },
+    "./remix": {
+      "types": "./dist/remix.d.ts",
+      "import": "./dist/remix.js"
+    },
+    "./astro": {
+      "types": "./dist/astro.d.ts",
+      "import": "./dist/astro.js"
+    },
+    "./readtime": {
+      "types": "./dist/readtime.d.ts",
+      "import": "./dist/readtime.js"
+    },
+    "./searchscore": {
+      "types": "./dist/searchscore.d.ts",
+      "import": "./dist/searchscore.js"
+    },
+    "./searchindex": {
+      "types": "./dist/searchindex.d.ts",
+      "import": "./dist/searchindex.js"
+    },
+    "./searchpolicy": {
+      "types": "./dist/searchpolicy.d.ts",
+      "import": "./dist/searchpolicy.js"
+    },
+    "./llms": {
+      "types": "./dist/llms.d.ts",
+      "import": "./dist/llms.js"
+    },
+    "./openapi": {
+      "types": "./dist/openapi.d.ts",
+      "import": "./dist/openapi.js"
+    },
+    "./algolia": {
+      "types": "./dist/algolia.d.ts",
+      "import": "./dist/algolia.js"
+    },
+    "./orama": {
+      "types": "./dist/orama.d.ts",
+      "import": "./dist/orama.js"
+    },
+    "./styles/reset.css": "./styles/reset.css"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "^3.1.0",
+    "@shikijs/rehype": "^3.0.0",
+    "@shikijs/transformers": "^3.22.0",
+    "gray-matter": "^4.0.3",
+    "next-mdx-remote": "^6.0.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^3.0.0",
+    "unist-util-visit": "^5.1.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@remix-run/react": "^2.17.1",
+    "@tanstack/react-router": "^1.133.42",
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4.0.4",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "react-router": "^7.9.5",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.0",
+    "unified": "^11.0.5"
+  },
+  "peerDependencies": {
+    "@remix-run/react": ">=2.0.0",
+    "@tanstack/react-router": ">=1.0.0",
+    "katex": ">=0.16.0",
+    "mermaid": ">=10.0.0",
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "react-router": ">=7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@remix-run/react": {
+      "optional": true
+    },
+    "mermaid": {
+      "optional": true
+    },
+    "katex": {
+      "optional": true
+    },
+    "@tanstack/react-router": {
+      "optional": true
+    },
+    "react-router": {
+      "optional": true
+    }
+  }
 }

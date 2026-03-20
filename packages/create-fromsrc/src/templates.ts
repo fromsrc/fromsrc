@@ -1,141 +1,145 @@
-import type { Framework } from "./frameworks"
+import type { Framework } from "./frameworks";
 
 export function packagejson(name: string, framework: Framework): string {
-	const base = {
-		name,
-		version: "0.0.0",
-		private: true,
-		engines: {
-			node: "^20.19.0 || >=22.12.0",
-		},
-		dependencies: {
-			fromsrc: "latest",
-			react: "^19.0.0",
-			"react-dom": "^19.0.0",
-		},
-		devDependencies: {
-			"@types/node": "^22.0.0",
-			"@types/react": "^19.0.0",
-			"@types/react-dom": "^19.0.0",
-			typescript: "^5.0.0",
-		},
-	}
+  const base = {
+    dependencies: {
+      fromsrc: "latest",
+      react: "^19.0.0",
+      "react-dom": "^19.0.0",
+    },
+    devDependencies: {
+      "@types/node": "^22.0.0",
+      "@types/react": "^19.0.0",
+      "@types/react-dom": "^19.0.0",
+      typescript: "^5.0.0",
+    },
+    engines: {
+      node: "^20.19.0 || >=22.12.0",
+    },
+    name,
+    private: true,
+    version: "0.0.0",
+  };
 
-	if (framework === "next.js") {
-		return JSON.stringify(
-			{
-				...base,
-				scripts: {
-					dev: "next dev",
-					"dev:up": "bun dev",
-					"dev:status": "echo dev server runs on bun dev",
-					"dev:down": "echo stop dev with ctrl+c",
-					build: "next build",
-					start: "next start",
-					typecheck: "tsc --noEmit",
-				},
-				dependencies: {
-					...base.dependencies,
-					next: "^16.0.0",
-					"next-mdx-remote": "^6.0.0",
-				},
-				devDependencies: {
-					...base.devDependencies,
-					"@tailwindcss/postcss": "^4.0.0",
-					postcss: "^8.0.0",
-					tailwindcss: "^4.0.0",
-				},
-			},
-			null,
-			"\t",
-		)
-	}
+  if (framework === "next.js") {
+    return JSON.stringify(
+      {
+        ...base,
+        dependencies: {
+          ...base.dependencies,
+          next: "^16.0.0",
+          "next-mdx-remote": "^6.0.0",
+        },
+        devDependencies: {
+          ...base.devDependencies,
+          "@tailwindcss/postcss": "^4.0.0",
+          postcss: "^8.0.0",
+          tailwindcss: "^4.0.0",
+        },
+        scripts: {
+          build: "next build",
+          dev: "next dev",
+          "dev:down": "echo stop dev with ctrl+c",
+          "dev:status": "echo dev server runs on bun dev",
+          "dev:up": "bun dev",
+          start: "next start",
+          typecheck: "tsc --noEmit",
+        },
+      },
+      null,
+      "\t"
+    );
+  }
 
-	if (framework === "astro") {
-		return JSON.stringify(
-			{
-				...base,
-				scripts: {
-					dev: "astro dev",
-					"dev:up": "bun dev",
-					"dev:status": "echo dev server runs on bun dev",
-					"dev:down": "echo stop dev with ctrl+c",
-					build: "astro build",
-					start: "astro preview",
-					typecheck: "tsc --noEmit",
-				},
-				dependencies: {
-					...base.dependencies,
-					astro: "^5.0.0",
-					marked: "^16.4.1",
-				},
-				devDependencies: {
-					...base.devDependencies,
-				},
-			},
-			null,
-			"\t",
-		)
-	}
+  if (framework === "astro") {
+    return JSON.stringify(
+      {
+        ...base,
+        dependencies: {
+          ...base.dependencies,
+          astro: "^5.0.0",
+          marked: "^16.4.1",
+        },
+        devDependencies: {
+          ...base.devDependencies,
+        },
+        scripts: {
+          build: "astro build",
+          dev: "astro dev",
+          "dev:down": "echo stop dev with ctrl+c",
+          "dev:status": "echo dev server runs on bun dev",
+          "dev:up": "bun dev",
+          start: "astro preview",
+          typecheck: "tsc --noEmit",
+        },
+      },
+      null,
+      "\t"
+    );
+  }
 
-	if (framework === "remix") {
-		return JSON.stringify(
-			{
-				...base,
-				scripts: {
-					dev: "remix vite:dev",
-					"dev:up": "bun dev",
-					"dev:status": "echo dev server runs on bun dev",
-					"dev:down": "echo stop dev with ctrl+c",
-					build: "remix vite:build",
-					start: "remix-serve ./build/server/index.js",
-					typecheck: "tsc --noEmit",
-				},
-				dependencies: {
-					...base.dependencies,
-					"@remix-run/node": "^2.17.2",
-					"@remix-run/react": "^2.17.2",
-					marked: "^16.4.1",
-				},
-				devDependencies: {
-					...base.devDependencies,
-					"@remix-run/dev": "^2.17.2",
-					vite: "^7.1.12",
-				},
-			},
-			null,
-			"\t",
-		)
-	}
+  if (framework === "remix") {
+    return JSON.stringify(
+      {
+        ...base,
+        dependencies: {
+          ...base.dependencies,
+          "@remix-run/node": "^2.17.2",
+          "@remix-run/react": "^2.17.2",
+          marked: "^16.4.1",
+        },
+        devDependencies: {
+          ...base.devDependencies,
+          "@remix-run/dev": "^2.17.2",
+          vite: "^7.1.12",
+        },
+        scripts: {
+          build: "remix vite:build",
+          dev: "remix vite:dev",
+          "dev:down": "echo stop dev with ctrl+c",
+          "dev:status": "echo dev server runs on bun dev",
+          "dev:up": "bun dev",
+          start: "remix-serve ./build/server/index.js",
+          typecheck: "tsc --noEmit",
+        },
+      },
+      null,
+      "\t"
+    );
+  }
 
-	if (framework === "react-router" || framework === "vite" || framework === "tanstack") {
-		return JSON.stringify(
-			{
-				...base,
-				scripts: {
-					dev: "vite",
-					"dev:up": "bun dev",
-					"dev:status": "echo dev server runs on bun dev",
-					"dev:down": "echo stop dev with ctrl+c",
-					build: "vite build",
-					start: "vite preview",
-					typecheck: "tsc --noEmit",
-				},
-				dependencies: {
-					...base.dependencies,
-					marked: "^16.4.1",
-				},
-				devDependencies: {
-					...base.devDependencies,
-					vite: "^7.1.12",
-				},
-			},
-			null,
-			"\t",
-		)
-	}
+  if (
+    framework === "react-router" ||
+    framework === "vite" ||
+    framework === "tanstack"
+  ) {
+    return JSON.stringify(
+      {
+        ...base,
+        dependencies: {
+          ...base.dependencies,
+          marked: "^16.4.1",
+        },
+        devDependencies: {
+          ...base.devDependencies,
+          vite: "^7.1.12",
+        },
+        scripts: {
+          build: "vite build",
+          dev: "vite",
+          "dev:down": "echo stop dev with ctrl+c",
+          "dev:status": "echo dev server runs on bun dev",
+          "dev:up": "bun dev",
+          start: "vite preview",
+          typecheck: "tsc --noEmit",
+        },
+      },
+      null,
+      "\t"
+    );
+  }
 
-	throw new Error(`unsupported framework: ${framework}`)
+  throw new Error(`unsupported framework: ${framework}`);
 }
 
 export const nextconfig = `import type { NextConfig } from "next"
@@ -143,77 +147,80 @@ export const nextconfig = `import type { NextConfig } from "next"
 const config: NextConfig = {}
 
 export default config
-`
+`;
 
 export function tsconfig(framework: Framework) {
-	if (framework === "astro") {
-		return JSON.stringify(
-			{
-				extends: "astro/tsconfigs/strict",
-				include: [".astro/types.d.ts", "**/*"],
-				exclude: ["dist"],
-			},
-			null,
-			"\t",
-		)
-	}
+  if (framework === "astro") {
+    return JSON.stringify(
+      {
+        exclude: ["dist"],
+        extends: "astro/tsconfigs/strict",
+        include: [".astro/types.d.ts", "**/*"],
+      },
+      null,
+      "\t"
+    );
+  }
 
-	if (framework === "remix") {
-		return JSON.stringify(
-			{
-				compilerOptions: {
-					target: "ES2022",
-					lib: ["DOM", "DOM.Iterable", "ES2022"],
-					module: "ESNext",
-					moduleResolution: "Bundler",
-					jsx: "react-jsx",
-					types: ["@remix-run/node", "vite/client"],
-					strict: true,
-					resolveJsonModule: true,
-					noEmit: true,
-					allowJs: true,
-					esModuleInterop: true,
-					isolatedModules: true,
-					skipLibCheck: true,
-				},
-				include: ["**/*.ts", "**/*.tsx"],
-				exclude: ["node_modules"],
-			},
-			null,
-			"\t",
-		)
-	}
+  if (framework === "remix") {
+    return JSON.stringify(
+      {
+        compilerOptions: {
+          allowJs: true,
+          esModuleInterop: true,
+          isolatedModules: true,
+          jsx: "react-jsx",
+          lib: ["DOM", "DOM.Iterable", "ES2022"],
+          module: "ESNext",
+          moduleResolution: "Bundler",
+          noEmit: true,
+          resolveJsonModule: true,
+          skipLibCheck: true,
+          strict: true,
+          target: "ES2022",
+          types: ["@remix-run/node", "vite/client"],
+        },
+        exclude: ["node_modules"],
+        include: ["**/*.ts", "**/*.tsx"],
+      },
+      null,
+      "\t"
+    );
+  }
 
-	return JSON.stringify(
-		{
-			compilerOptions: {
-				target: "ES2017",
-				lib: ["dom", "dom.iterable", "esnext"],
-				allowJs: true,
-				skipLibCheck: true,
-				strict: true,
-				noEmit: true,
-				esModuleInterop: true,
-				module: "esnext",
-				moduleResolution: "bundler",
-				resolveJsonModule: true,
-				isolatedModules: true,
-				jsx: framework === "next.js" ? "preserve" : "react-jsx",
-				incremental: true,
-				plugins: framework === "next.js" ? [{ name: "next" }] : [],
-				paths: { "@/*": ["./*"] },
-			},
-			include: framework === "next.js" ? ["next-env.d.ts", "**/*.ts", "**/*.tsx"] : ["**/*.ts", "**/*.tsx"],
-			exclude: ["node_modules"],
-		},
-		null,
-		"\t",
-	)
+  return JSON.stringify(
+    {
+      compilerOptions: {
+        allowJs: true,
+        esModuleInterop: true,
+        incremental: true,
+        isolatedModules: true,
+        jsx: framework === "next.js" ? "preserve" : "react-jsx",
+        lib: ["dom", "dom.iterable", "esnext"],
+        module: "esnext",
+        moduleResolution: "bundler",
+        noEmit: true,
+        paths: { "@/*": ["./*"] },
+        plugins: framework === "next.js" ? [{ name: "next" }] : [],
+        resolveJsonModule: true,
+        skipLibCheck: true,
+        strict: true,
+        target: "ES2017",
+      },
+      exclude: ["node_modules"],
+      include:
+        framework === "next.js"
+          ? ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+          : ["**/*.ts", "**/*.tsx"],
+    },
+    null,
+    "\t"
+  );
 }
 
 export const nextenv = `/// <reference types="next" />
 /// <reference types="next/image-types/global" />
-`
+`;
 
 export const tailwindconfig = `import type { Config } from "tailwindcss"
 
@@ -226,14 +233,14 @@ const config: Config = {
 }
 
 export default config
-`
+`;
 
 export const postcssconfig = `export default {
 \tplugins: {
 \t\t"@tailwindcss/postcss": {},
 \t},
 }
-`
+`;
 
 export const nextglobalscss = `@import "tailwindcss";
 
@@ -287,7 +294,7 @@ export const nextglobalscss = `@import "tailwindcss";
 \t\tbackground-color: transparent !important;
 \t}
 }
-`
+`;
 
 export const globalscss = `* {
 \tbox-sizing: border-box;
@@ -312,15 +319,15 @@ a {
 \tcolor: inherit;
 \ttext-decoration: none;
 }
-`
+`;
 
 export const gitignore = `node_modules
 .next
 dist
-`
+`;
 
 export function browserentry() {
-	return `import { StrictMode } from "react"
+  return `import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { app } from "./app"
 import "./globals.css"
@@ -333,7 +340,7 @@ if (root) {
 \t\t</StrictMode>,
 \t)
 }
-`
+`;
 }
 
 export const browserapp = `import { marked } from "marked"
@@ -384,7 +391,7 @@ export function app() {
 \t\t</div>
 \t)
 }
-`
+`;
 
 export const vitehtml = `<!doctype html>
 <html lang="en">
@@ -398,16 +405,16 @@ export const vitehtml = `<!doctype html>
 \t\t<script type="module" src="/src/main.tsx"></script>
 \t</body>
 </html>
-`
+`;
 
 export const astroconfig = `import { defineConfig } from "astro/config"
 
 export default defineConfig({})
-`
+`;
 
 export const astroindex = `---
 return Astro.redirect("/docs")
----`
+---`;
 
 export const astropage = `---
 import { marked } from "marked"
@@ -453,7 +460,7 @@ const links = Array.from(doc.matchAll(/^##\\s+(.+)$/gm))
 \t\t</div>
 \t</body>
 </html>
-`
+`;
 
 export const astroenv = `/// <reference types="astro/client" />
 /// <reference types="vite/client" />
@@ -462,7 +469,7 @@ declare module "*.mdx?raw" {
 \tconst value: string
 \texport default value
 }
-`
+`;
 
 export const rawenv = `/// <reference types="vite/client" />
 
@@ -470,7 +477,7 @@ declare module "*.mdx?raw" {
 \tconst value: string
 \texport default value
 }
-`
+`;
 
 export const remixviteconfig = `import { vitePlugin as remix } from "@remix-run/dev"
 import { defineConfig } from "vite"
@@ -478,7 +485,7 @@ import { defineConfig } from "vite"
 export default defineConfig({
 \tplugins: [remix()],
 })
-`
+`;
 
 export const remixroot = `import {
 \tLinks,
@@ -505,7 +512,7 @@ export default function Root() {
 \t\t</html>
 \t)
 }
-`
+`;
 
 export const remixrootindex = `import { redirect } from "@remix-run/node"
 
@@ -516,7 +523,7 @@ export async function loader() {
 export default function Index() {
 \treturn null
 }
-`
+`;
 
 export const remixdocs = `import { marked } from "marked"
 import doc from "../../content/docs/index.mdx?raw"
@@ -558,4 +565,4 @@ export default function Docs() {
 \t\t</div>
 \t)
 }
-`
+`;

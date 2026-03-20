@@ -1,4 +1,5 @@
 import { z } from "fromsrc";
+
 import { segmentmdregex, segmentregex } from "@/app/api/_lib/slugpattern";
 
 const segment = z.string().trim().min(1).max(120).regex(segmentregex);
@@ -8,10 +9,14 @@ export const slugparams = z.object({ slug: z.array(segment).default([]) });
 export const slugparamsmd = z.object({ slug: z.array(segmentmd).default([]) });
 
 export function normalizeslug(slug: string[]): string[] {
-	if (slug.length === 0) return slug;
-	const next = [...slug];
-	const last = next[next.length - 1];
-	if (!last) return next;
-	next[next.length - 1] = last.replace(/\.md$/, "");
-	return next;
+  if (slug.length === 0) {
+    return slug;
+  }
+  const next = [...slug];
+  const last = next.at(-1);
+  if (!last) {
+    return next;
+  }
+  next[next.length - 1] = last.replace(/\.md$/, "");
+  return next;
 }

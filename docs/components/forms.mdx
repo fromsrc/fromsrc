@@ -13,9 +13,9 @@ text input with label, error, and hint support.
 ### usage
 
 ```tsx
-import { Input } from "fromsrc/client"
+import { Input } from "fromsrc/client";
 
-<Input label="email" placeholder="you@example.com" />
+<Input label="email" placeholder="you@example.com" />;
 ```
 
 <Input label="email" placeholder="you@example.com" />
@@ -42,14 +42,14 @@ import { Input } from "fromsrc/client"
 
 ### props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| variant | "default" \| "error" | "default" | visual style |
-| size | "sm" \| "md" \| "lg" | "md" | input size |
-| label | ReactNode | - | accessible label |
-| error | ReactNode | - | error message |
-| hint | ReactNode | - | helper text |
-| tooltip | ReactNode | - | help text shown on hover |
+| prop    | type                 | default   | description              |
+| ------- | -------------------- | --------- | ------------------------ |
+| variant | "default" \| "error" | "default" | visual style             |
+| size    | "sm" \| "md" \| "lg" | "md"      | input size               |
+| label   | ReactNode            | -         | accessible label         |
+| error   | ReactNode            | -         | error message            |
+| hint    | ReactNode            | -         | helper text              |
+| tooltip | ReactNode            | -         | help text shown on hover |
 
 ## button
 
@@ -58,9 +58,9 @@ interactive button with loading state.
 ### usage
 
 ```tsx
-import { Button } from "fromsrc/client"
+import { Button } from "fromsrc/client";
 
-<Button variant="primary">submit</Button>
+<Button variant="primary">submit</Button>;
 ```
 
 <Button variant="primary">submit</Button>
@@ -84,15 +84,17 @@ import { Button } from "fromsrc/client"
 
 ### loading
 
-<Button variant="primary" loading>saving...</Button>
+<Button variant="primary" loading>
+  saving...
+</Button>
 
 ### props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| variant | "default" \| "primary" \| "ghost" \| "danger" | "default" | visual style |
-| size | "sm" \| "md" \| "lg" | "md" | button size |
-| loading | boolean | false | show loading spinner |
+| prop    | type                                          | default   | description          |
+| ------- | --------------------------------------------- | --------- | -------------------- |
+| variant | "default" \| "primary" \| "ghost" \| "danger" | "default" | visual style         |
+| size    | "sm" \| "md" \| "lg"                          | "md"      | button size          |
+| loading | boolean                                       | false     | show loading spinner |
 
 ## select
 
@@ -101,7 +103,7 @@ dropdown select with keyboard navigation.
 ### usage
 
 ```tsx
-import { Select } from "fromsrc/client"
+import { Select } from "fromsrc/client";
 
 <Select
   options={[
@@ -110,7 +112,7 @@ import { Select } from "fromsrc/client"
     { value: "svelte", label: "svelte" },
   ]}
   placeholder="choose framework"
-/>
+/>;
 ```
 
 <Select
@@ -166,25 +168,25 @@ import { Select } from "fromsrc/client"
 
 ### props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| options | SelectOption[] | required | list of options |
-| value | string | - | controlled value |
-| defaultValue | string | "" | uncontrolled default |
-| onChange | (value: string) => void | - | change callback |
-| placeholder | string | "select..." | placeholder text |
-| disabled | boolean | false | disable select |
-| error | ReactNode | - | error message |
-| label | ReactNode | - | accessible label |
-| tooltip | ReactNode | - | help text shown on hover |
+| prop         | type                    | default     | description              |
+| ------------ | ----------------------- | ----------- | ------------------------ |
+| options      | SelectOption[]          | required    | list of options          |
+| value        | string                  | -           | controlled value         |
+| defaultValue | string                  | ""          | uncontrolled default     |
+| onChange     | (value: string) => void | -           | change callback          |
+| placeholder  | string                  | "select..." | placeholder text         |
+| disabled     | boolean                 | false       | disable select           |
+| error        | ReactNode               | -           | error message            |
+| label        | ReactNode               | -           | accessible label         |
+| tooltip      | ReactNode               | -           | help text shown on hover |
 
 ### SelectOption
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| value | string | required | option value |
-| label | string | required | display text |
-| disabled | boolean | false | disable option |
+| prop     | type    | default  | description    |
+| -------- | ------- | -------- | -------------- |
+| value    | string  | required | option value   |
+| label    | string  | required | display text   |
+| disabled | boolean | false    | disable option |
 
 ## checkbox
 
@@ -193,9 +195,9 @@ checkbox input with label and indeterminate state.
 ### usage
 
 ```tsx
-import { Checkbox } from "fromsrc/client"
+import { Checkbox } from "fromsrc/client";
 
-<Checkbox label="accept terms" />
+<Checkbox label="accept terms" />;
 ```
 
 <Checkbox label="accept terms" />
@@ -222,13 +224,13 @@ import { Checkbox } from "fromsrc/client"
 
 ### props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| label | ReactNode | - | accessible label |
-| size | "sm" \| "md" \| "lg" | "md" | checkbox size |
-| indeterminate | boolean | false | show indeterminate state |
-| error | ReactNode | - | error message |
-| tooltip | ReactNode | - | help text shown on hover |
+| prop          | type                 | default | description              |
+| ------------- | -------------------- | ------- | ------------------------ |
+| label         | ReactNode            | -       | accessible label         |
+| size          | "sm" \| "md" \| "lg" | "md"    | checkbox size            |
+| indeterminate | boolean              | false   | show indeterminate state |
+| error         | ReactNode            | -       | error message            |
+| tooltip       | ReactNode            | -       | help text shown on hover |
 
 ## switch
 
@@ -237,12 +239,12 @@ toggle switch for boolean values.
 ### usage
 
 ```tsx
-import { Switch } from "fromsrc/client"
-import { useState } from "react"
+import { Switch } from "fromsrc/client";
+import { useState } from "react";
 
 function Example() {
-  const [on, setOn] = useState(false)
-  return <Switch label="notifications" checked={on} onChange={setOn} />
+  const [on, setOn] = useState(false);
+  return <Switch label="notifications" checked={on} onChange={setOn} />;
 }
 ```
 
@@ -266,14 +268,14 @@ function Example() {
 
 ### props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| checked | boolean | false | whether switch is on |
-| onChange | (checked: boolean) => void | - | toggle callback |
-| size | "sm" \| "md" \| "lg" | "md" | switch size |
-| label | string | - | accessible label |
-| disabled | boolean | false | disable switch |
-| tooltip | ReactNode | - | help text shown on hover |
+| prop     | type                       | default | description              |
+| -------- | -------------------------- | ------- | ------------------------ |
+| checked  | boolean                    | false   | whether switch is on     |
+| onChange | (checked: boolean) => void | -       | toggle callback          |
+| size     | "sm" \| "md" \| "lg"       | "md"    | switch size              |
+| label    | string                     | -       | accessible label         |
+| disabled | boolean                    | false   | disable switch           |
+| tooltip  | ReactNode                  | -       | help text shown on hover |
 
 ## autofill
 
@@ -282,7 +284,7 @@ search input with autocomplete suggestions.
 ### usage
 
 ```tsx
-import { Autofill } from "fromsrc/client"
+import { Autofill } from "fromsrc/client";
 
 <Autofill
   items={[
@@ -291,7 +293,7 @@ import { Autofill } from "fromsrc/client"
     { id: "3", label: "python" },
   ]}
   placeholder="search languages"
-/>
+/>;
 ```
 
 <Autofill
@@ -308,10 +310,7 @@ import { Autofill } from "fromsrc/client"
 ### with selection callback
 
 ```tsx
-<Autofill
-  items={items}
-  onSelect={(item) => console.log("selected:", item)}
-/>
+<Autofill items={items} onSelect={(item) => console.log("selected:", item)} />
 ```
 
 ### features
@@ -324,21 +323,21 @@ import { Autofill } from "fromsrc/client"
 
 ### props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| items | AutofillItem[] | required | list of suggestions |
-| placeholder | string | "search..." | placeholder text |
-| value | string | - | controlled value |
-| onChange | (value: string) => void | - | input change callback |
-| onSelect | (item: AutofillItem) => void | - | selection callback |
+| prop        | type                         | default     | description           |
+| ----------- | ---------------------------- | ----------- | --------------------- |
+| items       | AutofillItem[]               | required    | list of suggestions   |
+| placeholder | string                       | "search..." | placeholder text      |
+| value       | string                       | -           | controlled value      |
+| onChange    | (value: string) => void      | -           | input change callback |
+| onSelect    | (item: AutofillItem) => void | -           | selection callback    |
 
 ### AutofillItem
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| id | string | required | unique identifier |
-| label | string | required | display text |
-| value | string | - | value when selected (defaults to label) |
+| prop  | type   | default  | description                             |
+| ----- | ------ | -------- | --------------------------------------- |
+| id    | string | required | unique identifier                       |
+| label | string | required | display text                            |
+| value | string | -        | value when selected (defaults to label) |
 
 ## radio
 
@@ -347,13 +346,13 @@ radio button group for selecting one option from a set.
 ### usage
 
 ```tsx
-import { Radio, RadioGroup } from "fromsrc/client"
+import { Radio, RadioGroup } from "fromsrc/client";
 
 <RadioGroup label="plan">
   <Radio value="free" label="free" />
   <Radio value="pro" label="pro" />
   <Radio value="team" label="team" />
-</RadioGroup>
+</RadioGroup>;
 ```
 
 <RadioGroup label="plan" defaultValue="pro">
@@ -396,24 +395,24 @@ import { Radio, RadioGroup } from "fromsrc/client"
 
 ### RadioGroup props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| value | string | - | controlled value |
-| defaultValue | string | - | uncontrolled default |
-| onChange | (value: string) => void | - | change callback |
-| name | string | - | form field name |
-| size | "sm" \| "md" \| "lg" | "md" | radio size |
-| label | string | - | group label for accessibility |
-| orientation | "horizontal" \| "vertical" | "vertical" | layout direction |
-| disabled | boolean | false | disable all radios |
+| prop         | type                       | default    | description                   |
+| ------------ | -------------------------- | ---------- | ----------------------------- |
+| value        | string                     | -          | controlled value              |
+| defaultValue | string                     | -          | uncontrolled default          |
+| onChange     | (value: string) => void    | -          | change callback               |
+| name         | string                     | -          | form field name               |
+| size         | "sm" \| "md" \| "lg"       | "md"       | radio size                    |
+| label        | string                     | -          | group label for accessibility |
+| orientation  | "horizontal" \| "vertical" | "vertical" | layout direction              |
+| disabled     | boolean                    | false      | disable all radios            |
 
 ### Radio props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| value | string | required | unique value for this option |
-| label | ReactNode | - | accessible label |
-| disabled | boolean | false | disable this radio |
+| prop     | type      | default  | description                  |
+| -------- | --------- | -------- | ---------------------------- |
+| value    | string    | required | unique value for this option |
+| label    | ReactNode | -        | accessible label             |
+| disabled | boolean   | false    | disable this radio           |
 
 ## textarea
 
@@ -422,9 +421,9 @@ multi-line text input with autoresize and character count.
 ### usage
 
 ```tsx
-import { Textarea } from "fromsrc/client"
+import { Textarea } from "fromsrc/client";
 
-<Textarea label="message" placeholder="type here..." />
+<Textarea label="message" placeholder="type here..." />;
 ```
 
 <Textarea label="message" placeholder="type here..." />
@@ -447,7 +446,12 @@ import { Textarea } from "fromsrc/client"
 
 ### character count
 
-<Textarea label="tweet" maxLength={280} showCount placeholder="what's happening?" />
+<Textarea
+  label="tweet"
+  maxLength={280}
+  showCount
+  placeholder="what's happening?"
+/>
 
 ### autoresize
 
@@ -459,14 +463,14 @@ import { Textarea } from "fromsrc/client"
 
 ### props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| variant | "default" \| "error" | "default" | visual style |
-| size | "sm" \| "md" \| "lg" | "md" | textarea size |
-| label | ReactNode | - | accessible label |
-| error | ReactNode | - | error message |
-| hint | ReactNode | - | helper text |
-| autoresize | boolean | false | auto-resize based on content |
-| maxLength | number | - | maximum character count |
-| showCount | boolean | false | show character count |
-| tooltip | ReactNode | - | help text shown on hover |
+| prop       | type                 | default   | description                  |
+| ---------- | -------------------- | --------- | ---------------------------- |
+| variant    | "default" \| "error" | "default" | visual style                 |
+| size       | "sm" \| "md" \| "lg" | "md"      | textarea size                |
+| label      | ReactNode            | -         | accessible label             |
+| error      | ReactNode            | -         | error message                |
+| hint       | ReactNode            | -         | helper text                  |
+| autoresize | boolean              | false     | auto-resize based on content |
+| maxLength  | number               | -         | maximum character count      |
+| showCount  | boolean              | false     | show character count         |
+| tooltip    | ReactNode            | -         | help text shown on hover     |

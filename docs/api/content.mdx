@@ -11,21 +11,29 @@ utilities for loading mdx content from the filesystem.
 load a single document by slug.
 
 ```tsx
-import { getDoc } from "fromsrc"
+import { getDoc } from "fromsrc";
 
-const doc = await getDoc("docs", ["components", "button"])
+const doc = await getDoc("docs", ["components", "button"]);
 // loads docs/components/button.mdx
 
 if (doc) {
-  console.log(doc.title)
-  console.log(doc.content)
+  console.log(doc.title);
+  console.log(doc.content);
 }
 ```
 
 <TypeTable
   data={{
-    dir: { type: "string", required: true, description: "directory containing mdx files" },
-    slug: { type: "string[]", required: true, description: "path segments to the document" },
+    dir: {
+      type: "string",
+      required: true,
+      description: "directory containing mdx files",
+    },
+    slug: {
+      type: "string[]",
+      required: true,
+      description: "path segments to the document",
+    },
   }}
 />
 
@@ -35,12 +43,12 @@ returns `Doc | null`. null if the file doesn't exist.
 
 ```typescript
 interface Doc {
-  slug: string        // "components/button"
-  title: string       // from frontmatter
-  description?: string
-  order?: number
-  content: string     // raw mdx content
-  data: Record<string, unknown>  // all frontmatter
+  slug: string; // "components/button"
+  title: string; // from frontmatter
+  description?: string;
+  order?: number;
+  content: string; // raw mdx content
+  data: Record<string, unknown>; // all frontmatter
 }
 ```
 
@@ -49,18 +57,22 @@ interface Doc {
 load metadata for all documents in a directory.
 
 ```tsx
-import { getAllDocs } from "fromsrc"
+import { getAllDocs } from "fromsrc";
 
-const docs = await getAllDocs("docs")
+const docs = await getAllDocs("docs");
 
-docs.forEach(doc => {
-  console.log(doc.slug, doc.title)
-})
+docs.forEach((doc) => {
+  console.log(doc.slug, doc.title);
+});
 ```
 
 <TypeTable
   data={{
-    dir: { type: "string", required: true, description: "directory to scan recursively" },
+    dir: {
+      type: "string",
+      required: true,
+      description: "directory to scan recursively",
+    },
   }}
 />
 
@@ -70,10 +82,10 @@ returns `DocMeta[]` sorted by order field.
 
 ```typescript
 interface DocMeta {
-  slug: string
-  title: string
-  description?: string
-  order?: number
+  slug: string;
+  title: string;
+  description?: string;
+  order?: number;
 }
 ```
 
@@ -82,9 +94,9 @@ interface DocMeta {
 generate navigation structure from documents.
 
 ```tsx
-import { getNavigation } from "fromsrc"
+import { getNavigation } from "fromsrc";
 
-const nav = await getNavigation("docs")
+const nav = await getNavigation("docs");
 // [
 //   { title: "documentation", items: [...] },
 //   { title: "api", items: [...] },
@@ -99,7 +111,7 @@ groups documents by first folder segment. top-level pages stay in one root secti
 create a typed content loader with custom schema.
 
 ```tsx
-import { defineContent, extendSchema, z } from "fromsrc"
+import { defineContent, extendSchema, z } from "fromsrc";
 
 const content = defineContent({
   dir: "docs",
@@ -107,9 +119,9 @@ const content = defineContent({
     author: z.string().optional(),
     tags: z.array(z.string()).optional(),
   }),
-})
+});
 
-const doc = await content.getDoc(["installation"])
+const doc = await content.getDoc(["installation"]);
 // doc.data.author is typed
 ```
 
@@ -124,10 +136,10 @@ const doc = await content.getDoc(["installation"])
 
 ```typescript
 interface ContentAPI {
-  getDoc: (slug: string[]) => Promise<Doc | null>
-  getAllDocs: () => Promise<DocMeta[]>
-  getNavigation: () => Promise<Section[]>
-  schema: ZodObject
+  getDoc: (slug: string[]) => Promise<Doc | null>;
+  getAllDocs: () => Promise<DocMeta[]>;
+  getNavigation: () => Promise<Section[]>;
+  schema: ZodObject;
 }
 ```
 
@@ -142,7 +154,7 @@ const baseSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   order: z.number().optional(),
-})
+});
 ```
 
 ### extendSchema
@@ -150,12 +162,12 @@ const baseSchema = z.object({
 extend the base schema with additional fields.
 
 ```tsx
-import { extendSchema, z } from "fromsrc"
+import { extendSchema, z } from "fromsrc";
 
 const schema = extendSchema({
   author: z.string(),
   publishedAt: z.string().datetime(),
-})
+});
 ```
 
 ### defineSchema
@@ -163,10 +175,12 @@ const schema = extendSchema({
 define a completely custom schema (not extending base).
 
 ```tsx
-import { defineSchema, z } from "fromsrc"
+import { defineSchema, z } from "fromsrc";
 
-const schema = defineSchema(z.object({
-  name: z.string(),
-  version: z.string(),
-}))
+const schema = defineSchema(
+  z.object({
+    name: z.string(),
+    version: z.string(),
+  })
+);
 ```

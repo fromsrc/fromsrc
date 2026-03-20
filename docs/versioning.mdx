@@ -19,6 +19,7 @@ v1          → v1.docs.site.com
 ```
 
 benefits:
+
 - no content duplication
 - independent builds per version
 - clean git history
@@ -35,6 +36,7 @@ docs/
 ```
 
 benefits:
+
 - single deployment
 - easy diffing between versions
 
@@ -43,7 +45,7 @@ benefits:
 add a version dropdown to your docs:
 
 ```tsx
-import { VersionSelect } from "fromsrc/client"
+import { VersionSelect } from "fromsrc/client";
 
 <VersionSelect
   current="v3"
@@ -52,7 +54,7 @@ import { VersionSelect } from "fromsrc/client"
     { id: "v2", label: "v2", href: "https://v2.docs.site.com" },
     { id: "v1", label: "v1", href: "https://v1.docs.site.com" },
   ]}
-/>
+/>;
 ```
 
 ## routing
@@ -82,9 +84,9 @@ always set canonical to the latest version:
 ```tsx
 export const metadata = {
   alternates: {
-    canonical: "https://docs.example.com/guide"
-  }
-}
+    canonical: "https://docs.example.com/guide",
+  },
+};
 ```
 
 ### sitemap priorities
@@ -105,12 +107,13 @@ export const metadata = {
 show banners on old versions:
 
 ```tsx
-import { Banner } from "fromsrc/client"
+import { Banner } from "fromsrc/client";
 
-{version !== "latest" && (
-  <Banner variant="warning">
-    you're viewing docs for {version}.
-    <a href="/">switch to latest</a>
-  </Banner>
-)}
+{
+  version !== "latest" && (
+    <Banner variant="warning">
+      you're viewing docs for {version}.<a href="/">switch to latest</a>
+    </Banner>
+  );
+}
 ```

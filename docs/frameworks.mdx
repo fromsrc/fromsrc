@@ -30,6 +30,6 @@ all adapter entrypoints also export:
 import { AdapterProvider, nextAdapter } from "fromsrc/next";
 
 export function Shell({ children }: { children: React.ReactNode }) {
-	return <AdapterProvider adapter={nextAdapter}>{children}</AdapterProvider>;
+  return <AdapterProvider adapter={nextAdapter}>{children}</AdapterProvider>;
 }
 ```

@@ -1,28 +1,28 @@
 {
-	"name": "create-fromsrc",
-	"version": "0.0.2",
-	"description": "create a new fromsrc documentation site",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/fromsrc/fromsrc.git"
-	},
-	"homepage": "https://github.com/fromsrc/fromsrc",
-	"bugs": {
-		"url": "https://github.com/fromsrc/fromsrc/issues"
-	},
-	"type": "module",
-	"bin": {
-		"create-fromsrc": "dist/index.js"
-	},
-	"files": [
-		"dist"
-	],
-	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch"
-	},
-	"devDependencies": {
-		"tsup": "^8.5.0",
-		"typescript": "^5.9.0"
-	}
+  "name": "create-fromsrc",
+  "version": "0.0.2",
+  "description": "create a new fromsrc documentation site",
+  "homepage": "https://github.com/fromsrc/fromsrc",
+  "bugs": {
+    "url": "https://github.com/fromsrc/fromsrc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fromsrc/fromsrc.git"
+  },
+  "bin": {
+    "create-fromsrc": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.0"
+  }
 }

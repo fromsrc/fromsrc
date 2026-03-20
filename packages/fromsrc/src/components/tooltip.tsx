@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
-import type { JSX, ReactNode } from "react"
-import { useCallback, useEffect, useId, useRef, useState } from "react"
-import { useEscapeKey } from "../hooks/escapekey"
+import type { JSX, ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+
+import { useEscapeKey } from "../hooks/escapekey";
 
 /**
  * tooltip position state
@@ -10,8 +11,8 @@ import { useEscapeKey } from "../hooks/escapekey"
  * @param y - vertical offset from viewport top
  */
 interface TooltipPosition {
-	x: number
-	y: number
+  x: number;
+  y: number;
 }
 
 /**
@@ -23,84 +24,95 @@ interface TooltipPosition {
  * @example <Tooltip content="copy"><button>...</button></Tooltip>
  */
 export interface TooltipProps {
-	content: ReactNode
-	children: ReactNode
-	side?: "top" | "bottom"
-	delay?: number
+  content: ReactNode;
+  children: ReactNode;
+  side?: "top" | "bottom";
+  delay?: number;
 }
 
-export function Tooltip({ content, children, side = "top", delay = 200 }: TooltipProps): JSX.Element {
-	const [show, setShow] = useState<boolean>(false)
-	const [position, setPosition] = useState<TooltipPosition>({ x: 0, y: 0 })
-	const triggerRef = useRef<HTMLSpanElement>(null)
-	const tooltipRef = useRef<HTMLDivElement>(null)
-	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-	const id = useId()
-	const tooltipId = `tooltip-${id}`
+export function Tooltip({
+  content,
+  children,
+  side = "top",
+  delay = 200,
+}: TooltipProps): JSX.Element {
+  const [show, setShow] = useState<boolean>(false);
+  const [position, setPosition] = useState<TooltipPosition>({ x: 0, y: 0 });
+  const triggerRef = useRef<HTMLSpanElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const id = useId();
+  const tooltipId = `tooltip-${id}`;
 
-	const hide = useCallback((): void => {
-		if (timeoutRef.current) clearTimeout(timeoutRef.current)
-		setShow(false)
-	}, [])
+  const hide = useCallback((): void => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setShow(false);
+  }, []);
 
-	useEffect(() => {
-		return () => {
-			if (timeoutRef.current) clearTimeout(timeoutRef.current)
-		}
-	}, [])
+  useEffect(
+    () => () => {
+      if (timeoutRef.current) {clearTimeout(timeoutRef.current);}
+    },
+    []
+  );
 
-	useEscapeKey(hide, show)
+  useEscapeKey(hide, show);
 
-	const updatePosition = useCallback((): void => {
-		if (!triggerRef.current || !tooltipRef.current) return
+  const updatePosition = useCallback((): void => {
+    if (!triggerRef.current || !tooltipRef.current) {
+      return;
+    }
 
-		const trigger = triggerRef.current.getBoundingClientRect()
-		const tooltip = tooltipRef.current.getBoundingClientRect()
+    const trigger = triggerRef.current.getBoundingClientRect();
+    const tooltip = tooltipRef.current.getBoundingClientRect();
 
-		const x = trigger.left + trigger.width / 2 - tooltip.width / 2
-		const y = side === "top" ? trigger.top - tooltip.height - 8 : trigger.bottom + 8
+    const x = trigger.left + trigger.width / 2 - tooltip.width / 2;
+    const y =
+      side === "top" ? trigger.top - tooltip.height - 8 : trigger.bottom + 8;
 
-		setPosition({ x, y })
-	}, [side])
+    setPosition({ x, y });
+  }, [side]);
 
-	const handleEnter = useCallback((): void => {
-		timeoutRef.current = setTimeout(() => {
-			setShow(true)
-			requestAnimationFrame(updatePosition)
-		}, delay)
-	}, [delay, updatePosition])
+  const handleEnter = useCallback((): void => {
+    timeoutRef.current = setTimeout(() => {
+      setShow(true);
+      requestAnimationFrame(updatePosition);
+    }, delay);
+  }, [delay, updatePosition]);
 
-	return (
-		<>
-			<span
-				ref={triggerRef}
-				onMouseEnter={handleEnter}
-				onMouseLeave={hide}
-				onFocus={handleEnter}
-				onBlur={hide}
-				tabIndex={0}
-				aria-describedby={show ? tooltipId : undefined}
-				className="inline"
-			>
-				{children}
-			</span>
-			{show && (
-				<div
-					ref={tooltipRef}
-					id={tooltipId}
-					role="tooltip"
-					className="fixed z-50 px-2 py-1 text-xs bg-fg text-bg rounded shadow-lg pointer-events-none"
-					style={{ left: position.x, top: position.y }}
-				>
-					{content}
-					<div
-						aria-hidden="true"
-						className={`absolute left-1/2 -translate-x-1/2 w-2 h-2 bg-fg rotate-45 ${
-							side === "top" ? "-bottom-1" : "-top-1"
-						}`}
-					/>
-				</div>
-			)}
-		</>
-	)
+  return (
+    <>
+      <span
+        ref={triggerRef}
+        onMouseEnter={handleEnter}
+        onMouseLeave={hide}
+        onFocus={handleEnter}
+        onBlur={hide}
+        tabIndex={0}
+        aria-describedby={show ? tooltipId : undefined}
+        className="inline"
+      >
+        {children}
+      </span>
+      {show && (
+        <div
+          ref={tooltipRef}
+          id={tooltipId}
+          role="tooltip"
+          className="fixed z-50 px-2 py-1 text-xs bg-fg text-bg rounded shadow-lg pointer-events-none"
+          style={{ left: position.x, top: position.y }}
+        >
+          {content}
+          <div
+            aria-hidden="true"
+            className={`absolute left-1/2 -translate-x-1/2 w-2 h-2 bg-fg rotate-45 ${
+              side === "top" ? "-bottom-1" : "-top-1"
+            }`}
+          />
+        </div>
+      )}
+    </>
+  );
 }

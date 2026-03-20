@@ -44,15 +44,15 @@ const tabs = [
     id: "docs",
     label: "docs",
     href: "/docs",
-    match: ["/docs/guide", "/docs/intro"]
+    match: ["/docs/guide", "/docs/intro"],
   },
   {
     id: "api",
     label: "api",
     href: "/api",
-    match: ["/api/hooks", "/api/components"]
+    match: ["/api/hooks", "/api/components"],
   },
-]
+];
 ```
 
 ## dropdown variant
@@ -68,17 +68,14 @@ for mobile or space-constrained layouts:
 place in sidebar header:
 
 ```tsx
-import { Sidebar, TabNav } from "fromsrc/client"
+import { Sidebar, TabNav } from "fromsrc/client";
 
 function Layout({ children }) {
   return (
-    <Sidebar
-      header={<TabNav tabs={tabs} />}
-      items={items}
-    >
+    <Sidebar header={<TabNav tabs={tabs} />} items={items}>
       {children}
     </Sidebar>
-  )
+  );
 }
 ```
 
@@ -86,16 +83,16 @@ function Layout({ children }) {
 
 ### tabnav
 
-| prop | type | description |
-|------|------|-------------|
+| prop | type     | description     |
+| ---- | -------- | --------------- |
 | tabs | NavTab[] | navigation tabs |
 
 ### navtab
 
-| prop | type | description |
-|------|------|-------------|
-| id | string | unique identifier |
-| label | string | display label |
-| href | string | target url |
-| icon | ReactNode | optional icon |
-| match | string[] | urls to match for active state |
+| prop  | type      | description                    |
+| ----- | --------- | ------------------------------ |
+| id    | string    | unique identifier              |
+| label | string    | display label                  |
+| href  | string    | target url                     |
+| icon  | ReactNode | optional icon                  |
+| match | string[]  | urls to match for active state |

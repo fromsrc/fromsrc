@@ -9,14 +9,9 @@ slide-out navigation for mobile devices.
 ## usage
 
 ```tsx
-import { MobileNav } from "fromsrc/client"
+import { MobileNav } from "fromsrc/client";
 
-<MobileNav
-  title="docs"
-  navigation={navigation}
-  docs={docs}
-  basePath="/docs"
-/>
+<MobileNav title="docs" navigation={navigation} docs={docs} basePath="/docs" />;
 ```
 
 ## with logo
@@ -43,11 +38,11 @@ import { MobileNav } from "fromsrc/client"
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| title | string | - | header title |
-| logo | ReactNode | - | logo element |
-| navigation | SidebarSection[] | - | navigation structure |
-| docs | DocMeta[] | - | docs for search |
-| basePath | string | "/docs" | base path for links |
-| github | string | - | github url |
+| prop       | type             | default | description          |
+| ---------- | ---------------- | ------- | -------------------- |
+| title      | string           | -       | header title         |
+| logo       | ReactNode        | -       | logo element         |
+| navigation | SidebarSection[] | -       | navigation structure |
+| docs       | DocMeta[]        | -       | docs for search      |
+| basePath   | string           | "/docs" | base path for links  |
+| github     | string           | -       | github url           |

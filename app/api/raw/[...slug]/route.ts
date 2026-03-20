@@ -1,22 +1,28 @@
-import { join } from "node:path"
-import { getDoc } from "fromsrc"
-import { slugparams } from "@/app/api/_lib/slug"
-import { send } from "@/app/api/_lib/text"
+import { join } from "node:path";
 
-const docsDir = join(process.cwd(), "docs")
-const cache = "public, max-age=600, s-maxage=86400, stale-while-revalidate=604800"
+import { getDoc } from "fromsrc";
 
-export async function GET(request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
-	const parsed = slugparams.safeParse(await params)
-	if (!parsed.success) {
-		return send(request, "bad request", cache, 400)
-	}
-	const { slug } = parsed.data
+import { slugparams } from "@/app/api/_lib/slug";
+import { send } from "@/app/api/_lib/text";
 
-	const doc = await getDoc(docsDir, slug)
-	if (!doc) {
-		return send(request, "not found", cache, 404)
-	}
+const docsDir = join(process.cwd(), "docs");
+const cache =
+  "public, max-age=600, s-maxage=86400, stale-while-revalidate=604800";
 
-	return send(request, doc.content, cache)
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ slug: string[] }> }
+) {
+  const parsed = slugparams.safeParse(await params);
+  if (!parsed.success) {
+    return send(request, "bad request", cache, 400);
+  }
+  const { slug } = parsed.data;
+
+  const doc = await getDoc(docsDir, slug);
+  if (!doc) {
+    return send(request, "not found", cache, 404);
+  }
+
+  return send(request, doc.content, cache);
 }

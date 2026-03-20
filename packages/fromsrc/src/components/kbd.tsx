@@ -1,54 +1,59 @@
-import { type JSX, type ReactNode, memo } from "react"
+import { memo } from "react";
+import type { JSX, ReactNode } from "react";
 
 /**
  * props for a single keyboard key display
  */
 export interface KbdProps {
-	children: ReactNode
-	className?: string
+  children: ReactNode;
+  className?: string;
 }
 
 function KbdBase({ children, className = "" }: KbdProps): JSX.Element {
-	return (
-		<kbd
-			className={`inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 text-xs font-mono bg-surface border border-line rounded shadow-sm text-muted ${className}`}
-		>
-			{children}
-		</kbd>
-	)
+  return (
+    <kbd
+      className={`inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 text-xs font-mono bg-surface border border-line rounded shadow-sm text-muted ${className}`}
+    >
+      {children}
+    </kbd>
+  );
 }
 
-export const Kbd = memo(KbdBase)
+export const Kbd = memo(KbdBase);
 
 /**
  * props for a keyboard shortcut with multiple keys
  */
 export interface ShortcutProps {
-	keys: string[]
+  keys: string[];
 }
 
 function ShortcutBase({ keys }: ShortcutProps): JSX.Element {
-	const label = keys.join(" + ")
+  const label = keys.join(" + ");
 
-	return (
-		<kbd className="inline-flex items-center gap-0.5" aria-label={label} role="group">
-			{keys.map((key, i) => (
-				<span key={`${i}-${key}`} className="contents">
-					{i > 0 && (
-						<span className="text-muted/50 mx-0.5" aria-hidden="true">
-							+
-						</span>
-					)}
-					<kbd
-						className="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 text-xs font-mono bg-surface border border-line rounded shadow-sm text-muted"
-						aria-hidden="true"
-					>
-						{key}
-					</kbd>
-				</span>
-			))}
-		</kbd>
-	)
+  return (
+    <kbd
+      className="inline-flex items-center gap-0.5"
+      aria-label={label}
+      role="group"
+    >
+      {keys.map((key, i) => (
+        <span key={`${i}-${key}`} className="contents">
+          {i > 0 && (
+            <span className="text-muted/50 mx-0.5" aria-hidden="true">
+              +
+            </span>
+          )}
+          <kbd
+            className="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 text-xs font-mono bg-surface border border-line rounded shadow-sm text-muted"
+            aria-hidden="true"
+          >
+            {key}
+          </kbd>
+        </span>
+      ))}
+    </kbd>
+  );
 }
 
-export const Shortcut = memo(ShortcutBase)
+export const Shortcut = memo(ShortcutBase);

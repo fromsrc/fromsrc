@@ -9,11 +9,11 @@ displays content in a focused overlay dialog.
 ## usage
 
 ```tsx
-import { Modal } from "fromsrc/client"
-import { useState } from "react"
+import { Modal } from "fromsrc/client";
+import { useState } from "react";
 
 function Example() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -22,7 +22,7 @@ function Example() {
         <p>are you sure you want to continue?</p>
       </Modal>
     </>
-  )
+  );
 }
 ```
 
@@ -42,20 +42,18 @@ omit the title for custom layouts.
 
 ```tsx
 <Modal open={open} onClose={onClose}>
-  <div className="p-4">
-    custom header and content
-  </div>
+  <div className="p-4">custom header and content</div>
 </Modal>
 ```
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| open | boolean | required | whether modal is visible |
-| onClose | () => void | required | callback when modal closes |
-| title | string | - | optional title in header |
-| children | ReactNode | required | modal content |
+| prop     | type       | default  | description                |
+| -------- | ---------- | -------- | -------------------------- |
+| open     | boolean    | required | whether modal is visible   |
+| onClose  | () => void | required | callback when modal closes |
+| title    | string     | -        | optional title in header   |
+| children | ReactNode  | required | modal content              |
 
 ## features
 

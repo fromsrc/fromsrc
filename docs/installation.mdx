@@ -71,17 +71,22 @@ add fromsrc to an existing app:
 <Install package="fromsrc" />
 
 <Callout type="info">
-fromsrc adapters are opt-in and tree-shake cleanly.
+  fromsrc adapters are opt-in and tree-shake cleanly.
 </Callout>
 
 <Callout type="info">
-for the smallest bundles, prefer subpath imports like `fromsrc/readtime`, `fromsrc/searchindex`, and `fromsrc/openapi` for utility-only usage.
+  for the smallest bundles, prefer subpath imports like `fromsrc/readtime`,
+  `fromsrc/searchindex`, and `fromsrc/openapi` for utility-only usage.
 </Callout>
 
 for framework-specific walkthroughs, use the manual guides:
 
 <Cards>
-  <Card title="manual guides" description="next.js, react router, tanstack, vite, remix, astro" href="/docs/manual" />
+  <Card
+    title="manual guides"
+    description="next.js, react router, tanstack, vite, remix, astro"
+    href="/docs/manual"
+  />
 </Cards>
 
 ## next adapter
@@ -89,10 +94,10 @@ for framework-specific walkthroughs, use the manual guides:
 use the next.js adapter entry for framework wiring:
 
 ```tsx
-import { AdapterProvider, nextAdapter } from "fromsrc/next"
+import { AdapterProvider, nextAdapter } from "fromsrc/next";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <AdapterProvider adapter={nextAdapter}>{children}</AdapterProvider>
+  return <AdapterProvider adapter={nextAdapter}>{children}</AdapterProvider>;
 }
 ```
 
@@ -101,14 +106,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
 use the react router adapter for browser-router apps:
 
 ```tsx
-import { AdapterProvider, reactRouterAdapter } from "fromsrc/react-router"
+import { AdapterProvider, reactRouterAdapter } from "fromsrc/react-router";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <AdapterProvider adapter={reactRouterAdapter}>
-      {children}
-    </AdapterProvider>
-  )
+    <AdapterProvider adapter={reactRouterAdapter}>{children}</AdapterProvider>
+  );
 }
 ```
 
@@ -117,16 +120,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
 use the vite adapter for custom router stacks:
 
 ```tsx
-import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite"
-import { Link } from "react-router"
+import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite";
+import { Link } from "react-router";
 
 const adapter = createadapter({
   ...viteAdapter,
   Link: ({ href, children }) => <Link to={href}>{children}</Link>,
-})
+});
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <AdapterProvider adapter={adapter}>{children}</AdapterProvider>
+  return <AdapterProvider adapter={adapter}>{children}</AdapterProvider>;
 }
 ```
 
@@ -135,10 +138,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
 use the tanstack adapter for tanstack router apps:
 
 ```tsx
-import { AdapterProvider, tanstackAdapter } from "fromsrc/tanstack"
+import { AdapterProvider, tanstackAdapter } from "fromsrc/tanstack";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <AdapterProvider adapter={tanstackAdapter}>{children}</AdapterProvider>
+  return (
+    <AdapterProvider adapter={tanstackAdapter}>{children}</AdapterProvider>
+  );
 }
 ```
 
@@ -147,10 +152,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
 use the remix adapter for remix routes and navigation:
 
 ```tsx
-import { AdapterProvider, remixAdapter } from "fromsrc/remix"
+import { AdapterProvider, remixAdapter } from "fromsrc/remix";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <AdapterProvider adapter={remixAdapter}>{children}</AdapterProvider>
+  return <AdapterProvider adapter={remixAdapter}>{children}</AdapterProvider>;
 }
 ```
 
@@ -159,10 +164,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
 use the astro adapter for astro integrations with client-rendered docs surfaces:
 
 ```tsx
-import { AdapterProvider, astroAdapter } from "fromsrc/astro"
+import { AdapterProvider, astroAdapter } from "fromsrc/astro";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>
+  return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>;
 }
 ```
 
@@ -191,52 +196,36 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 <Accordion>
   <AccordionItem title="cannot find module 'fromsrc'">
-    ensure fromsrc is installed:
-    ```bash
-    bun add fromsrc
-    ```
+    ensure fromsrc is installed: ```bash bun add fromsrc ```
   </AccordionItem>
   <AccordionItem title="adapter not resolving">
-    verify the subpath import matches your framework:
-    ```tsx
-    import { nextAdapter } from "fromsrc/next"
-    import { reactRouterAdapter } from "fromsrc/react-router"
-    import { viteAdapter } from "fromsrc/vite"
-    import { tanstackAdapter } from "fromsrc/tanstack"
-    import { remixAdapter } from "fromsrc/remix"
-    import { astroAdapter } from "fromsrc/astro"
-    import { parseOpenApi } from "fromsrc/openapi"
-    import { createAlgoliaAdapter } from "fromsrc/algolia"
-    import { createOramaAdapter } from "fromsrc/orama"
-    ```
+    verify the subpath import matches your framework: ```tsx import{" "}
+    {nextAdapter} from "fromsrc/next" import {reactRouterAdapter} from
+    "fromsrc/react-router" import {viteAdapter} from "fromsrc/vite" import{" "}
+    {tanstackAdapter} from "fromsrc/tanstack" import {remixAdapter} from
+    "fromsrc/remix" import {astroAdapter} from "fromsrc/astro" import{" "}
+    {parseOpenApi} from "fromsrc/openapi" import {createAlgoliaAdapter} from
+    "fromsrc/algolia" import {createOramaAdapter} from "fromsrc/orama" ```
   </AccordionItem>
   <AccordionItem title="bundle size got bigger">
-    run the tree-shake regression check:
-    ```bash
-    bun run check:shake
-    ```
-    this validates root, utility, and adapter imports stay inside budget.
+    run the tree-shake regression check: ```bash bun run check:shake ``` this
+    validates root, utility, and adapter imports stay inside budget.
   </AccordionItem>
   <AccordionItem title="search not working">
-    search indexes content from your docs folder. ensure you have `.mdx` files with valid frontmatter:
-    ```yaml
-    ---
-    title: page title
-    description: page description
-    ---
-    ```
+    search indexes content from your docs folder. ensure you have `.mdx` files
+    with valid frontmatter: ```yaml --- title: page title description: page
+    description --- ```
   </AccordionItem>
   <AccordionItem title="styles look wrong">
-    import the fromsrc styles in your root layout or globals.css. check that tailwind is configured correctly.
+    import the fromsrc styles in your root layout or globals.css. check that
+    tailwind is configured correctly.
   </AccordionItem>
   <AccordionItem title="pages not found">
-    verify your catch-all route is at `app/docs/[[...slug]]/page.tsx` and imports from fromsrc correctly.
+    verify your catch-all route is at `app/docs/[[...slug]]/page.tsx` and
+    imports from fromsrc correctly.
   </AccordionItem>
   <AccordionItem title="dev process stuck">
-    restart and inspect logs:
-    ```bash
-    bun run dev:restart
-    bun run dev:tail 80
+    restart and inspect logs: ```bash bun run dev:restart bun run dev:tail 80
     ```
   </AccordionItem>
 </Accordion>

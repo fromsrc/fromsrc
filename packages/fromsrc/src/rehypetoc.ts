@@ -1,86 +1,96 @@
-import type { Plugin } from "unified"
-import type { Element, Root } from "hast"
-import { visit } from "unist-util-visit"
+import type { Element, Root } from "hast";
+import type { Plugin } from "unified";
+import { visit } from "unist-util-visit";
 
 export interface TocEntry {
-	id: string
-	text: string
-	level: number
-	children: TocEntry[]
+  id: string;
+  text: string;
+  level: number;
+  children: TocEntry[];
 }
 
 export interface RehypeTocOptions {
-	minLevel?: number
-	maxLevel?: number
+  minLevel?: number;
+  maxLevel?: number;
 }
 
 function extractText(node: Element): string {
-	let text = ""
-	for (const child of node.children) {
-		if (child.type === "text") {
-			text += child.value
-		} else if (child.type === "element") {
-			text += extractText(child)
-		}
-	}
-	return text
+  let text = "";
+  for (const child of node.children) {
+    if (child.type === "text") {
+      text += child.value;
+    } else if (child.type === "element") {
+      text += extractText(child);
+    }
+  }
+  return text;
 }
 
 const levelMap: Record<string, number> = {
-	h1: 1,
-	h2: 2,
-	h3: 3,
-	h4: 4,
-	h5: 5,
-	h6: 6,
-}
+  h1: 1,
+  h2: 2,
+  h3: 3,
+  h4: 4,
+  h5: 5,
+  h6: 6,
+};
 
-function buildTree(headings: { id: string; text: string; level: number }[]): TocEntry[] {
-	const root: TocEntry[] = []
-	const stack: TocEntry[] = []
+function buildTree(
+  headings: { id: string; text: string; level: number }[]
+): TocEntry[] {
+  const root: TocEntry[] = [];
+  const stack: TocEntry[] = [];
 
-	for (const heading of headings) {
-		const node: TocEntry = { ...heading, children: [] }
+  for (const heading of headings) {
+    const node: TocEntry = { ...heading, children: [] };
 
-		while (stack.length > 0) {
-			const last = stack[stack.length - 1]
-			if (!last || last.level < heading.level) break
-			stack.pop()
-		}
+    while (stack.length > 0) {
+      const last = stack.at(-1);
+      if (!last || last.level < heading.level) {
+        break;
+      }
+      stack.pop();
+    }
 
-		if (stack.length === 0) {
-			root.push(node)
-		} else {
-			const parent = stack[stack.length - 1]
-			if (parent) parent.children.push(node)
-		}
+    if (stack.length === 0) {
+      root.push(node);
+    } else {
+      const parent = stack.at(-1);
+      if (parent) {
+        parent.children.push(node);
+      }
+    }
 
-		stack.push(node)
-	}
+    stack.push(node);
+  }
 
-	return root
+  return root;
 }
 
 export const rehypeToc: Plugin<[RehypeTocOptions?], Root> = (options) => {
-	const min = options?.minLevel ?? 2
-	const max = options?.maxLevel ?? 4
+  const min = options?.minLevel ?? 2;
+  const max = options?.maxLevel ?? 4;
 
-	return (tree: Root, file: { data: Record<string, unknown> }) => {
-		const headings: { id: string; text: string; level: number }[] = []
+  return (tree: Root, file: { data: Record<string, unknown> }) => {
+    const headings: { id: string; text: string; level: number }[] = [];
 
-		visit(tree, "element", (node: Element) => {
-			const level = levelMap[node.tagName]
-			if (!level || level < min || level > max) return
+    visit(tree, "element", (node: Element) => {
+      const level = levelMap[node.tagName];
+      if (!level || level < min || level > max) {
+        return;
+      }
 
-			const raw = node.properties?.id
-			const id = typeof raw === "string" ? raw : ""
-			const text = extractText(node)
-			if (!id || !text) return
+      const raw = node.properties?.id;
+      const id = typeof raw === "string" ? raw : "";
+      const text = extractText(node);
+      if (!id || !text) {
+        return;
+      }
 
-			headings.push({ id, text, level })
-		})
+      headings.push({ id, level, text });
+    });
 
-		file.data["headings"] = headings
-		file.data["toc"] = buildTree(headings)
-	}
-}
+    file.data["headings"] = headings;
+    file.data["toc"] = buildTree(headings);
+  };
+};

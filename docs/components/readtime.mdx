@@ -9,18 +9,18 @@ displays estimated reading time for content based on word count.
 ## usage
 
 ```tsx
-import { ReadTime } from "fromsrc"
+import { ReadTime } from "fromsrc";
 
-<ReadTime content={doc.content} />
+<ReadTime content={doc.content} />;
 ```
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| content | string | required | text content to calculate time from |
-| wpm | number | 200 | words per minute reading speed |
-| className | string | - | additional css classes |
+| prop      | type   | default  | description                         |
+| --------- | ------ | -------- | ----------------------------------- |
+| content   | string | required | text content to calculate time from |
+| wpm       | number | 200      | words per minute reading speed      |
+| className | string | -        | additional css classes              |
 
 ## example
 
@@ -35,8 +35,8 @@ renders as "3 min read"
 you can also use the utility function directly:
 
 ```tsx
-import { calcReadTime } from "fromsrc"
+import { calcReadTime } from "fromsrc";
 
-const minutes = calcReadTime(content)
-const minutes = calcReadTime(content, 250) // custom wpm
+const minutes = calcReadTime(content);
+const minutes = calcReadTime(content, 250); // custom wpm
 ```

@@ -1,164 +1,179 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export interface Heading {
-	id: string
-	text: string
-	level: number
+  id: string;
+  text: string;
+  level: number;
 }
 
 export interface TocState {
-	headings: Heading[]
-	active: string
-	activeRange: string[]
+  headings: Heading[];
+  active: string;
+  activeRange: string[];
 }
 
 function cleanheading(text: string): string {
-	return text.replace(/\s*#+\s*$/, "").trim()
+  return text.replace(/\s*#+\s*$/, "").trim();
 }
 
 export function useToc(multi = false): TocState {
-	const [headings, setHeadings] = useState<Heading[]>([])
-	const [active, setActive] = useState<string>("")
-	const [activeRange, setActiveRange] = useState<string[]>([])
+  const [headings, setHeadings] = useState<Heading[]>([]);
+  const [active, setActive] = useState<string>("");
+  const [activeRange, setActiveRange] = useState<string[]>([]);
 
-	useEffect(() => {
-		function scan() {
-			const elements = document.querySelectorAll("article h2, article h3, article h4, article h5, article h6")
-			const items: Heading[] = []
+  useEffect(() => {
+    function scan() {
+      const elements = document.querySelectorAll(
+        "article h2, article h3, article h4, article h5, article h6"
+      );
+      const items: Heading[] = [];
 
-			elements.forEach((el) => {
-				if (el.id) {
-					const level = Number(el.tagName.replace("H", ""))
-					items.push({
-						id: el.id,
-						text: cleanheading(el.textContent || ""),
-						level: Number.isFinite(level) ? level : 2,
-					})
-				}
-			})
+      elements.forEach((el) => {
+        if (el.id) {
+          const level = Number(el.tagName.replace("H", ""));
+          items.push({
+            id: el.id,
+            level: Number.isFinite(level) ? level : 2,
+            text: cleanheading(el.textContent || ""),
+          });
+        }
+      });
 
-			if (items.length > 0) {
-				setHeadings(items)
-			}
-		}
+      if (items.length > 0) {
+        setHeadings(items);
+      }
+    }
 
-		scan()
+    scan();
 
-		const observer = new MutationObserver(() => {
-			scan()
-		})
+    const observer = new MutationObserver(() => {
+      scan();
+    });
 
-		const article = document.querySelector("article")
-		if (article) {
-			observer.observe(article, { childList: true, subtree: true })
-		}
+    const article = document.querySelector("article");
+    if (article) {
+      observer.observe(article, { childList: true, subtree: true });
+    }
 
-		return () => observer.disconnect()
-	}, [])
+    return () => observer.disconnect();
+  }, []);
 
-	useEffect(() => {
-		if (headings.length === 0) return
+  useEffect(() => {
+    if (headings.length === 0) {
+      return;
+    }
 
-		function findClosest(): string {
-			let closest = headings[0]?.id || ""
-			let minDistance = Infinity
+    function findClosest(): string {
+      let closest = headings[0]?.id || "";
+      let minDistance = Infinity;
 
-			for (const { id } of headings) {
-				const el = document.getElementById(id)
-				if (!el) continue
-				const rect = el.getBoundingClientRect()
-				const distance = Math.abs(rect.top)
-				if (distance < minDistance) {
-					minDistance = distance
-					closest = id
-				}
-			}
+      for (const { id } of headings) {
+        const el = document.querySelector(`#${id}`);
+        if (!el) {
+          continue;
+        }
+        const rect = el.getBoundingClientRect();
+        const distance = Math.abs(rect.top);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closest = id;
+        }
+      }
 
-			return closest
-		}
+      return closest;
+    }
 
-		if (multi) {
-			const visible = new Set<string>()
+    if (multi) {
+      const visible = new Set<string>();
 
-			const observer = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						if (entry.isIntersecting) {
-							visible.add(entry.target.id)
-						} else {
-							visible.delete(entry.target.id)
-						}
-					}
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              visible.add(entry.target.id);
+            } else {
+              visible.delete(entry.target.id);
+            }
+          }
 
-					if (visible.size === 0) {
-						const closest = findClosest()
-						setActive(closest)
-						setActiveRange(closest ? [closest] : [])
-					} else {
-						const ordered = headings.filter((h) => visible.has(h.id))
-						setActive(ordered[0]?.id || "")
-						setActiveRange(ordered.map((h) => h.id))
-					}
-				},
-				{ rootMargin: "0px", threshold: 0.9 },
-			)
+          if (visible.size === 0) {
+            const closest = findClosest();
+            setActive(closest);
+            setActiveRange(closest ? [closest] : []);
+          } else {
+            const ordered = headings.filter((h) => visible.has(h.id));
+            setActive(ordered[0]?.id || "");
+            setActiveRange(ordered.map((h) => h.id));
+          }
+        },
+        { rootMargin: "0px", threshold: 0.9 }
+      );
 
-			for (const { id } of headings) {
-				const el = document.getElementById(id)
-				if (el) observer.observe(el)
-			}
+      for (const { id } of headings) {
+        const el = document.querySelector(`#${id}`);
+        if (el) {
+          observer.observe(el);
+        }
+      }
 
-			return () => observer.disconnect()
-		}
+      return () => observer.disconnect();
+    }
 
-		let ticking = false
+    let ticking = false;
 
-		function update() {
-			const atBottom =
-				window.innerHeight + Math.ceil(window.scrollY) >= document.documentElement.scrollHeight
+    function update() {
+      const atBottom =
+        window.innerHeight + Math.ceil(window.scrollY) >=
+        document.documentElement.scrollHeight;
 
-			if (atBottom && headings.length > 0) {
-				const last = headings[headings.length - 1]
-				if (last) setActive(last.id)
-				return
-			}
+      if (atBottom && headings.length > 0) {
+        const last = headings.at(-1);
+        if (last) {
+          setActive(last.id);
+        }
+        return;
+      }
 
-			const offset = 100
-			let current = ""
-			const items = headings.slice(0, -1)
+      const offset = 100;
+      let current = "";
+      const items = headings.slice(0, -1);
 
-			for (const { id } of items) {
-				const el = document.getElementById(id)
-				if (!el) continue
-				if (el.getBoundingClientRect().top <= offset) {
-					current = id
-				}
-			}
+      for (const { id } of items) {
+        const el = document.querySelector(`#${id}`);
+        if (!el) {
+          continue;
+        }
+        if (el.getBoundingClientRect().top <= offset) {
+          current = id;
+        }
+      }
 
-			if (!current && headings.length > 0) {
-				const first = headings[0]
-				if (first) current = first.id
-			}
+      if (!current && headings.length > 0) {
+        const first = headings[0];
+        if (first) {
+          current = first.id;
+        }
+      }
 
-			setActive(current)
-		}
+      setActive(current);
+    }
 
-		function onScroll() {
-			if (!ticking) {
-				requestAnimationFrame(() => {
-					update()
-					ticking = false
-				})
-				ticking = true
-			}
-		}
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          update();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
 
-		update()
-		window.addEventListener("scroll", onScroll, { passive: true })
-		return () => window.removeEventListener("scroll", onScroll)
-	}, [headings, multi])
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [headings, multi]);
 
-	return { headings, active, activeRange }
+  return { active, activeRange, headings };
 }

@@ -9,9 +9,9 @@ display a countdown to a target date.
 ## usage
 
 ```tsx
-import { Countdown } from "fromsrc/client"
+import { Countdown } from "fromsrc/client";
 
-<Countdown target={new Date("2026-12-31")} />
+<Countdown target={new Date("2026-12-31")} />;
 ```
 
 ## target formats
@@ -55,8 +55,8 @@ run code when countdown reaches zero:
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| target | Date \| string \| number | required | target date |
-| format | "full" \| "compact" | "full" | display format |
-| onComplete | () => void | - | callback at zero |
+| prop       | type                     | default  | description      |
+| ---------- | ------------------------ | -------- | ---------------- |
+| target     | Date \| string \| number | required | target date      |
+| format     | "full" \| "compact"      | "full"   | display format   |
+| onComplete | () => void               | -        | callback at zero |

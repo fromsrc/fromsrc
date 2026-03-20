@@ -27,11 +27,11 @@ for the default scaffold shape, redirect `/` to `/docs` in `src/pages/index.astr
 if you need adapter-level control for component wiring, use the astro adapter:
 
 ```tsx
-import { AdapterProvider, astroAdapter } from "fromsrc/astro"
-import type { ReactNode } from "react"
+import { AdapterProvider, astroAdapter } from "fromsrc/astro";
+import type { ReactNode } from "react";
 
 export function Providers({ children }: { children: ReactNode }) {
-	return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>
+  return <AdapterProvider adapter={astroAdapter}>{children}</AdapterProvider>;
 }
 ```
 

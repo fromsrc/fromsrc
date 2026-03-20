@@ -1,23 +1,23 @@
 {
-	"title": "Documentation",
-	"pages": [
-		"index",
-		"installation",
-		"quickstart",
-		"configuration",
-		"content-source",
-		"theming",
-		"customization",
-		"writing",
-		"navigation",
-		"search",
-		"ai",
-		"slugs",
-		"keyboard",
-		"versioning",
-		"deploying",
-		"i18n",
-		"accessibility",
-		"frameworks"
-	]
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "installation",
+    "quickstart",
+    "configuration",
+    "content-source",
+    "theming",
+    "customization",
+    "writing",
+    "navigation",
+    "search",
+    "ai",
+    "slugs",
+    "keyboard",
+    "versioning",
+    "deploying",
+    "i18n",
+    "accessibility",
+    "frameworks"
+  ]
 }

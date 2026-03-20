@@ -35,21 +35,21 @@ the base `Math` component with display mode option.
 
 ### math
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| children | ReactNode | required | latex expression |
-| display | boolean | false | block mode with centering |
+| prop     | type      | default  | description               |
+| -------- | --------- | -------- | ------------------------- |
+| children | ReactNode | required | latex expression          |
+| display  | boolean   | false    | block mode with centering |
 
 ### blockmath
 
-| prop | type | default | description |
-|------|------|---------|-------------|
+| prop     | type      | default  | description      |
+| -------- | --------- | -------- | ---------------- |
 | children | ReactNode | required | latex expression |
 
 ### inlinemath
 
-| prop | type | default | description |
-|------|------|---------|-------------|
+| prop     | type      | default  | description      |
+| -------- | --------- | -------- | ---------------- |
 | children | ReactNode | required | latex expression |
 
 ## requirements
@@ -64,5 +64,5 @@ add katex css to your layout:
 
 ```tsx
 // in layout.tsx
-import "katex/dist/katex.min.css"
+import "katex/dist/katex.min.css";
 ```

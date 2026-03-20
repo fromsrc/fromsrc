@@ -13,14 +13,14 @@ export default function Layout({ children }: { children: ReactNode }) {
 \t\t</html>
 \t)
 }
-`
+`;
 
 export const page = `import { redirect } from "next/navigation"
 
 export default function Home() {
 \tredirect("/docs")
 }
-`
+`;
 
 export const docslayout = `import type { ReactNode } from "react"
 
@@ -49,7 +49,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
 \t\t</div>
 \t)
 }
-`
+`;
 
 export const docspage = `import { readFile } from "node:fs/promises"
 import { isAbsolute, relative, resolve } from "node:path"
@@ -103,7 +103,7 @@ export default async function DocPage({ params }: Props) {
 \t\t</div>
 \t)
 }
-`
+`;
 
 export const welcomemdx = `---
 title: getting started
@@ -125,12 +125,12 @@ bun add fromsrc
 - add mdx files to \`content/docs/\`
 - customize the sidebar
 - deploy to vercel
-`
+`;
 
 export const metajson = JSON.stringify(
-	{
-		pages: ["index"],
-	},
-	null,
-	"\t",
-)
+  {
+    pages: ["index"],
+  },
+  null,
+  "\t"
+);

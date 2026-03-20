@@ -33,14 +33,24 @@ all http methods are supported with color coding:
 ```mdx
 <Endpoint method="POST" path="/api/users" description="create a new user">
   <Param name="name" type="string" required description="user's full name" />
-  <Param name="email" type="string" required description="user's email address" />
+  <Param
+    name="email"
+    type="string"
+    required
+    description="user's email address"
+  />
   <Param name="role" type="string" description="user role (admin, user)" />
 </Endpoint>
 ```
 
 <Endpoint method="POST" path="/api/users" description="create a new user">
   <Param name="name" type="string" required description="user's full name" />
-  <Param name="email" type="string" required description="user's email address" />
+  <Param
+    name="email"
+    type="string"
+    required
+    description="user's email address"
+  />
   <Param name="role" type="string" description="user role (admin, user)" />
 </Endpoint>
 
@@ -70,26 +80,26 @@ document response codes:
 
 ### endpoint
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| method | string | required | http method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE) |
-| path | string | required | api path |
-| description | string | - | endpoint description |
-| children | ReactNode | - | parameter list |
+| prop        | type      | default  | description                                                       |
+| ----------- | --------- | -------- | ----------------------------------------------------------------- |
+| method      | string    | required | http method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE) |
+| path        | string    | required | api path                                                          |
+| description | string    | -        | endpoint description                                              |
+| children    | ReactNode | -        | parameter list                                                    |
 
 ### param
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| name | string | required | parameter name |
-| type | string | required | parameter type |
-| required | boolean | false | marks as required |
-| description | string | - | parameter description |
+| prop        | type    | default  | description           |
+| ----------- | ------- | -------- | --------------------- |
+| name        | string  | required | parameter name        |
+| type        | string  | required | parameter type        |
+| required    | boolean | false    | marks as required     |
+| description | string  | -        | parameter description |
 
 ### response
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| status | number | required | http status code |
-| description | string | - | status description |
-| children | ReactNode | - | response details |
+| prop        | type      | default  | description        |
+| ----------- | --------- | -------- | ------------------ |
+| status      | number    | required | http status code   |
+| description | string    | -        | status description |
+| children    | ReactNode | -        | response details   |

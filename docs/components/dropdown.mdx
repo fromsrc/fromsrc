@@ -9,7 +9,7 @@ menu that opens on click with keyboard navigation.
 ## usage
 
 ```tsx
-import { Dropdown } from "fromsrc/client"
+import { Dropdown } from "fromsrc/client";
 
 <Dropdown
   trigger={<button>open menu</button>}
@@ -17,7 +17,7 @@ import { Dropdown } from "fromsrc/client"
     { label: "edit", onClick: () => {} },
     { label: "delete", onClick: () => {} },
   ]}
-/>
+/>;
 ```
 
 ## items
@@ -31,7 +31,7 @@ const items = [
   "separator",
   { label: "delete", danger: true, onClick: handleDelete },
   { label: "archived", disabled: true },
-]
+];
 ```
 
 ## alignment
@@ -65,18 +65,18 @@ align to the right.
 
 ### Dropdown
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| trigger | ReactNode | required | element that opens the menu |
-| items | (DropdownItem \| "separator")[] | required | menu items |
-| align | "start" \| "end" | "start" | horizontal alignment |
+| prop    | type                            | default  | description                 |
+| ------- | ------------------------------- | -------- | --------------------------- |
+| trigger | ReactNode                       | required | element that opens the menu |
+| items   | (DropdownItem \| "separator")[] | required | menu items                  |
+| align   | "start" \| "end"                | "start"  | horizontal alignment        |
 
 ### DropdownItem
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| label | string | required | item text |
-| icon | ReactNode | - | optional icon |
-| onClick | () => void | - | click handler |
-| disabled | boolean | false | disable interaction |
-| danger | boolean | false | destructive action styling |
+| prop     | type       | default  | description                |
+| -------- | ---------- | -------- | -------------------------- |
+| label    | string     | required | item text                  |
+| icon     | ReactNode  | -        | optional icon              |
+| onClick  | () => void | -        | click handler              |
+| disabled | boolean    | false    | disable interaction        |
+| danger   | boolean    | false    | destructive action styling |

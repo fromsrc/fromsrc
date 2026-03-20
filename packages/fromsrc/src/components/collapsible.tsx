@@ -1,85 +1,90 @@
-"use client"
+"use client";
 
-import { memo } from "react"
-import type { JSX, ReactNode } from "react"
-import { useCallback, useId, useState } from "react"
-import { IconChevronRight } from "./icons"
+import { memo } from "react";
+import type { JSX, ReactNode } from "react";
+import { useCallback, useId, useState } from "react";
+
+import { IconChevronRight } from "./icons";
 
 /**
  * Props for the Collapsible component.
  */
 export interface CollapsibleProps {
-	/** The title displayed in the collapsible header. */
-	title: string
-	/** Whether the collapsible is initially open. */
-	defaultOpen?: boolean
-	/** The content to display when expanded. */
-	children: ReactNode
+  /** The title displayed in the collapsible header. */
+  title: string;
+  /** Whether the collapsible is initially open. */
+  defaultOpen?: boolean;
+  /** The content to display when expanded. */
+  children: ReactNode;
 }
 
-function CollapsibleBase({ title, defaultOpen = false, children }: CollapsibleProps): JSX.Element {
-	const [open, setOpen] = useState(defaultOpen)
-	const id = useId()
-	const buttonId = `${id}-button`
-	const contentId = `${id}-content`
+function CollapsibleBase({
+  title,
+  defaultOpen = false,
+  children,
+}: CollapsibleProps): JSX.Element {
+  const [open, setOpen] = useState(defaultOpen);
+  const id = useId();
+  const buttonId = `${id}-button`;
+  const contentId = `${id}-content`;
 
-	const toggle = useCallback(() => setOpen((prev) => !prev), [])
+  const toggle = useCallback(() => setOpen((prev) => !prev), []);
 
-	return (
-		<div className="my-4 rounded-lg border border-line overflow-hidden">
-			<button
-				id={buttonId}
-				type="button"
-				onClick={toggle}
-				aria-expanded={open}
-				aria-controls={contentId}
-				className="flex items-center gap-2 w-full px-4 py-3 text-sm text-left text-fg hover:bg-surface/50 transition-colors"
-			>
-				<IconChevronRight
-					size={16}
-					className={`text-muted transition-transform duration-200 ${open ? "rotate-90" : ""}`}
-				/>
-				{title}
-			</button>
-			<div
-				id={contentId}
-				role="region"
-				aria-labelledby={buttonId}
-				className={`grid transition-[grid-template-rows] duration-200 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-			>
-				<div className="overflow-hidden">
-					<div className="px-4 pb-4 pt-0">{children}</div>
-				</div>
-			</div>
-		</div>
-	)
+  return (
+    <div className="my-4 rounded-lg border border-line overflow-hidden">
+      <button
+        id={buttonId}
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="flex items-center gap-2 w-full px-4 py-3 text-sm text-left text-fg hover:bg-surface/50 transition-colors"
+      >
+        <IconChevronRight
+          size={16}
+          className={`text-muted transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+        />
+        {title}
+      </button>
+      <div
+        id={contentId}
+        role="region"
+        aria-labelledby={buttonId}
+        className={`grid transition-[grid-template-rows] duration-200 ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+      >
+        <div className="overflow-hidden">
+          <div className="px-4 pb-4 pt-0">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export const Collapsible = memo(CollapsibleBase)
+export const Collapsible = memo(CollapsibleBase);
 
 /**
  * Props for the Details component.
  */
 export interface DetailsProps {
-	/** The summary text displayed in the details header. */
-	summary: string
-	/** The content to display when expanded. */
-	children: ReactNode
+  /** The summary text displayed in the details header. */
+  summary: string;
+  /** The content to display when expanded. */
+  children: ReactNode;
 }
 
 function DetailsBase({ summary, children }: DetailsProps): JSX.Element {
-	return (
-		<details className="my-4 group">
-			<summary className="flex items-center gap-2 cursor-pointer text-sm text-fg list-none [&::-webkit-details-marker]:hidden">
-				<IconChevronRight
-					size={16}
-					className="text-muted transition-transform duration-200 group-open:rotate-90"
-				/>
-				{summary}
-			</summary>
-			<div className="mt-2 pl-6 text-sm text-muted">{children}</div>
-		</details>
-	)
+  return (
+    <details className="my-4 group">
+      <summary className="flex items-center gap-2 cursor-pointer text-sm text-fg list-none [&::-webkit-details-marker]:hidden">
+        <IconChevronRight
+          size={16}
+          className="text-muted transition-transform duration-200 group-open:rotate-90"
+        />
+        {summary}
+      </summary>
+      <div className="mt-2 pl-6 text-sm text-muted">{children}</div>
+    </details>
+  );
 }
 
-export const Details = memo(DetailsBase)
+export const Details = memo(DetailsBase);

@@ -1,81 +1,100 @@
-import type { Paragraph, Root, Text } from "mdast"
-import type { Plugin } from "unified"
-import { visit } from "unist-util-visit"
+import type { Paragraph, Root, Text } from "mdast";
+import type { Plugin } from "unified";
+import { visit } from "unist-util-visit";
 
-const blockPattern = /^\$\$([\s\S]*)\$\$$/
-const inlinePattern = /\$([^$]+)\$/g
-type paragraphchild = Paragraph["children"][number]
-type rootchild = Root["children"][number]
+const blockPattern = /^\$\$([\s\S]*)\$\$$/;
+const inlinePattern = /\$([^$]+)\$/g;
+type paragraphchild = Paragraph["children"][number];
+type rootchild = Root["children"][number];
 
 function makeInline(math: string): paragraphchild {
-	return {
-		type: "mdxJsxTextElement" as const,
-		name: "InlineMath",
-		attributes: [{ type: "mdxJsxAttribute" as const, name: "math", value: math }],
-		children: [],
-		data: { _mdxExplicitJsx: true },
-	} as paragraphchild
+  return {
+    attributes: [
+      { name: "math", type: "mdxJsxAttribute" as const, value: math },
+    ],
+    children: [],
+    data: { _mdxExplicitJsx: true },
+    name: "InlineMath",
+    type: "mdxJsxTextElement" as const,
+  } as paragraphchild;
 }
 
 function makeBlock(math: string): rootchild {
-	return {
-		type: "mdxJsxFlowElement" as const,
-		name: "BlockMath",
-		attributes: [{ type: "mdxJsxAttribute" as const, name: "math", value: math }],
-		children: [],
-		data: { _mdxExplicitJsx: true },
-	} as rootchild
+  return {
+    attributes: [
+      { name: "math", type: "mdxJsxAttribute" as const, value: math },
+    ],
+    children: [],
+    data: { _mdxExplicitJsx: true },
+    name: "BlockMath",
+    type: "mdxJsxFlowElement" as const,
+  } as rootchild;
 }
 
 function transformer(tree: Root) {
-	visit(tree, "paragraph", (node: Paragraph, index, parent) => {
-		if (!parent || index === undefined) return
-		if (node.children.length !== 1) return
-		const child = node.children[0]
-		if (child?.type !== "text") return
-		const match = child.value.trim().match(blockPattern)
-		if (!match) return
-		const block = match[1]
-		if (block === undefined) return
-		parent.children[index] = makeBlock(block.trim())
-	})
+  visit(tree, "paragraph", (node: Paragraph, index, parent) => {
+    if (!parent || index === undefined) {
+      return;
+    }
+    if (node.children.length !== 1) {
+      return;
+    }
+    const child = node.children[0];
+    if (child?.type !== "text") {
+      return;
+    }
+    const match = child.value.trim().match(blockPattern);
+    if (!match) {
+      return;
+    }
+    const block = match[1];
+    if (block === undefined) {
+      return;
+    }
+    parent.children[index] = makeBlock(block.trim());
+  });
 
-	visit(tree, "paragraph", (node: Paragraph) => {
-		const next: paragraphchild[] = []
-		let changed = false
+  visit(tree, "paragraph", (node: Paragraph) => {
+    const next: paragraphchild[] = [];
+    let changed = false;
 
-		for (const child of node.children) {
-			if (child.type !== "text" || !inlinePattern.test(child.value)) {
-				next.push(child)
-				continue
-			}
+    for (const child of node.children) {
+      if (child.type !== "text" || !inlinePattern.test(child.value)) {
+        next.push(child);
+        continue;
+      }
 
-			changed = true
-			inlinePattern.lastIndex = 0
-			let cursor = 0
-			let match: RegExpExecArray | null
+      changed = true;
+      inlinePattern.lastIndex = 0;
+      let cursor = 0;
+      let match: RegExpExecArray | null;
 
-			while ((match = inlinePattern.exec(child.value)) !== null) {
-				if (match.index > cursor) {
-					next.push({
-						type: "text",
-						value: child.value.slice(cursor, match.index),
-					} as paragraphchild)
-				}
-				const inline = match[1]
-				if (inline !== undefined) next.push(makeInline(inline))
-				cursor = match.index + match[0].length
-			}
+      while ((match = inlinePattern.exec(child.value)) !== null) {
+        if (match.index > cursor) {
+          next.push({
+            type: "text",
+            value: child.value.slice(cursor, match.index),
+          } as paragraphchild);
+        }
+        const inline = match[1];
+        if (inline !== undefined) {
+          next.push(makeInline(inline));
+        }
+        cursor = match.index + match[0].length;
+      }
 
-			if (cursor < child.value.length) {
-				next.push({ type: "text", value: child.value.slice(cursor) } as paragraphchild)
-			}
-		}
+      if (cursor < child.value.length) {
+        next.push({
+          type: "text",
+          value: child.value.slice(cursor),
+        } as paragraphchild);
+      }
+    }
 
-		if (changed) {
-			node.children = next
-		}
-	})
+    if (changed) {
+      node.children = next;
+    }
+  });
 }
 
-export const remarkMath: Plugin<[], Root> = () => transformer
+export const remarkMath: Plugin<[], Root> = () => transformer;

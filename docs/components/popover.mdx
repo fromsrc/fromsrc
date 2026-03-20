@@ -9,11 +9,11 @@ floating panel that appears on click.
 ## usage
 
 ```tsx
-import { Popover } from "fromsrc/client"
+import { Popover } from "fromsrc/client";
 
 <Popover trigger={<button>click me</button>}>
   <p>popover content here</p>
-</Popover>
+</Popover>;
 ```
 
 ## alignment
@@ -78,9 +78,9 @@ position above the trigger.
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| trigger | ReactNode | required | element that opens the popover |
-| children | ReactNode | required | popover content |
-| align | "start" \| "center" \| "end" | "start" | horizontal alignment |
-| side | "top" \| "bottom" | "bottom" | vertical position |
+| prop     | type                         | default  | description                    |
+| -------- | ---------------------------- | -------- | ------------------------------ |
+| trigger  | ReactNode                    | required | element that opens the popover |
+| children | ReactNode                    | required | popover content                |
+| align    | "start" \| "center" \| "end" | "start"  | horizontal alignment           |
+| side     | "top" \| "bottom"            | "bottom" | vertical position              |

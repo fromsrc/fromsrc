@@ -1,27 +1,34 @@
-import { getDocs } from "@/app/docs/_lib/content"
-import { calcReadTime } from "fromsrc"
-import { sendjson } from "@/app/api/_lib/json"
+import { calcReadTime } from "fromsrc";
 
-const cache = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+import { sendjson } from "@/app/api/_lib/json";
+import { getDocs } from "@/app/docs/_lib/content";
+
+const cache =
+  "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800";
 
 export async function GET(request: Request) {
-	const docs = await getDocs()
+  const docs = await getDocs();
 
-	let words = 0
-	let readTime = 0
-	const categories = new Map<string, number>()
+  let words = 0;
+  let readTime = 0;
+  const categories = new Map<string, number>();
 
-	for (const doc of docs) {
-		const count = doc.content.split(/\s+/).filter(Boolean).length
-		words += count
-		readTime += calcReadTime(doc.content)
-		const category = doc.slug.split("/")[0] || "root"
-		categories.set(category, (categories.get(category) ?? 0) + 1)
-	}
+  for (const doc of docs) {
+    const count = doc.content.split(/\s+/).filter(Boolean).length;
+    words += count;
+    readTime += calcReadTime(doc.content);
+    const category = doc.slug.split("/")[0] || "root";
+    categories.set(category, (categories.get(category) ?? 0) + 1);
+  }
 
-	return sendjson(
-		request,
-		{ pages: docs.length, words, readTime, categories: Object.fromEntries(categories) },
-		cache,
-	)
+  return sendjson(
+    request,
+    {
+      categories: Object.fromEntries(categories),
+      pages: docs.length,
+      readTime,
+      words,
+    },
+    cache
+  );
 }

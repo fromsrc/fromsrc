@@ -49,7 +49,7 @@ export default {
       },
     },
   },
-}
+};
 ```
 
 ## light/dark mode
@@ -81,60 +81,60 @@ support both themes:
 create a theme provider component:
 
 ```tsx
-"use client"
+"use client";
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "dark" | "system"
+type Theme = "light" | "dark" | "system";
 
 const ThemeContext = createContext<{
-  theme: Theme
-  setTheme: (theme: Theme) => void
-}>({ theme: "system", setTheme: () => {} })
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+}>({ theme: "system", setTheme: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("system")
+  const [theme, setTheme] = useState<Theme>("system");
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme") as Theme
-    if (stored) setTheme(stored)
-  }, [])
+    const stored = localStorage.getItem("theme") as Theme;
+    if (stored) setTheme(stored);
+  }, []);
 
   useEffect(() => {
-    const root = document.documentElement
-    root.classList.remove("light", "dark")
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
 
     if (theme === "system") {
       const system = window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
-        : "light"
-      root.classList.add(system)
+        : "light";
+      root.classList.add(system);
     } else {
-      root.classList.add(theme)
+      root.classList.add(theme);
     }
 
-    localStorage.setItem("theme", theme)
-  }, [theme])
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeContext.Provider>
-  )
+  );
 }
 
-export const useTheme = () => useContext(ThemeContext)
+export const useTheme = () => useContext(ThemeContext);
 ```
 
 ## theme toggle
 
 ```tsx
-"use client"
+"use client";
 
-import { useTheme } from "@/components/theme"
+import { useTheme } from "@/components/theme";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
 
   return (
     <button
@@ -143,17 +143,29 @@ export function ThemeToggle() {
       aria-label="toggle theme"
     >
       {theme === "dark" ? (
-        <svg className="w-4 h-4" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <svg
+          className="w-4 h-4"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
           <circle cx="12" cy="12" r="5" />
           <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
         </svg>
       ) : (
-        <svg className="w-4 h-4" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <svg
+          className="w-4 h-4"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
           <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
         </svg>
       )}
     </button>
-  )
+  );
 }
 ```
 
@@ -184,27 +196,27 @@ create multiple theme options:
 let users pick a theme:
 
 ```tsx
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
-const themes = ["blue", "green", "purple", "orange"]
+const themes = ["blue", "green", "purple", "orange"];
 
 export function ThemeSelector() {
-  const [selected, setSelected] = useState("blue")
+  const [selected, setSelected] = useState("blue");
 
   useEffect(() => {
-    const stored = localStorage.getItem("accent-theme")
-    if (stored) setSelected(stored)
-  }, [])
+    const stored = localStorage.getItem("accent-theme");
+    if (stored) setSelected(stored);
+  }, []);
 
   const selectTheme = (theme: string) => {
-    const root = document.documentElement
-    themes.forEach((t) => root.classList.remove(`theme-${t}`))
-    root.classList.add(`theme-${theme}`)
-    localStorage.setItem("accent-theme", theme)
-    setSelected(theme)
-  }
+    const root = document.documentElement;
+    themes.forEach((t) => root.classList.remove(`theme-${t}`));
+    root.classList.add(`theme-${theme}`);
+    localStorage.setItem("accent-theme", theme);
+    setSelected(theme);
+  };
 
   return (
     <div className="flex gap-2">
@@ -213,19 +225,25 @@ export function ThemeSelector() {
           key={theme}
           onClick={() => selectTheme(theme)}
           className={`w-6 h-6 rounded-full ${
-            selected === theme ? "ring-2 ring-offset-2 ring-offset-bg ring-fg" : ""
+            selected === theme
+              ? "ring-2 ring-offset-2 ring-offset-bg ring-fg"
+              : ""
           }`}
           style={{
             backgroundColor:
-              theme === "blue" ? "#3b82f6" :
-              theme === "green" ? "#22c55e" :
-              theme === "purple" ? "#a855f7" : "#f97316"
+              theme === "blue"
+                ? "#3b82f6"
+                : theme === "green"
+                  ? "#22c55e"
+                  : theme === "purple"
+                    ? "#a855f7"
+                    : "#f97316",
           }}
           aria-label={`${theme} theme`}
         />
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -267,5 +285,5 @@ export default {
       },
     },
   },
-}
+};
 ```

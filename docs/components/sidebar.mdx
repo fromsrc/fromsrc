@@ -9,13 +9,13 @@ documentation sidebar with search, navigation sections, and collapsible folders.
 ## usage
 
 ```tsx
-import { Sidebar } from "fromsrc/client"
+import { Sidebar } from "fromsrc/client";
 
 <Sidebar
   title="docs"
   navigation={navigation}
   github="https://github.com/org/repo"
-/>
+/>;
 ```
 
 ## navigation structure
@@ -28,9 +28,9 @@ simple list of pages:
 const navigation = [
   {
     title: "getting started",
-    items: docs.filter(d => d.slug?.startsWith("getting-started"))
-  }
-]
+    items: docs.filter((d) => d.slug?.startsWith("getting-started")),
+  },
+];
 ```
 
 ### collapsible folders
@@ -48,7 +48,7 @@ const navigation = [
         items: [
           { type: "item", title: "sidebar", href: "/docs/sidebar" },
           { type: "item", title: "header", href: "/docs/header" },
-        ]
+        ],
       },
       {
         type: "folder",
@@ -57,11 +57,11 @@ const navigation = [
         items: [
           { type: "item", title: "callout", href: "/docs/callout" },
           { type: "item", title: "steps", href: "/docs/steps" },
-        ]
-      }
-    ]
-  }
-]
+        ],
+      },
+    ],
+  },
+];
 ```
 
 ### mixed
@@ -73,18 +73,16 @@ const navigation = [
   {
     title: "guides",
     items: [
-      ...docs.filter(d => d.slug?.startsWith("guide")),
+      ...docs.filter((d) => d.slug?.startsWith("guide")),
       { type: "item", title: "external", href: "https://example.com" },
       {
         type: "folder",
         title: "advanced",
-        items: [
-          { type: "item", title: "plugins", href: "/docs/plugins" },
-        ]
-      }
-    ]
-  }
-]
+        items: [{ type: "item", title: "plugins", href: "/docs/plugins" }],
+      },
+    ],
+  },
+];
 ```
 
 ## icons
@@ -92,24 +90,34 @@ const navigation = [
 add icons to items and folders:
 
 ```tsx
-import { Book, Settings, Puzzle } from "lucide-react"
+import { Book, Settings, Puzzle } from "lucide-react";
 
 const navigation = [
   {
     title: "guides",
     items: [
-      { type: "item", title: "intro", href: "/docs/intro", icon: <Book size={16} /> },
+      {
+        type: "item",
+        title: "intro",
+        href: "/docs/intro",
+        icon: <Book size={16} />,
+      },
       {
         type: "folder",
         title: "config",
         icon: <Settings size={16} />,
         items: [
-          { type: "item", title: "plugins", href: "/docs/plugins", icon: <Puzzle size={16} /> },
-        ]
-      }
-    ]
-  }
-]
+          {
+            type: "item",
+            title: "plugins",
+            href: "/docs/plugins",
+            icon: <Puzzle size={16} />,
+          },
+        ],
+      },
+    ],
+  },
+];
 ```
 
 icons appear in the collapsed view and next to items in the expanded view.
@@ -119,14 +127,11 @@ icons appear in the collapsed view and next to items in the expanded view.
 enable icon-only collapsed mode with the `collapsible` prop:
 
 ```tsx
-<Sidebar
-  title="docs"
-  navigation={navigation}
-  collapsible
-/>
+<Sidebar title="docs" navigation={navigation} collapsible />
 ```
 
 when collapsed:
+
 - shows only the toggle button
 - navigation items show icons only
 - expands on hover
@@ -136,10 +141,7 @@ when collapsed:
 expand folders automatically to a certain depth:
 
 ```tsx
-<Sidebar
-  navigation={navigation}
-  defaultOpenLevel={1}
-/>
+<Sidebar navigation={navigation} defaultOpenLevel={1} />
 ```
 
 folders at depth 1 or less will be expanded by default.
@@ -164,37 +166,37 @@ clicking the folder title navigates to the href. the expand/collapse button is s
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| title | string | required | site title |
-| logo | ReactNode | - | site logo |
-| navigation | SidebarSection[] | required | nav structure |
-| basePath | string | "/docs" | base url path |
-| github | string | - | github repo link |
-| collapsible | boolean | false | enable collapse toggle |
-| defaultOpenLevel | number | 0 | auto-expand folders to depth |
+| prop             | type             | default  | description                  |
+| ---------------- | ---------------- | -------- | ---------------------------- |
+| title            | string           | required | site title                   |
+| logo             | ReactNode        | -        | site logo                    |
+| navigation       | SidebarSection[] | required | nav structure                |
+| basePath         | string           | "/docs"  | base url path                |
+| github           | string           | -        | github repo link             |
+| collapsible      | boolean          | false    | enable collapse toggle       |
+| defaultOpenLevel | number           | 0        | auto-expand folders to depth |
 
 ## types
 
 ```ts
 interface SidebarItem {
-  type: "item"
-  title: string
-  href: string
-  icon?: ReactNode
+  type: "item";
+  title: string;
+  href: string;
+  icon?: ReactNode;
 }
 
 interface SidebarFolder {
-  type: "folder"
-  title: string
-  items: (SidebarItem | SidebarFolder)[]
-  defaultOpen?: boolean
-  icon?: ReactNode
-  href?: string
+  type: "folder";
+  title: string;
+  items: (SidebarItem | SidebarFolder)[];
+  defaultOpen?: boolean;
+  icon?: ReactNode;
+  href?: string;
 }
 
 interface SidebarSection {
-  title: string
-  items: (SidebarItem | SidebarFolder | DocMeta)[]
+  title: string;
+  items: (SidebarItem | SidebarFolder | DocMeta)[];
 }
 ```

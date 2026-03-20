@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import net from "node:net";
+import { join } from "node:path";
 
 const root = process.cwd();
 const logfile = join(root, ".dev.log");
@@ -12,46 +12,50 @@ const rawport = process.env.PORT || "3000";
 const port = Number(rawport);
 
 function listen(target) {
-	return new Promise((resolve) => {
-		const socket = new net.Socket();
-		const done = (value) => {
-			socket.removeAllListeners();
-			socket.destroy();
-			resolve(value);
-		};
-		socket.setTimeout(250);
-		socket.once("connect", () => done(true));
-		socket.once("error", () => done(false));
-		socket.once("timeout", () => done(false));
-		socket.connect(target, "127.0.0.1");
-	});
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    const done = (value) => {
+      socket.removeAllListeners();
+      socket.destroy();
+      resolve(value);
+    };
+    socket.setTimeout(250);
+    socket.once("connect", () => done(true));
+    socket.once("error", () => done(false));
+    socket.once("timeout", () => done(false));
+    socket.connect(target, "127.0.0.1");
+  });
 }
 
 async function readpid() {
-	try {
-		const raw = (await readFile(join(root, ".dev.pid"), "utf8")).trim();
-		const pid = Number(raw);
-		if (!Number.isFinite(pid) || pid <= 0) return null;
-		return pid;
-	} catch {
-		return null;
-	}
+  try {
+    const raw = (await readFile(join(root, ".dev.pid"), "utf8")).trim();
+    const pid = Number(raw);
+    if (!Number.isFinite(pid) || pid <= 0) {
+      return null;
+    }
+    return pid;
+  } catch {
+    return null;
+  }
 }
 
 const pid = await readpid();
 const busy = Number.isFinite(port) && port > 0 ? await listen(port) : false;
 if (!pid && busy) {
-	console.log("o external dev process");
-	process.exit(0);
+  console.log("o external dev process");
+  process.exit(0);
 }
 
 try {
-	const text = await readFile(logfile, "utf8");
-	const lines = text.split("\n");
-	const tail = lines.slice(-size);
-	for (const line of tail) {
-		if (line.length > 0) console.log(line);
-	}
+  const text = await readFile(logfile, "utf8");
+  const lines = text.split("\n");
+  const tail = lines.slice(-size);
+  for (const line of tail) {
+    if (line.length > 0) {
+      console.log(line);
+    }
+  }
 } catch {
-	console.log("o no log");
+  console.log("o no log");
 }

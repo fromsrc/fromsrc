@@ -1,18 +1,20 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react";
 
 export function useInterval(callback: () => void, delay: number | null): void {
-	const savedCallback = useRef(callback)
+  const savedCallback = useRef(callback);
 
-	useEffect(() => {
-		savedCallback.current = callback
-	}, [callback])
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
 
-	useEffect(() => {
-		if (delay === null) return
+  useEffect(() => {
+    if (delay === null) {
+      return;
+    }
 
-		const id = setInterval(() => savedCallback.current(), delay)
-		return () => clearInterval(id)
-	}, [delay])
+    const id = setInterval(() => savedCallback.current(), delay);
+    return () => clearInterval(id);
+  }, [delay]);
 }

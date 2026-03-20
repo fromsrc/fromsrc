@@ -1,26 +1,30 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export interface PasteData {
-	text: string | null
-	files: File[]
-	timestamp: number
+  text: string | null;
+  files: File[];
+  timestamp: number;
 }
 
 export function useClipboardPaste(): PasteData {
-	const [data, setData] = useState<PasteData>({ text: null, files: [], timestamp: 0 })
+  const [data, setData] = useState<PasteData>({
+    files: [],
+    text: null,
+    timestamp: 0,
+  });
 
-	useEffect(() => {
-		function handler(e: ClipboardEvent) {
-			const text = e.clipboardData?.getData("text/plain") ?? null
-			const files = Array.from(e.clipboardData?.files ?? [])
-			setData({ text, files, timestamp: Date.now() })
-		}
+  useEffect(() => {
+    function handler(e: ClipboardEvent) {
+      const text = e.clipboardData?.getData("text/plain") ?? null;
+      const files = [...(e.clipboardData?.files ?? [])];
+      setData({ files, text, timestamp: Date.now() });
+    }
 
-		document.addEventListener("paste", handler)
-		return () => document.removeEventListener("paste", handler)
-	}, [])
+    document.addEventListener("paste", handler);
+    return () => document.removeEventListener("paste", handler);
+  }, []);
 
-	return data
+  return data;
 }

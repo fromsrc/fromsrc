@@ -1,67 +1,87 @@
-import type { Code, Root } from "mdast"
-import type { Plugin } from "unified"
-import { visit } from "unist-util-visit"
+import type { Code, Root } from "mdast";
+import type { Plugin } from "unified";
+import { visit } from "unist-util-visit";
 
 function attribute(name: string, value: string) {
-	return { type: "mdxJsxAttribute", name, value }
+  return { name, type: "mdxJsxAttribute", value };
 }
 
-type codenode = Code
-type tabelement = {
-	type: "mdxJsxFlowElement"
-	name: "CodeTab"
-	attributes: ReturnType<typeof attribute>[]
-	children: [codenode]
-	data: { _mdxExplicitJsx: true }
+type codenode = Code;
+interface tabelement {
+  type: "mdxJsxFlowElement";
+  name: "CodeTab";
+  attributes: ReturnType<typeof attribute>[];
+  children: [codenode];
+  data: { _mdxExplicitJsx: true };
 }
-type groupelement = {
-	type: "mdxJsxFlowElement"
-	name: "CodeGroup"
-	attributes: []
-	children: tabelement[]
-	data: { _mdxExplicitJsx: true }
+interface groupelement {
+  type: "mdxJsxFlowElement";
+  name: "CodeGroup";
+  attributes: [];
+  children: tabelement[];
+  data: { _mdxExplicitJsx: true };
 }
 
 function skipped(node: Code): boolean {
-	return !!node.meta && (node.meta.includes("nogroup") || node.meta.includes("standalone"))
+  return (
+    !!node.meta &&
+    (node.meta.includes("nogroup") || node.meta.includes("standalone"))
+  );
 }
 
 function transformer(tree: Root) {
-	visit(tree, "code", (_node: Code, index, parent) => {
-		if (!parent || index === undefined) return
-		if (skipped(_node)) return
+  visit(tree, "code", (_node: Code, index, parent) => {
+    if (!parent || index === undefined) {
+      return;
+    }
+    if (skipped(_node)) {
+      return;
+    }
 
-		const group: Code[] = [_node]
-		let next = index + 1
+    const group: Code[] = [_node];
+    let next = index + 1;
 
-		while (next < parent.children.length) {
-			const sibling = parent.children[next]
-			if (sibling?.type !== "code") break
-			if (skipped(sibling as Code)) break
-			group.push(sibling as Code)
-			next++
-		}
+    while (next < parent.children.length) {
+      const sibling = parent.children[next];
+      if (sibling?.type !== "code") {
+        break;
+      }
+      if (skipped(sibling as Code)) {
+        break;
+      }
+      group.push(sibling as Code);
+      next++;
+    }
 
-		if (group.length < 2) return
+    if (group.length < 2) {
+      return;
+    }
 
-		const tabs: tabelement[] = group.map((code) => ({
-			type: "mdxJsxFlowElement",
-			name: "CodeTab",
-			attributes: [attribute("label", code.lang ?? "text"), attribute("value", code.lang ?? "text")],
-			children: [code],
-			data: { _mdxExplicitJsx: true },
-		}))
+    const tabs: tabelement[] = group.map((code) => ({
+      attributes: [
+        attribute("label", code.lang ?? "text"),
+        attribute("value", code.lang ?? "text"),
+      ],
+      children: [code],
+      data: { _mdxExplicitJsx: true },
+      name: "CodeTab",
+      type: "mdxJsxFlowElement",
+    }));
 
-		const element: groupelement = {
-			type: "mdxJsxFlowElement",
-			name: "CodeGroup",
-			attributes: [],
-			children: tabs,
-			data: { _mdxExplicitJsx: true },
-		}
+    const element: groupelement = {
+      attributes: [],
+      children: tabs,
+      data: { _mdxExplicitJsx: true },
+      name: "CodeGroup",
+      type: "mdxJsxFlowElement",
+    };
 
-		parent.children.splice(index, group.length, element as Root["children"][number])
-	})
+    parent.children.splice(
+      index,
+      group.length,
+      element as Root["children"][number]
+    );
+  });
 }
 
-export const remarkTabs: Plugin<[], Root> = () => transformer
+export const remarkTabs: Plugin<[], Root> = () => transformer;

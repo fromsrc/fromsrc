@@ -9,12 +9,12 @@ table of contents with scroll spy, progress indicator, and multiple variants.
 ## usage
 
 ```tsx
-import { Toc } from "fromsrc/client"
+import { Toc } from "fromsrc/client";
 
 <div className="flex">
   <article>{children}</article>
   <Toc />
-</div>
+</div>;
 ```
 
 ## scroll spy
@@ -94,10 +94,10 @@ open by default:
 access toc state directly for custom implementations.
 
 ```tsx
-import { useToc } from "fromsrc/client"
+import { useToc } from "fromsrc/client";
 
 function CustomToc() {
-  const { headings, active, activeRange } = useToc(true)
+  const { headings, active, activeRange } = useToc(true);
 
   return (
     <nav>
@@ -111,35 +111,35 @@ function CustomToc() {
         </a>
       ))}
     </nav>
-  )
+  );
 }
 ```
 
 ### return value
 
-| field | type | description |
-|-------|------|-------------|
-| headings | Heading[] | h2 and h3 elements with id, text, level |
-| active | string | id of the first active heading |
-| activeRange | string[] | ids of all visible headings (multi mode) |
+| field       | type      | description                              |
+| ----------- | --------- | ---------------------------------------- |
+| headings    | Heading[] | h2 and h3 elements with id, text, level  |
+| active      | string    | id of the first active heading           |
+| activeRange | string[]  | ids of all visible headings (multi mode) |
 
 ### heading type
 
 ```tsx
 interface Heading {
-  id: string
-  text: string
-  level: number
+  id: string;
+  text: string;
+  level: number;
 }
 ```
 
 ## props
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| variant | "default" \| "minimal" \| "inline" | "default" | toc style |
-| zigzag | boolean | false | show zigzag lines connecting headings |
-| multi | boolean | false | highlight multiple active headings |
-| title | string | "on this page" | header text (inline only) |
-| collapsible | boolean | true | can collapse (inline only) |
-| defaultOpen | boolean | false | start expanded (inline only) |
+| prop        | type                               | default        | description                           |
+| ----------- | ---------------------------------- | -------------- | ------------------------------------- |
+| variant     | "default" \| "minimal" \| "inline" | "default"      | toc style                             |
+| zigzag      | boolean                            | false          | show zigzag lines connecting headings |
+| multi       | boolean                            | false          | highlight multiple active headings    |
+| title       | string                             | "on this page" | header text (inline only)             |
+| collapsible | boolean                            | true           | can collapse (inline only)            |
+| defaultOpen | boolean                            | false          | start expanded (inline only)          |

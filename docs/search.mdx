@@ -36,11 +36,14 @@ const docs = await getSearchDocs()
 fromsrc uses a pluggable adapter pattern for search:
 
 ```ts
-import type { SearchAdapter, SearchResult } from "fromsrc"
+import type { SearchAdapter, SearchResult } from "fromsrc";
 
 interface SearchAdapter {
-  search(query: string, docs: SearchDoc[]): SearchResult[] | Promise<SearchResult[]>
-  index?(docs: SearchDoc[]): void | Promise<void>
+  search(
+    query: string,
+    docs: SearchDoc[]
+  ): SearchResult[] | Promise<SearchResult[]>;
+  index?(docs: SearchDoc[]): void | Promise<void>;
 }
 ```
 
@@ -107,12 +110,13 @@ fromsrc includes a typed search route for remote ui and custom clients:
 ```
 
 ```tsx
-import { Search } from "fromsrc/client"
+import { Search } from "fromsrc/client";
 
-<Search basePath="/docs" endpoint="/api/search" />
+<Search basePath="/docs" endpoint="/api/search" />;
 ```
 
 response fields:
+
 - `slug`
 - `title`
 - `description`
@@ -121,21 +125,22 @@ response fields:
 - `score`
 
 response headers:
+
 - `Server-Timing` (`search;dur=<ms>`)
 - `X-Search-Cache` (`hit` or `miss`)
 - `X-Search-Result-Count`
 
 ## keyboard shortcuts
 
-| shortcut | action |
-|----------|--------|
-| `⌘K` / `Ctrl+K` | open search |
-| `/` | open search (outside inputs) |
-| `↑` / `↓` | navigate results |
-| `Home` / `End` | jump to first / last |
-| `Tab` | autocomplete top result |
-| `Enter` | go to result |
-| `Escape` | close search |
+| shortcut        | action                       |
+| --------------- | ---------------------------- |
+| `⌘K` / `Ctrl+K` | open search                  |
+| `/`             | open search (outside inputs) |
+| `↑` / `↓`       | navigate results             |
+| `Home` / `End`  | jump to first / last         |
+| `Tab`           | autocomplete top result      |
+| `Enter`         | go to result                 |
+| `Escape`        | close search                 |
 
 ## searchdoc type
 
@@ -143,17 +148,17 @@ the search component accepts an array of searchable documents:
 
 ```ts
 interface SearchDoc {
-  slug: string
-  title: string
-  description?: string
-  content: string  // stripped body text for searching
+  slug: string;
+  title: string;
+  description?: string;
+  content: string; // stripped body text for searching
 }
 ```
 
 use `getSearchDocs()` to get documents with content for full-text search:
 
 ```ts
-import { getSearchDocs } from "./_lib/content"
+import { getSearchDocs } from "./_lib/content";
 
-const searchDocs = await getSearchDocs()
+const searchDocs = await getSearchDocs();
 ```

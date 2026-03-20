@@ -43,10 +43,7 @@ const items = [
 ## custom placeholder
 
 ```tsx
-<Command
-  items={items}
-  placeholder="type a command..."
-/>
+<Command items={items} placeholder="type a command..." />
 ```
 
 ## item callbacks
@@ -58,31 +55,31 @@ const items = [
   {
     id: "copy",
     label: "Copy to Clipboard",
-    onSelect: () => navigator.clipboard.writeText("copied!")
+    onSelect: () => navigator.clipboard.writeText("copied!"),
   },
   {
     id: "share",
     label: "Share",
-    onSelect: () => openShareDialog()
+    onSelect: () => openShareDialog(),
   },
-]
+];
 ```
 
 ## props
 
 ### command
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| items | CommandItem[] | required | list of command items |
-| placeholder | string | "search..." | input placeholder |
-| onSelect | (item) => void | - | callback when item selected |
+| prop        | type           | default     | description                 |
+| ----------- | -------------- | ----------- | --------------------------- |
+| items       | CommandItem[]  | required    | list of command items       |
+| placeholder | string         | "search..." | input placeholder           |
+| onSelect    | (item) => void | -           | callback when item selected |
 
 ### commanditem
 
-| prop | type | description |
-|------|------|-------------|
-| id | string | unique identifier |
-| label | string | display text |
-| icon | ReactNode | optional icon |
+| prop     | type       | description            |
+| -------- | ---------- | ---------------------- |
+| id       | string     | unique identifier      |
+| label    | string     | display text           |
+| icon     | ReactNode  | optional icon          |
 | onSelect | () => void | optional item callback |

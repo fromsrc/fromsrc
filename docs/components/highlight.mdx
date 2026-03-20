@@ -15,7 +15,11 @@ mark text with a colored background.
 <Highlight color="green">success</Highlight>
 ```
 
-<Highlight>important text</Highlight> <Highlight color="green">success</Highlight> <Highlight color="blue">info</Highlight> <Highlight color="red">error</Highlight> <Highlight color="purple">special</Highlight>
+<Highlight>important text</Highlight>
+<Highlight color="green">success</Highlight>
+<Highlight color="blue">info</Highlight>
+<Highlight color="red">error</Highlight>
+<Highlight color="purple">special</Highlight>
 
 ## highlight colors
 
@@ -58,7 +62,9 @@ add styled underlines to text.
 <Underline style="wavy">wavy</Underline>
 ```
 
-<Underline>solid</Underline> <Underline style="wavy">wavy</Underline> <Underline style="dotted">dotted</Underline> <Underline style="dashed">dashed</Underline>
+<Underline>solid</Underline> <Underline style="wavy">wavy</Underline>
+<Underline style="dotted">dotted</Underline>
+<Underline style="dashed">dashed</Underline>
 
 ## underline styles
 
@@ -90,14 +96,14 @@ dashed underline.
 
 ### highlight
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| children | ReactNode | required | text to highlight |
-| color | "yellow" \| "green" \| "blue" \| "red" \| "purple" | "yellow" | highlight color |
+| prop     | type                                               | default  | description       |
+| -------- | -------------------------------------------------- | -------- | ----------------- |
+| children | ReactNode                                          | required | text to highlight |
+| color    | "yellow" \| "green" \| "blue" \| "red" \| "purple" | "yellow" | highlight color   |
 
 ### underline
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| children | ReactNode | required | text to underline |
-| style | "solid" \| "wavy" \| "dotted" \| "dashed" | "solid" | underline style |
+| prop     | type                                      | default  | description       |
+| -------- | ----------------------------------------- | -------- | ----------------- |
+| children | ReactNode                                 | required | text to underline |
+| style    | "solid" \| "wavy" \| "dotted" \| "dashed" | "solid"  | underline style   |

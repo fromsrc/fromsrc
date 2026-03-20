@@ -1,74 +1,90 @@
-import type { List, ListItem, Paragraph, Root } from "mdast"
-import type { Plugin } from "unified"
-import { visit } from "unist-util-visit"
+import type { List, ListItem, Paragraph, Root } from "mdast";
+import type { Plugin } from "unified";
+import { visit } from "unist-util-visit";
 
-type textnode = { value?: string }
-
-function isStepsList(node: List): boolean {
-	if (!node.ordered) return false
-	return node.children.every((item: ListItem) => {
-		const first = item.children[0]
-		if (!first || first.type !== "paragraph") return false
-		return first.children[0]?.type === "strong"
-	})
+interface textnode {
+  value?: string;
 }
 
-function extractTitle(strong: Paragraph["children"][number] | undefined): string {
-	if (!strong || !("children" in strong) || !Array.isArray(strong.children)) return ""
-	return strong.children
-		.map((child) => ("value" in child ? ((child as textnode).value ?? "") : ""))
-		.join("")
+function isStepsList(node: List): boolean {
+  if (!node.ordered) {
+    return false;
+  }
+  return node.children.every((item: ListItem) => {
+    const first = item.children[0];
+    if (!first || first.type !== "paragraph") {
+      return false;
+    }
+    return first.children[0]?.type === "strong";
+  });
+}
+
+function extractTitle(
+  strong: Paragraph["children"][number] | undefined
+): string {
+  if (!strong || !("children" in strong) || !Array.isArray(strong.children)) {
+    return "";
+  }
+  return strong.children
+    .map((child) => ("value" in child ? ((child as textnode).value ?? "") : ""))
+    .join("");
 }
 
 function makeStep(item: ListItem) {
-	const paragraph = item.children[0] as Paragraph
-	const strong = paragraph.children[0]
-	const title = extractTitle(strong)
+  const paragraph = item.children[0] as Paragraph;
+  const strong = paragraph.children[0];
+  const title = extractTitle(strong);
 
-	const remaining = paragraph.children.slice(1)
-	const first = remaining[0]
-	const trimmed =
-		first && first.type === "text" && first.value.startsWith(" ")
-			? [{ ...first, value: first.value.slice(1) }, ...remaining.slice(1)]
-			: remaining
+  const remaining = paragraph.children.slice(1);
+  const first = remaining[0];
+  const trimmed =
+    first && first.type === "text" && first.value.startsWith(" ")
+      ? [{ ...first, value: first.value.slice(1) }, ...remaining.slice(1)]
+      : remaining;
 
-	const children: unknown[] = []
+  const children: unknown[] = [];
 
-	if (trimmed.length > 0) {
-		children.push({
-			type: "paragraph" as const,
-			children: trimmed,
-		})
-	}
+  if (trimmed.length > 0) {
+    children.push({
+      children: trimmed,
+      type: "paragraph" as const,
+    });
+  }
 
-	for (const child of item.children.slice(1)) {
-		children.push(child)
-	}
+  for (const child of item.children.slice(1)) {
+    children.push(child);
+  }
 
-	return {
-		type: "mdxJsxFlowElement" as const,
-		name: "Step",
-		attributes: [{ type: "mdxJsxAttribute" as const, name: "title", value: title }],
-		children,
-		data: { _mdxExplicitJsx: true },
-	}
+  return {
+    attributes: [
+      { name: "title", type: "mdxJsxAttribute" as const, value: title },
+    ],
+    children,
+    data: { _mdxExplicitJsx: true },
+    name: "Step",
+    type: "mdxJsxFlowElement" as const,
+  };
 }
 
 function transformer(tree: Root) {
-	visit(tree, "list", (node: List, index, parent) => {
-		if (!parent || index === undefined) return
-		if (!isStepsList(node)) return
+  visit(tree, "list", (node: List, index, parent) => {
+    if (!parent || index === undefined) {
+      return;
+    }
+    if (!isStepsList(node)) {
+      return;
+    }
 
-		const steps = node.children.map(makeStep)
+    const steps = node.children.map(makeStep);
 
-		parent.children[index] = {
-			type: "mdxJsxFlowElement",
-			name: "Steps",
-			attributes: [],
-			children: steps,
-			data: { _mdxExplicitJsx: true },
-		} as Root["children"][number]
-	})
+    parent.children[index] = {
+      attributes: [],
+      children: steps,
+      data: { _mdxExplicitJsx: true },
+      name: "Steps",
+      type: "mdxJsxFlowElement",
+    } as Root["children"][number];
+  });
 }
 
-export const remarkSteps: Plugin<[], Root> = () => transformer
+export const remarkSteps: Plugin<[], Root> = () => transformer;

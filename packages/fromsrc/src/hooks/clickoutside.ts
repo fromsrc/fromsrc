@@ -1,7 +1,9 @@
-"use client"
+"use client";
 
-import { type RefObject, useCallback } from "react"
-import { useEventListener } from "./eventlistener"
+import { useCallback } from "react";
+import type { RefObject } from "react";
+
+import { useEventListener } from "./eventlistener";
 
 /**
  * Triggers a callback when clicking outside the referenced element
@@ -10,20 +12,27 @@ import { useEventListener } from "./eventlistener"
  * @param enabled - Whether the listener is active (default: true)
  */
 export function useClickOutside<T extends HTMLElement>(
-	ref: RefObject<T | null>,
-	handler: () => void,
-	enabled = true
+  ref: RefObject<T | null>,
+  handler: () => void,
+  enabled = true
 ): void {
-	const handleClick = useCallback(
-		(e: MouseEvent) => {
-			const target = e.target
-			if (!(target instanceof Node)) return
-			if (ref.current && !ref.current.contains(target)) {
-				handler()
-			}
-		},
-		[ref, handler]
-	)
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
+      const { target } = e;
+      if (!(target instanceof Node)) {
+        return;
+      }
+      if (ref.current && !ref.current.contains(target)) {
+        handler();
+      }
+    },
+    [ref, handler]
+  );
 
-	useEventListener(typeof document !== "undefined" ? document : null, "click", handleClick, enabled)
+  useEventListener(
+    typeof document !== "undefined" ? document : null,
+    "click",
+    handleClick,
+    enabled
+  );
 }

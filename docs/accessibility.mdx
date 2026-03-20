@@ -10,16 +10,16 @@ fromsrc components follow wcag 2.1 guidelines.
 
 all interactive components include appropriate aria attributes:
 
-| component | attributes |
-|-----------|------------|
-| search | `role="combobox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant` |
-| dropdown | `role="menu"`, `aria-haspopup`, `aria-expanded` |
-| accordion | `aria-expanded`, `aria-controls` |
-| modal | `role="dialog"`, `aria-modal` |
-| tooltip | `role="tooltip"` |
-| progress | `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax` |
-| alert | `role="alert"` |
-| tabs | `role="tablist"`, `role="tab"`, `aria-selected` |
+| component | attributes                                                                   |
+| --------- | ---------------------------------------------------------------------------- |
+| search    | `role="combobox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant` |
+| dropdown  | `role="menu"`, `aria-haspopup`, `aria-expanded`                              |
+| accordion | `aria-expanded`, `aria-controls`                                             |
+| modal     | `role="dialog"`, `aria-modal`                                                |
+| tooltip   | `role="tooltip"`                                                             |
+| progress  | `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax`      |
+| alert     | `role="alert"`                                                               |
+| tabs      | `role="tablist"`, `role="tab"`, `aria-selected`                              |
 
 decorative icons use `aria-hidden="true"` to be ignored by screen readers.
 
@@ -27,16 +27,17 @@ decorative icons use `aria-hidden="true"` to be ignored by screen readers.
 
 interactive components support full keyboard control:
 
-| key | action |
-|-----|--------|
-| Tab | move focus between elements |
-| Enter/Space | activate buttons, select items |
+| key           | action                                |
+| ------------- | ------------------------------------- |
+| Tab           | move focus between elements           |
+| Enter/Space   | activate buttons, select items        |
 | Arrow Up/Down | navigate lists, menus, search results |
-| Escape | close modals, dropdowns, search |
-| Cmd/Ctrl+K | open search |
+| Escape        | close modals, dropdowns, search       |
+| Cmd/Ctrl+K    | open search                           |
 
 <Callout type="tip">
-the search component keeps keyboard navigation without extra hint chrome in the modal.
+  the search component keeps keyboard navigation without extra hint chrome in
+  the modal.
 </Callout>
 
 ## focus management
@@ -60,21 +61,23 @@ components announce state changes:
 - `aria-label` provides accessible names for icon buttons
 
 <Callout type="info">
-use semantic html (headings, lists, landmarks) in your content for better navigation.
+  use semantic html (headings, lists, landmarks) in your content for better
+  navigation.
 </Callout>
 
 ## color contrast
 
 the default theme meets wcag aa standards:
 
-| pair | contrast ratio |
-|------|----------------|
-| fg on bg | 19.6:1 |
-| muted on bg | 5.8:1 |
-| accent on bg | 5.3:1 |
+| pair         | contrast ratio |
+| ------------ | -------------- |
+| fg on bg     | 19.6:1         |
+| muted on bg  | 5.8:1          |
+| accent on bg | 5.3:1          |
 
 <Callout type="warning">
-custom themes should maintain at least 4.5:1 contrast for text and 3:1 for ui components.
+  custom themes should maintain at least 4.5:1 contrast for text and 3:1 for ui
+  components.
 </Callout>
 
 ### testing contrast

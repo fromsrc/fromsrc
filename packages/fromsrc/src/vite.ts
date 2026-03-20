@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-export { viteAdapter } from "./adaptervite"
+export { viteAdapter } from "./adaptervite";
 export {
-	AdapterContext,
-	AdapterProvider,
-	createadapter,
-	type FrameworkAdapter,
-	useAdapter,
-} from "./adapter"
+  AdapterContext,
+  AdapterProvider,
+  createadapter,
+  type FrameworkAdapter,
+  useAdapter,
+} from "./adapter";

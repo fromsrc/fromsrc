@@ -12,7 +12,9 @@ show type or value hints on hover.
 
 ```mdx
 <HoverInfo info="string">name</HoverInfo>
-<HoverInfo info="42" type="value">count</HoverInfo>
+<HoverInfo info="42" type="value">
+  count
+</HoverInfo>
 ```
 
 hover over: <HoverInfo info="string">name</HoverInfo> or <HoverInfo info="42" type="value">count</HoverInfo> or <HoverInfo info="undefined" type="error">missing</HoverInfo>
@@ -29,37 +31,59 @@ default style for type annotations.
 
 for displaying values.
 
-<HoverInfo info="true" type="value">enabled</HoverInfo>
+<HoverInfo info="true" type="value">
+  enabled
+</HoverInfo>
 
 ### error
 
 for error states.
 
-<HoverInfo info="null reference" type="error">data</HoverInfo>
+<HoverInfo info="null reference" type="error">
+  data
+</HoverInfo>
 
 ## typepopup
 
 for richer hover content with custom formatting.
 
 ```mdx
-<TypePopup trigger="config" content={<>type: object<br/>keys: 3</>} />
+<TypePopup
+  trigger="config"
+  content={
+    <>
+      type: object
+      <br />
+      keys: 3
+    </>
+  }
+/>
 ```
 
-<TypePopup trigger="config" content={<>type: object<br/>keys: 3</>} />
+<TypePopup
+  trigger="config"
+  content={
+    <>
+      type: object
+      <br />
+      keys: 3
+    </>
+  }
+/>
 
 ## props
 
 ### hoverinfo
 
-| prop | type | default | description |
-|------|------|---------|-------------|
-| children | ReactNode | required | trigger element |
-| info | string | required | text to display |
-| type | "type" \| "value" \| "error" | "type" | color style |
+| prop     | type                         | default  | description     |
+| -------- | ---------------------------- | -------- | --------------- |
+| children | ReactNode                    | required | trigger element |
+| info     | string                       | required | text to display |
+| type     | "type" \| "value" \| "error" | "type"   | color style     |
 
 ### typepopup
 
-| prop | type | default | description |
-|------|------|---------|-------------|
+| prop    | type      | default  | description   |
+| ------- | --------- | -------- | ------------- |
 | trigger | ReactNode | required | hover trigger |
 | content | ReactNode | required | popup content |

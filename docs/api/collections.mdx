@@ -14,14 +14,14 @@ create one typed collection.
 import { defineCollection, z } from "fromsrc";
 
 const posts = defineCollection({
-	name: "posts",
-	dir: "content/posts",
-	schema: z.object({
-		title: z.string(),
-		description: z.string().optional(),
-		publishedAt: z.string(),
-		tags: z.array(z.string()).default([]),
-	}),
+  name: "posts",
+  dir: "content/posts",
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    publishedAt: z.string(),
+    tags: z.array(z.string()).default([]),
+  }),
 });
 ```
 
@@ -33,22 +33,22 @@ create multiple collections in one call.
 import { defineCollections, z } from "fromsrc";
 
 const collections = defineCollections({
-	posts: {
-		name: "posts",
-		dir: "content/posts",
-		schema: z.object({
-			title: z.string(),
-			publishedAt: z.string(),
-		}),
-	},
-	changelog: {
-		name: "changelog",
-		dir: "content/changelog",
-		schema: z.object({
-			title: z.string(),
-			version: z.string(),
-		}),
-	},
+  posts: {
+    name: "posts",
+    dir: "content/posts",
+    schema: z.object({
+      title: z.string(),
+      publishedAt: z.string(),
+    }),
+  },
+  changelog: {
+    name: "changelog",
+    dir: "content/changelog",
+    schema: z.object({
+      title: z.string(),
+      version: z.string(),
+    }),
+  },
 });
 ```
 
@@ -78,8 +78,8 @@ schema fields are inferred through zod.
 ```tsx
 const first = (await posts.getAll())[0];
 if (first) {
-	first.data.title;
-	first.data.publishedAt;
+  first.data.title;
+  first.data.publishedAt;
 }
 ```
 

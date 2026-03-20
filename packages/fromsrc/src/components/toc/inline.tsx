@@ -1,88 +1,96 @@
-"use client"
+"use client";
 
-import { memo, useCallback, useState } from "react"
-import type { Heading } from "./hook"
+import { memo, useCallback, useState } from "react";
+
+import type { Heading } from "./hook";
 
 /**
  * props for the inline table of contents component
  */
 export interface TocInlineProps {
-	/** list of headings to display */
-	headings: Heading[]
-	/** title shown above the toc */
-	title?: string
-	/** whether the toc can be collapsed */
-	collapsible?: boolean
-	/** initial open state when collapsible */
-	defaultOpen?: boolean
+  /** list of headings to display */
+  headings: Heading[];
+  /** title shown above the toc */
+  title?: string;
+  /** whether the toc can be collapsed */
+  collapsible?: boolean;
+  /** initial open state when collapsible */
+  defaultOpen?: boolean;
 }
 
 function TocInlineBase({
-	headings,
-	title = "on this page",
-	collapsible = true,
-	defaultOpen = false,
+  headings,
+  title = "on this page",
+  collapsible = true,
+  defaultOpen = false,
 }: TocInlineProps): React.ReactElement | null {
-	const [open, setOpen] = useState(defaultOpen)
+  const [open, setOpen] = useState(defaultOpen);
 
-	const toggle = useCallback((): void => {
-		setOpen((prev) => !prev)
-	}, [])
+  const toggle = useCallback((): void => {
+    setOpen((prev) => !prev);
+  }, []);
 
-	if (headings.length === 0) return null
+  if (headings.length === 0) {
+    return null;
+  }
 
-	const content = (
-		<div className="flex flex-col text-sm text-muted">
-			{headings.map((heading) => (
-				<a
-					key={heading.id}
-					href={`#${heading.id}`}
-					className="border-l border-line py-1.5 hover:text-fg transition-colors"
-					style={{ paddingLeft: 12 * Math.max(heading.level - 1, 1) }}
-				>
-					{heading.text}
-				</a>
-			))}
-		</div>
-	)
+  const content = (
+    <div className="flex flex-col text-sm text-muted">
+      {headings.map((heading) => (
+        <a
+          key={heading.id}
+          href={`#${heading.id}`}
+          className="border-l border-line py-1.5 hover:text-fg transition-colors"
+          style={{ paddingLeft: 12 * Math.max(heading.level - 1, 1) }}
+        >
+          {heading.text}
+        </a>
+      ))}
+    </div>
+  );
 
-	if (!collapsible) {
-		return (
-			<nav
-				aria-label="table of contents"
-				className="my-6 rounded-lg border border-line bg-surface/30 p-4"
-			>
-				<p className="text-xs font-medium text-fg mb-3">{title}</p>
-				{content}
-			</nav>
-		)
-	}
+  if (!collapsible) {
+    return (
+      <nav
+        aria-label="table of contents"
+        className="my-6 rounded-lg border border-line bg-surface/30 p-4"
+      >
+        <p className="text-xs font-medium text-fg mb-3">{title}</p>
+        {content}
+      </nav>
+    );
+  }
 
-	return (
-		<nav
-			aria-label="table of contents"
-			className="my-6 rounded-lg border border-line bg-surface/30"
-		>
-			<button
-				type="button"
-				onClick={toggle}
-				aria-expanded={open}
-				className="w-full flex items-center justify-between px-4 py-3 text-xs font-medium text-fg"
-			>
-				{title}
-				<svg
-					className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-					aria-hidden="true"
-				>
-					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-				</svg>
-			</button>
-			{open && <div className="px-4 pb-4">{content}</div>}
-		</nav>
-	)
+  return (
+    <nav
+      aria-label="table of contents"
+      className="my-6 rounded-lg border border-line bg-surface/30"
+    >
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between px-4 py-3 text-xs font-medium text-fg"
+      >
+        {title}
+        <svg
+          className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      {open && <div className="px-4 pb-4">{content}</div>}
+    </nav>
+  );
 }
 
-export const TocInline = memo(TocInlineBase)
+export const TocInline = memo(TocInlineBase);
