@@ -136,10 +136,9 @@ export function defineConfig(config: FromsrcConfig): FromsrcConfig {
 }
 
 export function resolveConfig(config: FromsrcConfig): ResolvedConfig {
-  return mergeConfig(
-    defaults as unknown as Record<string, unknown>,
-    config as unknown as Record<string, unknown>
-  ) as ResolvedConfig;
+  const base: Record<string, unknown> = { ...defaults };
+  const over: Record<string, unknown> = { ...config };
+  return mergeConfig(base, over) as ResolvedConfig;
 }
 
 export async function loadConfig(dir: string): Promise<FromsrcConfig> {
