@@ -7,11 +7,15 @@ import { targets } from "./nextbundleset.mjs";
 const root = process.cwd();
 
 function parsemanifest(text) {
-  const index = text.indexOf("= {");
-  if (index === -1) {
+  const start = text.lastIndexOf("= {");
+  if (start === -1) {
     throw new Error("manifest payload missing");
   }
-  return JSON.parse(text.slice(index + 2).trim());
+  let raw = text.slice(start + 2).trim();
+  if (raw.endsWith(";")) {
+    raw = raw.slice(0, -1);
+  }
+  return JSON.parse(raw);
 }
 
 export async function measure(target) {

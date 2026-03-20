@@ -51,23 +51,26 @@ export function Sidebar({
   defaultOpenLevel = 0,
   width = 268,
 }: Props): ReactNode {
-  const [collapsed, setCollapsed] = useState(() => {
-    if (typeof document !== "undefined") {
-      return document.documentElement.hasAttribute("data-sidebar-collapsed");
-    }
-    return false;
-  });
+  const [collapsed, setCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [hovered, setHovered] = useState(false);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const floatingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [floating, setFloating] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const widthvalue = `${width}px`;
 
   useEffect((): void => {
-    const stored = localStorage.getItem("sidebar-collapsed");
-    setCollapsed(stored === "true");
-    setMounted(true);
+    const stored = localStorage.getItem("sidebar-collapsed") === "true";
+    setCollapsed(stored);
+    if (containerRef.current) {
+      delete containerRef.current.dataset.sidebarHide;
+    }
+    const style = document.getElementById("sidebar-hide");
+    if (style) {
+      style.remove();
+    }
+    requestAnimationFrame(() => setMounted(true));
   }, []);
 
   useEffect(() => {
@@ -163,7 +166,7 @@ export function Sidebar({
     : "";
 
   return (
-    <>
+    <div ref={containerRef} data-sidebar-container="">
       <div className="hidden lg:block shrink-0" style={{ width: widthvalue }} />
       <div
         className="hidden lg:block fixed left-0 top-0 z-40 h-screen pointer-events-none"
@@ -240,7 +243,7 @@ export function Sidebar({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
