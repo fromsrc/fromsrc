@@ -51,7 +51,13 @@ export function Sidebar({
   defaultOpenLevel = 0,
   width = 268,
 }: Props): ReactNode {
-  const [collapsed, setCollapsed] = useState<boolean | null>(null);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof document !== "undefined") {
+      return document.documentElement.hasAttribute("data-sidebar-collapsed");
+    }
+    return false;
+  });
+  const [mounted, setMounted] = useState(false);
   const [hovered, setHovered] = useState(false);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const floatingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,6 +67,7 @@ export function Sidebar({
   useEffect((): void => {
     const stored = localStorage.getItem("sidebar-collapsed");
     setCollapsed(stored === "true");
+    setMounted(true);
   }, []);
 
   useEffect(() => {
@@ -148,17 +155,19 @@ export function Sidebar({
     window.dispatchEvent(event);
   }, []);
 
-  const ready = collapsed !== null;
   const shadow = collapsed && hovered ? "shadow-xl" : "";
   const translate =
     collapsed && !hovered ? `translateX(-${width}px)` : "translateX(0px)";
+  const transition = mounted
+    ? "transition-[transform,box-shadow] duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+    : "";
 
   return (
     <>
       <div className="hidden lg:block shrink-0" style={{ width: widthvalue }} />
       <div
         className="hidden lg:block fixed left-0 top-0 z-40 h-screen pointer-events-none"
-        style={{ visibility: ready ? "visible" : "hidden", width: widthvalue }}
+        style={{ width: widthvalue }}
       >
         {collapsed && (
           <div
@@ -173,7 +182,7 @@ export function Sidebar({
           aria-expanded={showExpanded}
           data-collapsed={collapsed}
           data-hovered={collapsed && hovered}
-          className={`${shadow} h-full flex flex-col bg-bg border-r border-line transition-[transform,box-shadow] duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)] pointer-events-auto`}
+          className={`${shadow} h-full flex flex-col bg-bg border-r border-line ${transition} pointer-events-auto`}
           style={{ transform: translate, width: widthvalue }}
           onPointerEnter={handleEnter}
           onPointerLeave={handleLeave}
@@ -194,7 +203,7 @@ export function Sidebar({
           {github && <SidebarFooter github={github} />}
         </aside>
       </div>
-      {ready && floating && (
+      {mounted && floating && (
         <div className="hidden lg:flex fixed left-0 top-0 z-50 p-3 pointer-events-auto">
           <div className="flex flex-col rounded-lg border border-line bg-surface/80 backdrop-blur-sm overflow-hidden">
             <button

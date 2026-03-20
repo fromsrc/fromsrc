@@ -1,62 +1,62 @@
 {
-  "core": {
-    "size": 124707,
-    "gzip": 35134
-  },
-  "readtime": {
-    "size": 151,
-    "gzip": 147
-  },
-  "searchscore": {
-    "size": 1551,
-    "gzip": 638
-  },
-  "searchindex": {
-    "size": 1365,
-    "gzip": 694
-  },
-  "searchpolicy": {
-    "size": 175,
-    "gzip": 152
-  },
-  "llms": {
-    "size": 600,
-    "gzip": 400
-  },
-  "openapi": {
-    "size": 5170,
-    "gzip": 1828
-  },
-  "algolia": {
-    "size": 1564,
-    "gzip": 808
-  },
-  "orama": {
-    "size": 1595,
-    "gzip": 760
-  },
-  "next": {
-    "size": 566,
-    "gzip": 328
-  },
-  "reactrouter": {
-    "size": 421,
-    "gzip": 271
-  },
-  "tanstack": {
-    "size": 495,
-    "gzip": 310
-  },
-  "remix": {
-    "size": 452,
-    "gzip": 290
-  },
-  "astro": {
-    "size": 1194,
-    "gzip": 507
-  },
-  "vite": {
-    "size": 1194,
-    "gzip": 508
-  }
+	"core": {
+		"gzip": 35151,
+		"size": 124783
+	},
+	"readtime": {
+		"gzip": 147,
+		"size": 151
+	},
+	"searchscore": {
+		"gzip": 640,
+		"size": 1551
+	},
+	"searchindex": {
+		"gzip": 694,
+		"size": 1365
+	},
+	"searchpolicy": {
+		"gzip": 154,
+		"size": 178
+	},
+	"llms": {
+		"gzip": 343,
+		"size": 517
+	},
+	"openapi": {
+		"gzip": 1825,
+		"size": 5162
+	},
+	"algolia": {
+		"gzip": 808,
+		"size": 1565
+	},
+	"orama": {
+		"gzip": 755,
+		"size": 1591
+	},
+	"next": {
+		"gzip": 331,
+		"size": 566
+	},
+	"reactrouter": {
+		"gzip": 273,
+		"size": 421
+	},
+	"tanstack": {
+		"gzip": 313,
+		"size": 495
+	},
+	"remix": {
+		"gzip": 293,
+		"size": 452
+	},
+	"astro": {
+		"gzip": 511,
+		"size": 1194
+	},
+	"vite": {
+		"gzip": 511,
+		"size": 1194
+	}
 }

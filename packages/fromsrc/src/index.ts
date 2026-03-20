@@ -532,3 +532,4 @@ export { remarkToc } from "./remarktoc";
 export { remarkFootnote } from "./remarkfootnote";
 export { remarkBadge } from "./remarkbadge";
 export { remarkColumns } from "./remarkcolumns";
+export { SidebarScript } from "./components/sidebarscript";
