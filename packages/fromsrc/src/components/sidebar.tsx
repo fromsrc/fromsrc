@@ -52,26 +52,11 @@ export function Sidebar({
   width = 268,
 }: Props): ReactNode {
   const [collapsed, setCollapsed] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [hovered, setHovered] = useState(false);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const floatingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [floating, setFloating] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
   const widthvalue = `${width}px`;
-
-  useEffect((): void => {
-    const stored = localStorage.getItem("sidebar-collapsed") === "true";
-    setCollapsed(stored);
-    if (containerRef.current) {
-      delete containerRef.current.dataset.sidebarHide;
-    }
-    const style = document.getElementById("sidebar-hide");
-    if (style) {
-      style.remove();
-    }
-    requestAnimationFrame(() => setMounted(true));
-  }, []);
 
   useEffect(() => {
     if (floatingTimer.current) {
@@ -92,11 +77,7 @@ export function Sidebar({
   }, [collapsed, hovered]);
 
   const toggle = useCallback((): void => {
-    setCollapsed((prev) => {
-      const next = !prev;
-      localStorage.setItem("sidebar-collapsed", String(next));
-      return next;
-    });
+    setCollapsed((prev) => !prev);
   }, []);
 
   const showExpanded = !collapsed || hovered;
@@ -161,12 +142,9 @@ export function Sidebar({
   const shadow = collapsed && hovered ? "shadow-xl" : "";
   const translate =
     collapsed && !hovered ? `translateX(-${width}px)` : "translateX(0px)";
-  const transition = mounted
-    ? "transition-[transform,box-shadow] duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-    : "";
 
   return (
-    <div ref={containerRef} data-sidebar-container="">
+    <>
       <div className="hidden lg:block shrink-0" style={{ width: widthvalue }} />
       <div
         className="hidden lg:block fixed left-0 top-0 z-40 h-screen pointer-events-none"
@@ -185,7 +163,7 @@ export function Sidebar({
           aria-expanded={showExpanded}
           data-collapsed={collapsed}
           data-hovered={collapsed && hovered}
-          className={`${shadow} h-full flex flex-col bg-bg border-r border-line ${transition} pointer-events-auto`}
+          className={`${shadow} h-full flex flex-col bg-bg border-r border-line transition-[transform,box-shadow] duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)] pointer-events-auto`}
           style={{ transform: translate, width: widthvalue }}
           onPointerEnter={handleEnter}
           onPointerLeave={handleLeave}
@@ -206,7 +184,7 @@ export function Sidebar({
           {github && <SidebarFooter github={github} />}
         </aside>
       </div>
-      {mounted && floating && (
+      {floating && (
         <div className="hidden lg:flex fixed left-0 top-0 z-50 p-3 pointer-events-auto">
           <div className="flex flex-col rounded-lg border border-line bg-surface/80 backdrop-blur-sm overflow-hidden">
             <button
@@ -243,7 +221,7 @@ export function Sidebar({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 
@@ -257,7 +235,7 @@ function SidebarHeader({
   title: string;
   logo?: ReactNode;
   collapsible?: boolean;
-  collapsed: boolean | null;
+  collapsed: boolean;
   onToggle: () => void;
 }) {
   return (
