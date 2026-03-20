@@ -69,7 +69,7 @@ function backtrack(
       i--;
     }
   }
-  return result.toReversed();
+  return result.reverse();
 }
 
 function applyContext(lines: DiffLine[], ctx: number): DiffLine[] {

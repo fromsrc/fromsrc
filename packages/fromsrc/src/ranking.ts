@@ -93,7 +93,7 @@ export function rank(
       results.push({ item, matches: m, score: s });
     }
   }
-  return results.toSorted((a, b) => b.score - a.score);
+  return results.sort((a, b) => b.score - a.score);
 }
 
 export function bm25(items: RankableItem[], query: string): RankResult[] {
@@ -136,7 +136,7 @@ export function bm25(items: RankableItem[], query: string): RankResult[] {
       results.push({ item, matches, score: s });
     }
   }
-  return results.toSorted((a, b) => b.score - a.score);
+  return results.sort((a, b) => b.score - a.score);
 }
 
 export function boostRecent(
@@ -156,5 +156,5 @@ export function boostRecent(
         1 + (maxBoost - 1) * (1 - (now - dateFn(r.item).getTime()) / range);
       return { ...r, score: r.score * boost };
     })
-    .toSorted((a, b) => b.score - a.score);
+    .sort((a, b) => b.score - a.score);
 }

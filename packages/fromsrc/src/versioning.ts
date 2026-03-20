@@ -49,7 +49,7 @@ export function compareVersions(a: string, b: string): number {
 }
 
 export function sortVersions(versions: DocVersion[]): DocVersion[] {
-  return [...versions].toSorted((a, b) => compareVersions(b.label, a.label));
+  return [...versions].sort((a, b) => compareVersions(b.label, a.label));
 }
 
 export function resolveVersion(

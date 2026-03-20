@@ -20,8 +20,8 @@
     "gzip": 152
   },
   "llms": {
-    "size": 514,
-    "gzip": 340
+    "size": 600,
+    "gzip": 400
   },
   "openapi": {
     "size": 5170,

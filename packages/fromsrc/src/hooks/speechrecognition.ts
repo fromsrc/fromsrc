@@ -60,7 +60,7 @@ export function useSpeechRecognition(lang = "en-US"): SpeechResult {
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.onresult = (e) => {
-      const transcript = [...e.results]
+      const transcript = Array.from(e.results)
         .map((result) => result[0].transcript)
         .join("");
       setText(transcript);

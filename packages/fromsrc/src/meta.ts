@@ -92,7 +92,7 @@ export function sortByMeta<T extends { slug: string }>(
     }
   });
 
-  return [...items].toSorted((a, b) => {
+  return [...items].sort((a, b) => {
     const aName = getBasename(a.slug, prefix);
     const bName = getBasename(b.slug, prefix);
     const aOrder = order.get(aName) ?? 999;

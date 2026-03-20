@@ -104,7 +104,7 @@ export default defineConfig([
     entry: ["src/**/*.ts", "src/**/*.tsx"],
     external,
     format: ["esm"],
-    onSuccess: () => {
+    onSuccess: async () => {
       finish();
     },
     silent: true,

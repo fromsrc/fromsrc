@@ -60,19 +60,21 @@ export function Table<T extends Record<string, unknown>>({
     if (!sortKey || !sortDir) {
       return data;
     }
-    return [...data].toSorted((a, b) => {
-      const va = a[sortKey];
-      const vb = b[sortKey];
+    return [...data].sort((a, b) => {
+      const va: unknown = a[sortKey];
+      const vb: unknown = b[sortKey];
       if (va === vb) {
         return 0;
       }
-      if (va === null) {
+      if (va == null) {
         return 1;
       }
-      if (vb === null) {
+      if (vb == null) {
         return -1;
       }
-      const cmp = va < vb ? -1 : 1;
+      const na = typeof va === "number" ? va : String(va);
+      const nb = typeof vb === "number" ? vb : String(vb);
+      const cmp = na < nb ? -1 : na > nb ? 1 : 0;
       return sortDir === "asc" ? cmp : -cmp;
     });
   }, [data, sortKey, sortDir]);

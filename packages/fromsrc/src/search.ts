@@ -146,7 +146,7 @@ function searchContent(
     ...terms.map((term) => content.indexOf(term)),
   ];
   const idx =
-    positions.filter((value) => value >= 0).toSorted((a, b) => a - b)[0] ?? -1;
+    positions.filter((value) => value >= 0).sort((a, b) => a - b)[0] ?? -1;
   if (idx === -1) {
     return null;
   }

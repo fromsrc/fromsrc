@@ -196,20 +196,35 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 <Accordion>
   <AccordionItem title="cannot find module 'fromsrc'">
-    ensure fromsrc is installed: ```bash bun add fromsrc ```
+    ensure fromsrc is installed:
+
+    ```bash
+    bun add fromsrc
+    ```
   </AccordionItem>
   <AccordionItem title="adapter not resolving">
-    verify the subpath import matches your framework: ```tsx import{" "}
-    {nextAdapter} from "fromsrc/next" import {reactRouterAdapter} from
-    "fromsrc/react-router" import {viteAdapter} from "fromsrc/vite" import{" "}
-    {tanstackAdapter} from "fromsrc/tanstack" import {remixAdapter} from
-    "fromsrc/remix" import {astroAdapter} from "fromsrc/astro" import{" "}
-    {parseOpenApi} from "fromsrc/openapi" import {createAlgoliaAdapter} from
-    "fromsrc/algolia" import {createOramaAdapter} from "fromsrc/orama" ```
+    verify the subpath import matches your framework:
+
+    ```tsx
+    import { nextAdapter } from "fromsrc/next"
+    import { reactRouterAdapter } from "fromsrc/react-router"
+    import { viteAdapter } from "fromsrc/vite"
+    import { tanstackAdapter } from "fromsrc/tanstack"
+    import { remixAdapter } from "fromsrc/remix"
+    import { astroAdapter } from "fromsrc/astro"
+    import { parseOpenApi } from "fromsrc/openapi"
+    import { createAlgoliaAdapter } from "fromsrc/algolia"
+    import { createOramaAdapter } from "fromsrc/orama"
+    ```
   </AccordionItem>
   <AccordionItem title="bundle size got bigger">
-    run the tree-shake regression check: ```bash bun run check:shake ``` this
-    validates root, utility, and adapter imports stay inside budget.
+    run the tree-shake regression check:
+
+    ```bash
+    bun run check:shake
+    ```
+
+    this validates root, utility, and adapter imports stay inside budget.
   </AccordionItem>
   <AccordionItem title="search not working">
     search indexes content from your docs folder. ensure you have `.mdx` files
@@ -225,7 +240,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
     imports from fromsrc correctly.
   </AccordionItem>
   <AccordionItem title="dev process stuck">
-    restart and inspect logs: ```bash bun run dev:restart bun run dev:tail 80
+    restart and inspect logs:
+
+    ```bash
+    bun run dev:restart
+    bun run dev:tail 80
     ```
   </AccordionItem>
 </Accordion>

@@ -137,8 +137,8 @@ export function defineConfig(config: FromsrcConfig): FromsrcConfig {
 
 export function resolveConfig(config: FromsrcConfig): ResolvedConfig {
   return mergeConfig(
-    defaults as Record<string, unknown>,
-    config as Record<string, unknown>
+    defaults as unknown as Record<string, unknown>,
+    config as unknown as Record<string, unknown>
   ) as ResolvedConfig;
 }
 

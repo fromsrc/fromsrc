@@ -57,7 +57,7 @@ export async function getContributors(
         map.set(email, { commits: 1, email, lastCommit: date, name });
       }
     }
-    return [...map.values()].toSorted((a, b) => b.commits - a.commits);
+    return [...map.values()].sort((a, b) => b.commits - a.commits);
   } catch {
     return [];
   }
@@ -71,7 +71,7 @@ export async function getLastAuthor(
     return null;
   }
   return (
-    [...contributors].toSorted(
+    [...contributors].sort(
       (a, b) => b.lastCommit.getTime() - a.lastCommit.getTime()
     )[0] ?? null
   );

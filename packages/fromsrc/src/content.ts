@@ -188,7 +188,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
       return [];
     }
 
-    const sorted = docs.toSorted((a, b) => (a.order ?? 99) - (b.order ?? 99));
+    const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
     if (isProduction()) {
       docsCache = sorted;
     }
@@ -239,7 +239,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
       return [];
     }
 
-    const sorted = docs.toSorted((a, b) => (a.order ?? 99) - (b.order ?? 99));
+    const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
     if (isProduction()) {
       fullDocsCache = sorted;
     }
@@ -283,7 +283,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
             headings: headings.length > 0 ? headings : undefined,
           };
         })
-        .toSorted((a, b) => (a.order ?? 99) - (b.order ?? 99));
+        .sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
       searchCache = sorted;
       return sorted;
     }
@@ -329,7 +329,7 @@ export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
       return [];
     }
 
-    const sorted = docs.toSorted((a, b) => (a.order ?? 99) - (b.order ?? 99));
+    const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
     if (isProduction()) {
       searchCache = sorted;
     }
@@ -504,7 +504,7 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
   if (rootMeta?.pages) {
     sorted = sortByMeta(docs, rootMeta.pages, "");
   } else {
-    sorted = docs.toSorted((a, b) => (a.order ?? 99) - (b.order ?? 99));
+    sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
   }
 
   if (isProduction()) {
@@ -579,7 +579,7 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
     return [];
   }
 
-  const sorted = docs.toSorted((a, b) => (a.order ?? 99) - (b.order ?? 99));
+  const sorted = docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
   if (isProduction()) {
     searchCache.set(cacheKey, sorted);
   }

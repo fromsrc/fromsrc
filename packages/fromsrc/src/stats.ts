@@ -87,7 +87,7 @@ export async function analyzeDocs(dir: string): Promise<DocsStats> {
 
 export function formatStats(stats: DocsStats): string {
   const langs = Object.entries(stats.languages)
-    .toSorted((a, b) => b[1] - a[1])
+    .sort((a, b) => b[1] - a[1])
     .map(([l, c]) => `${l}: ${c}`)
     .join(", ");
   return [

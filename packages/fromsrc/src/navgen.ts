@@ -183,7 +183,7 @@ export async function generateNav(config: NavConfig): Promise<NavTree> {
 
 export function sortNav(items: NavItem[]): NavItem[] {
   return [...items]
-    .toSorted(
+    .sort(
       (a, b) =>
         (a.order ?? 999) - (b.order ?? 999) || a.title.localeCompare(b.title)
     )

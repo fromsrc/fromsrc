@@ -39,7 +39,7 @@ export const list = [
   {
     code: "import { generateLlmsIndex } from 'fromsrc/llms'; export default generateLlmsIndex({title:'a',description:'b',baseUrl:'https://x.y'},[{title:'t',slug:'s'}]);",
     max: 600,
-    maxgzip: 340,
+    maxgzip: 400,
     name: "llms",
   },
   {

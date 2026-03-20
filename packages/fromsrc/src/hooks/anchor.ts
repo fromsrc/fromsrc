@@ -34,7 +34,7 @@ export function useAnchorScroll(options: AnchorOptions = {}): void {
 
       e.preventDefault();
 
-      const top = element.offsetTop - offset;
+      const top = (element as HTMLElement).offsetTop - offset;
       window.scrollTo({
         behavior: smooth ? "smooth" : "auto",
         top: Math.max(0, top),
@@ -60,7 +60,7 @@ export function useAnchorScroll(options: AnchorOptions = {}): void {
     }
 
     setTimeout(() => {
-      const top = element.offsetTop - offset;
+      const top = (element as HTMLElement).offsetTop - offset;
       window.scrollTo({
         behavior: "auto",
         top: Math.max(0, top),

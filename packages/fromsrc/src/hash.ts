@@ -19,7 +19,7 @@ export interface Changes {
 function fnv1a(input: string): string {
   let h = 0x81_1C_9D_C5;
   for (let i = 0; i < input.length; i++) {
-    h ^= input.codePointAt(i);
+    h ^= input.codePointAt(i)!;
     h = Math.imul(h, 0x01_00_01_93);
   }
   return (h >>> 0).toString(16).padStart(8, "0");

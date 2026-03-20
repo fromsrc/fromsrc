@@ -71,5 +71,5 @@ export function scopeFromImports(imports: Record<string, unknown>): MdxScope {
 }
 
 export function listComponents(scope: MdxScope): string[] {
-  return Object.keys(scope).toSorted();
+  return Object.keys(scope).sort();
 }

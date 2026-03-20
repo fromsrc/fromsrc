@@ -132,7 +132,7 @@ export function defineCollection<T extends z.ZodRawShape>(
     name: config.name,
     sort: async (key, order = "asc") => {
       const items = await load();
-      return [...items].toSorted((a, b) => {
+      return [...items].sort((a, b) => {
         const va = key === "slug" ? a.slug : a.data[key];
         const vb = key === "slug" ? b.slug : b.data[key];
         const result = compare(va, vb);

@@ -72,23 +72,37 @@ jobs:
           version=$(node -p "require('./package.json').version")
           target=$(git rev-parse HEAD)
           title="v$version"
-          notes=$(cat <<EOF
-          fromsrc $title
 
-          packages
+          git fetch --tags --force
+
+          prev=$(git tag --sort=-v:refname | head -1)
+
+          if [ -n "$prev" ]; then
+            range="$prev..HEAD"
+          else
+            range="HEAD"
+          fi
+
+          changes=$(git log "$range" --pretty=format:"- %s" --no-merges | grep -v "□ release" || true)
+
+          notes=$(cat <<EOF
+          ## fromsrc $title
+
+          ### packages
           - fromsrc@$version
           - create-fromsrc@$version
 
-          source
+          ### changes
+          $changes
+
+          ### source
           - commit: $target
-
-          notes
-          - published from github actions
-
+          - previous: ${prev:-none}
           EOF
           )
+
           if gh release view "$title" >/dev/null 2>&1; then
-            gh release edit "$title" --title "$title" --notes "$notes"
+            gh release edit "$title" --title "$title" --notes "$notes" --tag "$title"
           else
             gh release create "$title" --target "$target" --title "$title" --notes "$notes"
           fi

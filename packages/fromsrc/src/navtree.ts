@@ -24,7 +24,7 @@ export function buildNavTree(config: NavTreeConfig): NavNode[] {
   const { docs, basePath = "/docs" } = config;
   const root: NavNode[] = [];
   const map = new Map<string, NavNode>();
-  const sorted = [...docs].toSorted(
+  const sorted = [...docs].sort(
     (a, b) => (a.order ?? 99) - (b.order ?? 99)
   );
 

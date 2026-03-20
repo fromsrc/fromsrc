@@ -36,7 +36,7 @@ export function detectLocale(
         q: Number.isNaN(q) ? 0 : q,
       };
     })
-    .toSorted((a, b) => b.q - a.q);
+    .sort((a, b) => b.q - a.q);
   for (const { lang } of entries) {
     if (set.has(lang)) {
       return lang;

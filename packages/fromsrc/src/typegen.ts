@@ -84,7 +84,7 @@ export async function generateTypes(config: TypegenConfig): Promise<string> {
   }
 
   const lines: string[] = [`export interface ${name} {`];
-  const sorted = [...fieldTypes.entries()].toSorted(([a], [b]) =>
+  const sorted = [...fieldTypes.entries()].sort(([a], [b]) =>
     a.localeCompare(b)
   );
 

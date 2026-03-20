@@ -142,7 +142,7 @@ export function Folder({
             const all = tree?.querySelectorAll("button, [tabindex='0']");
             const last =
               all && all.length > 0
-                ? toelement(all.at(-1) ?? null)
+                ? toelement(all[all.length - 1] ?? null)
                 : null;
             last?.focus();
             event.preventDefault();

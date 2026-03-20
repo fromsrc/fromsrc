@@ -29,7 +29,9 @@ interface MobileFolderProps {
 }
 
 function MobileFolder({
-  folderonNavigate,
+  folder,
+  basePath,
+  onNavigate,
 }: MobileFolderProps): JSX.Element {
   const pathname = usePathname();
   const isActive = folder.href && pathname === folder.href;
@@ -121,7 +123,7 @@ function MobileFolder({
                 <MobileFolder
                   key={item.title}
                   folder={item}
-                  
+                  basePath={basePath}
                   onNavigate={onNavigate}
                 />
               );

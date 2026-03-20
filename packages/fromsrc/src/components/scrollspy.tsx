@@ -32,7 +32,7 @@ function ScrollSpy({
       (entries) => {
         const visible = entries
           .filter((e) => e.isIntersecting)
-          .toSorted(
+          .sort(
             (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
           );
 
