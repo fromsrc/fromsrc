@@ -43,22 +43,22 @@ function FeedbackBase({ onFeedback }: FeedbackProps): JSX.Element {
         aria-live="polite"
         className="flex items-center gap-2 text-sm text-muted"
       >
-        {selected ? "thanks for your feedback" : "sorry to hear that"}
+        {selected ? "Thanks for your feedback" : "Sorry to hear that"}
       </div>
     );
   }
 
   return (
-    <div role="group" aria-label="feedback" className="flex items-center gap-3">
+    <div role="group" aria-label="Feedback" className="flex items-center gap-3">
       <span id="feedback-label" className="text-sm text-muted">
-        was this helpful?
+        Was this helpful?
       </span>
       <div role="group" aria-labelledby="feedback-label" className="flex gap-1">
         <button
           type="button"
           onClick={handlePositive}
           className="rounded-md p-1.5 text-muted hover:bg-surface hover:text-fg transition-colors"
-          aria-label="yes, helpful"
+          aria-label="Yes, helpful"
           aria-pressed={selected === true}
         >
           <IconThumbsUp aria-hidden="true" size={16} />
@@ -67,7 +67,7 @@ function FeedbackBase({ onFeedback }: FeedbackProps): JSX.Element {
           type="button"
           onClick={handleNegative}
           className="rounded-md p-1.5 text-muted hover:bg-surface hover:text-fg transition-colors"
-          aria-label="no, not helpful"
+          aria-label="No, not helpful"
           aria-pressed={selected === false}
         >
           <IconThumbsDown aria-hidden="true" size={16} />

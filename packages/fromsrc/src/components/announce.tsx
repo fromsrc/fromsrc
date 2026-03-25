@@ -39,7 +39,7 @@ export const Announce = memo(function Announce({
         <button
           type="button"
           onClick={dismiss}
-          aria-label="dismiss announcement"
+          aria-label="Dismiss announcement"
           className="ml-2 shrink-0 p-1 opacity-70 hover:opacity-100"
         >
           <svg

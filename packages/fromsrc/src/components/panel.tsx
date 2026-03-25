@@ -55,13 +55,13 @@ export function Panel({
           ? getOptionId(safe)
           : undefined;
   const resultStatus = loading
-    ? "loading results"
+    ? "Loading results"
     : !hasQuery
       ? recent.length > 0
         ? `${recent.length} recent searches`
-        : "no recent searches"
+        : "No recent searches"
       : results.length === 0
-        ? "no results"
+        ? "No results"
         : `${results.length} results`;
 
   const onTab = useCallback((event: KeyEvent<HTMLDivElement>): void => {
@@ -108,14 +108,14 @@ export function Panel({
         type="button"
         className="fixed inset-0 bg-bg/80 backdrop-blur-sm cursor-default"
         onClick={onClose}
-        aria-label="close search"
+        aria-label="Close search"
       />
       <div
         ref={dialog}
         className="relative z-10 max-w-lg mx-auto mt-[20vh]"
         role="dialog"
         aria-modal="true"
-        aria-label="search documentation"
+        aria-label="Search documentation"
       >
         <div className="bg-surface border border-line rounded-xl shadow-2xl overflow-hidden">
           <div className="flex items-center gap-3 px-4 border-b border-line">
@@ -126,7 +126,7 @@ export function Panel({
               value={query}
               onChange={(event) => onChange(event.target.value)}
               onKeyDown={onKey}
-              placeholder="search"
+              placeholder="Search"
               className="flex-1 py-4 bg-transparent text-fg text-sm placeholder:text-muted focus:outline-none"
               role="combobox"
               aria-expanded={showRecent || showResults}

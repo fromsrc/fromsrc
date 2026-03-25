@@ -45,7 +45,7 @@ function BackToTopBase({
       type="button"
       onClick={scrollToTop}
       className={`fixed bottom-6 right-6 p-3 bg-surface border border-line rounded-full shadow-lg hover:bg-bg transition-all z-50 ${className || ""}`}
-      aria-label="back to top"
+      aria-label="Back to top"
     >
       <svg
         aria-hidden="true"

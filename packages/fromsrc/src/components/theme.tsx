@@ -65,7 +65,7 @@ function ThemeToggleBase({
       <button
         type="button"
         className="p-2 text-muted hover:text-fg transition-colors"
-        aria-label="toggle theme"
+        aria-label="Toggle theme"
         disabled
       >
         <span className="size-4 block" />

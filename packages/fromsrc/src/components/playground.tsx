@@ -131,20 +131,20 @@ function PlaygroundBase({
               onClick={addHeader}
               className="text-xs text-accent"
             >
-              + add
+              + Add
             </button>
           </div>
           {headers.map((h, i) => (
             <div key={i} className="flex gap-2 mb-1.5">
               <input
                 className={input}
-                placeholder="key"
+                placeholder="Key"
                 value={h.key}
                 onChange={(e) => updateHeader(i, "key", e.target.value)}
               />
               <input
                 className={input}
-                placeholder="value"
+                placeholder="Value"
                 value={h.value}
                 onChange={(e) => updateHeader(i, "value", e.target.value)}
               />

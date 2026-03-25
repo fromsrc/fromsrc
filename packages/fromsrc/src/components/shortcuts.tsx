@@ -55,13 +55,13 @@ function ShortcutsBase({
         type="button"
         className="absolute inset-0"
         onClick={close}
-        aria-label="close shortcuts"
+        aria-label="Close shortcuts"
       />
       <div
         className="relative w-full max-w-lg rounded-xl border border-line bg-surface p-6 shadow-2xl"
         role="dialog"
         aria-modal="true"
-        aria-label="keyboard shortcuts"
+        aria-label="Keyboard shortcuts"
       >
         {[...groups].map(([group, items]) => (
           <div key={group} className="mb-4 last:mb-0">

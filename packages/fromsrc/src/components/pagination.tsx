@@ -47,7 +47,7 @@ function PaginationBase({ prev, next }: PaginationProps): JSX.Element | null {
             aria-hidden="true"
           />
           <div className="text-left">
-            <div className="text-xs text-muted">previous</div>
+            <div className="text-xs text-muted">Previous</div>
             <div className="text-sm font-medium text-fg">{prev.title}</div>
           </div>
         </Link>
@@ -62,7 +62,7 @@ function PaginationBase({ prev, next }: PaginationProps): JSX.Element | null {
           className="flex items-center gap-2 px-4 py-3 rounded-xl border border-line bg-surface/30 hover:bg-surface/50 transition-colors group"
         >
           <div className="text-right">
-            <div className="text-xs text-muted">next</div>
+            <div className="text-xs text-muted">Next</div>
             <div className="text-sm font-medium text-fg">{next.title}</div>
           </div>
           <IconChevronRight

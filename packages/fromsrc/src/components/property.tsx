@@ -59,7 +59,7 @@ export const Property = memo(function Property({
           </span>
         )}
       </header>
-      {children && <p className="text-sm text-muted">{children}</p>}
+      {children && <div className="text-sm text-muted [&>p]:m-0">{children}</div>}
     </article>
   );
 });

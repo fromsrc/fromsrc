@@ -121,8 +121,8 @@ function CalloutComponent({
       className={`my-4 rounded border-l-4 ${border} ${bg} px-3 py-2`}
     >
       {title && <p className={`mb-2 font-semibold ${text}`}>{title}</p>}
-      <div className={`flex items-center gap-2 ${text}`}>
-        <span className="size-4 shrink-0" aria-hidden="true">
+      <div className={`flex items-start gap-2 ${text}`}>
+        <span className="size-4 shrink-0 mt-0.5" aria-hidden="true">
           {icon}
         </span>
         <div className="text-sm text-fg/80 [&>p]:m-0">{children}</div>

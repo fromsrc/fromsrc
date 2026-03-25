@@ -191,16 +191,16 @@ export function Sidebar({
               type="button"
               onClick={toggle}
               className="w-9 h-9 flex items-center justify-center text-muted hover:text-fg hover:bg-surface transition-colors"
-              aria-label="expand sidebar"
+              aria-label="Expand sidebar"
             >
               <IconPanelLeft size={16} />
             </button>
-            <div className="h-px bg-line" />
+
             <button
               type="button"
               onClick={openSearch}
               className="w-9 h-9 flex items-center justify-center text-muted hover:text-fg hover:bg-surface transition-colors"
-              aria-label="open search"
+              aria-label="Open search"
               aria-keyshortcuts="Meta+K"
             >
               <svg
@@ -277,7 +277,7 @@ function SidebarSearch({
         type="button"
         onClick={onOpen}
         className="h-9 w-full flex items-center rounded-lg border border-line bg-surface/40 text-muted hover:text-fg hover:bg-surface/80 transition-colors px-3 gap-2"
-        aria-label="open search"
+        aria-label="Open search"
         aria-keyshortcuts="Meta+K"
       >
         <svg
@@ -295,7 +295,7 @@ function SidebarSearch({
           />
         </svg>
         <span className={`text-sm ${showExpanded ? "block" : "hidden"}`}>
-          search...
+          Search...
         </span>
         <kbd
           className={`ml-auto text-[10px] font-mono text-muted/50 ${showExpanded ? "block" : "hidden"}`}

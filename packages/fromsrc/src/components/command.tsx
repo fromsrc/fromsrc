@@ -26,7 +26,7 @@ export interface CommandProps {
 
 export function Command({
   items,
-  placeholder = "search...",
+  placeholder = "Search...",
   onSelect,
 }: CommandProps): JSX.Element {
   const [query, setQuery] = useState("");

@@ -65,13 +65,13 @@ function FeedbackWidgetBase({ onSubmit }: FeedbackWidgetProps): JSX.Element {
     >
       {stage === "ask" && (
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted">was this helpful?</span>
+          <span className="text-sm text-muted">Was this helpful?</span>
           <div className="flex gap-1">
             <button
               type="button"
               onClick={() => select(true)}
               className="rounded-md p-1.5 text-muted hover:bg-surface hover:text-fg transition-colors"
-              aria-label="yes, helpful"
+              aria-label="Yes, helpful"
             >
               <IconThumbsUp aria-hidden="true" size={16} />
             </button>
@@ -79,7 +79,7 @@ function FeedbackWidgetBase({ onSubmit }: FeedbackWidgetProps): JSX.Element {
               type="button"
               onClick={() => select(false)}
               className="rounded-md p-1.5 text-muted hover:bg-surface hover:text-fg transition-colors"
-              aria-label="no, not helpful"
+              aria-label="No, not helpful"
             >
               <IconThumbsDown aria-hidden="true" size={16} />
             </button>
@@ -95,8 +95,8 @@ function FeedbackWidgetBase({ onSubmit }: FeedbackWidgetProps): JSX.Element {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={keydown}
-            placeholder="share feedback"
-            aria-label="feedback"
+            placeholder="Share feedback"
+            aria-label="Feedback"
             className="h-8 w-56 rounded-md border border-line bg-surface px-3 text-sm text-fg placeholder:text-muted outline-none focus:border-accent transition-colors"
           />
           <button
@@ -104,21 +104,21 @@ function FeedbackWidgetBase({ onSubmit }: FeedbackWidgetProps): JSX.Element {
             onClick={submit}
             className="h-8 rounded-md border border-line bg-surface px-3 text-sm text-muted hover:text-fg transition-colors"
           >
-            send
+            Send
           </button>
           <button
             type="button"
             onClick={submit}
             className="h-8 rounded-md px-2 text-sm text-muted hover:text-fg transition-colors"
           >
-            skip
+            Skip
           </button>
         </div>
       )}
 
       {stage === "done" && (
         <span className="text-sm text-muted" role="status" aria-live="polite">
-          thanks
+          Thanks
         </span>
       )}
     </div>

@@ -31,7 +31,7 @@ export interface AutofillProps {
  */
 export function Autofill({
   items,
-  placeholder = "search...",
+  placeholder = "Search...",
   value: controlledValue,
   onChange,
   onSelect,

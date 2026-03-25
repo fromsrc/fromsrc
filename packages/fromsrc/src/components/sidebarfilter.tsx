@@ -57,15 +57,15 @@ export function SidebarFilter({
         type="text"
         value={value}
         onChange={handle}
-        aria-label="filter navigation"
-        placeholder="filter..."
+        aria-label="Filter navigation"
+        placeholder="Filter..."
         className="w-full h-8 px-2.5 pr-7 rounded-md border border-line bg-surface/50 text-sm text-fg placeholder:text-muted outline-none transition-colors focus:border-accent"
       />
       {value && (
         <button
           type="button"
           onClick={clear}
-          aria-label="clear filter"
+          aria-label="Clear filter"
           className="absolute right-1.5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-muted hover:text-fg transition-colors"
         >
           <svg
