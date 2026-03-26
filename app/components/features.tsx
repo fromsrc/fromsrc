@@ -63,8 +63,8 @@ function rowstyle(tone: row["tone"]): string {
 
 function Panel({ rows }: { readonly rows: readonly row[] }) {
   return (
-    <div className="flex h-[240px] flex-col bg-[#050505] sm:h-[280px]">
-      <div className="flex-1 overflow-x-auto px-5 py-4 font-mono text-[13px] leading-[1.65] tabular-nums whitespace-pre">
+    <div className="flex h-[240px] flex-col overflow-hidden bg-[#050505] sm:h-[280px]">
+      <div className="flex-1 overflow-auto px-5 py-4 font-mono text-[13px] leading-[1.65] tabular-nums whitespace-pre">
         {rows.map((entry, index) => (
           <div key={`${entry.text}-${index}`} className={rowstyle(entry.tone)}>
             {entry.text || "\u00A0"}

@@ -100,8 +100,8 @@ export function Hero() {
               </div>
 
               {current && (
-                <div className="h-[340px] md:h-[380px] overflow-y-auto px-5 py-4 font-mono text-[13px] leading-[1.65] whitespace-pre">
-                  <div className="flex">
+                <div className="h-[340px] md:h-[380px] overflow-auto px-5 py-4 font-mono text-[13px] leading-[1.65]">
+                  <div className="flex min-w-0">
                     <div
                       className="pr-5 text-white/15 text-right select-none mr-5 tabular-nums"
                       aria-hidden="true"

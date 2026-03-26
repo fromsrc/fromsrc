@@ -9,7 +9,7 @@ const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, 
 export default function Page() {
   return (
     <main
-      className="relative isolate min-h-dvh text-white selection:bg-white/20 selection:text-white"
+      className="relative isolate min-h-dvh overflow-x-hidden text-white selection:bg-white/20 selection:text-white"
       style={{ background: "#0a0a0a", fontFamily: font }}
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden md:block">
