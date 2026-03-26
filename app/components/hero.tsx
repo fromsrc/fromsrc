@@ -19,7 +19,8 @@ function Stage({ children }: { readonly children: React.ReactNode }) {
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.06]"
         style={{
-          backgroundImage: "url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAP0lEQVR4nO3QoQkAIBAEwZ//aQ0YzZzJq8M0p7oJ9A8jzq0AAACAvw9Yx0n4Kkq6qgAAAAAAAAAAAPw4b8m8wN8bK9yS8yZ0bA9x5wAAc2u7oQAAAABJRU5ErkJggg==\")",
+          backgroundImage:
+            'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAP0lEQVR4nO3QoQkAIBAEwZ//aQ0YzZzJq8M0p7oJ9A8jzq0AAACAvw9Yx0n4Kkq6qgAAAAAAAAAAAPw4b8m8wN8bK9yS8yZ0bA9x5wAAc2u7oQAAAABJRU5ErkJggg==")',
           mixBlendMode: "overlay",
         }}
         aria-hidden="true"
@@ -43,31 +44,38 @@ export function Hero() {
   const current = files[active];
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-0 md:pt-44 md:pb-0">
+    <section className="relative overflow-hidden pt-24 pb-0 sm:pt-32 md:pt-44 md:pb-0">
       <div className="mx-auto max-w-[1320px] px-6">
         <div className="max-w-[740px]">
-          <h1 className="text-5xl font-semibold tracking-tighter sm:text-6xl md:text-7xl leading-[1.03]" style={{ color: "#bbb" }}>
+          <h1
+            className="text-[2.25rem] font-semibold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl leading-[1.03]"
+            style={{ color: "#bbb" }}
+          >
             Docs, from source.
           </h1>
           <p className="mt-5 text-base text-[#888] leading-relaxed max-w-lg">
-            Full control over your docs. No content layer abstraction. No vendor lock-in. Just MDX, components, and builds that work at any scale.
+            Full control over your docs. No content layer abstraction. No vendor
+            lock-in. Just MDX, components, and builds that work at any scale.
           </p>
         </div>
 
         <div className="mt-8 flex items-center gap-4">
-          <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-5 py-3 font-mono text-sm text-white/70">
+          <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5 font-mono text-xs text-white/70 sm:px-5 sm:py-3 sm:text-sm">
             <span className="text-white/40">$</span>
             <span>bunx create-fromsrc</span>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto mt-32 max-w-[1320px] px-6 md:mt-44 md:px-0">
+      <div className="mx-auto mt-16 max-w-[1320px] px-6 sm:mt-24 md:mt-44 md:px-0">
         <Stage>
           <div className="mx-auto w-full max-w-[1160px]">
             <Window>
-              <div className="flex items-center justify-between border-b border-white/[0.06] bg-black/15 px-3 py-2">
-                <div className="flex items-center gap-1" role="tablist">
+              <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] bg-black/15 px-3 py-2">
+                <div
+                  className="flex min-w-0 items-center gap-1 overflow-x-auto"
+                  role="tablist"
+                >
                   {files.map((file, i) => (
                     <button
                       key={file.name}
@@ -85,7 +93,7 @@ export function Hero() {
                     </button>
                   ))}
                 </div>
-                <div className="flex items-center gap-2 text-[11px] font-mono text-white/40">
+                <div className="hidden shrink-0 items-center gap-2 text-[11px] font-mono text-white/40 sm:flex">
                   <span className="inline-flex size-1.5 rounded-full bg-white/50" />
                   ready
                 </div>
@@ -94,7 +102,10 @@ export function Hero() {
               {current && (
                 <div className="h-[340px] md:h-[380px] overflow-y-auto px-5 py-4 font-mono text-[13px] leading-[1.65] whitespace-pre">
                   <div className="flex">
-                    <div className="pr-5 text-white/15 text-right select-none mr-5 tabular-nums" aria-hidden="true">
+                    <div
+                      className="pr-5 text-white/15 text-right select-none mr-5 tabular-nums"
+                      aria-hidden="true"
+                    >
                       {current.lines.map((line) => (
                         <div key={line.num}>{line.num}</div>
                       ))}

@@ -76,16 +76,17 @@ export function Bento() {
       <div className="mx-auto max-w-[1320px] border-t border-white/5 px-6 py-20 md:py-28">
         <div className="grid gap-10 border-b border-white/[0.06] pb-12 md:grid-cols-[1.2fr_0.8fr] md:pb-14">
           <div>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-white md:text-5xl leading-[1.05]">
+            <h2 className="text-balance text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-5xl leading-[1.05]">
               Built for developers who want control.
             </h2>
           </div>
           <div className="md:pt-2">
             <p className="max-w-md text-pretty text-base leading-relaxed text-[#777]">
-              No abstraction. Just MDX and components. Open source, MIT licensed, free forever.
+              No abstraction. Just MDX and components. Open source, MIT
+              licensed, free forever.
             </p>
             <div className="mt-6">
-              <div className="inline-flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 font-mono text-sm text-white/60">
+              <div className="inline-flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 font-mono text-xs text-white/60 sm:px-4 sm:text-sm">
                 <span className="text-white/30">$</span>
                 <span>bunx create-fromsrc</span>
               </div>

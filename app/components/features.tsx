@@ -49,16 +49,22 @@ const searchrows: readonly row[] = [
 
 function rowstyle(tone: row["tone"]): string {
   switch (tone) {
-    case "cmd": return "text-white/75";
-    case "dim": return "text-white/35";
-    default: return "text-white/60";
+    case "cmd": {
+      return "text-white/75";
+    }
+    case "dim": {
+      return "text-white/35";
+    }
+    default: {
+      return "text-white/60";
+    }
   }
 }
 
 function Panel({ rows }: { readonly rows: readonly row[] }) {
   return (
-    <div className="flex h-[280px] flex-col bg-[#050505]">
-      <div className="flex-1 px-5 py-4 font-mono text-[13px] leading-[1.65] tabular-nums whitespace-pre">
+    <div className="flex h-[240px] flex-col bg-[#050505] sm:h-[280px]">
+      <div className="flex-1 overflow-x-auto px-5 py-4 font-mono text-[13px] leading-[1.65] tabular-nums whitespace-pre">
         {rows.map((entry, index) => (
           <div key={`${entry.text}-${index}`} className={rowstyle(entry.tone)}>
             {entry.text || "\u00A0"}
@@ -77,9 +83,18 @@ function Stage({
   readonly children: ReactNode;
 }) {
   const tones = {
-    slate: { bg: "#b8b8b8", img: "radial-gradient(900px 420px at 26% 18%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 62%), radial-gradient(720px 520px at 82% 72%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 58%), linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 55%)" },
-    ash: { bg: "#a8a8a8", img: "radial-gradient(900px 420px at 22% 20%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 62%), radial-gradient(820px 560px at 80% 74%, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 60%), linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 55%)" },
-    iron: { bg: "#b0b0b0", img: "radial-gradient(900px 420px at 24% 18%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 62%), radial-gradient(780px 560px at 82% 72%, rgba(0,0,0,0.17) 0%, rgba(0,0,0,0) 60%), linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 55%)" },
+    slate: {
+      bg: "#b8b8b8",
+      img: "radial-gradient(900px 420px at 26% 18%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 62%), radial-gradient(720px 520px at 82% 72%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 58%), linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 55%)",
+    },
+    ash: {
+      bg: "#a8a8a8",
+      img: "radial-gradient(900px 420px at 22% 20%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 62%), radial-gradient(820px 560px at 80% 74%, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 60%), linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 55%)",
+    },
+    iron: {
+      bg: "#b0b0b0",
+      img: "radial-gradient(900px 420px at 24% 18%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 62%), radial-gradient(780px 560px at 82% 72%, rgba(0,0,0,0.17) 0%, rgba(0,0,0,0) 60%), linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 55%)",
+    },
   };
   const s = tones[tone];
   return (
@@ -88,7 +103,8 @@ function Stage({
       style={{
         backgroundColor: s.bg,
         backgroundImage: s.img,
-        boxShadow: "0 50px 90px rgba(0,0,0,0.55), 0 2px 0 rgba(255,255,255,0.06) inset, 0 -1px 0 rgba(0,0,0,0.24) inset",
+        boxShadow:
+          "0 50px 90px rgba(0,0,0,0.55), 0 2px 0 rgba(255,255,255,0.06) inset, 0 -1px 0 rgba(0,0,0,0.24) inset",
       }}
     >
       <div className="absolute inset-0 bg-black/10" />
@@ -131,7 +147,10 @@ function Spotlight({
         </p>
         <ul className="mt-8 space-y-3">
           {bullets.map((b) => (
-            <li key={b} className="flex items-center gap-3 text-sm text-white/70">
+            <li
+              key={b}
+              className="flex items-center gap-3 text-sm text-white/70"
+            >
               <span className="h-1 w-1 rounded-full bg-white/40" />
               {b}
             </li>
@@ -142,9 +161,7 @@ function Spotlight({
       <div className={flip ? "order-1 md:order-1" : "order-1 md:order-2"}>
         <Stage tone={tone}>
           <div className="mx-auto w-full max-w-[1160px]">
-            <Window>
-              {window}
-            </Window>
+            <Window>{window}</Window>
           </div>
         </Stage>
       </div>
