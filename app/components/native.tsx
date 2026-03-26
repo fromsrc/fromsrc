@@ -1,6 +1,6 @@
 const endpoints = [
-  { method: "GET", path: "/api/raw/:slug", label: "raw markdown" },
-  { method: "GET", path: "/api/llms/:slug", label: "ai-optimized" },
+  { method: "GET", path: "/api/raw/auth", label: "raw markdown" },
+  { method: "GET", path: "/api/llms/auth", label: "ai-optimized" },
   { method: "GET", path: "/llms.txt", label: "full index" },
   { method: "POST", path: "/api/mcp", label: "mcp server" },
 ];
@@ -48,7 +48,7 @@ export function Native() {
             <div className="p-5 font-mono text-[13px] leading-[1.8] whitespace-pre">
               <div className="flex gap-3">
                 <span className="text-white/30 select-none" aria-hidden="true">$</span>
-                <span className="text-white/70">curl https://docs.example.com/api/llms/auth</span>
+                <span className="text-white/70">curl https://your-docs.com/api/llms/auth</span>
               </div>
               <div className="mt-4 pl-4 border-l border-white/[0.08] text-white/40 space-y-0.5">
                 <p className="text-white/20"># Authentication</p>

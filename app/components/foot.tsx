@@ -26,6 +26,9 @@ export function Foot() {
               <Link href="/docs/components/index" className="hover:text-white transition-colors">components</Link>
               <Link href="/docs/examples/index" className="hover:text-white transition-colors">examples</Link>
             </div>
+            <div className="mt-6 p-3 bg-white/[0.02] border border-white/[0.06] rounded-lg font-mono text-xs text-white/60">
+              bunx create-fromsrc
+            </div>
           </div>
 
           <div>
