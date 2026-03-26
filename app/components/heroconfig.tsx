@@ -1,14 +1,19 @@
 import type { file } from "./herotype";
 
+const k = "text-white/40";
+const v = "text-white/70";
+const p = "text-white/50";
+const d = "text-white/25";
+
 export const heroconfig: file = {
   lines: [
     {
       content: (
         <>
-          <span className="text-accent">import</span>{" "}
-          <span className="text-fg">{"{ defineConfig }"}</span>{" "}
-          <span className="text-accent">from</span>{" "}
-          <span className="text-muted">"fromsrc"</span>
+          <span className={p}>import</span>{" "}
+          <span className={v}>{"{ defineConfig }"}</span>{" "}
+          <span className={p}>from</span>{" "}
+          <span className={k}>"fromsrc"</span>
         </>
       ),
       num: 1,
@@ -17,9 +22,9 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          <span className="text-accent">export default</span>{" "}
-          <span className="text-fg">defineConfig</span>
-          <span className="text-dim">({"{"}</span>
+          <span className={p}>export default</span>{" "}
+          <span className={v}>defineConfig</span>
+          <span className={d}>({"{"}</span>
         </>
       ),
       num: 3,
@@ -27,8 +32,8 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          &nbsp;&nbsp;<span className="text-muted">title:</span>{" "}
-          <span className="text-accent">"My Docs"</span>,
+          {"  "}<span className={k}>title:</span>{" "}
+          <span className={p}>"My Docs"</span>,
         </>
       ),
       num: 4,
@@ -36,8 +41,8 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          &nbsp;&nbsp;<span className="text-muted">description:</span>{" "}
-          <span className="text-accent">"API documentation"</span>,
+          {"  "}<span className={k}>description:</span>{" "}
+          <span className={p}>"API documentation"</span>,
         </>
       ),
       num: 5,
@@ -45,8 +50,8 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          &nbsp;&nbsp;<span className="text-muted">llmsTxt:</span>{" "}
-          <span className="text-fg">true</span>,
+          {"  "}<span className={k}>llmsTxt:</span>{" "}
+          <span className={v}>true</span>,
         </>
       ),
       num: 6,
@@ -54,8 +59,8 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          &nbsp;&nbsp;<span className="text-muted">mcp:</span>{" "}
-          <span className="text-fg">true</span>,
+          {"  "}<span className={k}>mcp:</span>{" "}
+          <span className={v}>true</span>,
         </>
       ),
       num: 7,
@@ -63,11 +68,11 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          &nbsp;&nbsp;<span className="text-muted">search:</span>{" "}
-          <span className="text-dim">{"{"}</span>{" "}
-          <span className="text-muted">provider:</span>{" "}
-          <span className="text-accent">"orama"</span>{" "}
-          <span className="text-dim">{"}"}</span>,
+          {"  "}<span className={k}>search:</span>{" "}
+          <span className={d}>{"{"}</span>{" "}
+          <span className={k}>provider:</span>{" "}
+          <span className={p}>"orama"</span>{" "}
+          <span className={d}>{"}"}</span>,
         </>
       ),
       num: 8,
@@ -75,11 +80,11 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          &nbsp;&nbsp;<span className="text-muted">theme:</span>{" "}
-          <span className="text-dim">{"{"}</span>{" "}
-          <span className="text-muted">accent:</span>{" "}
-          <span className="text-accent">"#ef4444"</span>{" "}
-          <span className="text-dim">{"}"}</span>,
+          {"  "}<span className={k}>theme:</span>{" "}
+          <span className={d}>{"{"}</span>{" "}
+          <span className={k}>accent:</span>{" "}
+          <span className={p}>"#ef4444"</span>{" "}
+          <span className={d}>{"}"}</span>,
         </>
       ),
       num: 9,
@@ -87,11 +92,11 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          &nbsp;&nbsp;<span className="text-muted">sidebar:</span>{" "}
-          <span className="text-dim">{"{"}</span>{" "}
-          <span className="text-muted">collapsed:</span>{" "}
-          <span className="text-fg">false</span>{" "}
-          <span className="text-dim">{"}"}</span>,
+          {"  "}<span className={k}>sidebar:</span>{" "}
+          <span className={d}>{"{"}</span>{" "}
+          <span className={k}>collapsed:</span>{" "}
+          <span className={v}>false</span>{" "}
+          <span className={d}>{"}"}</span>,
         </>
       ),
       num: 10,
@@ -99,7 +104,7 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          <span className="text-dim">{"}"})</span>
+          <span className={d}>{"}"})</span>
         </>
       ),
       num: 11,

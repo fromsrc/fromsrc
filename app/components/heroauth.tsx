@@ -1,66 +1,42 @@
 import type { file } from "./herotype";
 
+const k = "text-white/40";
+const v = "text-white/70";
+const p = "text-white/50";
+const d = "text-white/25";
+
 export const heroauth: file = {
   lines: [
-    {
-      content: (
-        <>
-          <span className="text-dim">---</span>
-        </>
-      ),
-      num: 1,
-    },
-    {
-      content: (
-        <>
-          <span className="text-muted">title:</span>{" "}
-          <span className="text-fg">Authentication</span>
-        </>
-      ),
-      num: 2,
-    },
-    {
-      content: (
-        <>
-          <span className="text-dim">---</span>
-        </>
-      ),
-      num: 3,
-    },
+    { content: <><span className={d}>---</span></>, num: 1 },
+    { content: <><span className={k}>title:</span> <span className={v}>Authentication</span></>, num: 2 },
+    { content: <><span className={d}>---</span></>, num: 3 },
     { content: <>&nbsp;</>, num: 4 },
     {
       content: (
         <>
-          <span className="text-accent">import</span>{" "}
-          <span className="text-fg">{"{ ApiEndpoint }"}</span>{" "}
-          <span className="text-accent">from</span>{" "}
-          <span className="text-muted">"@/components"</span>
+          <span className={p}>import</span>{" "}
+          <span className={v}>{"{ ApiEndpoint }"}</span>{" "}
+          <span className={p}>from</span>{" "}
+          <span className={k}>"@/components"</span>
         </>
       ),
       num: 5,
     },
     { content: <>&nbsp;</>, num: 6 },
-    {
-      content: (
-        <>
-          <span className="text-muted"># OAuth 2.0</span>
-        </>
-      ),
-      num: 7,
-    },
+    { content: <><span className={k}># OAuth 2.0</span></>, num: 7 },
     { content: <>&nbsp;</>, num: 8 },
-    { content: <>Configure OAuth providers for SSO.</>, num: 9 },
+    { content: <><span className={v}>Configure OAuth providers for SSO.</span></>, num: 9 },
     { content: <>&nbsp;</>, num: 10 },
     {
       content: (
         <>
-          <span className="text-dim">{"<"}</span>
-          <span className="text-fg">ApiEndpoint</span>{" "}
-          <span className="text-muted">method=</span>
-          <span className="text-accent">"POST"</span>{" "}
-          <span className="text-muted">path=</span>
-          <span className="text-accent">"/auth/token"</span>{" "}
-          <span className="text-dim">/{">"}</span>
+          <span className={d}>{"<"}</span>
+          <span className={v}>ApiEndpoint</span>{" "}
+          <span className={k}>method=</span>
+          <span className={p}>"POST"</span>{" "}
+          <span className={k}>path=</span>
+          <span className={p}>"/auth/token"</span>{" "}
+          <span className={d}>/{">"}</span>
         </>
       ),
       num: 11,
