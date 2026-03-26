@@ -1,13 +1,8 @@
 *.tsbuildinfo
-search-*.png
-*-1920.png
 node_modules
-.DS_Store
 .vercel
 .next
-.env*
-.dev.log
-.dev.pid
+.env
+.env.local
 dist
-PLAN.md
-RESEARCH.md
+next-env.d.ts
