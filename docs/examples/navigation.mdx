@@ -6,7 +6,7 @@ order: 11
 
 build custom navigation structures for your documentation.
 
-## basic sidebar
+## Basic sidebar
 
 ```tsx
 import Link from "next/link";
@@ -34,7 +34,7 @@ export async function Sidebar() {
 }
 ```
 
-## grouped navigation
+## Grouped navigation
 
 organize docs into sections:
 
@@ -81,7 +81,7 @@ export async function Sidebar() {
 }
 ```
 
-## active link
+## Active link
 
 highlight the current page:
 
@@ -113,7 +113,7 @@ export function NavLink({ href, children }: Props) {
 }
 ```
 
-## collapsible sections
+## Collapsible sections
 
 ```tsx
 "use client";
@@ -152,7 +152,7 @@ export function NavSection({ title, children, defaultOpen = true }: Props) {
 }
 ```
 
-## breadcrumbs
+## Breadcrumbs
 
 show page hierarchy:
 
@@ -191,7 +191,7 @@ export function Breadcrumbs({ slug }: Props) {
 }
 ```
 
-## prev/next links
+## Prev/next links
 
 navigate between docs:
 
@@ -238,7 +238,7 @@ export async function PrevNext({ slug }: Props) {
 }
 ```
 
-## mobile sidebar
+## Mobile sidebar
 
 responsive navigation drawer:
 
@@ -290,7 +290,7 @@ export function MobileSidebar({ children }) {
 }
 ```
 
-## table of contents
+## Table of contents
 
 in-page navigation:
 
@@ -355,7 +355,7 @@ export function TableOfContents({ headings }: { headings: Heading[] }) {
 }
 ```
 
-## order configuration
+## Order configuration
 
 control page order in frontmatter:
 

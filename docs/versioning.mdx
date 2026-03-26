@@ -6,9 +6,9 @@ order: 13
 
 document multiple versions of your project.
 
-## strategies
+## Strategies
 
-### branch-based (recommended)
+### Branch-based (recommended)
 
 separate git branches per major version:
 
@@ -24,7 +24,7 @@ benefits:
 - independent builds per version
 - clean git history
 
-### directory-based
+### Directory-based
 
 version folders in single branch:
 
@@ -40,7 +40,7 @@ benefits:
 - single deployment
 - easy diffing between versions
 
-## version selector
+## Version selector
 
 add a version dropdown to your docs:
 
@@ -57,9 +57,9 @@ import { VersionSelect } from "fromsrc/client";
 />;
 ```
 
-## routing
+## Routing
 
-### subdomains
+### Subdomains
 
 ```
 v2.docs.example.com → version 2
@@ -67,7 +67,7 @@ v1.docs.example.com → version 1
 docs.example.com    → latest
 ```
 
-### subpaths
+### Subpaths
 
 ```
 docs.example.com/v2/ → version 2
@@ -75,9 +75,9 @@ docs.example.com/v1/ → version 1
 docs.example.com/    → latest
 ```
 
-## seo
+## Seo
 
-### canonical urls
+### Canonical urls
 
 always set canonical to the latest version:
 
@@ -89,7 +89,7 @@ export const metadata = {
 };
 ```
 
-### sitemap priorities
+### Sitemap priorities
 
 ```xml
 <url>
@@ -102,7 +102,7 @@ export const metadata = {
 </url>
 ```
 
-## deprecation notices
+## Deprecation notices
 
 show banners on old versions:
 

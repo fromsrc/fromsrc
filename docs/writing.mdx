@@ -6,16 +6,16 @@ order: 7
 
 write documentation using markdown and mdx.
 
-## markdown
+## Markdown
 
 standard markdown syntax is fully supported:
 
 ```md
 # heading 1
 
-## heading 2
+## Heading 2
 
-### heading 3
+### Heading 3
 
 **bold** and _italic_ text
 
@@ -46,7 +46,7 @@ use react components directly in mdx files:
 
 components are available globally via the mdx config.
 
-## code blocks
+## Code blocks
 
 syntax highlighting with language detection:
 
@@ -84,7 +84,7 @@ value.
 //    ^| string methods
 ```
 
-## frontmatter
+## Frontmatter
 
 every mdx file needs frontmatter:
 
@@ -96,7 +96,7 @@ order: 1
 ---
 ```
 
-### fields
+### Fields
 
 | field       | type   | required | description           |
 | ----------- | ------ | -------- | --------------------- |
@@ -104,7 +104,7 @@ order: 1
 | description | string | no       | seo description       |
 | order       | number | no       | sort order in sidebar |
 
-## file structure
+## File structure
 
 organize docs by topic:
 
@@ -120,7 +120,7 @@ docs/
     deploying.mdx
 ```
 
-## links
+## Links
 
 link to other pages using relative paths:
 
@@ -134,11 +134,11 @@ external links automatically get an icon:
 check out [github](https://github.com)
 ```
 
-## math
+## Math
 
 write math equations using latex syntax. fromsrc includes `Math` components powered by katex.
 
-### usage
+### Usage
 
 ```text
 <InlineMath>E = mc^2</InlineMath>

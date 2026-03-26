@@ -6,7 +6,7 @@ order: 12
 
 render api reference pages directly from openapi specifications.
 
-## quick usage
+## Quick usage
 
 ```mdx
 <Openapi spec={spec} />
@@ -50,7 +50,7 @@ render api reference pages directly from openapi specifications.
   }}
 />
 
-## filter endpoints
+## Filter endpoints
 
 filter by tag, method, or path substring:
 
@@ -61,7 +61,7 @@ filter by tag, method, or path substring:
 <Openapi spec={spec} group="tag" />
 ```
 
-## import from json
+## Import from json
 
 for larger specs, load json and pass it to `Openapi`:
 
@@ -73,7 +73,7 @@ export default function Page() {
 }
 ```
 
-## parser import
+## Parser import
 
 for parse-only flows, import the parser from the dedicated subpath:
 

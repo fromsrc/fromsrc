@@ -6,7 +6,7 @@ order: 9
 
 fromsrc includes built-in full-text search with a pluggable adapter system.
 
-## built-in search
+## Built-in search
 
 the default search works out of the box with full-text content search:
 
@@ -19,7 +19,7 @@ const docs = await getSearchDocs()
 <Search docs={docs} basePath="/docs" />
 ```
 
-### features
+### Features
 
 - full-text body content search
 - fuzzy title/description matching
@@ -31,7 +31,7 @@ const docs = await getSearchDocs()
 - tab autocomplete to top result
 - instant results
 
-## search adapter interface
+## Search adapter interface
 
 fromsrc uses a pluggable adapter pattern for search:
 
@@ -47,7 +47,7 @@ interface SearchAdapter {
 }
 ```
 
-### using a custom adapter
+### Using a custom adapter
 
 ```tsx
 import { Search } from "fromsrc/client"
@@ -64,7 +64,7 @@ const myAdapter = createSearchAdapter({
 <Search docs={docs} adapter={myAdapter} />
 ```
 
-## hosted adapters
+## Hosted adapters
 
 ### orama
 
@@ -101,7 +101,7 @@ const adapter = createAlgoliaAdapter({
 
 for hosted adapters, pass lightweight docs metadata to the component and let the provider return ranked results.
 
-## search api
+## Search api
 
 fromsrc includes a typed search route for remote ui and custom clients:
 
@@ -130,7 +130,7 @@ response headers:
 - `X-Search-Cache` (`hit` or `miss`)
 - `X-Search-Result-Count`
 
-## keyboard shortcuts
+## Keyboard shortcuts
 
 | shortcut        | action                       |
 | --------------- | ---------------------------- |
@@ -142,7 +142,7 @@ response headers:
 | `Enter`         | go to result                 |
 | `Escape`        | close search                 |
 
-## searchdoc type
+## Searchdoc type
 
 the search component accepts an array of searchable documents:
 

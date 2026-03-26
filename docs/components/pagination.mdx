@@ -6,7 +6,7 @@ order: 37
 
 previous/next navigation between pages.
 
-## usage
+## Usage
 
 ```tsx
 <Pagination
@@ -17,33 +17,33 @@ previous/next navigation between pages.
 
 the component renders previous and next links for navigating between documentation pages.
 
-## only next
+## Only next
 
 ```tsx
 <Pagination next={{ href: "/docs/quickstart", title: "quickstart" }} />
 ```
 
-## only previous
+## Only previous
 
 ```tsx
 <Pagination prev={{ href: "/docs/installation", title: "installation" }} />
 ```
 
-## props
+## Props
 
 | prop | type   | description        |
 | ---- | ------ | ------------------ |
 | prev | object | previous page link |
 | next | object | next page link     |
 
-### link object
+### Link object
 
 | prop  | type   | description |
 | ----- | ------ | ----------- |
 | href  | string | page url    |
 | title | string | page title  |
 
-## styling
+## Styling
 
 the component uses theme tokens for consistent styling:
 

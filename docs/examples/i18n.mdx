@@ -6,7 +6,7 @@ order: 9
 
 serve documentation in multiple languages.
 
-## folder structure
+## Folder structure
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -25,7 +25,7 @@ serve documentation in multiple languages.
   </Folder>
 </Files>
 
-## content loader
+## Content loader
 
 create locale-aware content:
 
@@ -52,7 +52,7 @@ export const ja = createLocalizedContent("ja");
 export const zh = createLocalizedContent("zh");
 ```
 
-## route structure
+## Route structure
 
 use next.js dynamic segments:
 
@@ -68,7 +68,7 @@ use next.js dynamic segments:
   </Folder>
 </Files>
 
-## page component
+## Page component
 
 ```tsx
 import { notFound } from "next/navigation";
@@ -112,7 +112,7 @@ export default async function DocPage({ params }: Props) {
 }
 ```
 
-## locale switcher
+## Locale switcher
 
 ```tsx
 "use client";
@@ -153,7 +153,7 @@ export function LocaleSwitcher() {
 }
 ```
 
-## proxy configuration
+## Proxy configuration
 
 redirect based on accept-language header:
 
@@ -180,7 +180,7 @@ export async function proxy(request: NextRequest) {
 }
 ```
 
-## translations file
+## Translations file
 
 store ui strings separately:
 
@@ -214,7 +214,7 @@ export function useTranslations(locale: string) {
 }
 ```
 
-## localized metadata
+## Localized metadata
 
 ```tsx
 export async function generateMetadata({ params }: Props) {
@@ -233,7 +233,7 @@ export async function generateMetadata({ params }: Props) {
 }
 ```
 
-## rtl support
+## Rtl support
 
 handle right-to-left languages:
 

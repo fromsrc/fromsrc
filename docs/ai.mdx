@@ -20,7 +20,7 @@ this endpoint combines all pages into one text file with clear section markers.
   llms.txt is an emerging standard for making content accessible to ai systems.
 </Callout>
 
-## per-page endpoints
+## Per-page endpoints
 
 access raw markdown for any page by appending `.md` to the url:
 
@@ -33,7 +33,7 @@ access raw markdown for any page by appending `.md` to the url:
 
 this lets ai tools fetch specific pages without parsing html.
 
-## use cases
+## Use cases
 
 <Cards>
   <Card
@@ -119,9 +119,9 @@ available methods:
 
 resource slugs are normalized lowercase kebab-case paths (for example `fromsrc://docs/getting-started`).
 
-## implementation
+## Implementation
 
-### route handler
+### Route handler
 
 create `app/llms.txt/route.ts`:
 
@@ -146,7 +146,7 @@ export async function GET() {
 }
 ```
 
-### raw markdown endpoint
+### Raw markdown endpoint
 
 use next.js proxy to serve `.md` files:
 
@@ -169,26 +169,26 @@ export function proxy(request: NextRequest) {
 }
 ```
 
-## best practices
+## Best practices
 
 <Steps>
 <Step>
 
-### structure content clearly
+### Structure content clearly
 
 use descriptive headings and short paragraphs. ai tools parse structure to understand context.
 
 </Step>
 <Step>
 
-### include code examples
+### Include code examples
 
 practical examples help ai understand usage patterns and generate accurate code.
 
 </Step>
 <Step>
 
-### keep pages focused
+### Keep pages focused
 
 one topic per page makes retrieval more precise and reduces noise in ai responses.
 

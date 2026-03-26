@@ -6,7 +6,7 @@ order: 3
 
 renders mdx content client-side with syntax highlighting and all built-in components.
 
-## usage
+## Usage
 
 ```tsx
 import { Content } from "fromsrc/client";
@@ -18,7 +18,7 @@ export default function Page({ source }: { source: string }) {
 
 pass raw mdx content as a string. the component compiles and renders it client-side.
 
-## import style
+## Import style
 
 for smallest bundles, prefer direct subpath imports when you only need specific utilities:
 
@@ -31,7 +31,7 @@ import { generateLlmsIndex } from "fromsrc/llms";
 
 use `fromsrc/client` for ui components like `Content`.
 
-## how it works
+## How it works
 
 content uses [@mdx-js/mdx](https://mdxjs.com) to compile mdx at runtime. it includes:
 
@@ -40,7 +40,7 @@ content uses [@mdx-js/mdx](https://mdxjs.com) to compile mdx at runtime. it incl
 - line highlighting, diff, and focus transformers
 - all built-in fromsrc components
 
-## built-in components
+## Built-in components
 
 the following components are available in mdx content without imports:
 
@@ -65,7 +65,7 @@ the following components are available in mdx content without imports:
 | Video               | video embeds                  |
 | Zoom                | image lightbox                |
 
-## prose styling
+## Prose styling
 
 content applies prose styling to standard markdown elements:
 
@@ -78,11 +78,11 @@ content applies prose styling to standard markdown elements:
 - blockquotes with left border
 - tables with hover states
 
-## loading state
+## Loading state
 
 while compiling, content shows a skeleton placeholder with animated pulse.
 
-## props
+## Props
 
 | prop   | type   | required | description               |
 | ------ | ------ | -------- | ------------------------- |

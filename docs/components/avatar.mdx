@@ -6,7 +6,7 @@ order: 34
 
 display user avatars with fallback initials.
 
-## avatar
+## Avatar
 
 with image:
 
@@ -22,7 +22,7 @@ with image:
   name="John Doe"
 />
 
-## fallback initials
+## Fallback initials
 
 without image shows initials:
 
@@ -32,7 +32,7 @@ without image shows initials:
 
 <Avatar name="Jane Smith" />
 
-## sizes
+## Sizes
 
 ```mdx
 <Avatar name="Small" size="sm" />
@@ -46,7 +46,7 @@ without image shows initials:
   <Avatar name="Large" size="lg" />
 </div>
 
-## avatar group
+## Avatar group
 
 group avatars with overlapping layout:
 
@@ -82,7 +82,7 @@ group avatars with overlapping layout:
   />
 </AvatarGroup>
 
-## avatar stack
+## Avatar stack
 
 stack avatars with overflow indicator:
 
@@ -144,7 +144,7 @@ stack avatars with overflow indicator:
   />
 </AvatarStack>
 
-### stack sizes
+### Stack sizes
 
 ```mdx
 <AvatarStack max={3} size="lg">
@@ -186,7 +186,7 @@ stack avatars with overflow indicator:
   />
 </AvatarStack>
 
-## user
+## User
 
 avatar with name and role:
 
@@ -204,7 +204,7 @@ avatar with name and role:
   avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=alice"
 />
 
-### without role
+### Without role
 
 ```mdx
 <User
@@ -218,7 +218,7 @@ avatar with name and role:
   avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=mike"
 />
 
-### without avatar
+### Without avatar
 
 ```mdx
 <User name="Sarah Kim" role="Designer" />
@@ -226,9 +226,9 @@ avatar with name and role:
 
 <User name="Sarah Kim" role="Designer" />
 
-## props
+## Props
 
-### avatar
+### Avatar
 
 | prop | type                 | default | description |
 | ---- | -------------------- | ------- | ----------- |
@@ -236,14 +236,14 @@ avatar with name and role:
 | name | string               | -       | user name   |
 | size | "sm" \| "md" \| "lg" | "md"    | avatar size |
 
-### avatar group
+### Avatar group
 
 | prop     | type      | default | description      |
 | -------- | --------- | ------- | ---------------- |
 | children | ReactNode | -       | avatar elements  |
 | label    | string    | -       | accessible label |
 
-### avatar stack
+### Avatar stack
 
 | prop     | type                 | default | description         |
 | -------- | -------------------- | ------- | ------------------- |
@@ -251,7 +251,7 @@ avatar with name and role:
 | max      | number               | 5       | max visible avatars |
 | size     | "sm" \| "md" \| "lg" | "md"    | wrapper size        |
 
-### user
+### User
 
 | prop   | type   | default | description |
 | ------ | ------ | ------- | ----------- |

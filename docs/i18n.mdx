@@ -6,9 +6,9 @@ order: 15
 
 support multiple languages in your documentation.
 
-## content organization
+## Content organization
 
-### separate folders
+### Separate folders
 
 organize translated content by locale:
 
@@ -25,7 +25,7 @@ docs/
     quickstart.mdx
 ```
 
-### file extensions
+### File extensions
 
 use locale suffixes:
 
@@ -38,7 +38,7 @@ docs/
 
 ## url patterns
 
-### subpath (recommended)
+### Subpath (recommended)
 
 ```
 docs.example.com/en/guide
@@ -54,7 +54,7 @@ export default function Page({ params }) {
 }
 ```
 
-### subdomain
+### Subdomain
 
 ```
 en.docs.example.com/guide
@@ -62,7 +62,7 @@ fr.docs.example.com/guide
 de.docs.example.com/guide
 ```
 
-## language switcher
+## Language switcher
 
 ```tsx
 import { LanguageSwitch } from "fromsrc/client";
@@ -78,7 +78,7 @@ import { LanguageSwitch } from "fromsrc/client";
 />;
 ```
 
-## rtl support
+## Rtl support
 
 for right-to-left languages like arabic and hebrew:
 
@@ -93,7 +93,7 @@ for right-to-left languages like arabic and hebrew:
 }
 ```
 
-## content loading
+## Content loading
 
 load localized content dynamically:
 
@@ -104,7 +104,7 @@ export async function getDocs(locale: string) {
 }
 ```
 
-## fallbacks
+## Fallbacks
 
 fall back to default locale when translation missing:
 
@@ -118,15 +118,15 @@ async function getDoc(locale: string, slug: string) {
 }
 ```
 
-## translation workflow
+## Translation workflow
 
-### recommended tools
+### Recommended tools
 
 - [crowdin](https://crowdin.com) - translation management
 - [lokalise](https://lokalise.com) - localization platform
 - [phrase](https://phrase.com) - translation automation
 
-### sync workflow
+### Sync workflow
 
 ```bash
 # export source strings
@@ -139,7 +139,7 @@ bun run i18n:import
 bun run build
 ```
 
-## metadata
+## Metadata
 
 localize page metadata:
 
@@ -159,7 +159,7 @@ export async function generateMetadata({ params }) {
 }
 ```
 
-## search
+## Search
 
 index each locale separately:
 

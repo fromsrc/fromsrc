@@ -6,11 +6,11 @@ order: 60
 
 form components for collecting user input.
 
-## input
+## Input
 
 text input with label, error, and hint support.
 
-### usage
+### Usage
 
 ```tsx
 import { Input } from "fromsrc/client";
@@ -20,7 +20,7 @@ import { Input } from "fromsrc/client";
 
 <Input label="email" placeholder="you@example.com" />
 
-### sizes
+### Sizes
 
 <div className="flex flex-col gap-4">
   <Input size="sm" placeholder="small" />
@@ -28,19 +28,19 @@ import { Input } from "fromsrc/client";
   <Input size="lg" placeholder="large" />
 </div>
 
-### with error
+### With error
 
 <Input label="username" error="username is required" />
 
-### with hint
+### With hint
 
 <Input label="password" type="password" hint="must be 8+ characters" />
 
-### with tooltip
+### With tooltip
 
 <Input label="api key" tooltip="find this in your dashboard settings" />
 
-### props
+### Props
 
 | prop    | type                 | default   | description              |
 | ------- | -------------------- | --------- | ------------------------ |
@@ -51,11 +51,11 @@ import { Input } from "fromsrc/client";
 | hint    | ReactNode            | -         | helper text              |
 | tooltip | ReactNode            | -         | help text shown on hover |
 
-## button
+## Button
 
 interactive button with loading state.
 
-### usage
+### Usage
 
 ```tsx
 import { Button } from "fromsrc/client";
@@ -65,7 +65,7 @@ import { Button } from "fromsrc/client";
 
 <Button variant="primary">submit</Button>
 
-### variants
+### Variants
 
 <div className="flex gap-2 flex-wrap">
   <Button variant="default">default</Button>
@@ -74,7 +74,7 @@ import { Button } from "fromsrc/client";
   <Button variant="danger">danger</Button>
 </div>
 
-### sizes
+### Sizes
 
 <div className="flex gap-2 items-center flex-wrap">
   <Button size="sm">small</Button>
@@ -82,13 +82,13 @@ import { Button } from "fromsrc/client";
   <Button size="lg">large</Button>
 </div>
 
-### loading
+### Loading
 
 <Button variant="primary" loading>
   saving...
 </Button>
 
-### props
+### Props
 
 | prop    | type                                          | default   | description          |
 | ------- | --------------------------------------------- | --------- | -------------------- |
@@ -96,11 +96,11 @@ import { Button } from "fromsrc/client";
 | size    | "sm" \| "md" \| "lg"                          | "md"      | button size          |
 | loading | boolean                                       | false     | show loading spinner |
 
-## select
+## Select
 
 dropdown select with keyboard navigation.
 
-### usage
+### Usage
 
 ```tsx
 import { Select } from "fromsrc/client";
@@ -124,7 +124,7 @@ import { Select } from "fromsrc/client";
   placeholder="choose framework"
 />
 
-### with label
+### With label
 
 <Select
   label="framework"
@@ -134,7 +134,7 @@ import { Select } from "fromsrc/client";
   ]}
 />
 
-### with error
+### With error
 
 <Select
   label="country"
@@ -145,7 +145,7 @@ import { Select } from "fromsrc/client";
   ]}
 />
 
-### disabled options
+### Disabled options
 
 <Select
   options={[
@@ -155,7 +155,7 @@ import { Select } from "fromsrc/client";
   ]}
 />
 
-### with tooltip
+### With tooltip
 
 <Select
   label="region"
@@ -166,7 +166,7 @@ import { Select } from "fromsrc/client";
   ]}
 />
 
-### props
+### Props
 
 | prop         | type                    | default     | description              |
 | ------------ | ----------------------- | ----------- | ------------------------ |
@@ -188,11 +188,11 @@ import { Select } from "fromsrc/client";
 | label    | string  | required | display text   |
 | disabled | boolean | false    | disable option |
 
-## checkbox
+## Checkbox
 
 checkbox input with label and indeterminate state.
 
-### usage
+### Usage
 
 ```tsx
 import { Checkbox } from "fromsrc/client";
@@ -202,7 +202,7 @@ import { Checkbox } from "fromsrc/client";
 
 <Checkbox label="accept terms" />
 
-### sizes
+### Sizes
 
 <div className="flex flex-col gap-3">
   <Checkbox size="sm" label="small checkbox" />
@@ -210,19 +210,19 @@ import { Checkbox } from "fromsrc/client";
   <Checkbox size="lg" label="large checkbox" />
 </div>
 
-### with error
+### With error
 
 <Checkbox label="required field" error="you must accept" />
 
-### indeterminate
+### Indeterminate
 
 <Checkbox label="select all" indeterminate />
 
-### with tooltip
+### With tooltip
 
 <Checkbox label="enable analytics" tooltip="we collect anonymous usage data" />
 
-### props
+### Props
 
 | prop          | type                 | default | description              |
 | ------------- | -------------------- | ------- | ------------------------ |
@@ -232,11 +232,11 @@ import { Checkbox } from "fromsrc/client";
 | error         | ReactNode            | -       | error message            |
 | tooltip       | ReactNode            | -       | help text shown on hover |
 
-## switch
+## Switch
 
 toggle switch for boolean values.
 
-### usage
+### Usage
 
 ```tsx
 import { Switch } from "fromsrc/client";
@@ -250,7 +250,7 @@ function Example() {
 
 <Switch label="notifications" />
 
-### sizes
+### Sizes
 
 <div className="flex flex-col gap-3">
   <Switch size="sm" label="small" />
@@ -258,15 +258,15 @@ function Example() {
   <Switch size="lg" label="large" />
 </div>
 
-### disabled
+### Disabled
 
 <Switch label="disabled switch" disabled />
 
-### with tooltip
+### With tooltip
 
 <Switch label="dark mode" tooltip="toggle between light and dark theme" />
 
-### props
+### Props
 
 | prop     | type                       | default | description              |
 | -------- | -------------------------- | ------- | ------------------------ |
@@ -277,11 +277,11 @@ function Example() {
 | disabled | boolean                    | false   | disable switch           |
 | tooltip  | ReactNode                  | -       | help text shown on hover |
 
-## autofill
+## Autofill
 
 search input with autocomplete suggestions.
 
-### usage
+### Usage
 
 ```tsx
 import { Autofill } from "fromsrc/client";
@@ -307,13 +307,13 @@ import { Autofill } from "fromsrc/client";
   placeholder="search languages"
 />
 
-### with selection callback
+### With selection callback
 
 ```tsx
 <Autofill items={items} onSelect={(item) => console.log("selected:", item)} />
 ```
 
-### features
+### Features
 
 - filters as you type
 - keyboard navigation with arrow keys
@@ -321,7 +321,7 @@ import { Autofill } from "fromsrc/client";
 - `Escape` to close suggestions
 - closes on outside click
 
-### props
+### Props
 
 | prop        | type                         | default     | description           |
 | ----------- | ---------------------------- | ----------- | --------------------- |
@@ -339,11 +339,11 @@ import { Autofill } from "fromsrc/client";
 | label | string | required | display text                            |
 | value | string | -        | value when selected (defaults to label) |
 
-## radio
+## Radio
 
 radio button group for selecting one option from a set.
 
-### usage
+### Usage
 
 ```tsx
 import { Radio, RadioGroup } from "fromsrc/client";
@@ -361,7 +361,7 @@ import { Radio, RadioGroup } from "fromsrc/client";
   <Radio value="team" label="team" />
 </RadioGroup>
 
-### sizes
+### Sizes
 
 <div className="flex gap-8">
   <RadioGroup label="small" size="sm">
@@ -378,7 +378,7 @@ import { Radio, RadioGroup } from "fromsrc/client";
   </RadioGroup>
 </div>
 
-### horizontal
+### Horizontal
 
 <RadioGroup label="theme" orientation="horizontal" defaultValue="system">
   <Radio value="light" label="light" />
@@ -386,7 +386,7 @@ import { Radio, RadioGroup } from "fromsrc/client";
   <Radio value="system" label="system" />
 </RadioGroup>
 
-### disabled
+### Disabled
 
 <RadioGroup label="disabled group" disabled defaultValue="a">
   <Radio value="a" label="option a" />
@@ -414,11 +414,11 @@ import { Radio, RadioGroup } from "fromsrc/client";
 | label    | ReactNode | -        | accessible label             |
 | disabled | boolean   | false    | disable this radio           |
 
-## textarea
+## Textarea
 
 multi-line text input with autoresize and character count.
 
-### usage
+### Usage
 
 ```tsx
 import { Textarea } from "fromsrc/client";
@@ -428,7 +428,7 @@ import { Textarea } from "fromsrc/client";
 
 <Textarea label="message" placeholder="type here..." />
 
-### sizes
+### Sizes
 
 <div className="flex flex-col gap-4">
   <Textarea size="sm" placeholder="small" />
@@ -436,15 +436,15 @@ import { Textarea } from "fromsrc/client";
   <Textarea size="lg" placeholder="large" />
 </div>
 
-### with error
+### With error
 
 <Textarea label="bio" error="bio is required" />
 
-### with hint
+### With hint
 
 <Textarea label="description" hint="keep it brief" />
 
-### character count
+### Character count
 
 <Textarea
   label="tweet"
@@ -453,15 +453,15 @@ import { Textarea } from "fromsrc/client";
   placeholder="what's happening?"
 />
 
-### autoresize
+### Autoresize
 
 <Textarea label="notes" autoresize placeholder="grows as you type..." />
 
-### with tooltip
+### With tooltip
 
 <Textarea label="feedback" tooltip="your feedback helps us improve" />
 
-### props
+### Props
 
 | prop       | type                 | default   | description                  |
 | ---------- | -------------------- | --------- | ---------------------------- |

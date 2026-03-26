@@ -6,7 +6,7 @@ order: 3
 
 strategies for versioning documentation with fromsrc.
 
-## branch-based versioning
+## Branch-based versioning
 
 use git branches to maintain different doc versions:
 
@@ -26,18 +26,18 @@ deploy each branch to a subdomain:
 - `docs.example.com` → main branch (latest)
 - `v1.docs.example.com` → v1 branch
 
-### pros
+### Pros
 
 - no content duplication in main branch
 - independent builds per version
 - clean git history
 
-### cons
+### Cons
 
 - requires multiple deployments
 - harder to search across versions
 
-## folder-based versioning
+## Folder-based versioning
 
 keep all versions in a single branch:
 
@@ -52,7 +52,7 @@ keep all versions in a single branch:
   </Folder>
 </Files>
 
-### content loader
+### Content loader
 
 ```tsx
 import { defineContent, z } from "fromsrc";
@@ -73,7 +73,7 @@ export function createVersionedContent(version: Version) {
 }
 ```
 
-### version switcher
+### Version switcher
 
 ```tsx
 "use client";
@@ -113,13 +113,13 @@ export function VersionSwitcher() {
 }
 ```
 
-### pros
+### Pros
 
 - single deployment
 - easy to search across versions
 - unified navigation
 
-### cons
+### Cons
 
 - larger repo size
 - potential content duplication
@@ -144,7 +144,7 @@ const schema = extendSchema({
 });
 ```
 
-### deprecation notice
+### Deprecation notice
 
 ```tsx
 function DeprecationBanner({ doc }) {
@@ -164,7 +164,7 @@ function DeprecationBanner({ doc }) {
 }
 ```
 
-## recommendation
+## Recommendation
 
 for most projects, branch-based versioning is simpler:
 

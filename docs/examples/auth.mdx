@@ -6,7 +6,7 @@ order: 10
 
 restrict access to documentation for private or premium content.
 
-## folder structure
+## Folder structure
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -21,7 +21,7 @@ restrict access to documentation for private or premium content.
   </Folder>
 </Files>
 
-## content schema
+## Content schema
 
 mark pages as protected:
 
@@ -40,7 +40,7 @@ export const getDoc = docs.getDoc;
 export const getAllDocs = docs.getAllDocs;
 ```
 
-## protected frontmatter
+## Protected frontmatter
 
 ```yaml
 ---
@@ -51,7 +51,7 @@ role: admin
 ---
 ```
 
-## proxy protection
+## Proxy protection
 
 protect routes at the edge:
 
@@ -76,7 +76,7 @@ export async function proxy(request: NextRequest) {
 }
 ```
 
-## page-level auth
+## Page-level auth
 
 check access in page component:
 
@@ -123,7 +123,7 @@ function AccessDenied() {
 }
 ```
 
-## session helper
+## Session helper
 
 ```tsx
 import { cookies } from "next/headers";
@@ -149,7 +149,7 @@ export async function getSession(): Promise<Session | null> {
 }
 ```
 
-## navigation filtering
+## Navigation filtering
 
 hide protected pages from sidebar:
 
@@ -170,7 +170,7 @@ export async function getNavigation() {
 }
 ```
 
-## login page
+## Login page
 
 ```tsx
 "use client";
@@ -258,7 +258,7 @@ export async function POST(request: Request) {
 }
 ```
 
-## protected badge
+## Protected badge
 
 show lock icon on protected pages:
 

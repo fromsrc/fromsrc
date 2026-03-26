@@ -6,7 +6,7 @@ order: 3
 
 utilities for loading mdx content from the filesystem.
 
-## getDoc
+## GetDoc
 
 load a single document by slug.
 
@@ -37,7 +37,7 @@ if (doc) {
   }}
 />
 
-### getDoc returns
+### GetDoc returns
 
 returns `Doc | null`. null if the file doesn't exist.
 
@@ -52,7 +52,7 @@ interface Doc {
 }
 ```
 
-## getAllDocs
+## GetAllDocs
 
 load metadata for all documents in a directory.
 
@@ -76,7 +76,7 @@ docs.forEach((doc) => {
   }}
 />
 
-### getAllDocs returns
+### GetAllDocs returns
 
 returns `DocMeta[]` sorted by order field.
 
@@ -89,7 +89,7 @@ interface DocMeta {
 }
 ```
 
-## getNavigation
+## GetNavigation
 
 generate navigation structure from documents.
 
@@ -106,7 +106,7 @@ const nav = await getNavigation("docs");
 
 groups documents by first folder segment. top-level pages stay in one root section. section titles use `_meta.json` `title` when present.
 
-## defineContent
+## DefineContent
 
 create a typed content loader with custom schema.
 
@@ -132,7 +132,7 @@ const doc = await content.getDoc(["installation"]);
   }}
 />
 
-### defineContent returns
+### DefineContent returns
 
 ```typescript
 interface ContentAPI {
@@ -143,9 +143,9 @@ interface ContentAPI {
 }
 ```
 
-## schema utilities
+## Schema utilities
 
-### baseSchema
+### BaseSchema
 
 the default frontmatter schema.
 
@@ -157,7 +157,7 @@ const baseSchema = z.object({
 });
 ```
 
-### extendSchema
+### ExtendSchema
 
 extend the base schema with additional fields.
 
@@ -170,7 +170,7 @@ const schema = extendSchema({
 });
 ```
 
-### defineSchema
+### DefineSchema
 
 define a completely custom schema (not extending base).
 

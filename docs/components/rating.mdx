@@ -6,7 +6,7 @@ order: 18
 
 interactive star rating input.
 
-## usage
+## Usage
 
 ```tsx
 import { Rating } from "fromsrc/client"
@@ -16,7 +16,7 @@ const [value, setValue] = useState(0)
 <Rating value={value} onChange={setValue} />
 ```
 
-## readonly
+## Readonly
 
 display only, no interaction:
 
@@ -24,7 +24,7 @@ display only, no interaction:
 <Rating value={4} readonly />
 ```
 
-## custom max
+## Custom max
 
 change maximum stars:
 
@@ -32,7 +32,7 @@ change maximum stars:
 <Rating value={3} max={10} />
 ```
 
-## controlled
+## Controlled
 
 fully controlled with state:
 
@@ -45,7 +45,7 @@ const [rating, setRating] = useState(3)
 />
 ```
 
-## form integration
+## Form integration
 
 works with form libraries:
 
@@ -53,7 +53,7 @@ works with form libraries:
 <Rating value={formState.rating} onChange={(v) => setFormValue("rating", v)} />
 ```
 
-## props
+## Props
 
 | prop     | type                    | default | description         |
 | -------- | ----------------------- | ------- | ------------------- |

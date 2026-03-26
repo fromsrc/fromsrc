@@ -6,7 +6,7 @@ order: 14
 
 deploy fromsrc documentation to any platform.
 
-## vercel
+## Vercel
 
 zero-config deployment:
 
@@ -16,7 +16,7 @@ vercel
 
 or connect your github repo at vercel.com/new.
 
-### environment variables
+### Environment variables
 
 set in vercel dashboard or `.env`:
 
@@ -24,13 +24,13 @@ set in vercel dashboard or `.env`:
 NEXT_PUBLIC_SITE_URL=https://docs.example.com
 ```
 
-## netlify
+## Netlify
 
 ```bash
 netlify deploy --prod
 ```
 
-### netlify.toml
+### Netlify.toml
 
 ```toml
 [build]
@@ -41,20 +41,20 @@ netlify deploy --prod
   package = "@netlify/plugin-nextjs"
 ```
 
-## cloudflare pages
+## Cloudflare pages
 
 ```bash
 npx wrangler pages deploy .next
 ```
 
-### wrangler.toml
+### Wrangler.toml
 
 ```toml
 name = "docs"
 compatibility_date = "2026-01-01"
 ```
 
-## static export
+## Static export
 
 generate static html for any host:
 
@@ -76,9 +76,9 @@ deploy the `out/` folder to any static host:
 - nginx
 - apache
 
-## docker
+## Docker
 
-### dockerfile
+### Dockerfile
 
 ```dockerfile
 FROM oven/bun:1 AS builder
@@ -97,7 +97,7 @@ EXPOSE 3000
 CMD ["bun", "run", "start"]
 ```
 
-### docker compose
+### Docker compose
 
 ```yaml
 services:
@@ -109,9 +109,9 @@ services:
       - NODE_ENV=production
 ```
 
-## self-hosting
+## Self-hosting
 
-### standalone build
+### Standalone build
 
 ```ts
 // next.config.ts
@@ -126,13 +126,13 @@ outputs minimal files needed to run:
 node .next/standalone/server.js
 ```
 
-### pm2
+### Pm2
 
 ```bash
 pm2 start .next/standalone/server.js --name docs
 ```
 
-## custom domain
+## Custom domain
 
 ### dns configuration
 

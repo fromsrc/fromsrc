@@ -6,7 +6,7 @@ order: 52
 
 menu that opens on click with keyboard navigation.
 
-## usage
+## Usage
 
 ```tsx
 import { Dropdown } from "fromsrc/client";
@@ -20,7 +20,7 @@ import { Dropdown } from "fromsrc/client";
 />;
 ```
 
-## items
+## Items
 
 each item can have a label, icon, click handler, and states.
 
@@ -34,9 +34,9 @@ const items = [
 ];
 ```
 
-## alignment
+## Alignment
 
-### start
+### Start
 
 default alignment to the left.
 
@@ -44,7 +44,7 @@ default alignment to the left.
 <Dropdown align="start" trigger={<button>menu</button>} items={items} />
 ```
 
-### end
+### End
 
 align to the right.
 
@@ -52,7 +52,7 @@ align to the right.
 <Dropdown align="end" trigger={<button>menu</button>} items={items} />
 ```
 
-## features
+## Features
 
 - closes on outside click
 - closes on `Escape` key
@@ -61,7 +61,7 @@ align to the right.
 - disabled items are not selectable
 - danger styling for destructive actions
 
-## props
+## Props
 
 ### Dropdown
 

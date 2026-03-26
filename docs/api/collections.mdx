@@ -6,7 +6,7 @@ order: 4
 
 `defineCollection` and `defineCollections` provide typed collection loaders over `.mdx` files.
 
-## defineCollection
+## DefineCollection
 
 create one typed collection.
 
@@ -25,7 +25,7 @@ const posts = defineCollection({
 });
 ```
 
-## defineCollections
+## DefineCollections
 
 create multiple collections in one call.
 
@@ -52,7 +52,7 @@ const collections = defineCollections({
 });
 ```
 
-## returned api
+## Returned api
 
 collection instances expose:
 
@@ -71,7 +71,7 @@ const sorted = await posts.sort("slug", "asc");
 const byDate = await posts.sort("publishedAt", "desc");
 ```
 
-## type inference
+## Type inference
 
 schema fields are inferred through zod.
 
@@ -83,7 +83,7 @@ if (first) {
 }
 ```
 
-## notes
+## Notes
 
 - files are scanned recursively under `dir`
 - slugs are file-path based (`nested/page.mdx` -> `nested/page`)

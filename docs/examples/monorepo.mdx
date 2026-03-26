@@ -6,7 +6,7 @@ order: 4
 
 document multiple packages in a monorepo with a unified docs site.
 
-## structure
+## Structure
 
 <Files>
   <Folder name="packages" defaultOpen>
@@ -42,7 +42,7 @@ document multiple packages in a monorepo with a unified docs site.
   </Folder>
 </Files>
 
-## package-specific content
+## Package-specific content
 
 create a content loader for each package:
 
@@ -72,7 +72,7 @@ export const cli = defineContent({
 });
 ```
 
-## unified navigation
+## Unified navigation
 
 combine package navigations:
 
@@ -95,7 +95,7 @@ export async function getUnifiedNavigation() {
 }
 ```
 
-## package switcher
+## Package switcher
 
 add tabs to switch between packages:
 
@@ -137,7 +137,7 @@ export function PackageTabs() {
 }
 ```
 
-## cross-references
+## Cross-references
 
 link between packages:
 
@@ -145,7 +145,7 @@ link between packages:
 see the <Link href="/docs/core/api">core api</Link> for the base implementation.
 ```
 
-## shared components
+## Shared components
 
 reuse mdx components across packages:
 
@@ -162,7 +162,7 @@ export const components = {
 };
 ```
 
-## auto-generated docs
+## Auto-generated docs
 
 extract api docs from package exports:
 
@@ -182,7 +182,7 @@ export function extractExports(packagePath: string) {
 }
 ```
 
-## workspace configuration
+## Workspace configuration
 
 configure turborepo for docs builds:
 

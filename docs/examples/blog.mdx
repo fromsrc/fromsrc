@@ -6,7 +6,7 @@ order: 2
 
 add a blog alongside your documentation using the same content system.
 
-## folder structure
+## Folder structure
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -19,7 +19,7 @@ add a blog alongside your documentation using the same content system.
   </Folder>
 </Files>
 
-## extended schema
+## Extended schema
 
 add blog-specific fields to your frontmatter:
 
@@ -39,7 +39,7 @@ export const getBlogPost = blog.getDoc;
 export const getAllPosts = blog.getAllDocs;
 ```
 
-## blog post frontmatter
+## Blog post frontmatter
 
 ```yaml
 ---
@@ -53,7 +53,7 @@ tags:
 ---
 ```
 
-## blog index page
+## Blog index page
 
 create `app/blog/page.tsx`:
 
@@ -86,7 +86,7 @@ export default async function BlogIndex() {
 }
 ```
 
-## blog post page
+## Blog post page
 
 create `app/blog/[slug]/page.tsx`:
 

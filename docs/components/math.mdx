@@ -6,7 +6,7 @@ order: 63
 
 render latex equations with katex.
 
-## inline math
+## Inline math
 
 use `InlineMath` for equations within text.
 
@@ -14,7 +14,7 @@ use `InlineMath` for equations within text.
 the equation <InlineMath>E = mc^2</InlineMath> is famous.
 ```
 
-## block math
+## Block math
 
 use `BlockMath` for standalone equations.
 
@@ -22,7 +22,7 @@ use `BlockMath` for standalone equations.
 <BlockMath>x^2 + y^2 = r^2</BlockMath>
 ```
 
-## math component
+## Math component
 
 the base `Math` component with display mode option.
 
@@ -31,28 +31,28 @@ the base `Math` component with display mode option.
 <Math display>a + b = c</Math>
 ```
 
-## props
+## Props
 
-### math
+### Math
 
 | prop     | type      | default  | description               |
 | -------- | --------- | -------- | ------------------------- |
 | children | ReactNode | required | latex expression          |
 | display  | boolean   | false    | block mode with centering |
 
-### blockmath
+### Blockmath
 
 | prop     | type      | default  | description      |
 | -------- | --------- | -------- | ---------------- |
 | children | ReactNode | required | latex expression |
 
-### inlinemath
+### Inlinemath
 
 | prop     | type      | default  | description      |
 | -------- | --------- | -------- | ---------------- |
 | children | ReactNode | required | latex expression |
 
-## requirements
+## Requirements
 
 requires katex as a peer dependency.
 

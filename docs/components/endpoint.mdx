@@ -6,7 +6,7 @@ order: 21
 
 document rest api endpoints with method badges and parameters.
 
-## usage
+## Usage
 
 ```mdx
 <Endpoint method="GET" path="/api/users/:id" description="get a user by id">
@@ -18,7 +18,7 @@ document rest api endpoints with method badges and parameters.
   <Param name="id" type="string" required description="the user id" />
 </Endpoint>
 
-## methods
+## Methods
 
 all http methods are supported with color coding:
 
@@ -28,7 +28,7 @@ all http methods are supported with color coding:
 <Endpoint method="PATCH" path="/api/resource/:id" />
 <Endpoint method="DELETE" path="/api/resource/:id" />
 
-## parameters
+## Parameters
 
 ```mdx
 <Endpoint method="POST" path="/api/users" description="create a new user">
@@ -54,7 +54,7 @@ all http methods are supported with color coding:
   <Param name="role" type="string" description="user role (admin, user)" />
 </Endpoint>
 
-## responses
+## Responses
 
 document response codes:
 
@@ -76,9 +76,9 @@ document response codes:
   user does not exist
 </Response>
 
-## props
+## Props
 
-### endpoint
+### Endpoint
 
 | prop        | type      | default  | description                                                       |
 | ----------- | --------- | -------- | ----------------------------------------------------------------- |
@@ -87,7 +87,7 @@ document response codes:
 | description | string    | -        | endpoint description                                              |
 | children    | ReactNode | -        | parameter list                                                    |
 
-### param
+### Param
 
 | prop        | type    | default  | description           |
 | ----------- | ------- | -------- | --------------------- |
@@ -96,7 +96,7 @@ document response codes:
 | required    | boolean | false    | marks as required     |
 | description | string  | -        | parameter description |
 
-### response
+### Response
 
 | prop        | type      | default  | description        |
 | ----------- | --------- | -------- | ------------------ |

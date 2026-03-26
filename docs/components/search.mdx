@@ -6,7 +6,7 @@ order: 10
 
 instant search with cmd+k support.
 
-## usage
+## Usage
 
 ```tsx
 import { Search } from "fromsrc/client"
@@ -17,14 +17,14 @@ const docs = await getAllDocs()
 <Search docs={docs} />
 ```
 
-## keyboard shortcuts
+## Keyboard shortcuts
 
 - **cmd+k** - open search
 - **esc** - close search
 - **arrow keys** - navigate results
 - **enter** - select result
 
-## features
+## Features
 
 - fuzzy matching
 - ranked results
@@ -32,7 +32,7 @@ const docs = await getAllDocs()
 - keyboard navigation
 - responsive modal
 
-## props
+## Props
 
 <TypeTable
   data={{
@@ -64,39 +64,39 @@ const docs = await getAllDocs()
   }}
 />
 
-## how it works
+## How it works
 
 search runs entirely client-side using fuzzy matching. when the component mounts, it indexes all doc titles and descriptions.
 
 <Steps>
 <Step>
 
-### indexing
+### Indexing
 
 docs are indexed on mount. each doc's title and description are tokenized for matching.
 
 </Step>
 <Step>
 
-### matching
+### Matching
 
 user input is matched against tokens using fuzzy matching with typo tolerance.
 
 </Step>
 <Step>
 
-### ranking
+### Ranking
 
 results are ranked by relevance. title matches score higher than description matches.
 
 </Step>
 </Steps>
 
-## search adapter
+## Search adapter
 
 create custom search adapters for external services or advanced search.
 
-### interface
+### Interface
 
 ```ts
 interface SearchAdapter {
@@ -114,7 +114,7 @@ interface SearchResult {
 }
 ```
 
-### custom adapter
+### Custom adapter
 
 ```ts
 import { createSearchAdapter } from "fromsrc";
@@ -140,15 +140,15 @@ const algoliaAdapter = createSearchAdapter({
 });
 ```
 
-### usage
+### Usage
 
 ```tsx
 <Search docs={docs} adapter={algoliaAdapter} />
 ```
 
-## customization
+## Customization
 
-### placeholder text
+### Placeholder text
 
 wrap the search component to customize the placeholder:
 
@@ -158,7 +158,7 @@ wrap the search component to customize the placeholder:
 </div>
 ```
 
-### styling
+### Styling
 
 search uses semantic color variables that adapt to your theme:
 
@@ -168,7 +168,7 @@ search uses semantic color variables that adapt to your theme:
 - `--color-fg` - text
 - `--color-muted` - secondary text
 
-## performance
+## Performance
 
 search is optimized for docs sites up to thousands of pages:
 

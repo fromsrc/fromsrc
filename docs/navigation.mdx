@@ -10,7 +10,7 @@ import { Files, Folder, File } from "fromsrc/client";
 
 fromsrc uses a file-based navigation system. your docs folder structure determines the sidebar navigation.
 
-## folder structure
+## Folder structure
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -27,7 +27,7 @@ fromsrc uses a file-based navigation system. your docs folder structure determin
   </Folder>
 </Files>
 
-## meta files
+## Meta files
 
 use `_meta.json` files to control page ordering and section titles.
 
@@ -40,7 +40,7 @@ use `_meta.json` files to control page ordering and section titles.
 
 pages are displayed in the order specified. pages not listed appear after the specified pages.
 
-## nested sections
+## Nested sections
 
 create `_meta.json` in subdirectories for nested navigation:
 
@@ -62,7 +62,7 @@ create `_meta.json` in subdirectories for nested navigation:
 }
 ```
 
-## frontmatter ordering
+## Frontmatter ordering
 
 alternatively, use frontmatter `order` to sort pages:
 
@@ -75,7 +75,7 @@ order: 1
 
 lower numbers appear first. pages without `order` default to 99.
 
-## sidebar sections
+## Sidebar sections
 
 the sidebar groups pages from the navigation tree:
 
@@ -83,7 +83,7 @@ the sidebar groups pages from the navigation tree:
 - nested pages are grouped by their first folder
 - section titles come from folder `_meta.json` `title` when present
 
-## custom sections
+## Custom sections
 
 you can fully customize section grouping in your own sidebar component:
 
@@ -96,7 +96,7 @@ for (const section of navigation) {
 }
 ```
 
-## icons
+## Icons
 
 add icons to sidebar items via the icons map:
 
@@ -110,7 +110,7 @@ const icons = {
 };
 ```
 
-## collapsible folders
+## Collapsible folders
 
 folders can be collapsed in the sidebar. use `defaultOpen` to control initial state:
 

@@ -6,7 +6,7 @@ order: 60
 
 lightweight toast notifications for user feedback.
 
-## setup
+## Setup
 
 wrap your app with the toast provider:
 
@@ -18,7 +18,7 @@ export default function Layout({ children }) {
 }
 ```
 
-## usage
+## Usage
 
 use the `useToast` hook to trigger notifications:
 
@@ -43,33 +43,33 @@ function SaveButton() {
 }
 ```
 
-## types
+## Types
 
-### info
+### Info
 
 ```tsx
 add({ type: "info", message: "new version available" });
 ```
 
-### success
+### Success
 
 ```tsx
 add({ type: "success", message: "file uploaded" });
 ```
 
-### warning
+### Warning
 
 ```tsx
 add({ type: "warning", message: "low storage" });
 ```
 
-### error
+### Error
 
 ```tsx
 add({ type: "error", message: "connection failed" });
 ```
 
-## custom duration
+## Custom duration
 
 toasts auto-dismiss after 3 seconds by default:
 
@@ -81,7 +81,7 @@ add({
 });
 ```
 
-## manual dismiss
+## Manual dismiss
 
 use `remove` to dismiss a toast early:
 
@@ -93,9 +93,9 @@ toasts.map((toast) => (
 ));
 ```
 
-## props
+## Props
 
-### toast
+### Toast
 
 | prop     | type                                        | default  | description             |
 | -------- | ------------------------------------------- | -------- | ----------------------- |
@@ -103,7 +103,7 @@ toasts.map((toast) => (
 | type     | "info" \| "success" \| "warning" \| "error" | required | toast style             |
 | duration | number                                      | 3000     | auto-dismiss time in ms |
 
-### useToast
+### UseToast
 
 | property | type            | description           |
 | -------- | --------------- | --------------------- |

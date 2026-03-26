@@ -6,7 +6,7 @@ order: 7
 
 create custom themes for your documentation.
 
-## basic theme
+## Basic theme
 
 add css variables to your global stylesheet:
 
@@ -22,7 +22,7 @@ add css variables to your global stylesheet:
 }
 ```
 
-## brand colors
+## Brand colors
 
 match your brand by customizing the accent color:
 
@@ -52,7 +52,7 @@ export default {
 };
 ```
 
-## light/dark mode
+## Light/dark mode
 
 support both themes:
 
@@ -76,7 +76,7 @@ support both themes:
 }
 ```
 
-## theme provider
+## Theme provider
 
 create a theme provider component:
 
@@ -126,7 +126,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export const useTheme = () => useContext(ThemeContext);
 ```
 
-## theme toggle
+## Theme toggle
 
 ```tsx
 "use client";
@@ -169,7 +169,7 @@ export function ThemeToggle() {
 }
 ```
 
-## preset themes
+## Preset themes
 
 create multiple theme options:
 
@@ -191,7 +191,7 @@ create multiple theme options:
 }
 ```
 
-## theme selector
+## Theme selector
 
 let users pick a theme:
 
@@ -247,7 +247,7 @@ export function ThemeSelector() {
 }
 ```
 
-## code block themes
+## Code block themes
 
 customize syntax highlighting:
 
@@ -262,7 +262,7 @@ customize syntax highlighting:
 }
 ```
 
-## custom fonts
+## Custom fonts
 
 add brand fonts:
 

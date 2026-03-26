@@ -6,7 +6,7 @@ order: 5
 
 build api reference documentation with endpoints, parameters, and responses.
 
-## folder structure
+## Folder structure
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -24,7 +24,7 @@ build api reference documentation with endpoints, parameters, and responses.
   </Folder>
 </Files>
 
-## content schema
+## Content schema
 
 add api-specific frontmatter fields:
 
@@ -44,7 +44,7 @@ export const getApiDoc = api.getDoc;
 export const getAllApiDocs = api.getAllDocs;
 ```
 
-## endpoint documentation
+## Endpoint documentation
 
 document each endpoint with method, path, and parameters:
 
@@ -74,7 +74,7 @@ auth: true
   <Param name="role" type="string" description="user or admin" />
 </Endpoint>
 
-## request body
+## Request body
 
 {/* codeblock lang="json" */}
 {
@@ -84,7 +84,7 @@ auth: true
 "role": "user"
 }
 
-## responses
+## Responses
 
 <Response status={201} description="created">
   returns the created user object
@@ -154,12 +154,12 @@ export default async function ApiIndex() {
 }
 ```
 
-## property documentation
+## Property documentation
 
 use the property component for request/response schemas:
 
 ```mdx
-## user object
+## User object
 
 <Properties>
   <Property name="id" type="string" required>
@@ -180,7 +180,7 @@ use the property component for request/response schemas:
 </Properties>
 ```
 
-## authentication badge
+## Authentication badge
 
 show authentication requirements:
 

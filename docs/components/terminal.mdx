@@ -6,7 +6,7 @@ order: 27
 
 display command line output with syntax highlighting.
 
-## usage
+## Usage
 
 ```mdx
 <Terminal>
@@ -20,7 +20,7 @@ display command line output with syntax highlighting.
   <Output>added 42 packages in 2s</Output>
 </Terminal>
 
-## custom title
+## Custom title
 
 ```mdx
 <Terminal title="bash">
@@ -34,7 +34,7 @@ display command line output with syntax highlighting.
   <Output>On branch main</Output>
 </Terminal>
 
-## custom prompt
+## Custom prompt
 
 ```mdx
 <Terminal>
@@ -46,7 +46,7 @@ display command line output with syntax highlighting.
   <Line prompt=">">.exit</Line>
 </Terminal>
 
-## typed animation
+## Typed animation
 
 animate text appearing character by character:
 
@@ -64,29 +64,29 @@ animate text appearing character by character:
   </Line>
 </Terminal>
 
-## props
+## Props
 
-### terminal
+### Terminal
 
 | prop     | type      | default    | description  |
 | -------- | --------- | ---------- | ------------ |
 | title    | string    | "Terminal" | window title |
 | children | ReactNode | -          | content      |
 
-### line
+### Line
 
 | prop     | type      | default | description      |
 | -------- | --------- | ------- | ---------------- |
 | prompt   | string    | "$"     | prompt character |
 | children | ReactNode | -       | command text     |
 
-### output
+### Output
 
 | prop     | type      | default | description |
 | -------- | --------- | ------- | ----------- |
 | children | ReactNode | -       | output text |
 
-### typed
+### Typed
 
 | prop  | type   | default | description      |
 | ----- | ------ | ------- | ---------------- |

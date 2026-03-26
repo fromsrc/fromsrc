@@ -6,7 +6,7 @@ order: 5
 
 fromsrc supports pluggable content sources for docs, ai routes, and mcp handlers.
 
-## local source
+## Local source
 
 use `defineContent` for local filesystem docs:
 
@@ -18,7 +18,7 @@ export const content = defineContent({
 });
 ```
 
-## remote source
+## Remote source
 
 use `createRemoteSource` when docs are hosted on a remote fromsrc site:
 
@@ -37,7 +37,7 @@ default remote endpoints:
 - search index: `/api/search-index`
 - fallback index: `/llms.txt`
 
-## github source
+## Github source
 
 use `createGithubSource` to read docs directly from a repository:
 

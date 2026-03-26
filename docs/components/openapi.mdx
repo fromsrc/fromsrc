@@ -6,19 +6,19 @@ order: 22
 
 render grouped endpoint docs from an openapi spec.
 
-## usage
+## Usage
 
 ```mdx
 <Openapi spec={spec} />
 ```
 
-## grouped tags
+## Grouped tags
 
 ```mdx
 <Openapi spec={spec} group="tag" />
 ```
 
-## filtered views
+## Filtered views
 
 ```mdx
 <Openapi spec={spec} tag="billing" />
@@ -26,7 +26,7 @@ render grouped endpoint docs from an openapi spec.
 <Openapi spec={spec} path="/v1/invoices" />
 ```
 
-## props
+## Props
 
 | prop   | type              | default  | description                      |
 | ------ | ----------------- | -------- | -------------------------------- |
@@ -40,7 +40,7 @@ grouped mode shows a per-tag endpoint count and uses stable method ordering:
 `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `HEAD`, `TRACE`.
 when grouped mode is enabled, fromsrc also renders quick-jump tag chips at the top for faster keyboard and pointer navigation.
 
-## schema renderer
+## Schema renderer
 
 `Openapischema` renders nested request/response shapes.
 

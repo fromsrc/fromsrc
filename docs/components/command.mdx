@@ -6,7 +6,7 @@ order: 15
 
 searchable command palette with keyboard navigation.
 
-## usage
+## Usage
 
 ```tsx
 import { Command } from "fromsrc/client"
@@ -20,7 +20,7 @@ const items = [
 <Command items={items} onSelect={(item) => console.log(item.id)} />
 ```
 
-## with icons
+## With icons
 
 ```tsx
 import { Home, BookOpen, Settings } from "lucide-react"
@@ -34,19 +34,19 @@ const items = [
 <Command items={items} />
 ```
 
-## keyboard shortcuts
+## Keyboard shortcuts
 
 - **arrow up/down** - navigate items
 - **enter** - select highlighted item
 - **type** - filter items
 
-## custom placeholder
+## Custom placeholder
 
 ```tsx
 <Command items={items} placeholder="type a command..." />
 ```
 
-## item callbacks
+## Item callbacks
 
 each item can have its own onSelect:
 
@@ -65,9 +65,9 @@ const items = [
 ];
 ```
 
-## props
+## Props
 
-### command
+### Command
 
 | prop        | type           | default     | description                 |
 | ----------- | -------------- | ----------- | --------------------------- |
@@ -75,7 +75,7 @@ const items = [
 | placeholder | string         | "search..." | input placeholder           |
 | onSelect    | (item) => void | -           | callback when item selected |
 
-### commanditem
+### Commanditem
 
 | prop     | type       | description            |
 | -------- | ---------- | ---------------------- |

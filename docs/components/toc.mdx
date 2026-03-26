@@ -6,7 +6,7 @@ order: 18
 
 table of contents with scroll spy, progress indicator, and multiple variants.
 
-## usage
+## Usage
 
 ```tsx
 import { Toc } from "fromsrc/client";
@@ -17,7 +17,7 @@ import { Toc } from "fromsrc/client";
 </div>;
 ```
 
-## scroll spy
+## Scroll spy
 
 the toc automatically detects h2 and h3 headings within an `<article>` element. as you scroll, the current heading is highlighted.
 
@@ -27,9 +27,9 @@ when multi mode is enabled, all visible headings are highlighted as a range.
 <Toc multi />
 ```
 
-## variants
+## Variants
 
-### default
+### Default
 
 full toc with border-based highlighting showing which section is active.
 
@@ -49,7 +49,7 @@ with zigzag lines connecting nested headings:
 <Toc variant="default" zigzag />
 ```
 
-### minimal
+### Minimal
 
 simpler toc with scroll progress indicator on a vertical track.
 
@@ -63,7 +63,7 @@ with zigzag progress:
 <Toc variant="minimal" zigzag />
 ```
 
-### inline
+### Inline
 
 collapsible toc that goes inside the content area.
 
@@ -89,7 +89,7 @@ open by default:
 <Toc variant="inline" defaultOpen />
 ```
 
-## useToc hook
+## UseToc hook
 
 access toc state directly for custom implementations.
 
@@ -115,7 +115,7 @@ function CustomToc() {
 }
 ```
 
-### return value
+### Return value
 
 | field       | type      | description                              |
 | ----------- | --------- | ---------------------------------------- |
@@ -123,7 +123,7 @@ function CustomToc() {
 | active      | string    | id of the first active heading           |
 | activeRange | string[]  | ids of all visible headings (multi mode) |
 
-### heading type
+### Heading type
 
 ```tsx
 interface Heading {
@@ -133,7 +133,7 @@ interface Heading {
 }
 ```
 
-## props
+## Props
 
 | prop        | type                               | default        | description                           |
 | ----------- | ---------------------------------- | -------------- | ------------------------------------- |
