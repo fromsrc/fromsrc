@@ -1,5 +1,5 @@
 ---
-title: Api reference
+title: API reference
 description: All exports from fromsrc
 order: 1
 ---
@@ -7,11 +7,11 @@ order: 1
 fromsrc exports from two entry points:
 
 - `fromsrc` - server utilities and content helpers
-- `fromsrc/client` - react components and hooks
+- `fromsrc/client` - React components and hooks
 
 ## fromsrc
 
-server-side utilities for content loading.
+Server-side utilities for content loading.
 
 ### Functions
 
@@ -19,65 +19,65 @@ server-side utilities for content loading.
   data={{
     getDoc: {
       type: "(dir, slug[]) => Promise<Doc | null>",
-      description: "load a single document by slug",
+      description: "Load a single document by slug",
     },
     getAllDocs: {
       type: "(dir) => Promise<DocMeta[]>",
-      description: "load metadata for all documents",
+      description: "Load metadata for all documents",
     },
     getNavigation: {
       type: "(dir) => Promise<Section[]>",
-      description: "generate navigation structure",
+      description: "Generate navigation structure",
     },
     defineContent: {
       type: "(config) => ContentAPI",
-      description: "create typed content loader",
+      description: "Create typed content loader",
     },
     defineCollection: {
       type: "(config) => Collection",
-      description: "create typed collection loader",
+      description: "Create typed collection loader",
     },
     defineCollections: {
       type: "(configs) => Record<string, Collection>",
-      description: "create multiple typed collections",
+      description: "Create multiple typed collections",
     },
   }}
 />
 
-### api utilities
+### API utilities
 
 <TypeTable
   data={{
     json: {
       type: "(data, status?, headers?) => Response",
-      description: "return json response with content-type",
+      description: "Return JSON response with content-type",
     },
     error: {
       type: "(message, status?) => Response",
-      description: "return json error response",
+      description: "Return JSON error response",
     },
     cors: {
       type: "(config?) => Record<string, string>",
-      description: "build cors headers map",
+      description: "Build CORS headers map",
     },
     withCors: {
       type: "(response, config?) => Response",
-      description: "attach cors headers to response",
+      description: "Attach CORS headers to response",
     },
     cache: {
       type: "(response, maxAge, stale?) => Response",
-      description: "attach cache-control headers",
+      description: "Attach cache-control headers",
     },
     rateLimiter: {
       type: "(config) => (key) => { allowed; remaining; resetAt }",
-      description: "create fixed-window limiter",
+      description: "Create fixed-window limiter",
     },
   }}
 />
 
-`rateLimiter` stores counters in process memory. use a shared store for multi-instance deployments.
+`rateLimiter` stores counters in process memory. Use a shared store for multi-instance deployments.
 
-`cors()` defaults to wildcard origins when no explicit `origins` are provided. pass `origins` in production APIs.
+`cors()` defaults to wildcard origins when no explicit `origins` are provided. Pass `origins` in production APIs.
 
 ### Schema utilities
 
@@ -85,19 +85,19 @@ server-side utilities for content loading.
   data={{
     baseSchema: {
       type: "ZodObject",
-      description: "default frontmatter schema (title, description, order)",
+      description: "Default frontmatter schema (title, description, order)",
     },
     defineSchema: {
       type: "(schema) => schema",
-      description: "define custom frontmatter schema",
+      description: "Define custom frontmatter schema",
     },
     extendSchema: {
       type: "(fields) => ZodObject",
-      description: "extend base schema with extra fields",
+      description: "Extend base schema with extra fields",
     },
     z: {
       type: "typeof zod",
-      description: "re-exported zod for schema definitions",
+      description: "Re-exported zod for schema definitions",
     },
   }}
 />
@@ -127,9 +127,9 @@ interface ContentConfig {
 }
 ```
 
-## Fromsrc/client
+## fromsrc/client
 
-react components for building documentation ui.
+React components for building documentation UI.
 
 ### Layout components
 
@@ -153,7 +153,7 @@ react components for building documentation ui.
 | Cards     | grid of linked cards                     |
 | Accordion | collapsible sections                     |
 | Files     | file tree display                        |
-| TypeTable | api property documentation               |
+| TypeTable | API property documentation               |
 
 ### Utility components
 
@@ -164,9 +164,9 @@ react components for building documentation ui.
 | Link        | external link with icon |
 | Zoom        | image lightbox          |
 | Tooltip     | hover tooltips          |
-| Github      | github repo info        |
+| Github      | GitHub repo info        |
 | Video       | embedded video          |
-| Mermaid     | mermaid diagrams        |
+| Mermaid     | Mermaid diagrams        |
 | ThemeToggle | light/dark mode toggle  |
 | BackToTop   | scroll to top button    |
 
@@ -176,15 +176,15 @@ react components for building documentation ui.
   data={{
     useToc: {
       type: "() => TocState",
-      description: "access table of contents state",
+      description: "Access table of contents state",
     },
     useKeyboardNav: {
       type: "(docs) => void",
-      description: "enable keyboard navigation",
+      description: "Enable keyboard navigation",
     },
     useCopy: {
       type: "(duration?) => { copied, copy }",
-      description: "copy to clipboard utility",
+      description: "Copy to clipboard utility",
     },
   }}
 />
@@ -192,17 +192,17 @@ react components for building documentation ui.
 ## Detailed reference
 
 <Cards>
-  <Card title="hooks" href="/docs/api/hooks">
+  <Card title="Hooks" href="/docs/api/hooks">
     useCopy, useToc, useKeyboardNav
   </Card>
-  <Card title="content api" href="/docs/api/content">
+  <Card title="Content API" href="/docs/api/content">
     getDoc, getAllDocs, getNavigation, defineContent
   </Card>
-  <Card title="collections api" href="/docs/api/collections">
+  <Card title="Collections API" href="/docs/api/collections">
     defineCollection, defineCollections
   </Card>
-  <Card title="components api" href="/docs/api/components">
-    props reference for all components
+  <Card title="Components API" href="/docs/api/components">
+    Props reference for all components
   </Card>
 </Cards>
 

@@ -1,10 +1,10 @@
 ---
 title: Typetable
-description: Api property documentation
+description: API property documentation
 order: 25
 ---
 
-document api properties and types in a clean table format.
+Document API properties and types in a clean table format.
 
 ## Usage
 
@@ -28,15 +28,15 @@ document api properties and types in a clean table format.
   }}
 />
 
-click a row to expand the description.
+Click a row to expand the description.
 
 ## Features
 
-- shows property name, type, default, and description
-- indicates required properties with `?` marker
-- expandable rows for descriptions
-- clean compact design
-- works in mdx
+- Shows property name, type, default, and description
+- Indicates required properties with `?` marker
+- Expandable rows for descriptions
+- Clean compact design
+- Works in MDX
 
 ## Props
 
@@ -45,7 +45,7 @@ click a row to expand the description.
     data: {
       type: "Record<string, TypeInfo>",
       required: true,
-      description: "map of prop names to type info",
+      description: "Map of prop names to type info",
     },
   }}
 />
@@ -54,9 +54,9 @@ click a row to expand the description.
 
 <TypeTable
   data={{
-    type: { type: "string", required: true, description: "typescript type" },
-    required: { type: "boolean", description: "marks prop as required" },
-    default: { type: "string", description: "default value" },
-    description: { type: "ReactNode", description: "prop description" },
+    type: { type: "string", required: true, description: "TypeScript type" },
+    required: { type: "boolean", description: "Marks prop as required" },
+    default: { type: "string", description: "Default value" },
+    description: { type: "ReactNode", description: "Prop description" },
   }}
 />

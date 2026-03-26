@@ -4,11 +4,11 @@ description: Scroll position indicator
 order: 62
 ---
 
-shows reading progress as a bar at the top of the page.
+Shows reading progress as a bar at the top of the page.
 
 ## Usage
 
-add to your layout to show scroll progress.
+Add to your layout to show scroll progress.
 
 ```tsx
 import { ScrollProgress } from "fromsrc/client";
@@ -25,7 +25,7 @@ export default function Layout({ children }) {
 
 ## Custom color
 
-change the progress bar color.
+Change the progress bar color.
 
 ```tsx
 <ScrollProgress color="#22c55e" />
@@ -34,7 +34,7 @@ change the progress bar color.
 
 ## Custom height
 
-adjust the bar thickness.
+Adjust the bar thickness.
 
 ```tsx
 <ScrollProgress height={4} />
@@ -44,12 +44,12 @@ adjust the bar thickness.
 
 | prop   | type   | default         | description          |
 | ------ | ------ | --------------- | -------------------- |
-| color  | string | "var(--accent)" | bar color            |
-| height | number | 2               | bar height in pixels |
+| color  | string | "var(--accent)" | Bar color            |
+| height | number | 2               | Bar height in pixels |
 
 ## Features
 
-- fixed position at top of viewport
-- smooth animation on scroll
-- accessible with aria progressbar role
-- passive scroll listener for performance
+- Fixed position at top of viewport
+- Smooth animation on scroll
+- Accessible with ARIA progressbar role
+- Passive scroll listener for performance

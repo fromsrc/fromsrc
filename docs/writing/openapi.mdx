@@ -1,10 +1,10 @@
 ---
-title: Openapi
-description: Render endpoint docs from openapi specs
+title: OpenAPI
+description: Render endpoint docs from OpenAPI specs
 order: 12
 ---
 
-render api reference pages directly from openapi specifications.
+Render API reference pages directly from OpenAPI specifications.
 
 ## Quick usage
 
@@ -52,7 +52,7 @@ render api reference pages directly from openapi specifications.
 
 ## Filter endpoints
 
-filter by tag, method, or path substring:
+Filter by tag, method, or path substring:
 
 ```mdx
 <Openapi spec={spec} tag="billing" />
@@ -61,9 +61,9 @@ filter by tag, method, or path substring:
 <Openapi spec={spec} group="tag" />
 ```
 
-## Import from json
+## Import from JSON
 
-for larger specs, load json and pass it to `Openapi`:
+For larger specs, load JSON and pass it to `Openapi`:
 
 ```tsx
 import spec from "./openapi.json";
@@ -75,7 +75,7 @@ export default function Page() {
 
 ## Parser import
 
-for parse-only flows, import the parser from the dedicated subpath:
+For parse-only flows, import the parser from the dedicated subpath:
 
 ```ts
 import { parseOpenApi } from "fromsrc/openapi";

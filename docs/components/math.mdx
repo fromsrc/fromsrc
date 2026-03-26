@@ -1,10 +1,10 @@
 ---
 title: Math
-description: Latex math equations
+description: LaTeX math equations
 order: 63
 ---
 
-render latex equations with katex.
+Render LaTeX equations with KaTeX.
 
 ## Inline math
 
@@ -24,7 +24,7 @@ use `BlockMath` for standalone equations.
 
 ## Math component
 
-the base `Math` component with display mode option.
+The base `Math` component with display mode option.
 
 ```mdx
 <Math>a + b = c</Math>
@@ -37,30 +37,30 @@ the base `Math` component with display mode option.
 
 | prop     | type      | default  | description               |
 | -------- | --------- | -------- | ------------------------- |
-| children | ReactNode | required | latex expression          |
-| display  | boolean   | false    | block mode with centering |
+| children | ReactNode | required | LaTeX expression          |
+| display  | boolean   | false    | Block mode with centering |
 
 ### Blockmath
 
 | prop     | type      | default  | description      |
 | -------- | --------- | -------- | ---------------- |
-| children | ReactNode | required | latex expression |
+| children | ReactNode | required | LaTeX expression |
 
 ### Inlinemath
 
 | prop     | type      | default  | description      |
 | -------- | --------- | -------- | ---------------- |
-| children | ReactNode | required | latex expression |
+| children | ReactNode | required | LaTeX expression |
 
 ## Requirements
 
-requires katex as a peer dependency.
+Requires KaTeX as a peer dependency.
 
 ```bash
 bun add katex
 ```
 
-add katex css to your layout:
+Add KaTeX CSS to your layout:
 
 ```tsx
 // in layout.tsx

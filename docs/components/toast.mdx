@@ -4,11 +4,11 @@ description: Temporary notification toasts
 order: 60
 ---
 
-lightweight toast notifications for user feedback.
+Lightweight toast notifications for user feedback.
 
 ## Setup
 
-wrap your app with the toast provider:
+Wrap your app with the toast provider:
 
 ```tsx
 import { ToastProvider } from "fromsrc/client";
@@ -71,7 +71,7 @@ add({ type: "error", message: "connection failed" });
 
 ## Custom duration
 
-toasts auto-dismiss after 3 seconds by default:
+Toasts auto-dismiss after 3 seconds by default:
 
 ```tsx
 add({
@@ -99,14 +99,14 @@ toasts.map((toast) => (
 
 | prop     | type                                        | default  | description             |
 | -------- | ------------------------------------------- | -------- | ----------------------- |
-| message  | string                                      | required | notification text       |
-| type     | "info" \| "success" \| "warning" \| "error" | required | toast style             |
-| duration | number                                      | 3000     | auto-dismiss time in ms |
+| message  | string                                      | required | Notification text       |
+| type     | "info" \| "success" \| "warning" \| "error" | required | Toast style             |
+| duration | number                                      | 3000     | Auto-dismiss time in ms |
 
 ### UseToast
 
 | property | type            | description           |
 | -------- | --------------- | --------------------- |
-| toasts   | Toast[]         | current active toasts |
-| add      | (toast) => void | show a new toast      |
-| remove   | (id) => void    | dismiss a toast       |
+| toasts   | Toast[]         | Current active toasts |
+| add      | (toast) => void | Show a new toast      |
+| remove   | (id) => void    | Dismiss a toast       |

@@ -4,7 +4,7 @@ description: Add a blog to your docs site
 order: 2
 ---
 
-add a blog alongside your documentation using the same content system.
+Add a blog alongside your documentation using the same content system.
 
 ## Folder structure
 
@@ -21,7 +21,7 @@ add a blog alongside your documentation using the same content system.
 
 ## Extended schema
 
-add blog-specific fields to your frontmatter:
+Add blog-specific fields to your frontmatter:
 
 ```tsx
 import { defineContent, extendSchema, z } from "fromsrc";
@@ -55,7 +55,7 @@ tags:
 
 ## Blog index page
 
-create `app/blog/page.tsx`:
+Create `app/blog/page.tsx`:
 
 ```tsx
 import Link from "next/link";
@@ -88,7 +88,7 @@ export default async function BlogIndex() {
 
 ## Blog post page
 
-create `app/blog/[slug]/page.tsx`:
+Create `app/blog/[slug]/page.tsx`:
 
 ```tsx
 import { notFound } from "next/navigation";
@@ -126,9 +126,9 @@ export default async function BlogPost({ params }: Props) {
 }
 ```
 
-## rss feed
+## RSS feed
 
-add an rss feed at `app/blog/feed.xml/route.ts`:
+Add an RSS feed at `app/blog/feed.xml/route.ts`:
 
 ```tsx
 import { getAllPosts } from "@/lib/blog";

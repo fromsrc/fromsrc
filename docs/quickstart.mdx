@@ -4,7 +4,7 @@ description: Build a docs site in 5 minutes
 order: 3
 ---
 
-build a documentation site from scratch.
+Build a documentation site from scratch.
 
 <Steps>
 <Step>
@@ -18,7 +18,7 @@ build a documentation site from scratch.
 
 ### Create your first page
 
-create `docs/index.mdx`:
+Create `docs/index.mdx`:
 
 ```mdx
 ---
@@ -41,9 +41,9 @@ bun run dev:up
 bun run dev:status
 ```
 
-open [http://localhost:3000/docs](http://localhost:3000/docs) to see your site.
+Open [http://localhost:3000/docs](http://localhost:3000/docs) to see your site.
 
-when you are done:
+When you are done:
 
 ```bash
 bun run dev:down
@@ -54,7 +54,7 @@ bun run dev:down
 
 ## Add more pages
 
-create `docs/getting-started.mdx`:
+Create `docs/getting-started.mdx`:
 
 ```mdx
 ---
@@ -76,7 +76,7 @@ follow these steps to set up the project.
 create a config file and add your settings.
 ```
 
-your project structure:
+Your project structure:
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -87,7 +87,7 @@ your project structure:
 
 ## Customize the sidebar
 
-pages are sorted by the `order` field in frontmatter:
+Pages are sorted by the `order` field in frontmatter:
 
 ```yaml
 ---
@@ -96,7 +96,7 @@ order: 1
 ---
 ```
 
-lower numbers appear first. organize with folders:
+Lower numbers appear first. Organize with folders:
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -112,11 +112,11 @@ lower numbers appear first. organize with folders:
   </Folder>
 </Files>
 
-folders become collapsible sections in the sidebar.
+Folders become collapsible sections in the sidebar.
 
 ## Add components
 
-use built-in components in your mdx files:
+Use built-in components in your MDX files:
 
 ### Callouts
 
@@ -161,42 +161,42 @@ function greet(name: string) {
 
 <Cards>
   <Card
-    title="components"
-    description="learn how to use the project"
+    title="Components"
+    description="Learn how to use the project"
     href="/docs/components"
   />
   <Card
-    title="api"
-    description="api reference documentation"
+    title="API"
+    description="API reference documentation"
     href="/docs/api"
   />
 </Cards>
 
 ## Deploy
 
-build for production:
+Build for production:
 
 ```bash
 bun run build
 ```
 
-deploy to any hosting platform:
+Deploy to any hosting platform:
 
-- vercel
-- netlify
-- cloudflare pages
+- Vercel
+- Netlify
+- Cloudflare Pages
 
 ## Next steps
 
 <Cards>
   <Card
-    title="components"
-    description="explore all available components"
+    title="Components"
+    description="Explore all available components"
     href="/docs/components"
   />
   <Card
-    title="theming"
-    description="customize colors and styles"
+    title="Theming"
+    description="Customize colors and styles"
     href="/docs/theming"
   />
 </Cards>

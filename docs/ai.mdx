@@ -1,28 +1,28 @@
 ---
-title: Ai integration
-description: Make your docs accessible to ai tools
+title: AI integration
+description: Make your docs accessible to AI tools
 order: 10
 ---
 
-fromsrc provides built-in endpoints that make your documentation accessible to ai tools and llms.
+fromsrc provides built-in endpoints that make your documentation accessible to AI tools and LLMs.
 
 ## llms.txt
 
-the `/llms.txt` endpoint returns all your documentation content in a single file optimized for ai consumption.
+The `/llms.txt` endpoint returns all your documentation content in a single file optimized for AI consumption.
 
 ```
 https://your-docs.com/llms.txt
 ```
 
-this endpoint combines all pages into one text file with clear section markers.
+This endpoint combines all pages into one text file with clear section markers.
 
 <Callout type="info">
-  llms.txt is an emerging standard for making content accessible to ai systems.
+  llms.txt is an emerging standard for making content accessible to AI systems.
 </Callout>
 
 ## Per-page endpoints
 
-access raw markdown for any page by appending `.md` to the url:
+Access raw markdown for any page by appending `.md` to the URL:
 
 ```
 /docs/installation     → rendered page
@@ -31,32 +31,32 @@ access raw markdown for any page by appending `.md` to the url:
 /docs.md              → raw index markdown
 ```
 
-this lets ai tools fetch specific pages without parsing html.
+This lets AI tools fetch specific pages without parsing HTML.
 
 ## Use cases
 
 <Cards>
   <Card
-    title="rag systems"
-    description="feed documentation into retrieval-augmented generation pipelines"
+    title="RAG systems"
+    description="Feed documentation into retrieval-augmented generation pipelines"
   />
   <Card
-    title="ai assistants"
-    description="let chatbots answer questions using your docs"
+    title="AI assistants"
+    description="Let chatbots answer questions using your docs"
   />
   <Card
-    title="code generation"
-    description="provide context for ai coding tools"
+    title="Code generation"
+    description="Provide context for AI coding tools"
   />
   <Card
-    title="training data"
-    description="use docs as training material for fine-tuning"
+    title="Training data"
+    description="Use docs as training material for fine-tuning"
   />
 </Cards>
 
-## mcp endpoint
+## MCP endpoint
 
-the `/api/mcp` endpoint supports both plain method calls and json-rpc 2.0 payloads.
+The `/api/mcp` endpoint supports both plain method calls and JSON-RPC 2.0 payloads.
 
 ```json
 {
@@ -67,7 +67,7 @@ the `/api/mcp` endpoint supports both plain method calls and json-rpc 2.0 payloa
 }
 ```
 
-available methods:
+Available methods:
 
 - `initialize`
 - `notifications/initialized`
@@ -117,13 +117,13 @@ available methods:
 }
 ```
 
-resource slugs are normalized lowercase kebab-case paths (for example `fromsrc://docs/getting-started`).
+Resource slugs are normalized lowercase kebab-case paths (for example `fromsrc://docs/getting-started`).
 
 ## Implementation
 
 ### Route handler
 
-create `app/llms.txt/route.ts`:
+Create `app/llms.txt/route.ts`:
 
 ```typescript
 import { getAllDocs, getDoc } from "fromsrc";
@@ -148,7 +148,7 @@ export async function GET() {
 
 ### Raw markdown endpoint
 
-use next.js proxy to serve `.md` files:
+Use Next.js proxy to serve `.md` files:
 
 ```typescript
 // proxy.ts
@@ -176,21 +176,21 @@ export function proxy(request: NextRequest) {
 
 ### Structure content clearly
 
-use descriptive headings and short paragraphs. ai tools parse structure to understand context.
+Use descriptive headings and short paragraphs. AI tools parse structure to understand context.
 
 </Step>
 <Step>
 
 ### Include code examples
 
-practical examples help ai understand usage patterns and generate accurate code.
+Practical examples help AI understand usage patterns and generate accurate code.
 
 </Step>
 <Step>
 
 ### Keep pages focused
 
-one topic per page makes retrieval more precise and reduces noise in ai responses.
+One topic per page makes retrieval more precise and reduces noise in AI responses.
 
 </Step>
 </Steps>

@@ -4,7 +4,7 @@ description: Contextual feedback messages
 order: 51
 ---
 
-feedback messages with semantic styling.
+Feedback messages with semantic styling.
 
 ## Usage
 
@@ -15,46 +15,46 @@ import { Alert } from "fromsrc/client"
 <Alert type="success">operation completed</Alert>
 ```
 
-<Alert>this is an info alert</Alert>
+<Alert>This is an info alert</Alert>
 
 ## Types
 
 ### Info
 
-default type for general information.
+Default type for general information.
 
-<Alert type="info">new features are available</Alert>
+<Alert type="info">New features are available</Alert>
 
 ### Success
 
-for positive outcomes.
+For positive outcomes.
 
-<Alert type="success">changes saved successfully</Alert>
+<Alert type="success">Changes saved successfully</Alert>
 
 ### Warning
 
-for cautionary messages.
+For cautionary messages.
 
-<Alert type="warning">this action cannot be undone</Alert>
+<Alert type="warning">This action cannot be undone</Alert>
 
 ### Error
 
-for errors and failures.
+For errors and failures.
 
-<Alert type="error">failed to load data</Alert>
+<Alert type="error">Failed to load data</Alert>
 
 ## With title
 
-add a title for more context.
+Add a title for more context.
 
 <Alert type="warning" title="deprecation notice">
-  this api will be removed in v2.0
+  This API will be removed in v2.0
 </Alert>
 
 ## Props
 
 | prop     | type                                        | default  | description    |
 | -------- | ------------------------------------------- | -------- | -------------- |
-| children | ReactNode                                   | required | alert content  |
-| type     | "info" \| "success" \| "warning" \| "error" | "info"   | alert style    |
-| title    | string                                      | -        | optional title |
+| children | ReactNode                                   | required | Alert content  |
+| type     | "info" \| "success" \| "warning" \| "error" | "info"   | Alert style    |
+| title    | string                                      | -        | Optional title |

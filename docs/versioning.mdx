@@ -4,13 +4,13 @@ description: Manage multiple documentation versions
 order: 13
 ---
 
-document multiple versions of your project.
+Document multiple versions of your project.
 
 ## Strategies
 
 ### Branch-based (recommended)
 
-separate git branches per major version:
+Separate git branches per major version:
 
 ```
 main        → docs.site.com (latest)
@@ -18,15 +18,15 @@ v2          → v2.docs.site.com
 v1          → v1.docs.site.com
 ```
 
-benefits:
+Benefits:
 
-- no content duplication
-- independent builds per version
-- clean git history
+- No content duplication
+- Independent builds per version
+- Clean git history
 
 ### Directory-based
 
-version folders in single branch:
+Version folders in single branch:
 
 ```
 docs/
@@ -35,14 +35,14 @@ docs/
   v1/          → legacy
 ```
 
-benefits:
+Benefits:
 
-- single deployment
-- easy diffing between versions
+- Single deployment
+- Easy diffing between versions
 
 ## Version selector
 
-add a version dropdown to your docs:
+Add a version dropdown to your docs:
 
 ```tsx
 import { VersionSelect } from "fromsrc/client";
@@ -75,11 +75,11 @@ docs.example.com/v1/ → version 1
 docs.example.com/    → latest
 ```
 
-## Seo
+## SEO
 
-### Canonical urls
+### Canonical URLs
 
-always set canonical to the latest version:
+Always set canonical to the latest version:
 
 ```tsx
 export const metadata = {
@@ -104,7 +104,7 @@ export const metadata = {
 
 ## Deprecation notices
 
-show banners on old versions:
+Show banners on old versions:
 
 ```tsx
 import { Banner } from "fromsrc/client";

@@ -1,14 +1,14 @@
 ---
 title: Writing
-description: Markdown and mdx authoring guide
+description: Markdown and MDX authoring guide
 order: 7
 ---
 
-write documentation using markdown and mdx.
+Write documentation using markdown and MDX.
 
 ## Markdown
 
-standard markdown syntax is fully supported:
+Standard markdown syntax is fully supported:
 
 ```md
 # heading 1
@@ -34,9 +34,9 @@ standard markdown syntax is fully supported:
 `inline code`
 ```
 
-## mdx
+## MDX
 
-use react components directly in mdx files:
+Use React components directly in MDX files:
 
 ```text
 <Callout type="info">
@@ -44,11 +44,11 @@ use react components directly in mdx files:
 </Callout>
 ```
 
-components are available globally via the mdx config.
+Components are available globally via the MDX config.
 
 ## Code blocks
 
-syntax highlighting with language detection:
+Syntax highlighting with language detection:
 
 ````md
 ```typescript
@@ -56,7 +56,7 @@ const hello = "world";
 ```
 ````
 
-add a title to code blocks:
+Add a title to code blocks:
 
 ````md
 ```typescript title="app.ts"
@@ -64,9 +64,9 @@ const app = new App();
 ```
 ````
 
-## twoslash
+## Twoslash
 
-enable twoslash annotations in fenced code blocks with the `twoslash` meta flag:
+Enable twoslash annotations in fenced code blocks with the `twoslash` meta flag:
 
 ````md
 ```ts twoslash
@@ -86,7 +86,7 @@ value.
 
 ## Frontmatter
 
-every mdx file needs frontmatter:
+Every MDX file needs frontmatter:
 
 ```yaml
 ---
@@ -101,12 +101,12 @@ order: 1
 | field       | type   | required | description           |
 | ----------- | ------ | -------- | --------------------- |
 | title       | string | yes      | page title            |
-| description | string | no       | seo description       |
+| description | string | no       | SEO description       |
 | order       | number | no       | sort order in sidebar |
 
 ## File structure
 
-organize docs by topic:
+Organize docs by topic:
 
 ```
 docs/
@@ -122,21 +122,21 @@ docs/
 
 ## Links
 
-link to other pages using relative paths:
+Link to other pages using relative paths:
 
 ```md
 see the [installation guide](/docs/installation)
 ```
 
-external links automatically get an icon:
+External links automatically get an icon:
 
 ```md
-check out [github](https://github.com)
+check out [GitHub](https://github.com)
 ```
 
 ## Math
 
-write math equations using latex syntax. fromsrc includes `Math` components powered by katex.
+Write math equations using LaTeX syntax. fromsrc includes `Math` components powered by KaTeX.
 
 ### Usage
 
@@ -146,4 +146,4 @@ write math equations using latex syntax. fromsrc includes `Math` components powe
 <BlockMath>x^2 + y^2 = z^2</BlockMath>
 ```
 
-math components are available globally.
+Math components are available globally.

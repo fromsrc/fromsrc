@@ -4,11 +4,11 @@ description: Customize colors and styles
 order: 4
 ---
 
-fromsrc uses css variables for theming, making it easy to customize.
+fromsrc uses CSS variables for theming, making it easy to customize.
 
-## css variables
+## CSS variables
 
-add these to your global css:
+Add these to your global CSS:
 
 ```css
 :root {
@@ -24,7 +24,7 @@ add these to your global css:
 
 ## Tailwind config
 
-map the variables in your tailwind config:
+Map the variables in your Tailwind config:
 
 ```ts
 export default {
@@ -58,7 +58,7 @@ export default {
 
 ## Light mode
 
-add light mode colors with a class or media query:
+Add light mode colors with a class or media query:
 
 ```css
 .light {
@@ -74,7 +74,7 @@ add light mode colors with a class or media query:
 
 ## Theme toggle
 
-use the `ThemeToggle` component for light/dark mode switching:
+Use the `ThemeToggle` component for light/dark mode switching:
 
 ```tsx
 import { ThemeToggle } from "fromsrc/client";
@@ -82,11 +82,11 @@ import { ThemeToggle } from "fromsrc/client";
 <ThemeToggle />;
 ```
 
-the toggle persists the user's choice in localStorage.
+The toggle persists the user's choice in localStorage.
 
 ## System preference
 
-respect the user's system preference with a media query:
+Respect the user's system preference with a media query:
 
 ```css
 @media (prefers-color-scheme: light) {
@@ -103,11 +103,11 @@ respect the user's system preference with a media query:
 
 ## Component styles
 
-all components use these semantic colors. change the variables to theme everything at once.
+All components use these semantic colors. Change the variables to theme everything at once.
 
 ## Custom themes
 
-create named themes by defining classes:
+Create named themes by defining classes:
 
 ```css
 .theme-blue {
@@ -123,4 +123,4 @@ create named themes by defining classes:
 }
 ```
 
-then apply the class to your root element based on user preference.
+Then apply the class to your root element based on user preference.

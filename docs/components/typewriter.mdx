@@ -4,7 +4,7 @@ description: Animated typing effect
 order: 17
 ---
 
-animated typewriter effect that cycles through words.
+Animated typewriter effect that cycles through words.
 
 ## Usage
 
@@ -16,7 +16,7 @@ import { Typewriter } from "fromsrc/client";
 
 ## Speed
 
-adjust typing speed in milliseconds:
+Adjust typing speed in milliseconds:
 
 ```tsx
 <Typewriter words={["fast", "typing"]} speed={50} />
@@ -26,7 +26,7 @@ adjust typing speed in milliseconds:
 
 ## Delay
 
-time before deleting and typing next word:
+Time before deleting and typing next word:
 
 ```tsx
 <Typewriter words={["hello", "world"]} delay={3000} />
@@ -34,7 +34,7 @@ time before deleting and typing next word:
 
 ## Loop
 
-disable looping to stop after last word:
+Disable looping to stop after last word:
 
 ```tsx
 <Typewriter words={["first", "second", "final"]} loop={false} />
@@ -42,7 +42,7 @@ disable looping to stop after last word:
 
 ## With text
 
-combine with static text:
+Combine with static text:
 
 ```tsx
 <p>
@@ -54,7 +54,7 @@ combine with static text:
 
 | prop  | type     | default  | description            |
 | ----- | -------- | -------- | ---------------------- |
-| words | string[] | required | words to cycle through |
-| speed | number   | 100      | typing speed in ms     |
-| delay | number   | 2000     | pause before deleting  |
-| loop  | boolean  | true     | loop after last word   |
+| words | string[] | required | Words to cycle through |
+| speed | number   | 100      | Typing speed in ms     |
+| delay | number   | 2000     | Pause before deleting  |
+| loop  | boolean  | true     | Loop after last word   |

@@ -1,10 +1,10 @@
 ---
-title: Api documentation
-description: Document rest apis
+title: API documentation
+description: Document REST APIs
 order: 5
 ---
 
-build api reference documentation with endpoints, parameters, and responses.
+Build API reference documentation with endpoints, parameters, and responses.
 
 ## Folder structure
 
@@ -26,7 +26,7 @@ build api reference documentation with endpoints, parameters, and responses.
 
 ## Content schema
 
-add api-specific frontmatter fields:
+Add API-specific frontmatter fields:
 
 ```tsx
 import { defineContent, extendSchema, z } from "fromsrc";
@@ -46,7 +46,7 @@ export const getAllApiDocs = api.getAllDocs;
 
 ## Endpoint documentation
 
-document each endpoint with method, path, and parameters:
+Document each endpoint with method, path, and parameters:
 
 ```mdx
 ---
@@ -99,9 +99,9 @@ auth: true
 </Response>
 ```
 
-## api index page
+## API index page
 
-create `app/api/page.tsx`:
+Create `app/api/page.tsx`:
 
 ```tsx
 import Link from "next/link";
@@ -156,7 +156,7 @@ export default async function ApiIndex() {
 
 ## Property documentation
 
-use the property component for request/response schemas:
+Use the property component for request/response schemas:
 
 ```mdx
 ## User object
@@ -175,14 +175,14 @@ use the property component for request/response schemas:
     user role
   </Property>
   <Property name="created" type="string" required>
-    iso 8601 timestamp
+    ISO 8601 timestamp
   </Property>
 </Properties>
 ```
 
 ## Authentication badge
 
-show authentication requirements:
+Show authentication requirements:
 
 ```tsx
 function AuthBadge({ required }: { required?: boolean }) {
@@ -195,7 +195,7 @@ function AuthBadge({ required }: { required?: boolean }) {
 }
 ```
 
-use in your api layout:
+Use in your API layout:
 
 ```tsx
 export default async function ApiLayout({ params, children }) {

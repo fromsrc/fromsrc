@@ -4,7 +4,7 @@ description: Countdown timer component
 order: 16
 ---
 
-display a countdown to a target date.
+Display a countdown to a target date.
 
 ## Usage
 
@@ -16,7 +16,7 @@ import { Countdown } from "fromsrc/client";
 
 ## Target formats
 
-accepts multiple formats:
+Accepts multiple formats:
 
 ```tsx
 <Countdown target={new Date("2026-12-31")} />
@@ -28,7 +28,7 @@ accepts multiple formats:
 
 ## Compact format
 
-single line display:
+Single line display:
 
 ```tsx
 <Countdown target={new Date("2026-12-31")} format="compact" />
@@ -36,7 +36,7 @@ single line display:
 
 ## Full format
 
-default format with labeled segments:
+Default format with labeled segments:
 
 ```tsx
 <Countdown target={new Date("2026-12-31")} format="full" />
@@ -44,7 +44,7 @@ default format with labeled segments:
 
 ## Completion callback
 
-run code when countdown reaches zero:
+Run code when countdown reaches zero:
 
 ```tsx
 <Countdown
@@ -57,6 +57,6 @@ run code when countdown reaches zero:
 
 | prop       | type                     | default  | description      |
 | ---------- | ------------------------ | -------- | ---------------- |
-| target     | Date \| string \| number | required | target date      |
-| format     | "full" \| "compact"      | "full"   | display format   |
-| onComplete | () => void               | -        | callback at zero |
+| target     | Date \| string \| number | required | Target date      |
+| format     | "full" \| "compact"      | "full"   | Display format   |
+| onComplete | () => void               | -        | Callback at zero |

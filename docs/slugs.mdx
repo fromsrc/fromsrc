@@ -1,14 +1,14 @@
 ---
 title: Page slugs
-description: Url structure and page tree organization
+description: URL structure and page tree organization
 order: 11
 ---
 
-page slugs determine the url structure of your documentation.
+Page slugs determine the URL structure of your documentation.
 
 ## File-based routing
 
-fromsrc uses file-based routing. the file path becomes the url:
+fromsrc uses file-based routing. The file path becomes the URL:
 
 | file                             | url                        |
 | -------------------------------- | -------------------------- |
@@ -19,7 +19,7 @@ fromsrc uses file-based routing. the file path becomes the url:
 
 ## Meta files
 
-use `_meta.json` files to control page ordering and titles in the sidebar.
+Use `_meta.json` files to control page ordering and titles in the sidebar.
 
 ### Example
 
@@ -46,7 +46,7 @@ use `_meta.json` files to control page ordering and titles in the sidebar.
 
 ## Ordering
 
-without a meta file, pages are sorted by their `order` frontmatter field:
+Without a meta file, pages are sorted by their `order` frontmatter field:
 
 ```text
 ---
@@ -55,11 +55,11 @@ order: 2
 ---
 ```
 
-with a meta file, the `pages` array determines the order. pages not listed appear at the end alphabetically.
+With a meta file, the `pages` array determines the order. Pages not listed appear at the end alphabetically.
 
 ## Nested folders
 
-each folder can have its own `_meta.json`:
+Each folder can have its own `_meta.json`:
 
 ```text
 docs/
@@ -77,7 +77,7 @@ docs/
 
 ## Folder pages
 
-folders with an `index.mdx` become clickable links:
+Folders with an `index.mdx` become clickable links:
 
 ```text
 docs/
@@ -86,4 +86,4 @@ docs/
     callout.mdx   # /docs/components/callout
 ```
 
-without an index, the folder is just a grouping container in the sidebar.
+Without an index, the folder is just a grouping container in the sidebar.

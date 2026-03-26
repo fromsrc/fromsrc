@@ -4,7 +4,7 @@ description: Floating content panel
 order: 53
 ---
 
-floating panel that appears on click.
+Floating panel that appears on click.
 
 ## Usage
 
@@ -20,7 +20,7 @@ import { Popover } from "fromsrc/client";
 
 ### Start
 
-default alignment to the left.
+Default alignment to the left.
 
 ```tsx
 <Popover align="start" trigger={<button>start</button>}>
@@ -30,7 +30,7 @@ default alignment to the left.
 
 ### Center
 
-centered below the trigger.
+Centered below the trigger.
 
 ```tsx
 <Popover align="center" trigger={<button>center</button>}>
@@ -40,7 +40,7 @@ centered below the trigger.
 
 ### End
 
-aligned to the right.
+Aligned to the right.
 
 ```tsx
 <Popover align="end" trigger={<button>end</button>}>
@@ -52,7 +52,7 @@ aligned to the right.
 
 ### Bottom
 
-default position below the trigger.
+Default position below the trigger.
 
 ```tsx
 <Popover side="bottom" trigger={<button>below</button>}>
@@ -62,7 +62,7 @@ default position below the trigger.
 
 ### Top
 
-position above the trigger.
+Position above the trigger.
 
 ```tsx
 <Popover side="top" trigger={<button>above</button>}>
@@ -72,15 +72,15 @@ position above the trigger.
 
 ## Features
 
-- closes on outside click
-- closes on `Escape` key
-- custom content support
+- Closes on outside click
+- Closes on `Escape` key
+- Custom content support
 
 ## Props
 
 | prop     | type                         | default  | description                    |
 | -------- | ---------------------------- | -------- | ------------------------------ |
-| trigger  | ReactNode                    | required | element that opens the popover |
-| children | ReactNode                    | required | popover content                |
-| align    | "start" \| "center" \| "end" | "start"  | horizontal alignment           |
-| side     | "top" \| "bottom"            | "bottom" | vertical position              |
+| trigger  | ReactNode                    | required | Element that opens the popover |
+| children | ReactNode                    | required | Popover content                |
+| align    | "start" \| "center" \| "end" | "start"  | Horizontal alignment           |
+| side     | "top" \| "bottom"            | "bottom" | Vertical position              |

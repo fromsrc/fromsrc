@@ -1,15 +1,15 @@
 ---
-title: Tanstack start
-description: Configure fromsrc in tanstack start apps
+title: TanStack Start
+description: Configure fromsrc in TanStack Start apps
 ---
 
-install dependencies:
+Install dependencies:
 
 ```bash
 bun add fromsrc @tanstack/react-router
 ```
 
-wire the adapter:
+Wire the adapter:
 
 ```tsx
 import { AdapterProvider, tanstackAdapter } from "fromsrc/tanstack";
@@ -22,6 +22,6 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-use the provider near your router provider so link/navigation components are consistent.
+Use the provider near your router provider so link/navigation components are consistent.
 
-use the core content helpers from `fromsrc` for docs parsing and search indexing.
+Use the core content helpers from `fromsrc` for docs parsing and search indexing.

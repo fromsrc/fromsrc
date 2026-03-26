@@ -1,15 +1,15 @@
 ---
 title: Next.js
-description: Configure fromsrc in next.js apps
+description: Configure fromsrc in Next.js apps
 ---
 
-install dependencies:
+Install dependencies:
 
 ```bash
 bun add fromsrc
 ```
 
-create a provider and wire `nextAdapter`:
+Create a provider and wire `nextAdapter`:
 
 ```tsx
 "use client";
@@ -22,7 +22,7 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-use it in your root layout:
+Use it in your root layout:
 
 ```tsx
 import { Providers } from "@/app/providers";
@@ -42,7 +42,7 @@ export default function RootLayout({
 }
 ```
 
-create docs route:
+Create docs route:
 
 ```tsx
 // app/docs/[[...slug]]/page.tsx

@@ -4,7 +4,7 @@ description: Protect docs with authentication
 order: 10
 ---
 
-restrict access to documentation for private or premium content.
+Restrict access to documentation for private or premium content.
 
 ## Folder structure
 
@@ -23,7 +23,7 @@ restrict access to documentation for private or premium content.
 
 ## Content schema
 
-mark pages as protected:
+Mark pages as protected:
 
 ```tsx
 import { defineContent, extendSchema, z } from "fromsrc";
@@ -53,7 +53,7 @@ role: admin
 
 ## Proxy protection
 
-protect routes at the edge:
+Protect routes at the edge:
 
 ```tsx
 import { NextRequest } from "next/server";
@@ -78,7 +78,7 @@ export async function proxy(request: NextRequest) {
 
 ## Page-level auth
 
-check access in page component:
+Check access in page component:
 
 ```tsx
 import { notFound, redirect } from "next/navigation";
@@ -151,7 +151,7 @@ export async function getSession(): Promise<Session | null> {
 
 ## Navigation filtering
 
-hide protected pages from sidebar:
+Hide protected pages from sidebar:
 
 ```tsx
 import { getAllDocs } from "@/lib/content";
@@ -226,7 +226,7 @@ export default function LoginPage() {
 }
 ```
 
-## api route
+## API route
 
 ```tsx
 import { sign } from "jsonwebtoken";
@@ -260,7 +260,7 @@ export async function POST(request: Request) {
 
 ## Protected badge
 
-show lock icon on protected pages:
+Show lock icon on protected pages:
 
 ```tsx
 export function ProtectedBadge({ protected: isProtected }) {

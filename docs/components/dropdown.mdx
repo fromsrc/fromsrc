@@ -4,7 +4,7 @@ description: Action menu triggered by click
 order: 52
 ---
 
-menu that opens on click with keyboard navigation.
+Menu that opens on click with keyboard navigation.
 
 ## Usage
 
@@ -22,7 +22,7 @@ import { Dropdown } from "fromsrc/client";
 
 ## Items
 
-each item can have a label, icon, click handler, and states.
+Each item can have a label, icon, click handler, and states.
 
 ```tsx
 const items = [
@@ -38,7 +38,7 @@ const items = [
 
 ### Start
 
-default alignment to the left.
+Default alignment to the left.
 
 ```tsx
 <Dropdown align="start" trigger={<button>menu</button>} items={items} />
@@ -46,7 +46,7 @@ default alignment to the left.
 
 ### End
 
-align to the right.
+Align to the right.
 
 ```tsx
 <Dropdown align="end" trigger={<button>menu</button>} items={items} />
@@ -54,12 +54,12 @@ align to the right.
 
 ## Features
 
-- closes on outside click
-- closes on `Escape` key
-- keyboard navigation with arrow keys
+- Closes on outside click
+- Closes on `Escape` key
+- Keyboard navigation with arrow keys
 - `Enter` to select item
-- disabled items are not selectable
-- danger styling for destructive actions
+- Disabled items are not selectable
+- Danger styling for destructive actions
 
 ## Props
 
@@ -67,16 +67,16 @@ align to the right.
 
 | prop    | type                            | default  | description                 |
 | ------- | ------------------------------- | -------- | --------------------------- |
-| trigger | ReactNode                       | required | element that opens the menu |
-| items   | (DropdownItem \| "separator")[] | required | menu items                  |
-| align   | "start" \| "end"                | "start"  | horizontal alignment        |
+| trigger | ReactNode                       | required | Element that opens the menu |
+| items   | (DropdownItem \| "separator")[] | required | Menu items                  |
+| align   | "start" \| "end"                | "start"  | Horizontal alignment        |
 
 ### DropdownItem
 
 | prop     | type       | default  | description                |
 | -------- | ---------- | -------- | -------------------------- |
-| label    | string     | required | item text                  |
-| icon     | ReactNode  | -        | optional icon              |
-| onClick  | () => void | -        | click handler              |
-| disabled | boolean    | false    | disable interaction        |
-| danger   | boolean    | false    | destructive action styling |
+| label    | string     | required | Item text                  |
+| icon     | ReactNode  | -        | Optional icon              |
+| onClick  | () => void | -        | Click handler              |
+| disabled | boolean    | false    | Disable interaction        |
+| danger   | boolean    | false    | Destructive action styling |

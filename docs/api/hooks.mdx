@@ -4,11 +4,11 @@ description: React hooks for documentation features
 order: 2
 ---
 
-custom hooks for common documentation patterns.
+Custom hooks for common documentation patterns.
 
 ## UseCopy
 
-copy text to clipboard with feedback state.
+Copy text to clipboard with feedback state.
 
 ```tsx
 import { useCopy } from "fromsrc/client";
@@ -27,7 +27,7 @@ function CopyButton({ text }: { text: string }) {
     duration: {
       type: "number",
       default: "1500",
-      description: "feedback duration in ms",
+      description: "Feedback duration in ms",
     },
   }}
 />
@@ -38,18 +38,18 @@ function CopyButton({ text }: { text: string }) {
   data={{
     copied: {
       type: "boolean",
-      description: "true after copying, resets after duration",
+      description: "True after copying, resets after duration",
     },
     copy: {
       type: "(text: string) => Promise<void>",
-      description: "copy text to clipboard",
+      description: "Copy text to clipboard",
     },
   }}
 />
 
 ## UseToc
 
-access table of contents state for custom toc implementations.
+Access table of contents state for custom toc implementations.
 
 ```tsx
 import { useToc } from "fromsrc/client";
@@ -75,9 +75,9 @@ function CustomToc() {
   data={{
     headings: {
       type: "Heading[]",
-      description: "list of headings on the page",
+      description: "List of headings on the page",
     },
-    active: { type: "string", description: "id of currently active heading" },
+    active: { type: "string", description: "ID of currently active heading" },
   }}
 />
 
@@ -93,7 +93,7 @@ interface Heading {
 
 ## UseKeyboardNav
 
-enable keyboard navigation between documentation pages.
+Enable keyboard navigation between documentation pages.
 
 ```tsx
 import { useKeyboardNav } from "fromsrc/client";
@@ -104,7 +104,7 @@ function KeyboardNav({ docs }: { docs: DocMeta[] }) {
 }
 ```
 
-this hook enables:
+This hook enables:
 
 - **left arrow** - navigate to previous page
 - **right arrow** - navigate to next page
@@ -114,19 +114,19 @@ this hook enables:
     docs: {
       type: "DocMeta[]",
       required: true,
-      description: "ordered list of docs for navigation",
+      description: "Ordered list of docs for navigation",
     },
     basePath: {
       type: "string",
       default: '"/docs"',
-      description: "base path for documentation routes",
+      description: "Base path for documentation routes",
     },
   }}
 />
 
 ## UseScrollSpy
 
-track which heading is currently visible in the viewport.
+Track which heading is currently visible in the viewport.
 
 ```tsx
 import { useScrollSpy } from "fromsrc/client";
@@ -142,24 +142,24 @@ function ActiveIndicator({ ids }: { ids: string[] }) {
     ids: {
       type: "string[]",
       required: true,
-      description: "array of element ids to track",
+      description: "Array of element ids to track",
     },
     offset: {
       type: "number",
       default: "100",
-      description: "scroll offset from top",
+      description: "Scroll offset from top",
     },
     threshold: {
       type: "number",
       default: "0.5",
-      description: "intersection threshold",
+      description: "Intersection threshold",
     },
   }}
 />
 
 ## UseAnchorScroll
 
-smooth scrolling to anchor links with configurable offset.
+Smooth scrolling to anchor links with configurable offset.
 
 ```tsx
 import { useAnchorScroll } from "fromsrc/client";
@@ -175,19 +175,19 @@ function DocsLayout() {
     offset: {
       type: "number",
       default: "80",
-      description: "scroll offset for fixed headers",
+      description: "Scroll offset for fixed headers",
     },
     smooth: {
       type: "boolean",
       default: "true",
-      description: "enable smooth scrolling",
+      description: "Enable smooth scrolling",
     },
   }}
 />
 
 ## UseMediaQuery
 
-react to media query changes.
+React to media query changes.
 
 ```tsx
 import { useIsMobile, useIsDesktop } from "fromsrc/client";
@@ -198,7 +198,7 @@ function ResponsiveLayout() {
 }
 ```
 
-available hooks:
+Available hooks:
 
 - `useMediaQuery(query)` - custom media query
 - `useIsMobile()` - below 768px
@@ -209,7 +209,7 @@ available hooks:
 
 ## UseLocalStorage
 
-persist state to local storage.
+Persist state to local storage.
 
 ```tsx
 import { useLocalStorage } from "fromsrc/client";
@@ -222,20 +222,20 @@ function Preferences() {
 
 <TypeTable
   data={{
-    key: { type: "string", required: true, description: "storage key" },
+    key: { type: "string", required: true, description: "Storage key" },
     defaultValue: {
       type: "T",
       required: true,
-      description: "default value if not stored",
+      description: "Default value if not stored",
     },
   }}
 />
 
-also available: `useSessionStorage` with same api.
+Also available: `useSessionStorage` with same API.
 
 ## UseToast
 
-show toast notifications with configurable types and duration.
+Show toast notifications with configurable types and duration.
 
 ```tsx
 import { ToastProvider, useToast } from "fromsrc/client";
@@ -263,14 +263,14 @@ function NotifyButton() {
 
 <TypeTable
   data={{
-    toasts: { type: "Toast[]", description: "list of active toasts" },
+    toasts: { type: "Toast[]", description: "List of active toasts" },
     add: {
       type: "(toast: Omit<Toast, 'id'>) => void",
-      description: "add a toast notification",
+      description: "Add a toast notification",
     },
     remove: {
       type: "(id: string) => void",
-      description: "dismiss a toast by id",
+      description: "Dismiss a toast by id",
     },
   }}
 />
@@ -288,7 +288,7 @@ interface Toast {
 
 ## UseDebounce
 
-debounce a value with configurable delay.
+Debounce a value with configurable delay.
 
 ```tsx
 import { useDebounce } from "fromsrc/client";
@@ -307,11 +307,11 @@ function SearchInput() {
 
 <TypeTable
   data={{
-    value: { type: "T", required: true, description: "value to debounce" },
+    value: { type: "T", required: true, description: "Value to debounce" },
     delay: {
       type: "number",
       required: true,
-      description: "debounce delay in ms",
+      description: "Debounce delay in ms",
     },
   }}
 />

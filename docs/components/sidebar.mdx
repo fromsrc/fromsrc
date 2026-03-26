@@ -4,7 +4,7 @@ description: Navigation sidebar with collapsible folders
 order: 22
 ---
 
-documentation sidebar with search, navigation sections, and collapsible folders.
+Documentation sidebar with search, navigation sections, and collapsible folders.
 
 ## Usage
 
@@ -22,7 +22,7 @@ import { Sidebar } from "fromsrc/client";
 
 ### Flat items
 
-simple list of pages:
+Simple list of pages:
 
 ```tsx
 const navigation = [
@@ -35,7 +35,7 @@ const navigation = [
 
 ### Collapsible folders
 
-nested sections that can collapse:
+Nested sections that can collapse:
 
 ```tsx
 const navigation = [
@@ -66,7 +66,7 @@ const navigation = [
 
 ### Mixed
 
-combine doc items with explicit items and folders:
+Combine doc items with explicit items and folders:
 
 ```tsx
 const navigation = [
@@ -87,7 +87,7 @@ const navigation = [
 
 ## Icons
 
-add icons to items and folders:
+Add icons to items and folders:
 
 ```tsx
 import { Book, Settings, Puzzle } from "lucide-react";
@@ -120,35 +120,35 @@ const navigation = [
 ];
 ```
 
-icons appear in the collapsed view and next to items in the expanded view.
+Icons appear in the collapsed view and next to items in the expanded view.
 
 ## Collapsible sidebar
 
-enable icon-only collapsed mode with the `collapsible` prop:
+Enable icon-only collapsed mode with the `collapsible` prop:
 
 ```tsx
 <Sidebar title="docs" navigation={navigation} collapsible />
 ```
 
-when collapsed:
+When collapsed:
 
-- shows only the toggle button
-- navigation items show icons only
-- expands on hover
+- Shows only the toggle button
+- Navigation items show icons only
+- Expands on hover
 
 ## Auto-expand folders
 
-expand folders automatically to a certain depth:
+Expand folders automatically to a certain depth:
 
 ```tsx
 <Sidebar navigation={navigation} defaultOpenLevel={1} />
 ```
 
-folders at depth 1 or less will be expanded by default.
+Folders at depth 1 or less will be expanded by default.
 
 ## Clickable folders
 
-folders can also be links:
+Folders can also be links:
 
 ```tsx
 {
@@ -162,19 +162,19 @@ folders can also be links:
 }
 ```
 
-clicking the folder title navigates to the href. the expand/collapse button is separate.
+Clicking the folder title navigates to the href. The expand/collapse button is separate.
 
 ## Props
 
 | prop             | type             | default  | description                  |
 | ---------------- | ---------------- | -------- | ---------------------------- |
-| title            | string           | required | site title                   |
-| logo             | ReactNode        | -        | site logo                    |
-| navigation       | SidebarSection[] | required | nav structure                |
-| basePath         | string           | "/docs"  | base url path                |
-| github           | string           | -        | github repo link             |
-| collapsible      | boolean          | false    | enable collapse toggle       |
-| defaultOpenLevel | number           | 0        | auto-expand folders to depth |
+| title            | string           | required | Site title                   |
+| logo             | ReactNode        | -        | Site logo                    |
+| navigation       | SidebarSection[] | required | Nav structure                |
+| basePath         | string           | "/docs"  | Base URL path                |
+| github           | string           | -        | GitHub repo link             |
+| collapsible      | boolean          | false    | Enable collapse toggle       |
+| defaultOpenLevel | number           | 0        | Auto-expand folders to depth |
 
 ## Types
 

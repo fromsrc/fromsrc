@@ -4,58 +4,58 @@ description: Expandable content sections
 order: 26
 ---
 
-toggle content visibility with smooth animations.
+Toggle content visibility with smooth animations.
 
 ## Collapsible
 
-controlled component with state:
+Controlled component with state:
 
 ```mdx
-<Collapsible title="show more details">
-  hidden content that appears when expanded. supports any content including code
+<Collapsible title="Show more details">
+  Hidden content that appears when expanded. Supports any content including code
   blocks and components.
 </Collapsible>
 ```
 
-<Collapsible title="show more details">
-  hidden content that appears when expanded. supports any content including code
+<Collapsible title="Show more details">
+  Hidden content that appears when expanded. Supports any content including code
   blocks and components.
 </Collapsible>
 
 ## Default open
 
-start expanded:
+Start expanded:
 
 ```mdx
-<Collapsible title="expanded by default" defaultOpen>
-  this content is visible on page load
+<Collapsible title="Expanded by default" defaultOpen>
+  This content is visible on page load
 </Collapsible>
 ```
 
-<Collapsible title="expanded by default" defaultOpen>
-  this content is visible on page load
+<Collapsible title="Expanded by default" defaultOpen>
+  This content is visible on page load
 </Collapsible>
 
 ## Details
 
-native html details element with styled appearance:
+Native HTML details element with styled appearance:
 
 ```mdx
-<Details summary="click to expand">
-  lightweight alternative using native browser behavior
+<Details summary="Click to expand">
+  Lightweight alternative using native browser behavior
 </Details>
 ```
 
-<Details summary="click to expand">
-  lightweight alternative using native browser behavior
+<Details summary="Click to expand">
+  Lightweight alternative using native browser behavior
 </Details>
 
 ## When to use
 
 | component   | use case                            |
 | ----------- | ----------------------------------- |
-| Collapsible | controlled state, react integration |
-| Details     | simple toggle, no javascript needed |
+| Collapsible | Controlled state, React integration |
+| Details     | Simple toggle, no JavaScript needed |
 
 ## Props
 
@@ -63,13 +63,13 @@ native html details element with styled appearance:
 
 | prop        | type      | default | description   |
 | ----------- | --------- | ------- | ------------- |
-| title       | string    | -       | header text   |
-| defaultOpen | boolean   | false   | initial state |
-| children    | ReactNode | -       | content       |
+| title       | string    | -       | Header text   |
+| defaultOpen | boolean   | false   | Initial state |
+| children    | ReactNode | -       | Content       |
 
 ### Details
 
 | prop     | type      | default | description |
 | -------- | --------- | ------- | ----------- |
-| summary  | string    | -       | header text |
-| children | ReactNode | -       | content     |
+| summary  | string    | -       | Header text |
+| children | ReactNode | -       | Content     |

@@ -4,7 +4,7 @@ description: Data tables with sorting and responsive features
 order: 40
 ---
 
-display tabular data with optional sorting, custom rendering, and mobile responsiveness.
+Display tabular data with optional sorting, custom rendering, and mobile responsiveness.
 
 ## Usage
 
@@ -39,7 +39,7 @@ const columns = [
 
 ## Sorting
 
-enable sorting on columns with `sortable`:
+Enable sorting on columns with `sortable`:
 
 ```tsx
 const columns = [
@@ -88,7 +88,7 @@ const columns = [
 
 ## Responsive
 
-hide columns on mobile with `hideOnMobile`:
+Hide columns on mobile with `hideOnMobile`:
 
 ```tsx
 const columns = [
@@ -117,7 +117,7 @@ const columns = [
 
 ### Striped
 
-alternating row colors:
+Alternating row colors:
 
 ```tsx
 <Table data={data} columns={columns} striped />
@@ -139,7 +139,7 @@ alternating row colors:
 
 ### Compact
 
-reduced padding:
+Reduced padding:
 
 ```tsx
 <Table data={data} columns={columns} compact />
@@ -160,7 +160,7 @@ reduced padding:
 
 ### Column width
 
-set fixed widths:
+Set fixed widths:
 
 ```tsx
 const columns = [
@@ -175,23 +175,23 @@ const columns = [
 
 | prop             | type            | default | description                  |
 | ---------------- | --------------- | ------- | ---------------------------- |
-| data             | T[]             | -       | array of row objects         |
-| columns          | TableColumn[]   | -       | column definitions           |
-| defaultSort      | string          | -       | initial sort column key      |
-| defaultDirection | "asc" \| "desc" | "asc"   | initial sort direction       |
-| striped          | boolean         | false   | alternating row colors       |
-| hoverable        | boolean         | true    | row hover effect             |
-| compact          | boolean         | false   | reduced padding              |
-| caption          | string          | -       | accessible table description |
-| className        | string          | -       | additional css classes       |
+| data             | T[]             | -       | Array of row objects         |
+| columns          | TableColumn[]   | -       | Column definitions           |
+| defaultSort      | string          | -       | Initial sort column key      |
+| defaultDirection | "asc" \| "desc" | "asc"   | Initial sort direction       |
+| striped          | boolean         | false   | Alternating row colors       |
+| hoverable        | boolean         | true    | Row hover effect             |
+| compact          | boolean         | false   | Reduced padding              |
+| caption          | string          | -       | Accessible table description |
+| className        | string          | -       | Additional CSS classes       |
 
 ### Tablecolumn
 
 | prop         | type     | default | description             |
 | ------------ | -------- | ------- | ----------------------- |
-| key          | string   | -       | property name from data |
-| header       | string   | -       | column header text      |
-| sortable     | boolean  | false   | enable sorting          |
-| width        | string   | -       | fixed column width      |
-| render       | function | -       | custom cell renderer    |
-| hideOnMobile | boolean  | false   | hide on small screens   |
+| key          | string   | -       | Property name from data |
+| header       | string   | -       | Column header text      |
+| sortable     | boolean  | false   | Enable sorting          |
+| width        | string   | -       | Fixed column width      |
+| render       | function | -       | Custom cell renderer    |
+| hideOnMobile | boolean  | false   | Hide on small screens   |

@@ -6,7 +6,7 @@ order: 2
 
 ## Create a new project
 
-the fastest way to start is with create-fromsrc:
+The fastest way to start is with create-fromsrc:
 
 <Create />
 
@@ -15,19 +15,19 @@ the fastest way to start is with create-fromsrc:
 
 ### Run the command
 
-this creates a new directory with everything configured.
+This creates a new directory with everything configured.
 
 ```bash
 bunx create-fromsrc
 ```
 
-for non-interactive setup:
+For non-interactive setup:
 
 ```bash
 bunx create-fromsrc --name my-docs --framework next.js --yes
 ```
 
-list available framework values:
+List available framework values:
 
 ```bash
 bunx create-fromsrc --list
@@ -53,7 +53,7 @@ bun run dev:status
 bun run typecheck
 ```
 
-for log tail and controlled restart:
+For log tail and controlled restart:
 
 ```bash
 bun run dev:tail 80
@@ -66,7 +66,7 @@ bun run dev:down
 
 ## Manual installation
 
-add fromsrc to an existing app:
+Add fromsrc to an existing app:
 
 <Install package="fromsrc" />
 
@@ -75,23 +75,23 @@ add fromsrc to an existing app:
 </Callout>
 
 <Callout type="info">
-  for the smallest bundles, prefer subpath imports like `fromsrc/readtime`,
+  For the smallest bundles, prefer subpath imports like `fromsrc/readtime`,
   `fromsrc/searchindex`, and `fromsrc/openapi` for utility-only usage.
 </Callout>
 
-for framework-specific walkthroughs, use the manual guides:
+For framework-specific walkthroughs, use the manual guides:
 
 <Cards>
   <Card
-    title="manual guides"
-    description="next.js, react router, tanstack, vite, remix, astro"
+    title="Manual guides"
+    description="Next.js, React Router, TanStack, Vite, Remix, Astro"
     href="/docs/manual"
   />
 </Cards>
 
-## Next adapter
+## Next.js adapter
 
-use the next.js adapter entry for framework wiring:
+Use the Next.js adapter entry for framework wiring:
 
 ```tsx
 import { AdapterProvider, nextAdapter } from "fromsrc/next";
@@ -101,9 +101,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## React router adapter
+## React Router adapter
 
-use the react router adapter for browser-router apps:
+Use the React Router adapter for browser-router apps:
 
 ```tsx
 import { AdapterProvider, reactRouterAdapter } from "fromsrc/react-router";
@@ -115,9 +115,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## vite adapter
+## Vite adapter
 
-use the vite adapter for custom router stacks:
+Use the Vite adapter for custom router stacks:
 
 ```tsx
 import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite";
@@ -133,9 +133,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## tanstack adapter
+## TanStack adapter
 
-use the tanstack adapter for tanstack router apps:
+Use the TanStack adapter for TanStack Router apps:
 
 ```tsx
 import { AdapterProvider, tanstackAdapter } from "fromsrc/tanstack";
@@ -147,9 +147,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## remix adapter
+## Remix adapter
 
-use the remix adapter for remix routes and navigation:
+Use the Remix adapter for Remix routes and navigation:
 
 ```tsx
 import { AdapterProvider, remixAdapter } from "fromsrc/remix";
@@ -159,9 +159,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## astro adapter
+## Astro adapter
 
-use the astro adapter for astro integrations with client-rendered docs surfaces:
+Use the Astro adapter for Astro integrations with client-rendered docs surfaces:
 
 ```tsx
 import { AdapterProvider, astroAdapter } from "fromsrc/astro";
@@ -196,14 +196,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 <Accordion>
   <AccordionItem title="cannot find module 'fromsrc'">
-    ensure fromsrc is installed:
+    Ensure fromsrc is installed:
 
     ```bash
     bun add fromsrc
     ```
   </AccordionItem>
   <AccordionItem title="adapter not resolving">
-    verify the subpath import matches your framework:
+    Verify the subpath import matches your framework:
 
     ```tsx
     import { nextAdapter } from "fromsrc/next"
@@ -218,29 +218,29 @@ export function Providers({ children }: { children: React.ReactNode }) {
     ```
   </AccordionItem>
   <AccordionItem title="bundle size got bigger">
-    run the tree-shake regression check:
+    Run the tree-shake regression check:
 
     ```bash
     bun run check:shake
     ```
 
-    this validates root, utility, and adapter imports stay inside budget.
+    This validates root, utility, and adapter imports stay inside budget.
   </AccordionItem>
   <AccordionItem title="search not working">
-    search indexes content from your docs folder. ensure you have `.mdx` files
+    Search indexes content from your docs folder. Ensure you have `.mdx` files
     with valid frontmatter: ```yaml --- title: page title description: page
     description --- ```
   </AccordionItem>
   <AccordionItem title="styles look wrong">
-    import the fromsrc styles in your root layout or globals.css. check that
-    tailwind is configured correctly.
+    Import the fromsrc styles in your root layout or globals.css. Check that
+    Tailwind is configured correctly.
   </AccordionItem>
   <AccordionItem title="pages not found">
-    verify your catch-all route is at `app/docs/[[...slug]]/page.tsx` and
+    Verify your catch-all route is at `app/docs/[[...slug]]/page.tsx` and
     imports from fromsrc correctly.
   </AccordionItem>
   <AccordionItem title="dev process stuck">
-    restart and inspect logs:
+    Restart and inspect logs:
 
     ```bash
     bun run dev:restart
@@ -253,13 +253,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 <Cards>
   <Card
-    title="configuration"
-    description="customize fromsrc behavior"
+    title="Configuration"
+    description="Customize fromsrc behavior"
     href="/docs/configuration"
   />
   <Card
-    title="components"
-    description="explore available components"
+    title="Components"
+    description="Explore available components"
     href="/docs/components/code"
   />
 </Cards>

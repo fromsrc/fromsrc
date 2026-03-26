@@ -4,11 +4,11 @@ description: Responsive layout helpers
 order: 44
 ---
 
-layout utilities for responsive design.
+Layout utilities for responsive design.
 
 ## Show
 
-conditionally show content by breakpoint:
+Conditionally show content by breakpoint:
 
 ```mdx
 <Show above="md">desktop only</Show>
@@ -26,7 +26,7 @@ conditionally show content by breakpoint:
 
 ## Grid
 
-responsive grid layouts:
+Responsive grid layouts:
 
 ```mdx
 <Grid cols={2}>
@@ -47,7 +47,7 @@ responsive grid layouts:
 
 ## Flex
 
-flexible layouts:
+Flexible layouts:
 
 ```mdx
 <Flex direction="row" align="center" justify="between">
@@ -62,25 +62,25 @@ flexible layouts:
 
 | prop     | type                         | description          |
 | -------- | ---------------------------- | -------------------- |
-| above    | "sm" \| "md" \| "lg" \| "xl" | show above this size |
-| below    | "sm" \| "md" \| "lg" \| "xl" | show below this size |
-| children | ReactNode                    | content to show      |
+| above    | "sm" \| "md" \| "lg" \| "xl" | Show above this size |
+| below    | "sm" \| "md" \| "lg" \| "xl" | Show below this size |
+| children | ReactNode                    | Content to show      |
 
 ### Grid
 
 | prop     | type                 | default | description  |
 | -------- | -------------------- | ------- | ------------ |
-| cols     | 1 \| 2 \| 3 \| 4     | 2       | columns      |
-| gap      | "sm" \| "md" \| "lg" | "md"    | spacing      |
-| children | ReactNode            | -       | grid content |
+| cols     | 1 \| 2 \| 3 \| 4     | 2       | Columns      |
+| gap      | "sm" \| "md" \| "lg" | "md"    | Spacing      |
+| children | ReactNode            | -       | Grid content |
 
 ### Flex
 
 | prop      | type                                      | default | description     |
 | --------- | ----------------------------------------- | ------- | --------------- |
-| direction | "row" \| "col"                            | "row"   | direction       |
-| align     | "start" \| "center" \| "end" \| "stretch" | "start" | align-items     |
-| justify   | "start" \| "center" \| "end" \| "between" | "start" | justify-content |
-| gap       | "sm" \| "md" \| "lg"                      | "md"    | spacing         |
-| wrap      | boolean                                   | false   | flex-wrap       |
-| children  | ReactNode                                 | -       | flex content    |
+| direction | "row" \| "col"                            | "row"   | Direction       |
+| align     | "start" \| "center" \| "end" \| "stretch" | "start" | Align-items     |
+| justify   | "start" \| "center" \| "end" \| "between" | "start" | Justify-content |
+| gap       | "sm" \| "md" \| "lg"                      | "md"    | Spacing         |
+| wrap      | boolean                                   | false   | Flex-wrap       |
+| children  | ReactNode                                 | -       | Flex content    |

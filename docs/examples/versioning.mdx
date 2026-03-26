@@ -4,11 +4,11 @@ description: Version your documentation
 order: 3
 ---
 
-strategies for versioning documentation with fromsrc.
+Strategies for versioning documentation with fromsrc.
 
 ## Branch-based versioning
 
-use git branches to maintain different doc versions:
+Use git branches to maintain different doc versions:
 
 <Files>
   <Folder name="main branch" defaultOpen>
@@ -21,25 +21,25 @@ use git branches to maintain different doc versions:
   </Folder>
 </Files>
 
-deploy each branch to a subdomain:
+Deploy each branch to a subdomain:
 
 - `docs.example.com` → main branch (latest)
 - `v1.docs.example.com` → v1 branch
 
 ### Pros
 
-- no content duplication in main branch
-- independent builds per version
-- clean git history
+- No content duplication in main branch
+- Independent builds per version
+- Clean git history
 
 ### Cons
 
-- requires multiple deployments
-- harder to search across versions
+- Requires multiple deployments
+- Harder to search across versions
 
 ## Folder-based versioning
 
-keep all versions in a single branch:
+Keep all versions in a single branch:
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -115,18 +115,18 @@ export function VersionSwitcher() {
 
 ### Pros
 
-- single deployment
-- easy to search across versions
-- unified navigation
+- Single deployment
+- Easy to search across versions
+- Unified navigation
 
 ### Cons
 
-- larger repo size
-- potential content duplication
+- Larger repo size
+- Potential content duplication
 
-## api versioning
+## API versioning
 
-for api docs, use a date-based system (like stripe):
+For API docs, use a date-based system (like Stripe):
 
 ```yaml
 ---
@@ -166,9 +166,9 @@ function DeprecationBanner({ doc }) {
 
 ## Recommendation
 
-for most projects, branch-based versioning is simpler:
+For most projects, branch-based versioning is simpler:
 
-1. maintain docs alongside code in feature branches
-2. deploy latest docs from main
-3. archive old versions to version branches
-4. link to archived docs from main site
+1. Maintain docs alongside code in feature branches
+2. Deploy latest docs from main
+3. Archive old versions to version branches
+4. Link to archived docs from main site

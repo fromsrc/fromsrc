@@ -1,10 +1,10 @@
 ---
-title: Openapi
-description: Openapi spec renderer
+title: OpenAPI
+description: OpenAPI spec renderer
 order: 22
 ---
 
-render grouped endpoint docs from an openapi spec.
+Render grouped endpoint docs from an OpenAPI spec.
 
 ## Usage
 
@@ -30,15 +30,15 @@ render grouped endpoint docs from an openapi spec.
 
 | prop   | type              | default  | description                      |
 | ------ | ----------------- | -------- | -------------------------------- |
-| spec   | string \| object  | required | json string or object spec       |
-| tag    | string            | -        | exact tag filter                 |
-| method | string            | -        | exact method filter              |
-| path   | string            | -        | path substring filter            |
-| group  | `"none" \| "tag"` | `"none"` | render endpoints in tag sections |
+| spec   | string \| object  | required | JSON string or object spec       |
+| tag    | string            | -        | Exact tag filter                 |
+| method | string            | -        | Exact method filter              |
+| path   | string            | -        | Path substring filter            |
+| group  | `"none" \| "tag"` | `"none"` | Render endpoints in tag sections |
 
-grouped mode shows a per-tag endpoint count and uses stable method ordering:
+Grouped mode shows a per-tag endpoint count and uses stable method ordering:
 `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `HEAD`, `TRACE`.
-when grouped mode is enabled, fromsrc also renders quick-jump tag chips at the top for faster keyboard and pointer navigation.
+When grouped mode is enabled, fromsrc also renders quick-jump tag chips at the top for faster keyboard and pointer navigation.
 
 ## Schema renderer
 

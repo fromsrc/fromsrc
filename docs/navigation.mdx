@@ -6,9 +6,9 @@ order: 8
 
 import { Files, Folder, File } from "fromsrc/client";
 
-# navigation
+# Navigation
 
-fromsrc uses a file-based navigation system. your docs folder structure determines the sidebar navigation.
+fromsrc uses a file-based navigation system. Your docs folder structure determines the sidebar navigation.
 
 ## Folder structure
 
@@ -29,7 +29,7 @@ fromsrc uses a file-based navigation system. your docs folder structure determin
 
 ## Meta files
 
-use `_meta.json` files to control page ordering and section titles.
+Use `_meta.json` files to control page ordering and section titles.
 
 ```json
 {
@@ -38,11 +38,11 @@ use `_meta.json` files to control page ordering and section titles.
 }
 ```
 
-pages are displayed in the order specified. pages not listed appear after the specified pages.
+Pages are displayed in the order specified. Pages not listed appear after the specified pages.
 
 ## Nested sections
 
-create `_meta.json` in subdirectories for nested navigation:
+Create `_meta.json` in subdirectories for nested navigation:
 
 <Files>
   <Folder name="docs" defaultOpen>
@@ -64,7 +64,7 @@ create `_meta.json` in subdirectories for nested navigation:
 
 ## Frontmatter ordering
 
-alternatively, use frontmatter `order` to sort pages:
+Alternatively, use frontmatter `order` to sort pages:
 
 ```mdx
 ---
@@ -73,19 +73,19 @@ order: 1
 ---
 ```
 
-lower numbers appear first. pages without `order` default to 99.
+Lower numbers appear first. Pages without `order` default to 99.
 
 ## Sidebar sections
 
-the sidebar groups pages from the navigation tree:
+The sidebar groups pages from the navigation tree:
 
-- top-level pages stay in one root section
-- nested pages are grouped by their first folder
-- section titles come from folder `_meta.json` `title` when present
+- Top-level pages stay in one root section
+- Nested pages are grouped by their first folder
+- Section titles come from folder `_meta.json` `title` when present
 
 ## Custom sections
 
-you can fully customize section grouping in your own sidebar component:
+You can fully customize section grouping in your own sidebar component:
 
 ```tsx
 const groups = new Map<string, SidebarItem[]>();
@@ -98,7 +98,7 @@ for (const section of navigation) {
 
 ## Icons
 
-add icons to sidebar items via the icons map:
+Add icons to sidebar items via the icons map:
 
 ```tsx
 import { BookOpen, Download, Rocket } from "lucide-react";
@@ -112,7 +112,7 @@ const icons = {
 
 ## Collapsible folders
 
-folders can be collapsed in the sidebar. use `defaultOpen` to control initial state:
+Folders can be collapsed in the sidebar. Use `defaultOpen` to control initial state:
 
 ```tsx
 {
@@ -123,7 +123,7 @@ folders can be collapsed in the sidebar. use `defaultOpen` to control initial st
 }
 ```
 
-use `defaultOpenLevel` on the Sidebar component to auto-expand folders to a certain depth:
+Use `defaultOpenLevel` on the Sidebar component to auto-expand folders to a certain depth:
 
 ```tsx
 <Sidebar navigation={navigation} defaultOpenLevel={1} />

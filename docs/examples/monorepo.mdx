@@ -4,7 +4,7 @@ description: Document multiple packages
 order: 4
 ---
 
-document multiple packages in a monorepo with a unified docs site.
+Document multiple packages in a monorepo with a unified docs site.
 
 ## Structure
 
@@ -44,7 +44,7 @@ document multiple packages in a monorepo with a unified docs site.
 
 ## Package-specific content
 
-create a content loader for each package:
+Create a content loader for each package:
 
 ```tsx
 import { defineContent, z } from "fromsrc";
@@ -74,7 +74,7 @@ export const cli = defineContent({
 
 ## Unified navigation
 
-combine package navigations:
+Combine package navigations:
 
 ```tsx
 import { core, react, cli } from "@/lib/content";
@@ -97,7 +97,7 @@ export async function getUnifiedNavigation() {
 
 ## Package switcher
 
-add tabs to switch between packages:
+Add tabs to switch between packages:
 
 ```tsx
 "use client";
@@ -139,7 +139,7 @@ export function PackageTabs() {
 
 ## Cross-references
 
-link between packages:
+Link between packages:
 
 ```mdx
 see the <Link href="/docs/core/api">core api</Link> for the base implementation.
@@ -147,7 +147,7 @@ see the <Link href="/docs/core/api">core api</Link> for the base implementation.
 
 ## Shared components
 
-reuse mdx components across packages:
+Reuse MDX components across packages:
 
 ```tsx
 import { Callout, CodeBlock, TypeTable } from "fromsrc/client";
@@ -164,7 +164,7 @@ export const components = {
 
 ## Auto-generated docs
 
-extract api docs from package exports:
+Extract API docs from package exports:
 
 ```tsx
 import { readFileSync } from "fs";
@@ -184,7 +184,7 @@ export function extractExports(packagePath: string) {
 
 ## Workspace configuration
 
-configure turborepo for docs builds:
+Configure turborepo for docs builds:
 
 ```json
 {
@@ -199,4 +199,4 @@ configure turborepo for docs builds:
 }
 ```
 
-this ensures packages are built before docs.
+This ensures packages are built before docs.

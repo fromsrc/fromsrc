@@ -4,7 +4,7 @@ description: Multi-section navigation tabs
 order: 43
 ---
 
-navigate between documentation sections.
+Navigate between documentation sections.
 
 ## Usage
 
@@ -36,7 +36,7 @@ const tabs = [
 
 ## Custom matching
 
-match specific paths:
+Match specific paths:
 
 ```tsx
 const tabs = [
@@ -57,7 +57,7 @@ const tabs = [
 
 ## Dropdown variant
 
-for mobile or space-constrained layouts:
+For mobile or space-constrained layouts:
 
 ```tsx
 <TabNavDropdown tabs={tabs} />
@@ -65,7 +65,7 @@ for mobile or space-constrained layouts:
 
 ## Integration
 
-place in sidebar header:
+Place in sidebar header:
 
 ```tsx
 import { Sidebar, TabNav } from "fromsrc/client";
@@ -85,14 +85,14 @@ function Layout({ children }) {
 
 | prop | type     | description     |
 | ---- | -------- | --------------- |
-| tabs | NavTab[] | navigation tabs |
+| tabs | NavTab[] | Navigation tabs |
 
 ### Navtab
 
 | prop  | type      | description                    |
 | ----- | --------- | ------------------------------ |
-| id    | string    | unique identifier              |
-| label | string    | display label                  |
-| href  | string    | target url                     |
-| icon  | ReactNode | optional icon                  |
-| match | string[]  | urls to match for active state |
+| id    | string    | Unique identifier              |
+| label | string    | Display label                  |
+| href  | string    | Target URL                     |
+| icon  | ReactNode | Optional icon                  |
+| match | string[]  | URLs to match for active state |

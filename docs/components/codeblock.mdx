@@ -4,7 +4,7 @@ description: Syntax highlighted code blocks with language icons
 order: 2
 ---
 
-the codeblock component renders code with syntax highlighting, language icons, and a copy button.
+The CodeBlock component renders code with syntax highlighting, language icons, and a copy button.
 
 ## Usage
 
@@ -19,7 +19,7 @@ console.log(greeting)`}
 
 ## With title
 
-add a title to display in the header:
+Add a title to display in the header:
 
 ```tsx
 <CodeBlock lang="typescript" title="app.ts">
@@ -31,7 +31,7 @@ add a title to display in the header:
 
 ## Language icons
 
-codeblock displays icons for supported languages:
+CodeBlock displays icons for supported languages:
 
 - typescript, javascript
 - python, rust, go
@@ -41,24 +41,24 @@ codeblock displays icons for supported languages:
 - jsx, tsx
 - markdown
 
-aliases are supported: `ts` maps to `typescript`, `js` to `javascript`, `sh` to `bash`, `yml` to `yaml`.
+Aliases are supported: `ts` maps to `typescript`, `js` to `javascript`, `sh` to `bash`, `yml` to `yaml`.
 
 ## Copy button
 
-the copy button appears in the header when a title or language is set. without a label, it floats in the top-right corner. clicking copies the code content to clipboard.
+The copy button appears in the header when a title or language is set. Without a label, it floats in the top-right corner. Clicking copies the code content to clipboard.
 
 ## Props
 
 | prop     | type      | default  | description                 |
 | -------- | --------- | -------- | --------------------------- |
-| children | ReactNode | required | code content to display     |
-| lang     | string    | -        | language for icon and label |
-| title    | string    | -        | title shown in header       |
-| lines    | boolean   | false    | show line numbers           |
+| children | ReactNode | required | Code content to display     |
+| lang     | string    | -        | Language for icon and label |
+| title    | string    | -        | Title shown in header       |
+| lines    | boolean   | false    | Show line numbers           |
 
-## twoslash integration
+## Twoslash integration
 
-twoslash metadata is rendered as notes below the code block when annotations are present:
+Twoslash metadata is rendered as notes below the code block when annotations are present:
 
 ````md
 ```ts twoslash

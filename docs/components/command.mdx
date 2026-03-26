@@ -4,7 +4,7 @@ description: Command palette for quick actions
 order: 15
 ---
 
-searchable command palette with keyboard navigation.
+Searchable command palette with keyboard navigation.
 
 ## Usage
 
@@ -36,9 +36,9 @@ const items = [
 
 ## Keyboard shortcuts
 
-- **arrow up/down** - navigate items
-- **enter** - select highlighted item
-- **type** - filter items
+- **Arrow up/down** - Navigate items
+- **Enter** - Select highlighted item
+- **Type** - Filter items
 
 ## Custom placeholder
 
@@ -48,7 +48,7 @@ const items = [
 
 ## Item callbacks
 
-each item can have its own onSelect:
+Each item can have its own onSelect:
 
 ```tsx
 const items = [
@@ -71,15 +71,15 @@ const items = [
 
 | prop        | type           | default     | description                 |
 | ----------- | -------------- | ----------- | --------------------------- |
-| items       | CommandItem[]  | required    | list of command items       |
-| placeholder | string         | "search..." | input placeholder           |
-| onSelect    | (item) => void | -           | callback when item selected |
+| items       | CommandItem[]  | required    | List of command items       |
+| placeholder | string         | "search..." | Input placeholder           |
+| onSelect    | (item) => void | -           | Callback when item selected |
 
-### Commanditem
+### CommandItem
 
 | prop     | type       | description            |
 | -------- | ---------- | ---------------------- |
-| id       | string     | unique identifier      |
-| label    | string     | display text           |
-| icon     | ReactNode  | optional icon          |
-| onSelect | () => void | optional item callback |
+| id       | string     | Unique identifier      |
+| label    | string     | Display text           |
+| icon     | ReactNode  | Optional icon          |
+| onSelect | () => void | Optional item callback |

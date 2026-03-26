@@ -8,7 +8,7 @@ fromsrc includes built-in full-text search with a pluggable adapter system.
 
 ## Built-in search
 
-the default search works out of the box with full-text content search:
+The default search works out of the box with full-text content search:
 
 ```tsx
 import { Search } from "fromsrc/client"
@@ -21,15 +21,15 @@ const docs = await getSearchDocs()
 
 ### Features
 
-- full-text body content search
-- fuzzy title/description matching
-- multi-word ranking with exact and prefix boosts
-- typo-tolerant term matching for near-miss queries
-- heading-level results with section anchors
-- content snippets in results
-- keyboard navigation
-- tab autocomplete to top result
-- instant results
+- Full-text body content search
+- Fuzzy title/description matching
+- Multi-word ranking with exact and prefix boosts
+- Typo-tolerant term matching for near-miss queries
+- Heading-level results with section anchors
+- Content snippets in results
+- Keyboard navigation
+- Tab autocomplete to top result
+- Instant results
 
 ## Search adapter interface
 
@@ -66,9 +66,9 @@ const myAdapter = createSearchAdapter({
 
 ## Hosted adapters
 
-### orama
+### Orama
 
-use the built-in orama adapter for hosted search endpoints:
+Use the built-in Orama adapter for hosted search endpoints:
 
 ```tsx
 import { Search } from "fromsrc/client"
@@ -82,9 +82,9 @@ const adapter = createOramaAdapter({
 <Search docs={docs} adapter={adapter} />
 ```
 
-### algolia
+### Algolia
 
-use the built-in algolia adapter for remote hosted search:
+Use the built-in Algolia adapter for remote hosted search:
 
 ```tsx
 import { Search } from "fromsrc/client"
@@ -99,11 +99,11 @@ const adapter = createAlgoliaAdapter({
 <Search docs={docs} adapter={adapter} />
 ```
 
-for hosted adapters, pass lightweight docs metadata to the component and let the provider return ranked results.
+For hosted adapters, pass lightweight docs metadata to the component and let the provider return ranked results.
 
-## Search api
+## Search API
 
-fromsrc includes a typed search route for remote ui and custom clients:
+fromsrc includes a typed search route for remote UI and custom clients:
 
 ```bash
 /api/search?q=future+adapters&limit=8
@@ -115,7 +115,7 @@ import { Search } from "fromsrc/client";
 <Search basePath="/docs" endpoint="/api/search" />;
 ```
 
-response fields:
+Response fields:
 
 - `slug`
 - `title`
@@ -124,7 +124,7 @@ response fields:
 - `anchor`
 - `score`
 
-response headers:
+Response headers:
 
 - `Server-Timing` (`search;dur=<ms>`)
 - `X-Search-Cache` (`hit` or `miss`)
@@ -142,9 +142,9 @@ response headers:
 | `Enter`         | go to result                 |
 | `Escape`        | close search                 |
 
-## Searchdoc type
+## SearchDoc type
 
-the search component accepts an array of searchable documents:
+The search component accepts an array of searchable documents:
 
 ```ts
 interface SearchDoc {
@@ -155,7 +155,7 @@ interface SearchDoc {
 }
 ```
 
-use `getSearchDocs()` to get documents with content for full-text search:
+Use `getSearchDocs()` to get documents with content for full-text search:
 
 ```ts
 import { getSearchDocs } from "./_lib/content";

@@ -1,44 +1,44 @@
 ---
-title: Components api
+title: Components API
 description: Detailed props reference for all components
 order: 4
 ---
 
-complete props reference for all exported components.
+Complete props reference for all exported components.
 
 ## Layout components
 
 ### Sidebar
 
-navigation sidebar with sections and collapsible folders.
+Navigation sidebar with sections and collapsible folders.
 
 <TypeTable
   data={{
     title: {
       type: "string",
       required: true,
-      description: "sidebar title text",
+      description: "Sidebar title text",
     },
-    logo: { type: "ReactNode", description: "logo element next to title" },
+    logo: { type: "ReactNode", description: "Logo element next to title" },
     navigation: {
       type: "SidebarSection[]",
       required: true,
-      description: "navigation structure",
+      description: "Navigation structure",
     },
     basePath: {
       type: "string",
       default: '"/docs"',
-      description: "base path for doc links",
+      description: "Base path for doc links",
     },
-    github: { type: "string", description: "github repo url" },
+    github: { type: "string", description: "GitHub repo URL" },
     collapsible: {
       type: "boolean",
-      description: "enable collapse to icon-only mode",
+      description: "Enable collapse to icon-only mode",
     },
     defaultOpenLevel: {
       type: "number",
       default: "0",
-      description: "auto-open folder depth",
+      description: "Auto-open folder depth",
     },
   }}
 />
@@ -78,62 +78,62 @@ interface SidebarFolder {
 
 ### MobileNav
 
-mobile navigation drawer. no props required.
+Mobile navigation drawer. No props required.
 
 ### Breadcrumb
 
-breadcrumb navigation based on current path.
+Breadcrumb navigation based on current path.
 
 <TypeTable
   data={{
     base: {
       type: "string",
       default: '"/docs"',
-      description: "base path to strip from breadcrumb",
+      description: "Base path to strip from breadcrumb",
     },
   }}
 />
 
 ### Toc
 
-table of contents sidebar.
+Table of contents sidebar.
 
 <TypeTable
   data={{
     variant: {
       type: '"default" | "minimal"',
       default: '"default"',
-      description: "visual style",
+      description: "Visual style",
     },
-    zigzag: { type: "boolean", description: "alternating left-right layout" },
+    zigzag: { type: "boolean", description: "Alternating left-right layout" },
   }}
 />
 
 ### TocInline
 
-inline table of contents for embedding in content.
+Inline table of contents for embedding in content.
 
 <TypeTable
   data={{
     headings: {
       type: "Heading[]",
       required: true,
-      description: "headings to render",
+      description: "Headings to render",
     },
     title: {
       type: "string",
       default: '"on this page"',
-      description: "section title",
+      description: "Section title",
     },
     collapsible: {
       type: "boolean",
       default: "true",
-      description: "enable collapse toggle",
+      description: "Enable collapse toggle",
     },
     defaultOpen: {
       type: "boolean",
       default: "false",
-      description: "initial open state",
+      description: "Initial open state",
     },
   }}
 />
@@ -142,37 +142,37 @@ inline table of contents for embedding in content.
 
 ### CodeBlock
 
-syntax highlighted code with copy button.
+Syntax highlighted code with copy button.
 
 <TypeTable
   data={{
     children: {
       type: "ReactNode",
       required: true,
-      description: "code content",
+      description: "Code content",
     },
-    lang: { type: "string", description: "language label and icon key" },
-    title: { type: "string", description: "header title override" },
-    lines: { type: "boolean", description: "render line numbers" },
+    lang: { type: "string", description: "Language label and icon key" },
+    title: { type: "string", description: "Header title override" },
+    lines: { type: "boolean", description: "Render line numbers" },
   }}
 />
 
 ### CodeGroup
 
-tabbed code blocks for multiple examples.
+Tabbed code blocks for multiple examples.
 
 <TypeTable
   data={{
-    defaultValue: { type: "string", description: "initially active tab value" },
+    defaultValue: { type: "string", description: "Initially active tab value" },
     group: {
       type: "string",
       default: '"global"',
-      description: "shared persistence key",
+      description: "Shared persistence key",
     },
     persist: {
       type: "boolean",
       default: "true",
-      description: "persist selected tab across groups",
+      description: "Persist selected tab across groups",
     },
     children: {
       type: "ReactNode",
@@ -184,43 +184,43 @@ tabbed code blocks for multiple examples.
 
 ### CodeTab
 
-individual tab in a code group.
+Individual tab in a code group.
 
 <TypeTable
   data={{
-    value: { type: "string", required: true, description: "tab value" },
-    label: { type: "string", required: true, description: "tab label" },
+    value: { type: "string", required: true, description: "Tab value" },
+    label: { type: "string", required: true, description: "Tab label" },
     children: {
       type: "ReactNode",
       required: true,
-      description: "code block content",
+      description: "Code block content",
     },
   }}
 />
 
 ### Callout
 
-highlighted message boxes.
+Highlighted message boxes.
 
 <TypeTable
   data={{
     type: {
       type: '"info" | "warning" | "error" | "tip" | "note"',
       default: '"info"',
-      description: "callout style",
+      description: "Callout style",
     },
-    title: { type: "string", description: "optional title" },
+    title: { type: "string", description: "Optional title" },
     children: {
       type: "ReactNode",
       required: true,
-      description: "callout content",
+      description: "Callout content",
     },
   }}
 />
 
 ### Steps
 
-numbered step list container.
+Numbered step list container.
 
 <TypeTable
   data={{
@@ -234,30 +234,30 @@ numbered step list container.
 
 ### Step
 
-individual step in a steps list.
+Individual step in a steps list.
 
 <TypeTable
   data={{
     children: {
       type: "ReactNode",
       required: true,
-      description: "step content",
+      description: "Step content",
     },
   }}
 />
 
 ### Tabs
 
-tabbed content panels.
+Tabbed content panels.
 
 <TypeTable
   data={{
     items: {
       type: "readonly string[]",
       required: true,
-      description: "tab labels and values",
+      description: "Tab labels and values",
     },
-    defaultValue: { type: "string", description: "initially active tab" },
+    defaultValue: { type: "string", description: "Initially active tab" },
     children: {
       type: "ReactNode",
       required: true,
@@ -268,22 +268,22 @@ tabbed content panels.
 
 ### Tab
 
-individual tab panel.
+Individual tab panel.
 
 <TypeTable
   data={{
     value: {
       type: "string",
       required: true,
-      description: "tab value from Tabs items",
+      description: "Tab value from Tabs items",
     },
-    children: { type: "ReactNode", required: true, description: "tab content" },
+    children: { type: "ReactNode", required: true, description: "Tab content" },
   }}
 />
 
 ### Cards
 
-grid of linked cards.
+Grid of linked cards.
 
 <TypeTable
   data={{
@@ -297,20 +297,20 @@ grid of linked cards.
 
 ### Card
 
-individual card in a cards grid.
+Individual card in a cards grid.
 
 <TypeTable
   data={{
-    title: { type: "string", required: true, description: "card title" },
-    description: { type: "string", description: "card body text" },
-    href: { type: "string", description: "link destination" },
-    icon: { type: "ReactNode", description: "card icon" },
+    title: { type: "string", required: true, description: "Card title" },
+    description: { type: "string", description: "Card body text" },
+    href: { type: "string", description: "Link destination" },
+    icon: { type: "ReactNode", description: "Card icon" },
   }}
 />
 
 ### Accordion
 
-collapsible content sections.
+Collapsible content sections.
 
 <TypeTable
   data={{
@@ -324,23 +324,23 @@ collapsible content sections.
 
 ### AccordionItem
 
-individual accordion section.
+Individual accordion section.
 
 <TypeTable
   data={{
-    title: { type: "string", required: true, description: "section title" },
+    title: { type: "string", required: true, description: "Section title" },
     children: {
       type: "ReactNode",
       required: true,
-      description: "section content",
+      description: "Section content",
     },
-    defaultOpen: { type: "boolean", description: "initially expanded" },
+    defaultOpen: { type: "boolean", description: "Initially expanded" },
   }}
 />
 
 ### Files
 
-file tree display container.
+File tree display container.
 
 <TypeTable
   data={{
@@ -354,36 +354,36 @@ file tree display container.
 
 ### File
 
-file in a file tree.
+File in a file tree.
 
 <TypeTable
   data={{
-    name: { type: "string", required: true, description: "file name" },
+    name: { type: "string", required: true, description: "File name" },
   }}
 />
 
 ### Folder
 
-folder in a file tree.
+Folder in a file tree.
 
 <TypeTable
   data={{
-    name: { type: "string", required: true, description: "folder name" },
-    defaultOpen: { type: "boolean", description: "initially expanded" },
-    children: { type: "ReactNode", description: "nested files and folders" },
+    name: { type: "string", required: true, description: "Folder name" },
+    defaultOpen: { type: "boolean", description: "Initially expanded" },
+    children: { type: "ReactNode", description: "Nested files and folders" },
   }}
 />
 
 ### TypeTable
 
-api property documentation table.
+API property documentation table.
 
 <TypeTable
   data={{
     data: {
       type: "Record<string, TypeInfo>",
       required: true,
-      description: "properties to document",
+      description: "Properties to document",
     },
   }}
 />
@@ -403,155 +403,155 @@ interface TypeInfo {
 
 ### Badge
 
-inline status badges.
+Inline status badges.
 
 <TypeTable
   data={{
     variant: {
       type: '"default" | "success" | "warning" | "error" | "info"',
       default: '"default"',
-      description: "badge style",
+      description: "Badge style",
     },
-    children: { type: "ReactNode", required: true, description: "badge text" },
+    children: { type: "ReactNode", required: true, description: "Badge text" },
   }}
 />
 
 ### Banner
 
-dismissible page banners.
+Dismissible page banners.
 
 <TypeTable
   data={{
     variant: {
       type: '"default" | "rainbow"',
       default: '"default"',
-      description: "banner style",
+      description: "Banner style",
     },
-    id: { type: "string", description: "storage key for dismiss state" },
+    id: { type: "string", description: "Storage key for dismiss state" },
     children: {
       type: "ReactNode",
       required: true,
-      description: "banner content",
+      description: "Banner content",
     },
   }}
 />
 
 ### Link
 
-external link with indicator icon.
+External link with indicator icon.
 
 <TypeTable
   data={{
-    href: { type: "string", required: true, description: "link destination" },
-    children: { type: "ReactNode", required: true, description: "link text" },
+    href: { type: "string", required: true, description: "Link destination" },
+    children: { type: "ReactNode", required: true, description: "Link text" },
   }}
 />
 
 ### Zoom
 
-image lightbox for enlarging images.
+Image lightbox for enlarging images.
 
 <TypeTable
   data={{
     children: {
       type: "ReactNode",
       required: true,
-      description: "image element",
+      description: "Image element",
     },
   }}
 />
 
 ### Tooltip
 
-hover hint tooltip.
+Hover hint tooltip.
 
 <TypeTable
   data={{
-    content: { type: "ReactNode", required: true, description: "tooltip text" },
+    content: { type: "ReactNode", required: true, description: "Tooltip text" },
     children: {
       type: "ReactNode",
       required: true,
-      description: "trigger element",
+      description: "Trigger element",
     },
   }}
 />
 
 ### Github
 
-github repository info display.
+GitHub repository info display.
 
 <TypeTable
   data={{
-    repo: { type: "string", required: true, description: "owner/repo format" },
+    repo: { type: "string", required: true, description: "Owner/repo format" },
   }}
 />
 
 ### Video
 
-embedded video player.
+Embedded video player.
 
 <TypeTable
   data={{
-    src: { type: "string", required: true, description: "video url" },
-    title: { type: "string", description: "video title for accessibility" },
+    src: { type: "string", required: true, description: "Video URL" },
+    title: { type: "string", description: "Video title for accessibility" },
   }}
 />
 
 ### Mermaid
 
-mermaid diagram renderer.
+Mermaid diagram renderer.
 
 <TypeTable
   data={{
     chart: {
       type: "string",
       required: true,
-      description: "mermaid diagram code",
+      description: "Mermaid diagram code",
     },
   }}
 />
 
 ### ThemeToggle
 
-light/dark mode toggle button.
+Light/dark mode toggle button.
 
 <TypeTable
   data={{
     defaultTheme: {
       type: '"light" | "dark" | "system"',
       default: '"system"',
-      description: "initial theme",
+      description: "Initial theme",
     },
   }}
 />
 
 ### BackToTop
 
-scroll to top button.
+Scroll to top button.
 
 <TypeTable
   data={{
     threshold: {
       type: "number",
       default: "300",
-      description: "scroll position to show button",
+      description: "Scroll position to show button",
     },
   }}
 />
 
 ### Anchor
 
-heading with copy-link functionality.
+Heading with copy-link functionality.
 
 <TypeTable
   data={{
-    id: { type: "string", required: true, description: "anchor id" },
+    id: { type: "string", required: true, description: "Anchor id" },
     children: {
       type: "ReactNode",
       required: true,
-      description: "heading text",
+      description: "Heading text",
     },
   }}
 />
 
-also exported as H1, H2, H3, H4, H5, H6 with appropriate heading levels.
+Also exported as H1, H2, H3, H4, H5, H6 with appropriate heading levels.

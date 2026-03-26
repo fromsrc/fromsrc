@@ -4,7 +4,7 @@ description: Custom sidebar and navigation
 order: 11
 ---
 
-build custom navigation structures for your documentation.
+Build custom navigation structures for your documentation.
 
 ## Basic sidebar
 
@@ -36,7 +36,7 @@ export async function Sidebar() {
 
 ## Grouped navigation
 
-organize docs into sections:
+Organize docs into sections:
 
 ```tsx
 import Link from "next/link";
@@ -83,7 +83,7 @@ export async function Sidebar() {
 
 ## Active link
 
-highlight the current page:
+Highlight the current page:
 
 ```tsx
 "use client";
@@ -154,7 +154,7 @@ export function NavSection({ title, children, defaultOpen = true }: Props) {
 
 ## Breadcrumbs
 
-show page hierarchy:
+Show page hierarchy:
 
 ```tsx
 import Link from "next/link";
@@ -193,7 +193,7 @@ export function Breadcrumbs({ slug }: Props) {
 
 ## Prev/next links
 
-navigate between docs:
+Navigate between docs:
 
 ```tsx
 import Link from "next/link";
@@ -240,7 +240,7 @@ export async function PrevNext({ slug }: Props) {
 
 ## Mobile sidebar
 
-responsive navigation drawer:
+Responsive navigation drawer:
 
 ```tsx
 "use client";
@@ -292,7 +292,7 @@ export function MobileSidebar({ children }) {
 
 ## Table of contents
 
-in-page navigation:
+In-page navigation:
 
 ```tsx
 "use client";
@@ -366,7 +366,7 @@ order: 1
 ---
 ```
 
-sort navigation by order:
+Sort navigation by order:
 
 ```tsx
 const docs = await getAllDocs();

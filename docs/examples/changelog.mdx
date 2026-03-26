@@ -4,7 +4,7 @@ description: Version history page
 order: 6
 ---
 
-create a changelog page to document version history.
+Create a changelog page to document version history.
 
 ## Folder structure
 
@@ -21,7 +21,7 @@ create a changelog page to document version history.
 
 ## Changelog content
 
-create `content/changelog.mdx`:
+Create `content/changelog.mdx`:
 
 ```mdx
 ---
@@ -55,7 +55,7 @@ description: version history and release notes
 
 ## Changelog page
 
-create `app/changelog/page.tsx`:
+Create `app/changelog/page.tsx`:
 
 ```tsx
 import { MDX } from "@/components/mdx";
@@ -83,9 +83,9 @@ export default function ChangelogPage() {
 }
 ```
 
-## Json-based changelog
+## JSON-based changelog
 
-alternatively, manage releases as json:
+Alternatively, manage releases as JSON:
 
 ```tsx
 const releases = [
@@ -123,9 +123,9 @@ export default function ChangelogPage() {
 }
 ```
 
-## rss feed
+## RSS feed
 
-add an rss feed for changelog subscribers at `app/changelog/feed.xml/route.ts`:
+Add an RSS feed for changelog subscribers at `app/changelog/feed.xml/route.ts`:
 
 ```tsx
 import { releases } from "@/lib/changelog";
@@ -162,7 +162,7 @@ export async function GET() {
 
 ## Navigation link
 
-add to your header or footer:
+Add to your header or footer:
 
 ```tsx
 <Link href="/changelog" className="text-muted hover:text-fg">
@@ -172,7 +172,7 @@ add to your header or footer:
 
 ## Version badge
 
-show current version in your docs:
+Show current version in your docs:
 
 ```tsx
 import { releases } from "@/lib/changelog";

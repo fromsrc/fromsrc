@@ -4,7 +4,7 @@ description: Visualize document relationships
 order: 11
 ---
 
-the graph component displays an interactive node graph for visualizing relationships between documents.
+The graph component displays an interactive node graph for visualizing relationships between documents.
 
 ## Usage
 
@@ -26,11 +26,11 @@ the graph component displays an interactive node graph for visualizing relations
 
 | prop        | type                        | default  | description                        |
 | ----------- | --------------------------- | -------- | ---------------------------------- |
-| nodes       | `GraphNode[]`               | required | array of nodes to display          |
-| links       | `GraphLink[]`               | required | array of connections between nodes |
-| onNodeClick | `(node: GraphNode) => void` | -        | callback when a node is clicked    |
-| width       | `number`                    | 600      | canvas width                       |
-| height      | `number`                    | 400      | canvas height                      |
+| nodes       | `GraphNode[]`               | required | Array of nodes to display          |
+| links       | `GraphLink[]`               | required | Array of connections between nodes |
+| onNodeClick | `(node: GraphNode) => void` | -        | Callback when a node is clicked    |
+| width       | `number`                    | 600      | Canvas width                       |
+| height      | `number`                    | 400      | Canvas height                      |
 
 ## Types
 
@@ -49,7 +49,7 @@ interface GraphLink {
 
 ## Navigation
 
-use onNodeClick to navigate to pages:
+Use onNodeClick to navigate to pages:
 
 ```text
 <Graph

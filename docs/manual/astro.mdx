@@ -1,16 +1,16 @@
 ---
 title: Astro
-description: Configure fromsrc in astro apps
+description: Configure fromsrc in Astro apps
 ---
 
-install dependencies:
+Install dependencies:
 
 ```bash
 bun add fromsrc marked
 bun add -D astro
 ```
 
-use a docs route that reads mdx as raw text and renders html:
+Use a docs route that reads MDX as raw text and renders HTML:
 
 ```astro
 ---
@@ -22,9 +22,9 @@ const html = String(marked.parse(doc))
 <article set:html={html} />
 ```
 
-for the default scaffold shape, redirect `/` to `/docs` in `src/pages/index.astro` and render the docs shell in `src/pages/docs.astro`.
+For the default scaffold shape, redirect `/` to `/docs` in `src/pages/index.astro` and render the docs shell in `src/pages/docs.astro`.
 
-if you need adapter-level control for component wiring, use the astro adapter:
+If you need adapter-level control for component wiring, use the Astro adapter:
 
 ```tsx
 import { AdapterProvider, astroAdapter } from "fromsrc/astro";
@@ -35,4 +35,4 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-keep markdown content in `content/docs/` so navigation and ai endpoints stay aligned across frameworks.
+Keep markdown content in `content/docs/` so navigation and AI endpoints stay aligned across frameworks.

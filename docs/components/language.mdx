@@ -4,7 +4,7 @@ description: Language switcher for internationalized docs
 order: 12
 ---
 
-the language switch component provides a dropdown for switching between locales in internationalized documentation.
+The language switch component provides a dropdown for switching between locales in internationalized documentation.
 
 ## Usage
 
@@ -24,9 +24,9 @@ the language switch component provides a dropdown for switching between locales 
 
 | prop     | type                     | description                  |
 | -------- | ------------------------ | ---------------------------- |
-| current  | `string`                 | current locale code          |
-| locales  | `Locale[]`               | available locales            |
-| onChange | `(code: string) => void` | callback when locale changes |
+| current  | `string`                 | Current locale code          |
+| locales  | `Locale[]`               | Available locales            |
+| onChange | `(code: string) => void` | Callback when locale changes |
 
 ## Types
 
@@ -40,7 +40,7 @@ interface Locale {
 
 ## With routing
 
-integrate with your i18n routing:
+Integrate with your i18n routing:
 
 ```text
 "use client"
@@ -66,7 +66,7 @@ export function LocaleSwitcher() {
 
 ## Keyboard navigation
 
-the language switch supports full keyboard navigation:
+The language switch supports full keyboard navigation:
 
 - `Enter` or `Space` to open
 - `ArrowUp` / `ArrowDown` to navigate

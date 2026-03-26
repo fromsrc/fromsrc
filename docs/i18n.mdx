@@ -4,13 +4,13 @@ description: Internationalize your documentation
 order: 15
 ---
 
-support multiple languages in your documentation.
+Support multiple languages in your documentation.
 
 ## Content organization
 
 ### Separate folders
 
-organize translated content by locale:
+Organize translated content by locale:
 
 ```
 docs/
@@ -27,7 +27,7 @@ docs/
 
 ### File extensions
 
-use locale suffixes:
+Use locale suffixes:
 
 ```
 docs/
@@ -36,7 +36,7 @@ docs/
   index.de.mdx        # german
 ```
 
-## url patterns
+## URL patterns
 
 ### Subpath (recommended)
 
@@ -78,9 +78,9 @@ import { LanguageSwitch } from "fromsrc/client";
 />;
 ```
 
-## Rtl support
+## RTL support
 
-for right-to-left languages like arabic and hebrew:
+For right-to-left languages like Arabic and Hebrew:
 
 ```tsx
 <html dir={locale === "ar" ? "rtl" : "ltr"}>
@@ -95,7 +95,7 @@ for right-to-left languages like arabic and hebrew:
 
 ## Content loading
 
-load localized content dynamically:
+Load localized content dynamically:
 
 ```ts
 export async function getDocs(locale: string) {
@@ -106,7 +106,7 @@ export async function getDocs(locale: string) {
 
 ## Fallbacks
 
-fall back to default locale when translation missing:
+Fall back to default locale when translation missing:
 
 ```ts
 async function getDoc(locale: string, slug: string) {
@@ -141,7 +141,7 @@ bun run build
 
 ## Metadata
 
-localize page metadata:
+Localize page metadata:
 
 ```tsx
 export async function generateMetadata({ params }) {
@@ -161,7 +161,7 @@ export async function generateMetadata({ params }) {
 
 ## Search
 
-index each locale separately:
+Index each locale separately:
 
 ```ts
 const enIndex = createSearchIndex(enDocs);

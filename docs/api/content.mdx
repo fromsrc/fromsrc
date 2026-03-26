@@ -1,14 +1,14 @@
 ---
-title: Content api
+title: Content API
 description: Loading and querying documentation content
 order: 3
 ---
 
-utilities for loading mdx content from the filesystem.
+Utilities for loading MDX content from the filesystem.
 
 ## GetDoc
 
-load a single document by slug.
+Load a single document by slug.
 
 ```tsx
 import { getDoc } from "fromsrc";
@@ -27,19 +27,19 @@ if (doc) {
     dir: {
       type: "string",
       required: true,
-      description: "directory containing mdx files",
+      description: "Directory containing MDX files",
     },
     slug: {
       type: "string[]",
       required: true,
-      description: "path segments to the document",
+      description: "Path segments to the document",
     },
   }}
 />
 
 ### GetDoc returns
 
-returns `Doc | null`. null if the file doesn't exist.
+Returns `Doc | null`. Null if the file doesn't exist.
 
 ```typescript
 interface Doc {
@@ -54,7 +54,7 @@ interface Doc {
 
 ## GetAllDocs
 
-load metadata for all documents in a directory.
+Load metadata for all documents in a directory.
 
 ```tsx
 import { getAllDocs } from "fromsrc";
@@ -71,14 +71,14 @@ docs.forEach((doc) => {
     dir: {
       type: "string",
       required: true,
-      description: "directory to scan recursively",
+      description: "Directory to scan recursively",
     },
   }}
 />
 
 ### GetAllDocs returns
 
-returns `DocMeta[]` sorted by order field.
+Returns `DocMeta[]` sorted by order field.
 
 ```typescript
 interface DocMeta {
@@ -91,7 +91,7 @@ interface DocMeta {
 
 ## GetNavigation
 
-generate navigation structure from documents.
+Generate navigation structure from documents.
 
 ```tsx
 import { getNavigation } from "fromsrc";
@@ -104,11 +104,11 @@ const nav = await getNavigation("docs");
 // ]
 ```
 
-groups documents by first folder segment. top-level pages stay in one root section. section titles use `_meta.json` `title` when present.
+Groups documents by first folder segment. Top-level pages stay in one root section. Section titles use `_meta.json` `title` when present.
 
 ## DefineContent
 
-create a typed content loader with custom schema.
+Create a typed content loader with custom schema.
 
 ```tsx
 import { defineContent, extendSchema, z } from "fromsrc";
@@ -127,8 +127,8 @@ const doc = await content.getDoc(["installation"]);
 
 <TypeTable
   data={{
-    dir: { type: "string", required: true, description: "content directory" },
-    schema: { type: "ZodObject", description: "custom frontmatter schema" },
+    dir: { type: "string", required: true, description: "Content directory" },
+    schema: { type: "ZodObject", description: "Custom frontmatter schema" },
   }}
 />
 
@@ -147,7 +147,7 @@ interface ContentAPI {
 
 ### BaseSchema
 
-the default frontmatter schema.
+The default frontmatter schema.
 
 ```typescript
 const baseSchema = z.object({
@@ -159,7 +159,7 @@ const baseSchema = z.object({
 
 ### ExtendSchema
 
-extend the base schema with additional fields.
+Extend the base schema with additional fields.
 
 ```tsx
 import { extendSchema, z } from "fromsrc";
@@ -172,7 +172,7 @@ const schema = extendSchema({
 
 ### DefineSchema
 
-define a completely custom schema (not extending base).
+Define a completely custom schema (not extending base).
 
 ```tsx
 import { defineSchema, z } from "fromsrc";

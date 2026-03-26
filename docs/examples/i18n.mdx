@@ -4,7 +4,7 @@ description: Internationalize your docs
 order: 9
 ---
 
-serve documentation in multiple languages.
+Serve documentation in multiple languages.
 
 ## Folder structure
 
@@ -27,7 +27,7 @@ serve documentation in multiple languages.
 
 ## Content loader
 
-create locale-aware content:
+Create locale-aware content:
 
 ```tsx
 import { defineContent, z } from "fromsrc";
@@ -54,7 +54,7 @@ export const zh = createLocalizedContent("zh");
 
 ## Route structure
 
-use next.js dynamic segments:
+Use Next.js dynamic segments:
 
 <Files>
   <Folder name="app" defaultOpen>
@@ -155,7 +155,7 @@ export function LocaleSwitcher() {
 
 ## Proxy configuration
 
-redirect based on accept-language header:
+Redirect based on accept-language header:
 
 ```tsx
 import { NextRequest } from "next/server";
@@ -182,7 +182,7 @@ export async function proxy(request: NextRequest) {
 
 ## Translations file
 
-store ui strings separately:
+Store UI strings separately:
 
 ```tsx
 const translations = {
@@ -233,9 +233,9 @@ export async function generateMetadata({ params }: Props) {
 }
 ```
 
-## Rtl support
+## RTL support
 
-handle right-to-left languages:
+Handle right-to-left languages:
 
 ```tsx
 const rtlLocales = ["ar", "he", "fa"];

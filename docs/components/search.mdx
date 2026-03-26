@@ -4,7 +4,7 @@ description: Fast client-side search
 order: 10
 ---
 
-instant search with cmd+k support.
+Instant search with cmd+k support.
 
 ## Usage
 
@@ -26,11 +26,11 @@ const docs = await getAllDocs()
 
 ## Features
 
-- fuzzy matching
-- ranked results
-- title and description search
-- keyboard navigation
-- responsive modal
+- Fuzzy matching
+- Ranked results
+- Title and description search
+- Keyboard navigation
+- Responsive modal
 
 ## Props
 
@@ -39,62 +39,62 @@ const docs = await getAllDocs()
     docs: {
       type: "DocMeta[]",
       required: true,
-      description: "array of docs to search",
+      description: "Array of docs to search",
     },
     basePath: {
       type: "string",
       default: "/docs",
-      description: "base path for result links",
+      description: "Base path for result links",
     },
     hidden: {
       type: "boolean",
       default: "false",
-      description: "hide trigger button, only show modal",
+      description: "Hide trigger button, only show modal",
     },
     adapter: {
       type: "SearchAdapter",
       default: "localSearch",
-      description: "custom search adapter",
+      description: "Custom search adapter",
     },
     debounce: {
       type: "number",
       default: "100",
-      description: "debounce delay in milliseconds",
+      description: "Debounce delay in milliseconds",
     },
   }}
 />
 
 ## How it works
 
-search runs entirely client-side using fuzzy matching. when the component mounts, it indexes all doc titles and descriptions.
+Search runs entirely client-side using fuzzy matching. When the component mounts, it indexes all doc titles and descriptions.
 
 <Steps>
 <Step>
 
 ### Indexing
 
-docs are indexed on mount. each doc's title and description are tokenized for matching.
+Docs are indexed on mount. Each doc's title and description are tokenized for matching.
 
 </Step>
 <Step>
 
 ### Matching
 
-user input is matched against tokens using fuzzy matching with typo tolerance.
+User input is matched against tokens using fuzzy matching with typo tolerance.
 
 </Step>
 <Step>
 
 ### Ranking
 
-results are ranked by relevance. title matches score higher than description matches.
+Results are ranked by relevance. Title matches score higher than description matches.
 
 </Step>
 </Steps>
 
 ## Search adapter
 
-create custom search adapters for external services or advanced search.
+Create custom search adapters for external services or advanced search.
 
 ### Interface
 
@@ -150,7 +150,7 @@ const algoliaAdapter = createSearchAdapter({
 
 ### Placeholder text
 
-wrap the search component to customize the placeholder:
+Wrap the search component to customize the placeholder:
 
 ```tsx
 <div className="[&_input]:placeholder:text-dim">
@@ -160,7 +160,7 @@ wrap the search component to customize the placeholder:
 
 ### Styling
 
-search uses semantic color variables that adapt to your theme:
+Search uses semantic color variables that adapt to your theme:
 
 - `--color-bg` - modal background
 - `--color-surface` - input background
@@ -170,9 +170,9 @@ search uses semantic color variables that adapt to your theme:
 
 ## Performance
 
-search is optimized for docs sites up to thousands of pages:
+Search is optimized for docs sites up to thousands of pages:
 
-- local or hosted adapter support
-- debounced input handling
-- virtual scrolling for large result sets
-- minimal bundle size
+- Local or hosted adapter support
+- Debounced input handling
+- Virtual scrolling for large result sets
+- Minimal bundle size

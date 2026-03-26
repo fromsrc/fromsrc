@@ -4,11 +4,11 @@ description: Form input components
 order: 60
 ---
 
-form components for collecting user input.
+Form components for collecting user input.
 
 ## Input
 
-text input with label, error, and hint support.
+Text input with label, error, and hint support.
 
 ### Usage
 
@@ -38,22 +38,22 @@ import { Input } from "fromsrc/client";
 
 ### With tooltip
 
-<Input label="api key" tooltip="find this in your dashboard settings" />
+<Input label="API key" tooltip="Find this in your dashboard settings" />
 
 ### Props
 
 | prop    | type                 | default   | description              |
 | ------- | -------------------- | --------- | ------------------------ |
-| variant | "default" \| "error" | "default" | visual style             |
-| size    | "sm" \| "md" \| "lg" | "md"      | input size               |
-| label   | ReactNode            | -         | accessible label         |
-| error   | ReactNode            | -         | error message            |
-| hint    | ReactNode            | -         | helper text              |
-| tooltip | ReactNode            | -         | help text shown on hover |
+| variant | "default" \| "error" | "default" | Visual style             |
+| size    | "sm" \| "md" \| "lg" | "md"      | Input size               |
+| label   | ReactNode            | -         | Accessible label         |
+| error   | ReactNode            | -         | Error message            |
+| hint    | ReactNode            | -         | Helper text              |
+| tooltip | ReactNode            | -         | Help text shown on hover |
 
 ## Button
 
-interactive button with loading state.
+Interactive button with loading state.
 
 ### Usage
 
@@ -92,13 +92,13 @@ import { Button } from "fromsrc/client";
 
 | prop    | type                                          | default   | description          |
 | ------- | --------------------------------------------- | --------- | -------------------- |
-| variant | "default" \| "primary" \| "ghost" \| "danger" | "default" | visual style         |
-| size    | "sm" \| "md" \| "lg"                          | "md"      | button size          |
-| loading | boolean                                       | false     | show loading spinner |
+| variant | "default" \| "primary" \| "ghost" \| "danger" | "default" | Visual style         |
+| size    | "sm" \| "md" \| "lg"                          | "md"      | Button size          |
+| loading | boolean                                       | false     | Show loading spinner |
 
 ## Select
 
-dropdown select with keyboard navigation.
+Dropdown select with keyboard navigation.
 
 ### Usage
 
@@ -170,27 +170,27 @@ import { Select } from "fromsrc/client";
 
 | prop         | type                    | default     | description              |
 | ------------ | ----------------------- | ----------- | ------------------------ |
-| options      | SelectOption[]          | required    | list of options          |
-| value        | string                  | -           | controlled value         |
-| defaultValue | string                  | ""          | uncontrolled default     |
-| onChange     | (value: string) => void | -           | change callback          |
-| placeholder  | string                  | "select..." | placeholder text         |
-| disabled     | boolean                 | false       | disable select           |
-| error        | ReactNode               | -           | error message            |
-| label        | ReactNode               | -           | accessible label         |
-| tooltip      | ReactNode               | -           | help text shown on hover |
+| options      | SelectOption[]          | required    | List of options          |
+| value        | string                  | -           | Controlled value         |
+| defaultValue | string                  | ""          | Uncontrolled default     |
+| onChange     | (value: string) => void | -           | Change callback          |
+| placeholder  | string                  | "select..." | Placeholder text         |
+| disabled     | boolean                 | false       | Disable select           |
+| error        | ReactNode               | -           | Error message            |
+| label        | ReactNode               | -           | Accessible label         |
+| tooltip      | ReactNode               | -           | Help text shown on hover |
 
 ### SelectOption
 
 | prop     | type    | default  | description    |
 | -------- | ------- | -------- | -------------- |
-| value    | string  | required | option value   |
-| label    | string  | required | display text   |
-| disabled | boolean | false    | disable option |
+| value    | string  | required | Option value   |
+| label    | string  | required | Display text   |
+| disabled | boolean | false    | Disable option |
 
 ## Checkbox
 
-checkbox input with label and indeterminate state.
+Checkbox input with label and indeterminate state.
 
 ### Usage
 
@@ -226,15 +226,15 @@ import { Checkbox } from "fromsrc/client";
 
 | prop          | type                 | default | description              |
 | ------------- | -------------------- | ------- | ------------------------ |
-| label         | ReactNode            | -       | accessible label         |
-| size          | "sm" \| "md" \| "lg" | "md"    | checkbox size            |
-| indeterminate | boolean              | false   | show indeterminate state |
-| error         | ReactNode            | -       | error message            |
-| tooltip       | ReactNode            | -       | help text shown on hover |
+| label         | ReactNode            | -       | Accessible label         |
+| size          | "sm" \| "md" \| "lg" | "md"    | Checkbox size            |
+| indeterminate | boolean              | false   | Show indeterminate state |
+| error         | ReactNode            | -       | Error message            |
+| tooltip       | ReactNode            | -       | Help text shown on hover |
 
 ## Switch
 
-toggle switch for boolean values.
+Toggle switch for boolean values.
 
 ### Usage
 
@@ -270,16 +270,16 @@ function Example() {
 
 | prop     | type                       | default | description              |
 | -------- | -------------------------- | ------- | ------------------------ |
-| checked  | boolean                    | false   | whether switch is on     |
-| onChange | (checked: boolean) => void | -       | toggle callback          |
-| size     | "sm" \| "md" \| "lg"       | "md"    | switch size              |
-| label    | string                     | -       | accessible label         |
-| disabled | boolean                    | false   | disable switch           |
-| tooltip  | ReactNode                  | -       | help text shown on hover |
+| checked  | boolean                    | false   | Whether switch is on     |
+| onChange | (checked: boolean) => void | -       | Toggle callback          |
+| size     | "sm" \| "md" \| "lg"       | "md"    | Switch size              |
+| label    | string                     | -       | Accessible label         |
+| disabled | boolean                    | false   | Disable switch           |
+| tooltip  | ReactNode                  | -       | Help text shown on hover |
 
 ## Autofill
 
-search input with autocomplete suggestions.
+Search input with autocomplete suggestions.
 
 ### Usage
 
@@ -315,33 +315,33 @@ import { Autofill } from "fromsrc/client";
 
 ### Features
 
-- filters as you type
-- keyboard navigation with arrow keys
+- Filters as you type
+- Keyboard navigation with arrow keys
 - `Enter` to select highlighted item
 - `Escape` to close suggestions
-- closes on outside click
+- Closes on outside click
 
 ### Props
 
 | prop        | type                         | default     | description           |
 | ----------- | ---------------------------- | ----------- | --------------------- |
-| items       | AutofillItem[]               | required    | list of suggestions   |
-| placeholder | string                       | "search..." | placeholder text      |
-| value       | string                       | -           | controlled value      |
-| onChange    | (value: string) => void      | -           | input change callback |
-| onSelect    | (item: AutofillItem) => void | -           | selection callback    |
+| items       | AutofillItem[]               | required    | List of suggestions   |
+| placeholder | string                       | "search..." | Placeholder text      |
+| value       | string                       | -           | Controlled value      |
+| onChange    | (value: string) => void      | -           | Input change callback |
+| onSelect    | (item: AutofillItem) => void | -           | Selection callback    |
 
 ### AutofillItem
 
 | prop  | type   | default  | description                             |
 | ----- | ------ | -------- | --------------------------------------- |
-| id    | string | required | unique identifier                       |
-| label | string | required | display text                            |
-| value | string | -        | value when selected (defaults to label) |
+| id    | string | required | Unique identifier                       |
+| label | string | required | Display text                            |
+| value | string | -        | Value when selected (defaults to label) |
 
 ## Radio
 
-radio button group for selecting one option from a set.
+Radio button group for selecting one option from a set.
 
 ### Usage
 
@@ -397,26 +397,26 @@ import { Radio, RadioGroup } from "fromsrc/client";
 
 | prop         | type                       | default    | description                   |
 | ------------ | -------------------------- | ---------- | ----------------------------- |
-| value        | string                     | -          | controlled value              |
-| defaultValue | string                     | -          | uncontrolled default          |
-| onChange     | (value: string) => void    | -          | change callback               |
-| name         | string                     | -          | form field name               |
-| size         | "sm" \| "md" \| "lg"       | "md"       | radio size                    |
-| label        | string                     | -          | group label for accessibility |
-| orientation  | "horizontal" \| "vertical" | "vertical" | layout direction              |
-| disabled     | boolean                    | false      | disable all radios            |
+| value        | string                     | -          | Controlled value              |
+| defaultValue | string                     | -          | Uncontrolled default          |
+| onChange     | (value: string) => void    | -          | Change callback               |
+| name         | string                     | -          | Form field name               |
+| size         | "sm" \| "md" \| "lg"       | "md"       | Radio size                    |
+| label        | string                     | -          | Group label for accessibility |
+| orientation  | "horizontal" \| "vertical" | "vertical" | Layout direction              |
+| disabled     | boolean                    | false      | Disable all radios            |
 
 ### Radio props
 
 | prop     | type      | default  | description                  |
 | -------- | --------- | -------- | ---------------------------- |
-| value    | string    | required | unique value for this option |
-| label    | ReactNode | -        | accessible label             |
-| disabled | boolean   | false    | disable this radio           |
+| value    | string    | required | Unique value for this option |
+| label    | ReactNode | -        | Accessible label             |
+| disabled | boolean   | false    | Disable this radio           |
 
 ## Textarea
 
-multi-line text input with autoresize and character count.
+Multi-line text input with autoresize and character count.
 
 ### Usage
 
@@ -465,12 +465,12 @@ import { Textarea } from "fromsrc/client";
 
 | prop       | type                 | default   | description                  |
 | ---------- | -------------------- | --------- | ---------------------------- |
-| variant    | "default" \| "error" | "default" | visual style                 |
-| size       | "sm" \| "md" \| "lg" | "md"      | textarea size                |
-| label      | ReactNode            | -         | accessible label             |
-| error      | ReactNode            | -         | error message                |
-| hint       | ReactNode            | -         | helper text                  |
-| autoresize | boolean              | false     | auto-resize based on content |
-| maxLength  | number               | -         | maximum character count      |
-| showCount  | boolean              | false     | show character count         |
-| tooltip    | ReactNode            | -         | help text shown on hover     |
+| variant    | "default" \| "error" | "default" | Visual style                 |
+| size       | "sm" \| "md" \| "lg" | "md"      | Textarea size                |
+| label      | ReactNode            | -         | Accessible label             |
+| error      | ReactNode            | -         | Error message                |
+| hint       | ReactNode            | -         | Helper text                  |
+| autoresize | boolean              | false     | Auto-resize based on content |
+| maxLength  | number               | -         | Maximum character count      |
+| showCount  | boolean              | false     | Show character count         |
+| tooltip    | ReactNode            | -         | Help text shown on hover     |

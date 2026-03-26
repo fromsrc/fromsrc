@@ -4,7 +4,7 @@ description: Dialog overlay for focused content
 order: 64
 ---
 
-displays content in a focused overlay dialog.
+Displays content in a focused overlay dialog.
 
 ## Usage
 
@@ -28,7 +28,7 @@ function Example() {
 
 ## With title
 
-modal with a header showing title and close button.
+Modal with a header showing title and close button.
 
 ```tsx
 <Modal open={open} onClose={onClose} title="settings">
@@ -38,7 +38,7 @@ modal with a header showing title and close button.
 
 ## Without title
 
-omit the title for custom layouts.
+Omit the title for custom layouts.
 
 ```tsx
 <Modal open={open} onClose={onClose}>
@@ -50,15 +50,15 @@ omit the title for custom layouts.
 
 | prop     | type       | default  | description                |
 | -------- | ---------- | -------- | -------------------------- |
-| open     | boolean    | required | whether modal is visible   |
-| onClose  | () => void | required | callback when modal closes |
-| title    | string     | -        | optional title in header   |
-| children | ReactNode  | required | modal content              |
+| open     | boolean    | required | Whether modal is visible   |
+| onClose  | () => void | required | Callback when modal closes |
+| title    | string     | -        | Optional title in header   |
+| children | ReactNode  | required | Modal content              |
 
 ## Features
 
-- closes on escape key
-- closes on backdrop click
-- prevents body scroll while open
-- blurred backdrop overlay
-- accessible with aria dialog role
+- Closes on escape key
+- Closes on backdrop click
+- Prevents body scroll while open
+- Blurred backdrop overlay
+- Accessible with ARIA dialog role

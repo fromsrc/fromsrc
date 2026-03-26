@@ -4,11 +4,11 @@ description: Hover-triggered info popups
 order: 61
 ---
 
-display additional information on hover.
+Display additional information on hover.
 
 ## Hoverinfo
 
-show type or value hints on hover.
+Show type or value hints on hover.
 
 ```mdx
 <HoverInfo info="string">name</HoverInfo>
@@ -23,13 +23,13 @@ hover over: <HoverInfo info="string">name</HoverInfo> or <HoverInfo info="42" ty
 
 ### Type
 
-default style for type annotations.
+Default style for type annotations.
 
 <HoverInfo info="number">age</HoverInfo>
 
 ### Value
 
-for displaying values.
+For displaying values.
 
 <HoverInfo info="true" type="value">
   enabled
@@ -37,7 +37,7 @@ for displaying values.
 
 ### Error
 
-for error states.
+For error states.
 
 <HoverInfo info="null reference" type="error">
   data
@@ -45,7 +45,7 @@ for error states.
 
 ## Typepopup
 
-for richer hover content with custom formatting.
+For richer hover content with custom formatting.
 
 ```mdx
 <TypePopup
@@ -77,13 +77,13 @@ for richer hover content with custom formatting.
 
 | prop     | type                         | default  | description     |
 | -------- | ---------------------------- | -------- | --------------- |
-| children | ReactNode                    | required | trigger element |
-| info     | string                       | required | text to display |
-| type     | "type" \| "value" \| "error" | "type"   | color style     |
+| children | ReactNode                    | required | Trigger element |
+| info     | string                       | required | Text to display |
+| type     | "type" \| "value" \| "error" | "type"   | Color style     |
 
 ### Typepopup
 
 | prop    | type      | default  | description   |
 | ------- | --------- | -------- | ------------- |
-| trigger | ReactNode | required | hover trigger |
-| content | ReactNode | required | popup content |
+| trigger | ReactNode | required | Hover trigger |
+| content | ReactNode | required | Popup content |

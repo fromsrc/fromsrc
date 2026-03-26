@@ -4,21 +4,21 @@ description: Deploy your documentation site
 order: 14
 ---
 
-deploy fromsrc documentation to any platform.
+Deploy fromsrc documentation to any platform.
 
 ## Vercel
 
-zero-config deployment:
+Zero-config deployment:
 
 ```bash
 vercel
 ```
 
-or connect your github repo at vercel.com/new.
+Or connect your GitHub repo at vercel.com/new.
 
 ### Environment variables
 
-set in vercel dashboard or `.env`:
+Set in Vercel dashboard or `.env`:
 
 ```env
 NEXT_PUBLIC_SITE_URL=https://docs.example.com
@@ -41,7 +41,7 @@ netlify deploy --prod
   package = "@netlify/plugin-nextjs"
 ```
 
-## Cloudflare pages
+## Cloudflare Pages
 
 ```bash
 npx wrangler pages deploy .next
@@ -56,7 +56,7 @@ compatibility_date = "2026-01-01"
 
 ## Static export
 
-generate static html for any host:
+Generate static HTML for any host:
 
 ```ts
 // next.config.ts
@@ -69,12 +69,12 @@ export default {
 bun run build
 ```
 
-deploy the `out/` folder to any static host:
+Deploy the `out/` folder to any static host:
 
-- github pages
-- s3 + cloudfront
+- GitHub Pages
+- S3 + CloudFront
 - nginx
-- apache
+- Apache
 
 ## Docker
 
@@ -97,7 +97,7 @@ EXPOSE 3000
 CMD ["bun", "run", "start"]
 ```
 
-### Docker compose
+### Docker Compose
 
 ```yaml
 services:
@@ -120,13 +120,13 @@ export default {
 };
 ```
 
-outputs minimal files needed to run:
+Outputs minimal files needed to run:
 
 ```bash
 node .next/standalone/server.js
 ```
 
-### Pm2
+### PM2
 
 ```bash
 pm2 start .next/standalone/server.js --name docs
@@ -134,15 +134,15 @@ pm2 start .next/standalone/server.js --name docs
 
 ## Custom domain
 
-### dns configuration
+### DNS configuration
 
 ```
 docs.example.com  CNAME  your-host.com
 ```
 
-### ssl
+### SSL
 
-most platforms handle ssl automatically. for self-hosted:
+Most platforms handle SSL automatically. For self-hosted:
 
 ```bash
 certbot --nginx -d docs.example.com

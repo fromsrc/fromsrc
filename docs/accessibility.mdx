@@ -4,11 +4,11 @@ description: Accessible documentation for all users
 order: 16
 ---
 
-fromsrc components follow wcag 2.1 guidelines.
+fromsrc components follow WCAG 2.1 guidelines.
 
-## aria attributes
+## ARIA attributes
 
-all interactive components include appropriate aria attributes:
+All interactive components include appropriate ARIA attributes:
 
 | component | attributes                                                                   |
 | --------- | ---------------------------------------------------------------------------- |
@@ -21,11 +21,11 @@ all interactive components include appropriate aria attributes:
 | alert     | `role="alert"`                                                               |
 | tabs      | `role="tablist"`, `role="tab"`, `aria-selected`                              |
 
-decorative icons use `aria-hidden="true"` to be ignored by screen readers.
+Decorative icons use `aria-hidden="true"` to be ignored by screen readers.
 
 ## Keyboard navigation
 
-interactive components support full keyboard control:
+Interactive components support full keyboard control:
 
 | key           | action                                |
 | ------------- | ------------------------------------- |
@@ -36,24 +36,24 @@ interactive components support full keyboard control:
 | Cmd/Ctrl+K    | open search                           |
 
 <Callout type="tip">
-  the search component keeps keyboard navigation without extra hint chrome in
+  The search component keeps keyboard navigation without extra hint chrome in
   the modal.
 </Callout>
 
 ## Focus management
 
-focus is managed automatically:
+Focus is managed automatically:
 
-- modals trap focus within the dialog
-- dropdowns return focus to trigger on close
-- search input receives focus when opened
-- skip links allow jumping to main content
+- Modals trap focus within the dialog
+- Dropdowns return focus to trigger on close
+- Search input receives focus when opened
+- Skip links allow jumping to main content
 
-all focusable elements have visible focus indicators using the `outline` style.
+All focusable elements have visible focus indicators using the `outline` style.
 
 ## Screen readers
 
-components announce state changes:
+Components announce state changes:
 
 - `aria-expanded` indicates open/closed state
 - `aria-selected` indicates current selection
@@ -61,13 +61,13 @@ components announce state changes:
 - `aria-label` provides accessible names for icon buttons
 
 <Callout type="info">
-  use semantic html (headings, lists, landmarks) in your content for better
+  Use semantic HTML (headings, lists, landmarks) in your content for better
   navigation.
 </Callout>
 
 ## Color contrast
 
-the default theme meets wcag aa standards:
+The default theme meets WCAG AA standards:
 
 | pair         | contrast ratio |
 | ------------ | -------------- |
@@ -76,13 +76,13 @@ the default theme meets wcag aa standards:
 | accent on bg | 5.3:1          |
 
 <Callout type="warning">
-  custom themes should maintain at least 4.5:1 contrast for text and 3:1 for ui
+  Custom themes should maintain at least 4.5:1 contrast for text and 3:1 for UI
   components.
 </Callout>
 
 ### Testing contrast
 
-use browser devtools or online tools to verify:
+Use browser devtools or online tools to verify:
 
 ```bash
 # lighthouse accessibility audit
@@ -91,8 +91,8 @@ npx lighthouse http://localhost:3000 --only-categories=accessibility
 
 ## Best practices
 
-- use descriptive link text (not "click here")
-- provide alt text for meaningful images
-- maintain heading hierarchy (h1, h2, h3)
-- ensure form inputs have labels
-- avoid motion for users with vestibular disorders
+- Use descriptive link text (not "click here")
+- Provide alt text for meaningful images
+- Maintain heading hierarchy (h1, h2, h3)
+- Ensure form inputs have labels
+- Avoid motion for users with vestibular disorders

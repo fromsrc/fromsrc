@@ -1,5 +1,5 @@
 ---
-title: Collections api
+title: Collections API
 description: Typed content collections with zod schemas
 order: 4
 ---
@@ -8,7 +8,7 @@ order: 4
 
 ## DefineCollection
 
-create one typed collection.
+Create one typed collection.
 
 ```tsx
 import { defineCollection, z } from "fromsrc";
@@ -27,7 +27,7 @@ const posts = defineCollection({
 
 ## DefineCollections
 
-create multiple collections in one call.
+Create multiple collections in one call.
 
 ```tsx
 import { defineCollections, z } from "fromsrc";
@@ -52,9 +52,9 @@ const collections = defineCollections({
 });
 ```
 
-## Returned api
+## Returned API
 
-collection instances expose:
+Collection instances expose:
 
 - `getAll()`
 - `get(slug)`
@@ -73,7 +73,7 @@ const byDate = await posts.sort("publishedAt", "desc");
 
 ## Type inference
 
-schema fields are inferred through zod.
+Schema fields are inferred through zod.
 
 ```tsx
 const first = (await posts.getAll())[0];
@@ -85,6 +85,6 @@ if (first) {
 
 ## Notes
 
-- files are scanned recursively under `dir`
-- slugs are file-path based (`nested/page.mdx` -> `nested/page`)
-- frontmatter is validated with `schema.parse`
+- Files are scanned recursively under `dir`
+- Slugs are file-path based (`nested/page.mdx` -> `nested/page`)
+- Frontmatter is validated with `schema.parse`

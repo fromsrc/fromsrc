@@ -4,7 +4,7 @@ description: Configure and customize search
 order: 8
 ---
 
-add fast full-text search to your documentation.
+Add fast full-text search to your documentation.
 
 ## Basic setup
 
@@ -25,7 +25,7 @@ export function Header() {
 
 ## Search index
 
-generate the search index at build time:
+Generate the search index at build time:
 
 ```tsx
 import { getSearchDocs } from "fromsrc";
@@ -38,7 +38,7 @@ export async function GET() {
 
 ## Keyboard shortcut
 
-open search with cmd+k:
+Open search with cmd+k:
 
 ```tsx
 "use client";
@@ -140,9 +140,9 @@ export function SearchDialog({ onClose }: Props) {
 }
 ```
 
-## orama integration
+## Orama integration
 
-use the built-in orama adapter for hosted search:
+Use the built-in Orama adapter for hosted search:
 
 ```tsx
 import { createOramaAdapter } from "fromsrc/orama"
@@ -155,9 +155,9 @@ const adapter = createOramaAdapter({
 <Search docs={docs} adapter={adapter} />
 ```
 
-## algolia integration
+## Algolia integration
 
-use the built-in algolia adapter:
+Use the built-in Algolia adapter:
 
 ```tsx
 import algoliasearch from "algoliasearch";
@@ -190,7 +190,7 @@ export async function indexDocs(docs: Doc[]) {
 
 ## Search filters
 
-filter by section or category:
+Filter by section or category:
 
 ```tsx
 const filters = [
@@ -223,7 +223,7 @@ export function SearchFilters({ selected, onSelect }) {
 
 ## Recent searches
 
-save and display recent searches:
+Save and display recent searches:
 
 ```tsx
 "use client";

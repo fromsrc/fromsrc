@@ -1,15 +1,15 @@
 ---
 title: Remix
-description: Configure fromsrc in remix apps
+description: Configure fromsrc in Remix apps
 ---
 
-install dependencies:
+Install dependencies:
 
 ```bash
 bun add fromsrc @remix-run/react
 ```
 
-wire the adapter:
+Wire the adapter:
 
 ```tsx
 import { AdapterProvider, remixAdapter } from "fromsrc/remix";
@@ -20,4 +20,4 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-mount in your root route component and use `fromsrc` content helpers in loader functions for docs pages and search data.
+Mount in your root route component and use `fromsrc` content helpers in loader functions for docs pages and search data.
