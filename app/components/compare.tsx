@@ -1,91 +1,56 @@
-const principles = [
-  {
-    desc: "small pieces that combine freely. no monolithic architecture.",
-    id: "1.1",
-    title: "composable",
-  },
-  {
-    desc: "change anything without fighting the framework.",
-    id: "1.2",
-    title: "editable",
-  },
-  {
-    desc: "swap any component, style, or behavior.",
-    id: "1.3",
-    title: "customizable",
-  },
-  {
-    desc: "incremental builds only. scales to thousands of files.",
-    id: "1.4",
-    title: "optimized",
-  },
-];
-
-const benefits = [
-  "direct component access in mdx",
-  "incremental builds only",
-  "llms.txt + mcp built-in",
-  "sub-20ms search",
-  "scales to 3k+ files",
-  "open source forever",
-];
+import Link from "next/link";
 
 export function Compare() {
   return (
-    <section id="why" className="py-24 border-t border-line">
-      <div className="mx-auto max-w-5xl px-6">
-        <header className="grid lg:grid-cols-[200px,1fr] gap-12 mb-16">
-          <div>
-            <span className="text-dim text-xs">01</span>
-            <h2 className="text-xl mt-1">why fromsrc</h2>
+    <section id="why" className="mx-6 min-[1024px]:mx-10">
+      <div className="bg-[#201c18] text-[#f2ece4] relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(242,236,228,0.5) 1px, transparent 1px)",
+            backgroundSize: "14px 14px",
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="relative flex flex-col min-[1024px]:flex-row">
+          <div className="p-10 min-[1024px]:p-16 min-[1024px]:w-[55%]">
+            <h2 className="font-serif text-[2.5rem] min-[1024px]:text-[3.2rem] leading-[1.15] tracking-tight mb-8">
+              Built for scale,
+              <br />
+              designed for devs.
+            </h2>
+
+            <p className="text-[#f2ece4]/50 text-sm leading-relaxed max-w-md mb-12" style={{ fontFamily: "var(--font-serif)" }}>
+              Incremental builds that don't crash at 3,000 pages.
+              Direct component imports in MDX. AI endpoints on every page.
+              Everything you need, nothing you don't.
+            </p>
+
+            <Link
+              href="/docs"
+              className="inline-block border border-[#f2ece4]/40 px-6 py-2.5 text-[10px] uppercase tracking-[0.2em] text-[#f2ece4]/80 hover:bg-[#f2ece4]/10 hover:border-[#f2ece4]/60 transition-all duration-200"
+            >
+              explore the docs
+            </Link>
           </div>
-          <p className="text-muted max-w-xl">
-            Documentation should be as flexible as the code it describes. We
-            built fromsrc around four principles.
+
+          <div className="min-[1024px]:flex-1 relative min-h-[300px]">
+            <div
+              className="absolute inset-0 opacity-[0.12]"
+              style={{
+                backgroundImage: "radial-gradient(circle, rgba(242,236,228,0.4) 1.5px, transparent 1.5px)",
+                backgroundSize: "12px 12px",
+              }}
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+
+        <div className="border-t border-[#f2ece4]/10 px-10 min-[1024px]:px-16 py-5">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#f2ece4]/30 text-center">
+            next.js · vite · astro · react router · tanstack · remix · any react framework
           </p>
-        </header>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="rounded-2xl bg-surface border border-line p-6">
-            <div className="text-xs text-muted uppercase tracking-widest mb-6">
-              principles
-            </div>
-            <ul>
-              {principles.map((p) => (
-                <li
-                  key={p.id}
-                  className="flex items-start gap-4 py-4 border-b border-line last:border-0"
-                >
-                  <span className="text-dim text-xs tabular-nums w-6">
-                    {p.id}
-                  </span>
-                  <div className="flex-1">
-                    <span className="text-fg">{p.title}</span>
-                    <p className="text-muted text-xs mt-1">{p.desc}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="rounded-2xl border border-line p-6 bg-gradient-to-br from-surface to-bg">
-            <div className="text-xs text-accent uppercase tracking-widest mb-6">
-              what you get
-            </div>
-            <ul>
-              {benefits.map((b) => (
-                <li
-                  key={b}
-                  className="flex items-center gap-4 py-4 border-b border-line last:border-0"
-                >
-                  <span className="text-accent" aria-hidden="true">
-                    +
-                  </span>
-                  <span className="text-fg">{b}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
     </section>

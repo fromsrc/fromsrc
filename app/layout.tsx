@@ -1,22 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { DM_Mono, Playfair_Display } from "next/font/google";
 import type { ReactNode } from "react";
 
 import "katex/dist/katex.min.css";
 import "./globals.css";
 import { siteurl } from "./_lib/site";
 
-const mono = JetBrains_Mono({
+const mono = DM_Mono({
   display: "swap",
   subsets: ["latin"],
   variable: "--font-mono",
+  weight: ["300", "400", "500"],
 });
 
-const serif = Instrument_Serif({
+const serif = Playfair_Display({
   display: "swap",
   subsets: ["latin"],
   variable: "--font-serif",
-  weight: "400",
+  weight: ["400", "500", "600"],
 });
 
 const site = siteurl();
@@ -51,7 +52,7 @@ export const viewport: Viewport = {
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${mono.variable} ${serif.variable}`}>
+      <body className={`${mono.variable} ${serif.variable} bg-bg text-fg`} suppressHydrationWarning>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-surface focus:text-fg focus:border focus:border-line focus:rounded-md focus:text-sm"
