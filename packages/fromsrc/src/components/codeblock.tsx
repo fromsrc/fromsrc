@@ -158,9 +158,9 @@ export const CodeBlock = memo(function CodeBlock({
       aria-label={hasheader ? label : undefined}
       data-line-numbers={lines || undefined}
       style={{
-        backgroundColor: "#0d0d0d",
-        border: "1px solid #1c1c1c",
-        borderRadius: "8px",
+        backgroundColor: "#0a0a0a",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: "12px",
         margin: "24px 0",
         overflow: "hidden",
         position: "relative",
@@ -171,8 +171,8 @@ export const CodeBlock = memo(function CodeBlock({
         <div
           style={{
             alignItems: "center",
-            backgroundColor: "#141414",
-            borderBottom: "1px solid #1c1c1c",
+            backgroundColor: "rgba(255,255,255,0.02)",
+            borderBottom: "1px solid rgba(255,255,255,0.06)",
             display: "flex",
             height: "40px",
             justifyContent: "space-between",
