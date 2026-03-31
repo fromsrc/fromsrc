@@ -14,12 +14,13 @@ export interface NavLinkProps {
 }
 
 function NavLinkComponent({
-  href,
+  href: rawHref,
   children,
   icon,
   onClick,
   external,
 }: NavLinkProps): JSX.Element {
+  const href = rawHref || "#";
   const pathname = usePathname();
   const isActive = pathname === href;
   const ref = useRef<HTMLAnchorElement>(null);
