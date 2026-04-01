@@ -48,7 +48,6 @@
     outline-offset: 2px;
   }
   html {
-    scroll-behavior: smooth;
     color-scheme: dark;
   }
   html,

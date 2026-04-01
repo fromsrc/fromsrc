@@ -51,7 +51,7 @@ export const viewport: Viewport = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`${mono.variable} ${serif.variable} bg-bg text-fg`} suppressHydrationWarning>
         <a
           href="#main"
