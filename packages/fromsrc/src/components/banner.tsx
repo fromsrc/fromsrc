@@ -28,10 +28,7 @@ function BannerInner({
     if (!id) {
       return true;
     }
-    if (typeof window === "undefined") {
-      return null;
-    }
-    return localStorage.getItem(`banner-${id}`) !== "true";
+    return null;
   });
 
   useEffect(() => {

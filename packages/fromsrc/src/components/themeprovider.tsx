@@ -26,6 +26,9 @@ function istheme(value: string | null): value is ThemeMode {
 
 function resolve(theme: ThemeMode): "light" | "dark" {
   if (theme === "system") {
+    if (typeof window === "undefined") {
+      return "dark";
+    }
     return window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
@@ -39,19 +42,17 @@ export function ThemeProvider({
   storageKey = "fromsrc-theme",
   attribute = "data-theme",
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") {
-      return defaultTheme;
-    }
+  const [theme, setTheme] = useState<ThemeMode>(defaultTheme);
+  const [resolved, setResolved] = useState<"light" | "dark">(
+    defaultTheme === "system" ? "dark" : defaultTheme === "light" ? "light" : "dark"
+  );
+
+  useEffect(() => {
     const stored = localStorage.getItem(storageKey);
-    return istheme(stored) ? stored : defaultTheme;
-  });
-  const [resolved, setResolved] = useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") {
-      return "light";
+    if (istheme(stored) && stored !== theme) {
+      setTheme(stored);
     }
-    return resolve(theme);
-  });
+  }, [storageKey]);
 
   useEffect(() => {
     const r = resolve(theme);

@@ -15,7 +15,7 @@ export const Announce = memo(function Announce({
   storageKey = "fromsrc-announce",
   className,
 }: AnnounceProps) {
-  const [dismissed, setDismissed] = useState(true);
+  const [dismissed, setDismissed] = useState<boolean | null>(null);
 
   useEffect(() => {
     setDismissed(localStorage.getItem(storageKey) === "1");
@@ -26,7 +26,7 @@ export const Announce = memo(function Announce({
     setDismissed(true);
   }, [storageKey]);
 
-  if (dismissed) {
+  if (dismissed === null || dismissed) {
     return null;
   }
 
