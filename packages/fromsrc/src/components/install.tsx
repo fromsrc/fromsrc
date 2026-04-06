@@ -5,56 +5,74 @@ import type { KeyboardEvent, ReactElement } from "react";
 
 import { CopyButton } from "./copybutton";
 
-const managers = ["npm", "pnpm", "yarn", "bun"] as const;
-type Manager = (typeof managers)[number];
+const Managers = ["npm", "pnpm", "yarn", "bun"] as const;
+type Manager = (typeof Managers)[number];
 
-const commands: Record<Manager, string> = {
-  bun: "bun add",
-  npm: "npm i",
-  pnpm: "pnpm add",
-  yarn: "yarn add",
+type Mode = "create" | "install";
+
+const Prefixes: Record<Mode, Record<Manager, string>> = {
+  create: {
+    bun: "bun create",
+    npm: "npm create",
+    pnpm: "pnpm create",
+    yarn: "yarn create",
+  },
+  install: {
+    bun: "bun add",
+    npm: "npm i",
+    pnpm: "pnpm add",
+    yarn: "yarn add",
+  },
 };
 
 export interface InstallProps {
   package: string;
+  mode?: Mode;
 }
 
-function InstallBase({ package: pkg }: InstallProps): ReactElement {
-  const [active, setActive] = useState<Manager>("npm");
-  const command = `${commands[active]} ${pkg}`;
-  const id = useId();
-  const tablistRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<Map<Manager, number>>(new Map());
-  for (const manager of managers) {
-    if (!mapRef.current.has(manager)) {
-      mapRef.current.set(manager, mapRef.current.size);
+function InstallBase({
+  package: Pkg,
+  mode = "install",
+}: InstallProps): ReactElement {
+  const [Active, setActive] = useState<Manager>("npm");
+  const Prefix = Prefixes[mode][Active];
+  const Command = `${Prefix} ${Pkg}`;
+  const Id = useId();
+  const TablistRef = useRef<HTMLDivElement>(null);
+  const MapRef = useRef<Map<Manager, number>>(new Map());
+  for (const M of Managers) {
+    if (!MapRef.current.has(M)) {
+      MapRef.current.set(M, MapRef.current.size);
     }
   }
-  const getTabId = useCallback(
-    (value: Manager): string => `${id}-tab-${mapRef.current.get(value) ?? 0}`,
-    [id]
+  const GetTabId = useCallback(
+    (Value: Manager): string =>
+      `${Id}-tab-${MapRef.current.get(Value) ?? 0}`,
+    [Id]
   );
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>): void => {
-      const currentIndex = managers.indexOf(active);
-      let nextIndex = currentIndex;
+  const HandleKeyDown = useCallback(
+    (E: KeyboardEvent<HTMLDivElement>): void => {
+      const CurrentIndex = Managers.indexOf(Active);
+      let NextIndex = CurrentIndex;
 
-      switch (e.key) {
+      switch (E.key) {
         case "ArrowLeft": {
-          nextIndex = currentIndex > 0 ? currentIndex - 1 : managers.length - 1;
+          NextIndex =
+            CurrentIndex > 0 ? CurrentIndex - 1 : Managers.length - 1;
           break;
         }
         case "ArrowRight": {
-          nextIndex = currentIndex < managers.length - 1 ? currentIndex + 1 : 0;
+          NextIndex =
+            CurrentIndex < Managers.length - 1 ? CurrentIndex + 1 : 0;
           break;
         }
         case "Home": {
-          nextIndex = 0;
+          NextIndex = 0;
           break;
         }
         case "End": {
-          nextIndex = managers.length - 1;
+          NextIndex = Managers.length - 1;
           break;
         }
         default: {
@@ -62,26 +80,28 @@ function InstallBase({ package: pkg }: InstallProps): ReactElement {
         }
       }
 
-      e.preventDefault();
-      const next = managers[nextIndex];
-      if (next) {
-        setActive(next);
+      E.preventDefault();
+      const Next = Managers[NextIndex];
+      if (Next) {
+        setActive(Next);
       }
-      const tabs =
-        tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-      tabs?.[nextIndex]?.focus();
+      const Tabs =
+        TablistRef.current?.querySelectorAll<HTMLButtonElement>(
+          '[role="tab"]'
+        );
+      Tabs?.[NextIndex]?.focus();
     },
-    [active]
+    [Active]
   );
 
-  const handleTabClick = useCallback((manager: Manager): void => {
-    setActive(manager);
+  const HandleTabClick = useCallback((Manager: Manager): void => {
+    setActive(Manager);
   }, []);
 
   return (
     <figure
       role="group"
-      aria-label={`Install ${pkg} package`}
+      aria-label={`Package manager command: ${Command}`}
       style={{
         backgroundColor: "#0d0d0d",
         border: "1px solid #1c1c1c",
@@ -102,28 +122,30 @@ function InstallBase({ package: pkg }: InstallProps): ReactElement {
         }}
       >
         <div
-          ref={tablistRef}
+          ref={TablistRef}
           role="tablist"
           aria-label="Package managers"
-          onKeyDown={handleKeyDown}
+          onKeyDown={HandleKeyDown}
           style={{ alignItems: "center", display: "flex", gap: "4px" }}
         >
-          {managers.map((m, index) => (
+          {Managers.map((M) => (
             <button
-              key={m}
-              id={getTabId(m)}
+              key={M}
+              id={GetTabId(M)}
               type="button"
               role="tab"
-              aria-selected={active === m}
-              aria-controls={`${id}-panel`}
-              tabIndex={active === m ? 0 : -1}
-              onClick={() => handleTabClick(m)}
+              aria-selected={Active === M}
+              aria-controls={`${Id}-panel`}
+              tabIndex={Active === M ? 0 : -1}
+              onClick={() => HandleTabClick(M)}
               style={{
                 background: "transparent",
                 border: "none",
                 borderBottom:
-                  active === m ? "2px solid #fafafa" : "2px solid transparent",
-                color: active === m ? "#fafafa" : "#737373",
+                  Active === M
+                    ? "2px solid #fafafa"
+                    : "2px solid transparent",
+                color: Active === M ? "#fafafa" : "#737373",
                 cursor: "pointer",
                 fontSize: "13px",
                 marginBottom: "-1px",
@@ -131,16 +153,16 @@ function InstallBase({ package: pkg }: InstallProps): ReactElement {
                 transition: "color 0.15s",
               }}
             >
-              {m}
+              {M}
             </button>
           ))}
         </div>
-        <CopyButton text={command} />
+        <CopyButton text={Command} />
       </div>
       <div
-        id={`${id}-panel`}
+        id={`${Id}-panel`}
         role="tabpanel"
-        aria-labelledby={getTabId(active)}
+        aria-labelledby={GetTabId(Active)}
         tabIndex={0}
         style={{
           fontFamily: "var(--font-mono), ui-monospace, monospace",
@@ -149,9 +171,9 @@ function InstallBase({ package: pkg }: InstallProps): ReactElement {
           padding: "14px 16px",
         }}
       >
-        <code aria-label={`Command: ${command}`}>
-          <span style={{ color: "#7ee787" }}>{commands[active]}</span>
-          <span style={{ color: "#fafafa" }}> {pkg}</span>
+        <code aria-label={`Command: ${Command}`}>
+          <span style={{ color: "#7ee787" }}>{Prefix}</span>
+          <span style={{ color: "#fafafa" }}> {Pkg}</span>
         </code>
       </div>
     </figure>
