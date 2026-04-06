@@ -64,7 +64,7 @@ export function extractLinks(
     }
     if (!seen.has(href)) {
       seen.add(href);
-      results.push({ href, type: linktype(href) });
+      results.push({ href, type: linkType(href) });
     }
   }
 
@@ -85,7 +85,7 @@ export function extractLinks(
       const href = raw.trim();
       if (!seen.has(href)) {
         seen.add(href);
-        results.push({ href, type: linktype(href) });
+        results.push({ href, type: linkType(href) });
       }
     }
   }
@@ -93,7 +93,7 @@ export function extractLinks(
   return results;
 }
 
-function linktype(href: string): "internal" | "anchor" | "external" {
+function linkType(href: string): "internal" | "anchor" | "external" {
   if (href.startsWith("#")) {
     return "anchor";
   }

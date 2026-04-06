@@ -5,11 +5,11 @@ import { createElement } from "react";
 
 import type {
   FrameworkAdapter,
-  fromsrcimageprops,
-  fromsrclinkprops,
+  FromsrcImageProps,
+  FromsrcLinkProps,
 } from "./adapter";
 
-function Link({ href, children, prefetch, ...rest }: fromsrclinkprops) {
+function Link({ href, children, prefetch, ...rest }: FromsrcLinkProps) {
   return createElement(
     RemixLink,
     { prefetch: prefetch ? "intent" : "none", to: href, ...rest },
@@ -17,7 +17,7 @@ function Link({ href, children, prefetch, ...rest }: fromsrclinkprops) {
   );
 }
 
-function Image({ src, alt, ...rest }: fromsrcimageprops) {
+function Image({ src, alt, ...rest }: FromsrcImageProps) {
   return createElement("img", { alt, src, ...rest });
 }
 

@@ -5,8 +5,8 @@ import { Link as RouterLink, useLocation, useNavigate } from "react-router";
 
 import type {
   FrameworkAdapter,
-  fromsrcimageprops,
-  fromsrclinkprops,
+  FromsrcImageProps,
+  FromsrcLinkProps,
 } from "./adapter";
 
 function Link({
@@ -14,11 +14,11 @@ function Link({
   children,
   prefetch: _prefetch,
   ...rest
-}: fromsrclinkprops) {
+}: FromsrcLinkProps) {
   return createElement(RouterLink, { to: href, ...rest }, children);
 }
 
-function Image({ src, alt, ...rest }: fromsrcimageprops) {
+function Image({ src, alt, ...rest }: FromsrcImageProps) {
   return createElement("img", { alt, src, ...rest });
 }
 
