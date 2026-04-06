@@ -30,6 +30,16 @@ export interface SidebarSection {
   items: (SidebarItem | SidebarFolder | DocMeta)[];
 }
 
+export type SectionItem = SidebarItem | SidebarFolder | DocMeta;
+
+export function IsFolder(item: SectionItem): item is SidebarFolder {
+  return "type" in item && item.type === "folder";
+}
+
+export function IsSidebarItem(item: SectionItem): item is SidebarItem {
+  return "href" in item && typeof item.href === "string" && item.href.length > 0;
+}
+
 interface Props {
   title: string;
   logo?: ReactNode;
@@ -334,18 +344,7 @@ function SidebarNav({
           </h3>
           <ul role="list" className="space-y-px">
             {section.items.map((item, i) => {
-              if (!("type" in item)) {
-                return (
-                  <li key={item.slug || i}>
-                    <NavLink
-                      href={item.slug ? `${basePath}/${item.slug}` : basePath}
-                    >
-                      {item.title}
-                    </NavLink>
-                  </li>
-                );
-              }
-              if (item.type === "folder") {
+              if (IsFolder(item)) {
                 return (
                   <Folder
                     key={i}
@@ -356,9 +355,20 @@ function SidebarNav({
                   />
                 );
               }
+              if (IsSidebarItem(item)) {
+                return (
+                  <li key={i}>
+                    <NavLink href={item.href} icon={item.icon}>
+                      {item.title}
+                    </NavLink>
+                  </li>
+                );
+              }
               return (
-                <li key={i}>
-                  <NavLink href={item.href} icon={item.icon}>
+                <li key={item.slug || i}>
+                  <NavLink
+                    href={item.slug ? `${basePath}/${item.slug}` : basePath}
+                  >
                     {item.title}
                   </NavLink>
                 </li>

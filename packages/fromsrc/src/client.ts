@@ -246,11 +246,12 @@ export { Select } from "./components/select";
 export type { SearchProps } from "./components/search";
 export { Search } from "./components/search";
 export type {
+  SectionItem,
   SidebarFolder,
   SidebarItem,
   SidebarSection,
 } from "./components/sidebar";
-export { Sidebar } from "./components/sidebar";
+export { IsFolder, IsSidebarItem, Sidebar } from "./components/sidebar";
 export { SidebarFilter, filternavigation } from "./components/sidebarfilter";
 export type {
   SkeletonCardProps,
