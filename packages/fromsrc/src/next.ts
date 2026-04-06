@@ -4,7 +4,7 @@ export { nextAdapter } from "./adapternext";
 export {
   AdapterContext,
   AdapterProvider,
-  createadapter,
+  createAdapter,
   type FrameworkAdapter,
   useAdapter,
 } from "./adapter";

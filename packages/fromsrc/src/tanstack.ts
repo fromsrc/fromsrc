@@ -4,7 +4,7 @@ export { tanstackAdapter } from "./adaptertanstack";
 export {
   AdapterContext,
   AdapterProvider,
-  createadapter,
+  createAdapter,
   type FrameworkAdapter,
   useAdapter,
 } from "./adapter";

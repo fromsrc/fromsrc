@@ -18,6 +18,7 @@ export type FromsrcImageProps = Omit<
   alt: string;
 };
 
+/** Interface for framework-specific routing, linking, and image components */
 export interface FrameworkAdapter {
   Link: ComponentType<FromsrcLinkProps>;
   Image?: ComponentType<FromsrcImageProps>;
@@ -60,7 +61,8 @@ export const defaultAdapter: FrameworkAdapter = {
   useRouter: defaultUseRouter,
 };
 
-export function createadapter(
+/** Build a FrameworkAdapter by merging partial overrides with defaults */
+export function createAdapter(
   adapter: Partial<FrameworkAdapter>
 ): FrameworkAdapter {
   return {
@@ -69,8 +71,10 @@ export function createadapter(
   };
 }
 
+/** React context holding the active FrameworkAdapter */
 export const AdapterContext = createContext<FrameworkAdapter>(defaultAdapter);
 
+/** Provider component that supplies a FrameworkAdapter to the tree */
 export function AdapterProvider({
   adapter,
   children,
@@ -81,6 +85,7 @@ export function AdapterProvider({
   return createElement(AdapterContext.Provider, { value: adapter }, children);
 }
 
+/** Hook to access the current FrameworkAdapter from context */
 export function useAdapter(): FrameworkAdapter {
   return useContext(AdapterContext);
 }

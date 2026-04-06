@@ -4,7 +4,7 @@ export { astroAdapter } from "./adapterastro";
 export {
   AdapterContext,
   AdapterProvider,
-  createadapter,
+  createAdapter,
   type FrameworkAdapter,
   useAdapter,
 } from "./adapter";

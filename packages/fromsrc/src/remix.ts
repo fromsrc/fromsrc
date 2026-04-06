@@ -4,7 +4,7 @@ export { remixAdapter } from "./adapterremix";
 export {
   AdapterContext,
   AdapterProvider,
-  createadapter,
+  createAdapter,
   type FrameworkAdapter,
   useAdapter,
 } from "./adapter";

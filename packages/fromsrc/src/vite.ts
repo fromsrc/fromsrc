@@ -4,7 +4,7 @@ export { viteAdapter } from "./adaptervite";
 export {
   AdapterContext,
   AdapterProvider,
-  createadapter,
+  createAdapter,
   type FrameworkAdapter,
   useAdapter,
 } from "./adapter";

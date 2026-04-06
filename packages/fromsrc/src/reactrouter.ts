@@ -4,7 +4,7 @@ export { reactRouterAdapter } from "./adapterreactrouter";
 export {
   AdapterContext,
   AdapterProvider,
-  createadapter,
+  createAdapter,
   type FrameworkAdapter,
   useAdapter,
 } from "./adapter";
