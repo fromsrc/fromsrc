@@ -68,7 +68,7 @@ export const manuals = [
     href: 'href="/docs/manual/vite"',
     install: "bun add fromsrc react-router",
     name: "vite",
-    tokens: ["fromsrc/vite", "AdapterProvider", "viteAdapter", "createadapter"],
+    tokens: ["fromsrc/vite", "AdapterProvider", "viteAdapter", "createAdapter"],
   },
   {
     card: 'title="tanstack start"',

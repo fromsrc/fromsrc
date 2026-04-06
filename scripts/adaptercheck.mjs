@@ -10,7 +10,7 @@ const docs = join(root, "docs", "frameworks.mdx");
 const shared = [
   "AdapterProvider",
   "AdapterContext",
-  "createadapter",
+  "createAdapter",
   "useAdapter",
 ];
 const issues = [];
