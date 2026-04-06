@@ -25,6 +25,7 @@ export interface SearchProps {
   adapter?: SearchAdapter;
   debounce?: number;
   limit?: number;
+  showRecent?: boolean;
 }
 
 function tosearchdoc(doc: DocMeta | SearchDoc): SearchDoc {
@@ -55,6 +56,7 @@ export function Search({
   adapter = localSearch,
   debounce = 100,
   limit = 8,
+  showRecent = true,
 }: SearchProps): JSX.Element | null {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -90,7 +92,7 @@ export function Search({
   }, [endpoint, remote.results, value]);
   const results = endpoint ? remoteResults : local;
   const loading = endpoint ? remote.loading : adapterloading;
-  const hasrecent = value.trim().length === 0 && recent.length > 0;
+  const hasrecent = showRecent && value.trim().length === 0 && recent.length > 0;
   const safe =
     results.length === 0 ? -1 : Math.min(selected, results.length - 1);
   const saferecent = hasrecent ? Math.min(selected, recent.length - 1) : -1;
@@ -279,7 +281,7 @@ export function Search({
       query={query}
       value={value}
       safe={hasrecent ? saferecent : safe}
-      recent={recent}
+      recent={showRecent ? recent : []}
       loading={loading}
       results={results}
       input={input}
