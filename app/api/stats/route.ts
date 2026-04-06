@@ -1,6 +1,6 @@
 import { calcReadTime } from "fromsrc";
 
-import { sendjson } from "@/app/api/_lib/json";
+import { sendJson } from "@/app/api/_lib/json";
 import { getDocs } from "@/app/docs/_lib/content";
 
 const cache =
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     categories.set(category, (categories.get(category) ?? 0) + 1);
   }
 
-  return sendjson(
+  return sendJson(
     request,
     {
       categories: Object.fromEntries(categories),

@@ -7,24 +7,24 @@ const rules = [
   {
     file: "app/api/docs/route.ts",
     name: "api-docs-list",
-    patterns: ['from "@/app/api/_lib/json"', "sendjson(", "const cache ="],
+    patterns: ['from "@/app/api/_lib/json"', "sendJson(", "const cache ="],
   },
   {
     file: "app/api/manifest/route.ts",
     name: "api-manifest",
-    patterns: ['from "@/app/api/_lib/json"', "sendjson(", "const cache ="],
+    patterns: ['from "@/app/api/_lib/json"', "sendJson(", "const cache ="],
   },
   {
     file: "app/api/stats/route.ts",
     name: "api-stats",
-    patterns: ['from "@/app/api/_lib/json"', "sendjson(", "const cache ="],
+    patterns: ['from "@/app/api/_lib/json"', "sendJson(", "const cache ="],
   },
   {
     file: "app/api/search/route.ts",
     name: "api-search",
     patterns: [
       'from "@/app/api/_lib/json"',
-      "sendjsonwithheaders(",
+      "sendJsonWithHeaders(",
       "const cachecontrol =",
     ],
   },
@@ -33,7 +33,7 @@ const rules = [
     name: "api-search-index",
     patterns: [
       'from "@/app/api/_lib/json"',
-      "sendjsonwithheaders(",
+      "sendJsonWithHeaders(",
       "const cachecontrol =",
     ],
   },
@@ -42,7 +42,7 @@ const rules = [
     name: "api-mcp",
     patterns: [
       'from "@/app/api/_lib/json"',
-      "sendjson(",
+      "sendJson(",
       "const cachecontrol =",
     ],
   },
@@ -51,7 +51,7 @@ const rules = [
     name: "api-health",
     patterns: [
       'from "@/app/api/_lib/json"',
-      "sendjson(",
+      "sendJson(",
       'const cache = "no-store"',
     ],
   },

@@ -19,7 +19,7 @@ function token(content: string): string {
   return `"${createHash("sha256").update(content).digest("base64url")}"`;
 }
 
-export function sendjson<T>(
+export function sendJson<T>(
   request: Request,
   value: jsonify<T>,
   cache: string,
@@ -39,14 +39,14 @@ export function sendjson<T>(
   return new Response(content, { headers, status });
 }
 
-export function sendjsonwithheaders<T>(
+export function sendJsonWithHeaders<T>(
   request: Request,
   value: jsonify<T>,
   cache: string,
   extra: HeadersInit,
   status = 200
 ): Response {
-  const response = sendjson(request, value, cache, status);
+  const response = sendJson(request, value, cache, status);
   for (const [key, val] of new Headers(extra).entries()) {
     response.headers.set(key, val);
   }

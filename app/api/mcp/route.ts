@@ -2,7 +2,7 @@ import { createMcpHandler, generateMcpManifest, z } from "fromsrc";
 import type { ContentSource } from "fromsrc";
 
 import { siteUrl } from "@/app/_lib/site";
-import { sendjson } from "@/app/api/_lib/json";
+import { sendJson } from "@/app/api/_lib/json";
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content";
 
 import { execute } from "./ops";
@@ -83,7 +83,7 @@ export function OPTIONS() {
 
 export function GET(request: Request) {
   const manifest = generateMcpManifest(config);
-  const response = sendjson(request, manifest, cachecontrol);
+  const response = sendJson(request, manifest, cachecontrol);
   for (const [key, value] of Object.entries(cors)) {
     response.headers.set(key, value);
   }

@@ -1,7 +1,7 @@
-import { sendjson } from "@/app/api/_lib/json";
+import { sendJson } from "@/app/api/_lib/json";
 
 const cache = "no-store";
 
 export function GET(request: Request) {
-  return sendjson(request, { status: "ok" }, cache);
+  return sendJson(request, { status: "ok" }, cache);
 }

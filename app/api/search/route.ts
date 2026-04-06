@@ -1,7 +1,7 @@
 import { localSearch, z } from "fromsrc";
 import { searchMaxQuery } from "fromsrc/searchpolicy";
 
-import { sendjson, sendjsonwithheaders } from "@/app/api/_lib/json";
+import { sendJson, sendJsonWithHeaders } from "@/app/api/_lib/json";
 import { getAllDocs, getSearchDocs } from "@/app/docs/_lib/content";
 
 const schema = z.object({
@@ -168,7 +168,7 @@ export async function GET(request: Request) {
     q: url.searchParams.get("q") ?? undefined,
   });
   if (!parsed.success) {
-    return sendjson(request, [], cachecontrol, 400);
+    return sendJson(request, [], cachecontrol, 400);
   }
   const values = parsed.data;
   const query = normalize(values.q);
@@ -176,7 +176,7 @@ export async function GET(request: Request) {
   const cached = get(key);
   if (cached) {
     const duration = performance.now() - started;
-    return sendjsonwithheaders(request, cached, cachecontrol, {
+    return sendJsonWithHeaders(request, cached, cachecontrol, {
       "Server-Timing": `search;dur=${duration.toFixed(2)}`,
       "X-Search-Cache": "hit",
       "X-Search-Docs-Cache": doccachehit(query) ? "hit" : "miss",
@@ -195,7 +195,7 @@ export async function GET(request: Request) {
     }
   });
   const duration = performance.now() - started;
-  return sendjsonwithheaders(request, set(key, computed.rows), cachecontrol, {
+  return sendJsonWithHeaders(request, set(key, computed.rows), cachecontrol, {
     "Server-Timing": `search;dur=${duration.toFixed(2)}`,
     "X-Search-Cache": "miss",
     "X-Search-Docs-Cache": computed.docsHit ? "hit" : "miss",

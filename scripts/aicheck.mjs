@@ -37,7 +37,7 @@ const rules = [
   {
     file: "app/api/mcp/route.ts",
     name: "mcp-route",
-    patterns: ['from "@/app/api/_lib/json"', "sendjson("],
+    patterns: ['from "@/app/api/_lib/json"', "sendJson("],
   },
   {
     file: "app/.well-known/llms.txt/route.ts",

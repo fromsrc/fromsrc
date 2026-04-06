@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { sendjson } from "@/app/api/_lib/json";
+import { sendJson } from "@/app/api/_lib/json";
 import { getAllDocs } from "@/app/docs/_lib/content";
 
 const query = z.object({
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     page: url.searchParams.get("page") ?? undefined,
   });
   if (!parsed.success) {
-    return sendjson(
+    return sendJson(
       request,
       { data: [], page: 1, pages: 0, total: 0 },
       cache,
@@ -43,5 +43,5 @@ export async function GET(request: Request) {
   const start = (page - 1) * limit;
   const data = docs.slice(start, start + limit);
 
-  return sendjson(request, { data, page, pages, total }, cache);
+  return sendJson(request, { data, page, pages, total }, cache);
 }

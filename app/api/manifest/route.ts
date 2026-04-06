@@ -1,6 +1,6 @@
 import { generateManifest } from "fromsrc";
 
-import { sendjson } from "@/app/api/_lib/json";
+import { sendJson } from "@/app/api/_lib/json";
 import { getDocs } from "@/app/docs/_lib/content";
 
 const cache =
@@ -8,5 +8,5 @@ const cache =
 
 export async function GET(request: Request) {
   const docs = await getDocs();
-  return sendjson(request, generateManifest(docs), cache);
+  return sendJson(request, generateManifest(docs), cache);
 }

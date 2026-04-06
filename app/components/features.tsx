@@ -47,7 +47,7 @@ const searchrows: readonly row[] = [
   { tone: "code", text: "  ready. run bun dev to start." },
 ];
 
-function rowstyle(tone: row["tone"]): string {
+function rowStyle(tone: row["tone"]): string {
   switch (tone) {
     case "cmd": {
       return "text-white/75";
@@ -66,7 +66,7 @@ function Panel({ rows }: { readonly rows: readonly row[] }) {
     <div className="flex h-[240px] flex-col overflow-hidden bg-[#050505] sm:h-[280px]">
       <div className="flex-1 overflow-auto px-5 py-4 font-mono text-[13px] leading-[1.65] tabular-nums whitespace-pre">
         {rows.map((entry, index) => (
-          <div key={`${entry.text}-${index}`} className={rowstyle(entry.tone)}>
+          <div key={`${entry.text}-${index}`} className={rowStyle(entry.tone)}>
             {entry.text || "\u00A0"}
           </div>
         ))}
