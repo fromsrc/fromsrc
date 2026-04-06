@@ -12,11 +12,11 @@ bun add fromsrc react-router
 Wire the adapter with optional link override:
 
 ```tsx
-import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite";
+import { AdapterProvider, createAdapter, viteAdapter } from "fromsrc/vite";
 import { Link } from "react-router";
 import type { ReactNode } from "react";
 
-const adapter = createadapter({
+const adapter = createAdapter({
   ...viteAdapter,
   Link: ({ href, children }) => <Link to={href}>{children}</Link>,
 });

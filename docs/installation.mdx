@@ -120,10 +120,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
 Use the Vite adapter for custom router stacks:
 
 ```tsx
-import { AdapterProvider, createadapter, viteAdapter } from "fromsrc/vite";
+import { AdapterProvider, createAdapter, viteAdapter } from "fromsrc/vite";
 import { Link } from "react-router";
 
-const adapter = createadapter({
+const adapter = createAdapter({
   ...viteAdapter,
   Link: ({ href, children }) => <Link to={href}>{children}</Link>,
 });
