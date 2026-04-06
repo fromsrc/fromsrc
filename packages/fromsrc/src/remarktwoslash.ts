@@ -15,7 +15,7 @@ export interface TwoslashResult {
   noErrors: boolean;
 }
 
-function parseannotations(code: string): TwoslashResult {
+function parseAnnotations(code: string): TwoslashResult {
   const lines = code.split("\n");
   const output: string[] = [];
   const annotations: TwoslashAnnotation[] = [];
@@ -102,7 +102,7 @@ function transformer(tree: Root) {
       return;
     }
 
-    const result = parseannotations(node.value);
+    const result = parseAnnotations(node.value);
 
     if (result.annotations.length === 0) {
       return;
@@ -124,6 +124,6 @@ function transformer(tree: Root) {
   });
 }
 
-export { parseannotations, serialize };
+export { parseAnnotations, serialize };
 
 export const remarkTwoslash: Plugin<[], Root> = () => transformer;

@@ -3,19 +3,19 @@ import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
 const combined = /~~([^~]+)~~|https?:\/\/[^\s<>)}\]]+/g;
-type paragraphchild = Paragraph["children"][number];
+type ParagraphChild = Paragraph["children"][number];
 
-function makeDel(content: string): paragraphchild {
+function makeDel(content: string): ParagraphChild {
   return {
     attributes: [],
     children: [{ type: "text" as const, value: content }],
     data: { _mdxExplicitJsx: true },
     name: "del",
     type: "mdxJsxTextElement" as const,
-  } as paragraphchild;
+  } as ParagraphChild;
 }
 
-function makeLink(url: string): paragraphchild {
+function makeLink(url: string): ParagraphChild {
   return {
     attributes: [
       { name: "href", type: "mdxJsxAttribute" as const, value: url },
@@ -24,12 +24,12 @@ function makeLink(url: string): paragraphchild {
     data: { _mdxExplicitJsx: true },
     name: "a",
     type: "mdxJsxTextElement" as const,
-  } as paragraphchild;
+  } as ParagraphChild;
 }
 
 function transformer(tree: Root) {
   visit(tree, "paragraph", (node: Paragraph) => {
-    const next: paragraphchild[] = [];
+    const next: ParagraphChild[] = [];
     let changed = false;
 
     for (const child of node.children) {
@@ -48,7 +48,7 @@ function transformer(tree: Root) {
           next.push({
             type: "text",
             value: child.value.slice(cursor, match.index),
-          } as paragraphchild);
+          } as ParagraphChild);
         }
         if (match[1] !== undefined) {
           next.push(makeDel(match[1]));
@@ -62,7 +62,7 @@ function transformer(tree: Root) {
         next.push({
           type: "text",
           value: child.value.slice(cursor),
-        } as paragraphchild);
+        } as ParagraphChild);
       }
     }
 

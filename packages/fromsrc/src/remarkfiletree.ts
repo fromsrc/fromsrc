@@ -8,16 +8,16 @@ interface TreeNode {
   children: TreeNode[];
 }
 
-interface mdxattribute {
+interface MdxAttribute {
   type: "mdxJsxAttribute";
   name: string;
   value: string;
 }
-interface mdxelement {
+interface MdxElement {
   type: "mdxJsxFlowElement";
   name: string;
-  attributes: mdxattribute[];
-  children: mdxelement[];
+  attributes: MdxAttribute[];
+  children: MdxElement[];
   data: { _mdxExplicitJsx: true };
 }
 
@@ -63,7 +63,7 @@ function parse(content: string): TreeNode[] {
   return root;
 }
 
-function toElement(node: TreeNode): mdxelement {
+function toElement(node: TreeNode): MdxElement {
   if (node.folder) {
     return {
       attributes: [attribute("name", node.name)],
@@ -94,7 +94,7 @@ function transformer(tree: Root) {
     }
 
     const nodes = parse(node.value);
-    const element: mdxelement = {
+    const element: MdxElement = {
       attributes: [],
       children: nodes.map(toElement),
       data: { _mdxExplicitJsx: true },

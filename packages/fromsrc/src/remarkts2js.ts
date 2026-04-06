@@ -2,7 +2,7 @@ import type { Root, Code } from "mdast";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-type codegroup = Root["children"][number];
+type CodeGroup = Root["children"][number];
 
 function stripTypes(code: string): string {
   let result = code;
@@ -52,7 +52,7 @@ function createCodeGroup(
   tsCode: string,
   jsCode: string,
   lang: string
-): codegroup {
+): CodeGroup {
   const jsLang = lang === "tsx" ? "jsx" : "javascript";
 
   return {
@@ -99,7 +99,7 @@ function createCodeGroup(
     ],
     name: "CodeGroup",
     type: "mdxJsxFlowElement",
-  } as codegroup;
+  } as CodeGroup;
 }
 
 export const remarkTs2Js: Plugin<[], Root> = () => (tree) => {

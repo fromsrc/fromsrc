@@ -3,20 +3,20 @@ import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
 const pattern = /title=(?:"([^"]+)"|(\S+))/;
-interface codechild {
+interface CodeChild {
   type: "code";
   value: string;
   lang: string | null;
   meta: string | null;
 }
-interface titleelement {
+interface TitleElement {
   type: "mdxJsxFlowElement";
   name: "CodeBlock";
   attributes: [
     { type: "mdxJsxAttribute"; name: "title"; value: string },
     { type: "mdxJsxAttribute"; name: "lang"; value: string },
   ];
-  children: [codechild];
+  children: [CodeChild];
   data: { _mdxExplicitJsx: true };
 }
 
@@ -42,7 +42,7 @@ function transformer(tree: Root) {
     if (!result) {
       return;
     }
-    const element: titleelement = {
+    const element: TitleElement = {
       attributes: [
         {
           name: "title",

@@ -67,13 +67,13 @@ const rehypeCode: Plugin<[], Root> = () => (tree: Root) => {
     );
     if (!code) {return;}
 
-    const fromdata = code.properties?.["data-meta"];
-    const frommeta = code.properties?.meta;
+    const fromData = code.properties?.["data-meta"];
+    const fromMeta = code.properties?.meta;
     const meta =
-      typeof fromdata === "string"
-        ? fromdata
-        : (typeof frommeta === "string"
-          ? frommeta
+      typeof fromData === "string"
+        ? fromData
+        : (typeof fromMeta === "string"
+          ? fromMeta
           : "");
     if (!meta) {return;}
 

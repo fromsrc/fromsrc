@@ -70,11 +70,11 @@ export function buildTocTree(headings: TocHeading[]): TocNode[] {
   return root;
 }
 
-interface filedata {
+interface FileData {
   data: Record<string, unknown>;
 }
 
-function transformer(tree: Root, file: filedata) {
+function transformer(tree: Root, file: FileData) {
   const headings: TocHeading[] = [];
 
   visit(tree, "heading", (node: Heading) => {

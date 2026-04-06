@@ -2,32 +2,32 @@ import type { Element, Root } from "hast";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-interface textnode {
+interface TextNode {
   type: "text";
   value: string;
 }
-interface parentnode {
+interface ParentNode {
   children?: unknown[];
 }
 
-function istext(node: unknown): node is textnode {
+function isText(node: unknown): node is TextNode {
   return (
     typeof node === "object" &&
     node !== null &&
-    (node as textnode).type === "text"
+    (node as TextNode).type === "text"
   );
 }
 
 function extractText(node: unknown): string {
-  if (istext(node)) {
+  if (isText(node)) {
     return node.value;
   }
   if (
     typeof node === "object" &&
     node !== null &&
-    Array.isArray((node as parentnode).children)
+    Array.isArray((node as ParentNode).children)
   ) {
-    return (node as parentnode).children?.map(extractText).join("") ?? "";
+    return (node as ParentNode).children?.map(extractText).join("") ?? "";
   }
   return "";
 }

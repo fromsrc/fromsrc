@@ -7,33 +7,33 @@ interface Item {
   slug: string;
   depth: number;
 }
-interface textnode {
+interface TextNode {
   type: "text";
   value: string;
 }
-interface markernode {
+interface MarkerNode {
   type: "paragraph";
   children?: { type: string; value?: string }[];
 }
-interface parentnode {
+interface ParentNode {
   children: Root["children"];
 }
-interface mdxattribute {
+interface MdxAttribute {
   type: "mdxJsxAttribute";
   name: string;
   value: string;
 }
-interface mdxelement {
+interface MdxElement {
   type: "mdxJsxFlowElement";
   name: string;
-  attributes: mdxattribute[];
+  attributes: MdxAttribute[];
   children: [];
   data: { _mdxExplicitJsx: true };
 }
 
 function textContent(node: Heading): string {
   const parts: string[] = [];
-  visit(node, "text", (t: textnode) => {
+  visit(node, "text", (t: TextNode) => {
     parts.push(t.value);
   });
   return parts.join("");
@@ -46,7 +46,7 @@ function slugify(text: string): string {
     .replaceAll(/[^a-z0-9-]/g, "");
 }
 
-function isTocMarker(node: markernode): boolean {
+function isTocMarker(node: MarkerNode): boolean {
   if (node.type !== "paragraph") {
     return false;
   }
@@ -74,7 +74,7 @@ export const remarkToc: Plugin<[], Root> = () => (tree) => {
   visit(
     tree,
     "paragraph",
-    (node: markernode, index, parent: parentnode | undefined) => {
+    (node: MarkerNode, index, parent: ParentNode | undefined) => {
       if (!parent || index === undefined) {
         return;
       }
@@ -82,7 +82,7 @@ export const remarkToc: Plugin<[], Root> = () => (tree) => {
         return;
       }
 
-      const element: mdxelement = {
+      const element: MdxElement = {
         attributes: [
           {
             name: "items",

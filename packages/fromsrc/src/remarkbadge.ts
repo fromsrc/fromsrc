@@ -3,33 +3,33 @@ import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
 const pattern = /\[\[badge:([^\]:]+)(?::([^\]]+))?\]\]/g;
-interface textnode {
+interface TextNode {
   value: string;
 }
-interface parentnode {
+interface ParentNode {
   children: unknown[];
 }
-interface textpart {
+interface TextPart {
   type: "text";
   value: string;
 }
-interface badgepart {
+interface BadgePart {
   type: "mdxJsxTextElement";
   name: "Badge";
   attributes: [{ type: "mdxJsxAttribute"; name: "variant"; value: string }];
-  children: [textpart];
+  children: [TextPart];
   data: { _mdxExplicitJsx: true };
 }
-type badgechild = textpart | badgepart;
+type BadgeChild = TextPart | BadgePart;
 
 export const remarkBadge: Plugin<[], Root> = () => (tree) => {
   visit(
     tree,
     "text",
     (
-      node: textnode,
+      node: TextNode,
       index: number | undefined,
-      parent: parentnode | undefined
+      parent: ParentNode | undefined
     ) => {
       if (!parent || index === undefined) {
         return;
@@ -40,7 +40,7 @@ export const remarkBadge: Plugin<[], Root> = () => (tree) => {
         return;
       }
       pattern.lastIndex = 0;
-      const parts: badgechild[] = [];
+      const parts: BadgeChild[] = [];
       let last = 0;
 
       for (const match of value.matchAll(pattern)) {

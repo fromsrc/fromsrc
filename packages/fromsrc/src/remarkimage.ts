@@ -63,7 +63,7 @@ function createImageProperties(
   return props;
 }
 
-interface figurenode {
+interface FigureNode {
   type: "mdxJsxFlowElement";
   name: "figure";
   attributes: [];
@@ -80,7 +80,7 @@ function wrapInFigure(
   imageNode: Root["children"][number],
   alt: string
 ): Root["children"][number] {
-  const children: figurenode["children"] = [imageNode];
+  const children: FigureNode["children"] = [imageNode];
   if (alt) {
     children.push({
       attributes: [],
@@ -89,7 +89,7 @@ function wrapInFigure(
       type: "mdxJsxFlowElement",
     });
   }
-  const figure: figurenode = {
+  const figure: FigureNode = {
     attributes: [],
     children,
     name: "figure",

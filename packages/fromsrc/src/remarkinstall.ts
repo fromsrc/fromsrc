@@ -6,7 +6,7 @@ function attribute(name: string, value: string) {
   return { name, type: "mdxJsxAttribute", value };
 }
 
-interface installelement {
+interface InstallElement {
   type: "mdxJsxFlowElement";
   name: "Install";
   attributes: ReturnType<typeof attribute>[];
@@ -70,7 +70,7 @@ function transformer(tree: Root) {
       attribute("bun", cmds.bun),
     ];
 
-    const element: installelement = {
+    const element: InstallElement = {
       attributes: attrs,
       children: [],
       data: { _mdxExplicitJsx: true },

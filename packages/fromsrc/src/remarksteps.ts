@@ -2,7 +2,7 @@ import type { List, ListItem, Paragraph, Root } from "mdast";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-interface textnode {
+interface TextNode {
   value?: string;
 }
 
@@ -26,7 +26,7 @@ function extractTitle(
     return "";
   }
   return strong.children
-    .map((child) => ("value" in child ? ((child as textnode).value ?? "") : ""))
+    .map((child) => ("value" in child ? ((child as TextNode).value ?? "") : ""))
     .join("");
 }
 

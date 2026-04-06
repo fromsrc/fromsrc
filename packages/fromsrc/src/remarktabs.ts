@@ -6,19 +6,19 @@ function attribute(name: string, value: string) {
   return { name, type: "mdxJsxAttribute", value };
 }
 
-type codenode = Code;
-interface tabelement {
+type CodeNode = Code;
+interface TabElement {
   type: "mdxJsxFlowElement";
   name: "CodeTab";
   attributes: ReturnType<typeof attribute>[];
-  children: [codenode];
+  children: [CodeNode];
   data: { _mdxExplicitJsx: true };
 }
-interface groupelement {
+interface GroupElement {
   type: "mdxJsxFlowElement";
   name: "CodeGroup";
   attributes: [];
-  children: tabelement[];
+  children: TabElement[];
   data: { _mdxExplicitJsx: true };
 }
 
@@ -57,7 +57,7 @@ function transformer(tree: Root) {
       return;
     }
 
-    const tabs: tabelement[] = group.map((code) => ({
+    const tabs: TabElement[] = group.map((code) => ({
       attributes: [
         attribute("label", code.lang ?? "text"),
         attribute("value", code.lang ?? "text"),
@@ -68,7 +68,7 @@ function transformer(tree: Root) {
       type: "mdxJsxFlowElement",
     }));
 
-    const element: groupelement = {
+    const element: GroupElement = {
       attributes: [],
       children: tabs,
       data: { _mdxExplicitJsx: true },

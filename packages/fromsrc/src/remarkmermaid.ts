@@ -2,7 +2,7 @@ import type { Code, Root } from "mdast";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-interface mermaidelement {
+interface MermaidElement {
   type: "mdxJsxFlowElement";
   name: "Mermaid";
   attributes: [{ type: "mdxJsxAttribute"; name: "chart"; value: string }];
@@ -18,7 +18,7 @@ function transformer(tree: Root) {
     if (node.lang !== "mermaid") {
       return;
     }
-    const element: mermaidelement = {
+    const element: MermaidElement = {
       attributes: [
         { name: "chart", type: "mdxJsxAttribute" as const, value: node.value },
       ],

@@ -4,10 +4,10 @@ import { visit } from "unist-util-visit";
 
 const blockPattern = /^\$\$([\s\S]*)\$\$$/;
 const inlinePattern = /\$([^$]+)\$/g;
-type paragraphchild = Paragraph["children"][number];
-type rootchild = Root["children"][number];
+type ParagraphChild = Paragraph["children"][number];
+type RootChild = Root["children"][number];
 
-function makeInline(math: string): paragraphchild {
+function makeInline(math: string): ParagraphChild {
   return {
     attributes: [
       { name: "math", type: "mdxJsxAttribute" as const, value: math },
@@ -16,10 +16,10 @@ function makeInline(math: string): paragraphchild {
     data: { _mdxExplicitJsx: true },
     name: "InlineMath",
     type: "mdxJsxTextElement" as const,
-  } as paragraphchild;
+  } as ParagraphChild;
 }
 
-function makeBlock(math: string): rootchild {
+function makeBlock(math: string): RootChild {
   return {
     attributes: [
       { name: "math", type: "mdxJsxAttribute" as const, value: math },
@@ -28,7 +28,7 @@ function makeBlock(math: string): rootchild {
     data: { _mdxExplicitJsx: true },
     name: "BlockMath",
     type: "mdxJsxFlowElement" as const,
-  } as rootchild;
+  } as RootChild;
 }
 
 function transformer(tree: Root) {
@@ -55,7 +55,7 @@ function transformer(tree: Root) {
   });
 
   visit(tree, "paragraph", (node: Paragraph) => {
-    const next: paragraphchild[] = [];
+    const next: ParagraphChild[] = [];
     let changed = false;
 
     for (const child of node.children) {
@@ -74,7 +74,7 @@ function transformer(tree: Root) {
           next.push({
             type: "text",
             value: child.value.slice(cursor, match.index),
-          } as paragraphchild);
+          } as ParagraphChild);
         }
         const inline = match[1];
         if (inline !== undefined) {
@@ -87,7 +87,7 @@ function transformer(tree: Root) {
         next.push({
           type: "text",
           value: child.value.slice(cursor),
-        } as paragraphchild);
+        } as ParagraphChild);
       }
     }
 
