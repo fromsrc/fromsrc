@@ -31,7 +31,7 @@ function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
-function parsename(raw: string): string | null {
+function parseName(raw: string): string | null {
   try {
     const parsed: unknown = JSON.parse(raw);
     if (!isRecord(parsed)) {
@@ -89,7 +89,7 @@ export async function discoverPackages(
       if (!raw) {
         continue;
       }
-      const name = parsename(raw) ?? basename(dir);
+      const name = parseName(raw) ?? basename(dir);
       const docs = join(dir, docsDir);
       const exists = await stat(docs).catch(() => null);
       if (!exists?.isDirectory()) {

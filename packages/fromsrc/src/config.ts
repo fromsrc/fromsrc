@@ -51,49 +51,49 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function isstring(value: unknown): value is string {
+function isString(value: unknown): value is string {
   return typeof value === "string";
 }
 
-function isboolean(value: unknown): value is boolean {
+function isBoolean(value: unknown): value is boolean {
   return typeof value === "boolean";
 }
 
-function parseconfig(value: unknown): FromsrcConfig | null {
+function parseConfig(value: unknown): FromsrcConfig | null {
   if (!isRecord(value)) {
     return null;
   }
   const { title } = value;
-  if (!isstring(title)) {
+  if (!isString(title)) {
     return null;
   }
   const config: FromsrcConfig = { title };
-  if (isstring(value.description)) {
+  if (isString(value.description)) {
     config.description = value.description;
   }
-  if (isstring(value.baseUrl)) {
+  if (isString(value.baseUrl)) {
     config.baseUrl = value.baseUrl;
   }
-  if (isstring(value.docsDir)) {
+  if (isString(value.docsDir)) {
     config.docsDir = value.docsDir;
   }
-  if (isstring(value.outDir)) {
+  if (isString(value.outDir)) {
     config.outDir = value.outDir;
   }
-  if (isstring(value.theme)) {
+  if (isString(value.theme)) {
     config.theme = value.theme;
   }
-  if (isstring(value.editUrl)) {
+  if (isString(value.editUrl)) {
     config.editUrl = value.editUrl;
   }
-  if (isboolean(value.lastUpdated)) {
+  if (isBoolean(value.lastUpdated)) {
     config.lastUpdated = value.lastUpdated;
   }
-  if (isboolean(value.draft)) {
+  if (isBoolean(value.draft)) {
     config.draft = value.draft;
   }
   if (isRecord(value.search)) {
-    const provider = isstring(value.search.provider)
+    const provider = isString(value.search.provider)
       ? value.search.provider
       : undefined;
     const options = isRecord(value.search.options)
@@ -102,10 +102,10 @@ function parseconfig(value: unknown): FromsrcConfig | null {
     config.search = { options, provider };
   }
   if (isRecord(value.sidebar)) {
-    const defaultOpen = isboolean(value.sidebar.defaultOpen)
+    const defaultOpen = isBoolean(value.sidebar.defaultOpen)
       ? value.sidebar.defaultOpen
       : undefined;
-    const collapsible = isboolean(value.sidebar.collapsible)
+    const collapsible = isBoolean(value.sidebar.collapsible)
       ? value.sidebar.collapsible
       : undefined;
     config.sidebar = { collapsible, defaultOpen };
@@ -118,12 +118,12 @@ function parseconfig(value: unknown): FromsrcConfig | null {
     config.toc = { maxDepth, minDepth };
   }
   if (isRecord(value.i18n)) {
-    const defaultLocale = isstring(value.i18n.defaultLocale)
+    const defaultLocale = isString(value.i18n.defaultLocale)
       ? value.i18n.defaultLocale
       : undefined;
     const locales =
       Array.isArray(value.i18n.locales) &&
-      value.i18n.locales.every((entry) => isstring(entry))
+      value.i18n.locales.every((entry) => isString(entry))
         ? value.i18n.locales
         : undefined;
     config.i18n = { defaultLocale, locales };
@@ -145,7 +145,7 @@ export async function loadConfig(dir: string): Promise<FromsrcConfig> {
   for (const name of ["fromsrc.config.ts", "fromsrc.config.js"]) {
     try {
       const mod = await import(join(dir, name));
-      const parsed = parseconfig(mod.default ?? mod);
+      const parsed = parseConfig(mod.default ?? mod);
       if (parsed) {
         return parsed;
       }
@@ -153,7 +153,7 @@ export async function loadConfig(dir: string): Promise<FromsrcConfig> {
   }
   try {
     const raw = await readFile(join(dir, "fromsrc.config.json"), "utf8");
-    const parsed = parseconfig(JSON.parse(raw));
+    const parsed = parseConfig(JSON.parse(raw));
     if (parsed) {
       return parsed;
     }

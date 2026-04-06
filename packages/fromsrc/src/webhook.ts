@@ -27,15 +27,15 @@ function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
-function istype(value: unknown): value is WebhookEvent["type"] {
+function isType(value: unknown): value is WebhookEvent["type"] {
   return value === "created" || value === "updated" || value === "deleted";
 }
 
-function isevent(value: unknown): value is WebhookEvent {
+function isEvent(value: unknown): value is WebhookEvent {
   if (!isRecord(value)) {
     return false;
   }
-  if (!istype(value.type)) {
+  if (!isType(value.type)) {
     return false;
   }
   if (typeof value.path !== "string") {
@@ -58,9 +58,9 @@ function parsets(payload: string): number | null {
     const raw: unknown = JSON.parse(payload);
     if (Array.isArray(raw)) {
       const first = raw[0];
-      return isevent(first) ? first.timestamp : null;
+      return isEvent(first) ? first.timestamp : null;
     }
-    return isevent(raw) ? raw.timestamp : null;
+    return isEvent(raw) ? raw.timestamp : null;
   } catch {
     return null;
   }

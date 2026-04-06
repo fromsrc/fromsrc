@@ -23,7 +23,7 @@ export function createAnalytics(config?: AnalyticsConfig) {
   const sampleRate = config?.sampleRate ?? 1;
   const respectDnt = config?.respectDnt ?? true;
   let retries = 0;
-  const maxretries = 5;
+  const maxRetries = 5;
 
   function track(event: Omit<AnalyticsEvent, "timestamp">) {
     if (
@@ -52,7 +52,7 @@ export function createAnalytics(config?: AnalyticsConfig) {
       });
       retries = 0;
     } catch {
-      if (retries < maxretries) {
+      if (retries < maxRetries) {
         retries += 1;
         queue.unshift(...batch);
       }

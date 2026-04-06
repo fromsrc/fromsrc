@@ -25,7 +25,7 @@ export interface AuditResult {
   score: number;
 }
 
-function parsefrontmatter(raw: string): {
+function parseFrontmatter(raw: string): {
   fields: Record<string, string>;
   body: string;
 } {
@@ -86,7 +86,7 @@ export async function audit(config: AuditConfig): Promise<AuditResult> {
       });
     }
 
-    const { fields, body } = parsefrontmatter(raw);
+    const { fields, body } = parseFrontmatter(raw);
 
     for (const field of required) {
       if (!fields[field]) {

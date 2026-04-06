@@ -29,7 +29,7 @@ function titleize(s: string): string {
   return s.replaceAll(/[-_]/g, " ").replaceAll(/\b\w/g, (c) => c.toUpperCase());
 }
 
-interface metaentry {
+interface MetaEntry {
   title?: string;
   order?: number;
   icon?: string;
@@ -39,7 +39,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function ismetaentry(value: unknown): value is metaentry {
+function isMetaEntry(value: unknown): value is MetaEntry {
   if (!isRecord(value)) {
     return false;
   }
@@ -58,7 +58,7 @@ function ismetaentry(value: unknown): value is metaentry {
   return true;
 }
 
-function parsejson(raw: string): unknown {
+function parseJson(raw: string): unknown {
   try {
     return JSON.parse(raw);
   } catch {
@@ -66,28 +66,28 @@ function parsejson(raw: string): unknown {
   }
 }
 
-function parsemetats(raw: string): unknown {
+function parseMetaTs(raw: string): unknown {
   const match = raw.match(/export\s+default\s+({[\s\S]*})/);
   if (!match) {
     return null;
   }
   const body = match[1];
-  return body ? parsejson(body) : null;
+  return body ? parseJson(body) : null;
 }
 
 async function readMeta(
   dir: string
-): Promise<Record<string, string | metaentry>> {
+): Promise<Record<string, string | MetaEntry>> {
   for (const name of ["_meta.json", "_meta.ts"]) {
     try {
       const raw = await readFile(join(dir, name), "utf8");
-      const parsed = name.endsWith(".json") ? parsejson(raw) : parsemetats(raw);
+      const parsed = name.endsWith(".json") ? parseJson(raw) : parseMetaTs(raw);
       if (!isRecord(parsed)) {
         return {};
       }
-      const result: Record<string, string | metaentry> = {};
+      const result: Record<string, string | MetaEntry> = {};
       for (const [key, value] of Object.entries(parsed)) {
-        if (typeof value === "string" || ismetaentry(value)) {
+        if (typeof value === "string" || isMetaEntry(value)) {
           result[key] = value;
         }
       }
@@ -108,7 +108,7 @@ async function extractTitle(file: string): Promise<string | null> {
 }
 
 function resolveMeta(
-  meta: Record<string, string | metaentry>,
+  meta: Record<string, string | MetaEntry>,
   key: string,
   fallback: string
 ) {

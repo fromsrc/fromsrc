@@ -16,7 +16,7 @@ export interface TestSuite {
   duration: number;
 }
 
-function headingid(value: string): string {
+function headingId(value: string): string {
   return value
     .toLowerCase()
     .replaceAll(/[^\w\s-]/g, "")
@@ -24,14 +24,14 @@ function headingid(value: string): string {
     .replaceAll(/\s+/g, "-");
 }
 
-function collectheadingids(content: string): string[] {
+function collectHeadingIds(content: string): string[] {
   return [...content.matchAll(/^#{1,6}\s+(.+)$/gm)]
     .map((match) => {
       const value = match[1];
       if (!value) {
         return "";
       }
-      return headingid(value);
+      return headingId(value);
     })
     .filter(Boolean);
 }
@@ -117,7 +117,7 @@ export function assertHeadings(
   content: string,
   options?: { minCount?: number; maxDepth?: number; sequential?: boolean }
 ) {
-  const ids = collectheadingids(content);
+  const ids = collectHeadingIds(content);
   const seen = new Set<string>();
   for (const id of ids) {
     if (seen.has(id)) {
@@ -168,7 +168,7 @@ export function assertLinks(content: string) {
     "about:blank",
     "javascript:void(0)",
   ]);
-  const headingids = new Set(collectheadingids(content));
+  const headingIds = new Set(collectHeadingIds(content));
   const links = [...content.matchAll(/\[([^\]]*)\]\(([^)]*)\)/g)];
   for (const [, text = "", url = ""] of links) {
     if (!text.trim()) {
@@ -181,7 +181,7 @@ export function assertLinks(content: string) {
     }
     if (value.startsWith("#")) {
       const target = value.slice(1).toLowerCase();
-      if (!target || !headingids.has(target)) {
+      if (!target || !headingIds.has(target)) {
         throw new Error(`missing anchor target: ${url}`);
       }
     }
