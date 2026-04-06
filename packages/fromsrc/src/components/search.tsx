@@ -28,14 +28,14 @@ export interface SearchProps {
   showRecent?: boolean;
 }
 
-function tosearchdoc(doc: DocMeta | SearchDoc): SearchDoc {
+function toSearchDoc(doc: DocMeta | SearchDoc): SearchDoc {
   if ("content" in doc) {
     return doc;
   }
   return { ...doc, content: "" };
 }
 
-function iseditable(target: EventTarget | null): boolean {
+function isEditable(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) {
     return false;
   }
@@ -66,40 +66,40 @@ export function Search({
     []
   );
   const [local, setLocal] = useState<SearchResult[]>([]);
-  const [adapterloading, setAdapterLoading] = useState(false);
+  const [adapterLoading, setAdapterLoading] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLUListElement>(null);
-  const queryref = useRef("");
-  const requestref = useRef(0);
-  const lastfocus = useRef<HTMLElement | null>(null);
-  const updatequery = useCallback((next: string): void => {
+  const queryRef = useRef("");
+  const requestRef = useRef(0);
+  const lastFocus = useRef<HTMLElement | null>(null);
+  const updateQuery = useCallback((next: string): void => {
     const value = trimquery(next);
-    queryref.current = value;
+    queryRef.current = value;
     setQuery(value);
   }, []);
   const router = useRouter();
-  const searchdocs = useMemo(() => docs.map(tosearchdoc), [docs]);
+  const searchDocs = useMemo(() => docs.map(toSearchDoc), [docs]);
   const value = useDebounce(query, debounce);
   const remote = useSearcher(endpoint, value, limit);
   const remoteResults = useMemo(() => {
     if (!endpoint) {
       return [];
     }
-    if (value.trim() !== queryref.current.trim()) {
+    if (value.trim() !== queryRef.current.trim()) {
       return [];
     }
     return remote.results;
   }, [endpoint, remote.results, value]);
   const results = endpoint ? remoteResults : local;
-  const loading = endpoint ? remote.loading : adapterloading;
-  const hasrecent = showRecent && value.trim().length === 0 && recent.length > 0;
+  const loading = endpoint ? remote.loading : adapterLoading;
+  const hasRecent = showRecent && value.trim().length === 0 && recent.length > 0;
   const safe =
     results.length === 0 ? -1 : Math.min(selected, results.length - 1);
-  const saferecent = hasrecent ? Math.min(selected, recent.length - 1) : -1;
+  const safeRecent = hasRecent ? Math.min(selected, recent.length - 1) : -1;
   useScrollLock(open);
-  const openmodal = useCallback((): void => {
+  const openModal = useCallback((): void => {
     const active = document.activeElement;
-    lastfocus.current = active instanceof HTMLElement ? active : null;
+    lastFocus.current = active instanceof HTMLElement ? active : null;
     setOpen(true);
   }, []);
 
@@ -107,7 +107,7 @@ export function Search({
     const handler = (event: KeyboardEvent): void => {
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         event.preventDefault();
-        openmodal();
+        openModal();
       }
       const slash = event.key === "/" || event.code === "Slash";
       if (
@@ -115,10 +115,10 @@ export function Search({
         !event.metaKey &&
         !event.ctrlKey &&
         !event.altKey &&
-        !iseditable(event.target)
+        !isEditable(event.target)
       ) {
         event.preventDefault();
-        openmodal();
+        openModal();
       }
       if (event.key === "Escape") {
         setOpen(false);
@@ -126,17 +126,17 @@ export function Search({
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [openmodal]);
+  }, [openModal]);
 
   useEffect(() => {
     if (open) {
       input.current?.focus();
     } else {
-      updatequery("");
+      updateQuery("");
       setSelected(0);
-      lastfocus.current?.focus();
+      lastFocus.current?.focus();
     }
-  }, [open, updatequery]);
+  }, [open, updateQuery]);
 
   useEffect(() => setSelected(0), [value]);
 
@@ -144,21 +144,21 @@ export function Search({
     if (endpoint) {
       return;
     }
-    const id = requestref.current + 1;
-    requestref.current = id;
-    const result = adapter.search(value, searchdocs, limit);
+    const id = requestRef.current + 1;
+    requestRef.current = id;
+    const result = adapter.search(value, searchDocs, limit);
     if (result instanceof Promise) {
       setAdapterLoading(true);
       void result
         .then((next) => {
-          if (requestref.current !== id) {
+          if (requestRef.current !== id) {
             return;
           }
           setLocal(next);
           setAdapterLoading(false);
         })
         .catch(() => {
-          if (requestref.current !== id) {
+          if (requestRef.current !== id) {
             return;
           }
           setLocal([]);
@@ -168,17 +168,17 @@ export function Search({
     }
     setLocal(result);
     setAdapterLoading(false);
-  }, [adapter, endpoint, limit, searchdocs, value]);
+  }, [adapter, endpoint, limit, searchDocs, value]);
 
   useEffect(() => {
-    const target = hasrecent ? saferecent : safe;
+    const target = hasRecent ? safeRecent : safe;
     if (target < 0 || !list.current) {
       return;
     }
-    const id = hasrecent ? getRecentOptionId(target) : getOptionId(target);
+    const id = hasRecent ? getRecentOptionId(target) : getOptionId(target);
     const option = list.current.querySelector(`#${id}`);
     option?.scrollIntoView({ block: "nearest" });
-  }, [hasrecent, safe, saferecent]);
+  }, [hasRecent, safe, safeRecent]);
 
   const save = useCallback(
     (item: string): void => {
@@ -203,9 +203,9 @@ export function Search({
     [basePath, query, router, save]
   );
 
-  const onkey = useCallback(
+  const onKey = useCallback(
     (event: React.KeyboardEvent): void => {
-      if (hasrecent) {
+      if (hasRecent) {
         if (event.key === "ArrowDown") {
           event.preventDefault();
           setSelected((item) => Math.min(item + 1, recent.length - 1));
@@ -226,9 +226,9 @@ export function Search({
           setSelected(recent.length - 1);
           return;
         }
-        if (event.key === "Enter" && saferecent >= 0 && recent[saferecent]) {
+        if (event.key === "Enter" && safeRecent >= 0 && recent[safeRecent]) {
           event.preventDefault();
-          updatequery(recent[saferecent]);
+          updateQuery(recent[safeRecent]);
           setSelected(0);
           return;
         }
@@ -258,7 +258,7 @@ export function Search({
       }
       if (event.key === "Tab" && results[0]) {
         event.preventDefault();
-        updatequery(results[0].doc.title);
+        updateQuery(results[0].doc.title);
         setSelected(0);
         return;
       }
@@ -266,30 +266,30 @@ export function Search({
         navigate(results[safe].doc.slug, results[safe].anchor);
       }
     },
-    [hasrecent, navigate, recent, results, safe, saferecent, updatequery]
+    [hasRecent, navigate, recent, results, safe, safeRecent, updateQuery]
   );
 
   if (!open) {
     if (hidden) {
       return null;
     }
-    return <Trigger onOpen={openmodal} />;
+    return <Trigger onOpen={openModal} />;
   }
 
   return (
     <Panel
       query={query}
       value={value}
-      safe={hasrecent ? saferecent : safe}
+      safe={hasRecent ? safeRecent : safe}
       recent={showRecent ? recent : []}
       loading={loading}
       results={results}
       input={input}
       list={list}
       onClose={() => setOpen(false)}
-      onChange={updatequery}
-      onKey={onkey}
-      onSelect={updatequery}
+      onChange={updateQuery}
+      onKey={onKey}
+      onSelect={updateQuery}
       onNavigate={navigate}
     />
   );
