@@ -9,7 +9,7 @@ export interface ThemeToggleProps {
   defaultTheme?: Theme;
 }
 
-function istheme(value: string | null): value is Theme {
+function isTheme(value: string | null): value is Theme {
   return value === "light" || value === "dark" || value === "system";
 }
 
@@ -30,7 +30,7 @@ function ThemeToggleBase({
 
   useEffect(() => {
     const raw = localStorage.getItem("theme");
-    const initial = istheme(raw) ? raw : defaultTheme;
+    const initial = isTheme(raw) ? raw : defaultTheme;
     setTheme(initial);
     setResolved(resolves(initial));
   }, [defaultTheme]);
