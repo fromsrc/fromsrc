@@ -8,7 +8,7 @@
 		"size": 151
 	},
 	"searchscore": {
-		"gzip": 640,
+		"gzip": 643,
 		"size": 1551
 	},
 	"searchindex": {
@@ -28,11 +28,11 @@
 		"size": 5162
 	},
 	"algolia": {
-		"gzip": 808,
+		"gzip": 809,
 		"size": 1565
 	},
 	"orama": {
-		"gzip": 755,
+		"gzip": 754,
 		"size": 1591
 	},
 	"next": {
@@ -52,11 +52,11 @@
 		"size": 452
 	},
 	"astro": {
-		"gzip": 511,
+		"gzip": 512,
 		"size": 1194
 	},
 	"vite": {
-		"gzip": 511,
+		"gzip": 513,
 		"size": 1194
 	}
 }
