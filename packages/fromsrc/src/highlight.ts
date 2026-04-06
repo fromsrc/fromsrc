@@ -1,7 +1,9 @@
+/** Text with character ranges marking matched positions */
 export interface HighlightResult {
   text: string;
   ranges: { start: number; end: number }[];
 }
+/** Options for generating search result snippets */
 export interface SnippetOptions {
   maxLength?: number;
   surroundingWords?: number;
@@ -33,10 +35,12 @@ function findAll(
   return ranges;
 }
 
+/** Find all case-insensitive match ranges for a query in text */
 export function highlightMatches(text: string, query: string): HighlightResult {
   return { ranges: query ? findAll(text, query) : [], text };
 }
 
+/** Generate a text snippet centered around the first match */
 export function generateSnippet(
   text: string,
   query: string,
@@ -71,6 +75,7 @@ export function generateSnippet(
   return prefix + snippet.trim() + suffix;
 }
 
+/** Render text as HTML with query matches wrapped in mark tags */
 export function highlightHtml(text: string, query: string): string {
   if (!query) {
     return escape(text);
@@ -112,6 +117,7 @@ export function highlightHtml(text: string, query: string): string {
   return result.join("");
 }
 
+/** Split a query into terms, respecting quoted phrases */
 export function tokenize(query: string): string[] {
   const terms: string[] = [];
   const regex = /"([^"]+)"|(\S+)/g;
@@ -126,6 +132,7 @@ export function tokenize(query: string): string[] {
   return terms;
 }
 
+/** Highlight all occurrences of multiple terms in text */
 export function fuzzyHighlight(text: string, terms: string[]): HighlightResult {
   const ranges: { start: number; end: number }[] = [];
   for (const term of terms) {

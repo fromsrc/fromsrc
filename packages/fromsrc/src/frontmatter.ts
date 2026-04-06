@@ -4,18 +4,21 @@ import { join } from "node:path";
 import matter from "gray-matter";
 import type { ZodSchema } from "zod";
 
+/** Successful frontmatter parse result with validated data */
 export interface FrontmatterResult<T> {
   data: T;
   content: string;
   valid: true;
 }
 
+/** Failed frontmatter parse result with validation errors */
 export interface FrontmatterError {
   valid: false;
   errors: string[];
   content: string;
 }
 
+/** Parse and validate frontmatter against a zod schema */
 export function parseFrontmatter<T>(
   source: string,
   schema: ZodSchema<T>
@@ -74,6 +77,7 @@ async function getAllMdxFiles(dir: string): Promise<string[]> {
   return files;
 }
 
+/** Validate frontmatter in all mdx files within a directory */
 export async function validateAllFrontmatter<T>(
   docsDir: string,
   schema: ZodSchema<T>

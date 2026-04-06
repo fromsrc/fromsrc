@@ -1,12 +1,14 @@
 import type { Doc } from "./content";
 import { extractHeadings } from "./content";
 
+/** Full docs manifest with version, timestamp, and all pages */
 export interface DocManifest {
   version: number;
   generated: string;
   pages: ManifestPage[];
 }
 
+/** Single page entry in the docs manifest */
 export interface ManifestPage {
   slug: string;
   title: string;
@@ -42,6 +44,7 @@ function toManifestPage(doc: Doc): ManifestPage {
   };
 }
 
+/** Generate a structured manifest from an array of docs */
 export function generateManifest(docs: Doc[]): DocManifest {
   return {
     generated: new Date().toISOString(),
@@ -50,6 +53,7 @@ export function generateManifest(docs: Doc[]): DocManifest {
   };
 }
 
+/** Generate a manifest and serialize it as formatted JSON */
 export function generateManifestJson(docs: Doc[]): string {
   return JSON.stringify(generateManifest(docs), null, 2);
 }

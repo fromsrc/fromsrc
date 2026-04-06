@@ -3,6 +3,7 @@ import { promisify } from "node:util";
 
 const exec = promisify(execFile);
 
+/** Configuration for a git-based content source */
 export interface GitSourceConfig {
   dir: string;
   branch?: string;
@@ -10,6 +11,7 @@ export interface GitSourceConfig {
   glob?: string;
 }
 
+/** File retrieved from a git repository with content and metadata */
 export interface GitFile {
   path: string;
   content: string;
@@ -21,11 +23,13 @@ function ref(config: GitSourceConfig): string {
   return config.tag ?? config.branch ?? "HEAD";
 }
 
+/** Execute a git command and return trimmed stdout */
 export async function gitExec(args: string[], cwd: string): Promise<string> {
   const { stdout } = await exec("git", args, { cwd });
   return stdout.trim();
 }
 
+/** List files in a git tree, optionally filtered by glob */
 export async function listFiles(config: GitSourceConfig): Promise<string[]> {
   const output = await gitExec(
     ["ls-tree", "-r", "--name-only", ref(config)],
@@ -42,6 +46,7 @@ export async function listFiles(config: GitSourceConfig): Promise<string[]> {
   return files.filter((f) => pattern.test(f));
 }
 
+/** Read a file from a git ref with content, hash, and last modified date */
 export async function readFile(
   config: GitSourceConfig,
   path: string
@@ -53,6 +58,7 @@ export async function readFile(
   return { content, hash, lastModified, path };
 }
 
+/** Get the last modified date of a file from git log */
 export async function getLastModified(
   dir: string,
   path: string
@@ -61,11 +67,13 @@ export async function getLastModified(
   return new Date(output);
 }
 
+/** Get the git object hash for a file */
 export async function getFileHash(dir: string, path: string): Promise<string> {
   const output = await gitExec(["hash-object", path], dir);
   return output;
 }
 
+/** Create a content source backed by a local git repository */
 export function createGitSource(config: GitSourceConfig) {
   return {
     get(path: string) {

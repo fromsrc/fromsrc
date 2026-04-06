@@ -1,12 +1,14 @@
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 
+/** Configuration for the docs quality audit */
 export interface AuditConfig {
   docsDir: string;
   maxAge?: number;
   requiredFields?: string[];
 }
 
+/** Single issue found during a docs audit */
 export interface AuditIssue {
   file: string;
   type:
@@ -19,6 +21,7 @@ export interface AuditIssue {
   message: string;
 }
 
+/** Audit results with total files, issues, and quality score */
 export interface AuditResult {
   total: number;
   issues: AuditIssue[];
@@ -63,6 +66,7 @@ async function gather(dir: string): Promise<string[]> {
   return results;
 }
 
+/** Run a quality audit on all docs files in a directory */
 export async function audit(config: AuditConfig): Promise<AuditResult> {
   const maxAge = config.maxAge ?? 90;
   const required = config.requiredFields ?? ["title", "description"];
@@ -125,6 +129,7 @@ export async function audit(config: AuditConfig): Promise<AuditResult> {
   return { issues, score: Math.round(score), total };
 }
 
+/** Format audit results as a human-readable string */
 export function formatAudit(result: AuditResult): string {
   const lines = [
     `audit: ${result.total} files, score ${result.score}/100`,

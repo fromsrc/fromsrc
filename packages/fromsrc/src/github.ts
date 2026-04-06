@@ -4,6 +4,7 @@ import { extractHeadings } from "./content";
 import type { DocMeta, SearchDoc } from "./content";
 import type { ContentSource } from "./source";
 
+/** Configuration for a GitHub API-based content source */
 export interface GithubSourceConfig {
   owner: string;
   repo: string;
@@ -119,6 +120,7 @@ async function request(
   return new Response(null, { status: 429 });
 }
 
+/** Create a content source that fetches docs from a GitHub repository */
 export function createGithubSource(config: GithubSourceConfig): ContentSource {
   const branch = config.branch ?? "main";
   const docsPath = config.path ?? "docs";

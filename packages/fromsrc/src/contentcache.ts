@@ -1,13 +1,16 @@
+/** Single entry stored in the content cache */
 export interface CacheEntry<T> {
   value: T;
   expires: number;
   key: string;
 }
+/** Configuration for the LRU content cache */
 export interface CacheConfig {
   maxSize?: number;
   ttl?: number;
   onEvict?: (key: string) => void;
 }
+/** Cache performance statistics */
 export interface CacheStats {
   hits: number;
   misses: number;
@@ -15,6 +18,7 @@ export interface CacheStats {
   evictions: number;
 }
 
+/** Create an LRU cache with TTL expiration and size limits */
 export function createCache<T>(config?: CacheConfig) {
   const maxSize = config?.maxSize ?? 1000;
   const defaultTtl = config?.ttl ?? 300_000;

@@ -1,15 +1,18 @@
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 
+/** Hash entry for a single content file */
 export interface ContentHash {
   path: string;
   hash: string;
   size: number;
 }
+/** Manifest of all content file hashes for change detection */
 export interface HashManifest {
   generated: string;
   hashes: ContentHash[];
 }
+/** Detected changes between two hash manifests */
 export interface Changes {
   added: string[];
   modified: string[];
@@ -25,10 +28,12 @@ function fnv1a(input: string): string {
   return (h >>> 0).toString(16).padStart(8, "0");
 }
 
+/** Compute an FNV-1a hash of a string */
 export function hashContent(content: string): string {
   return fnv1a(content);
 }
 
+/** Hash a file and return its content hash and size */
 export async function hashFile(filepath: string): Promise<ContentHash> {
   const [content, info] = await Promise.all([
     readFile(filepath, "utf8"),
@@ -51,6 +56,7 @@ async function collectFiles(dir: string): Promise<string[]> {
   return results;
 }
 
+/** Generate a hash manifest for all md/mdx files in a directory */
 export async function generateHashManifest(dir: string): Promise<HashManifest> {
   const files = await collectFiles(dir);
   const hashes = await Promise.all(
@@ -62,6 +68,7 @@ export async function generateHashManifest(dir: string): Promise<HashManifest> {
   return { generated: new Date().toISOString(), hashes };
 }
 
+/** Diff two hash manifests to find added, modified, and removed files */
 export function detectChanges(
   previous: HashManifest,
   current: HashManifest
@@ -86,6 +93,7 @@ export function detectChanges(
   return { added, modified, removed };
 }
 
+/** Hash only the frontmatter section of a markdown file */
 export function hashFrontmatter(content: string): string | null {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) {

@@ -1,21 +1,25 @@
+/** Configuration for internationalization routing */
 export interface I18nConfig {
   defaultLocale: string;
   locales: string[];
   pathPrefix?: boolean;
 }
 
+/** Path with its detected locale and original form */
 export interface LocalizedPath {
   locale: string;
   path: string;
   originalPath: string;
 }
 
+/** Resolved locale path with alternate language links */
 export interface I18nResult {
   locale: string;
   path: string;
   alternates: { locale: string; path: string }[];
 }
 
+/** Detect the best locale from an Accept-Language header */
 export function detectLocale(
   acceptLanguage: string,
   locales: string[],
@@ -52,6 +56,7 @@ export function detectLocale(
   return fallback;
 }
 
+/** Prefix a path with a locale segment */
 export function localizePath(
   path: string,
   locale: string,
@@ -64,6 +69,7 @@ export function localizePath(
   return `/${locale}${clean === "/" ? "" : clean}`;
 }
 
+/** Strip the locale prefix from a path */
 export function delocalizePath(
   path: string,
   config: I18nConfig
@@ -86,6 +92,7 @@ export function delocalizePath(
   };
 }
 
+/** Resolve content file paths to check for a given locale */
 export function resolveContent(
   path: string,
   locale: string,
@@ -103,6 +110,7 @@ export function resolveContent(
   return paths;
 }
 
+/** Generate alternate locale links for a given path */
 export function generateAlternates(
   path: string,
   config: I18nConfig
@@ -121,6 +129,7 @@ export function generateAlternates(
   };
 }
 
+/** Create a bound i18n helper with localize, delocalize, and resolve */
 export function createI18n(config: I18nConfig) {
   return {
     delocalize: (path: string) => delocalizePath(path, config),

@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { isRecord } from "./guard";
 
+/** User-facing configuration for a fromsrc project */
 export interface FromsrcConfig {
   title: string;
   description?: string;
@@ -18,6 +19,7 @@ export interface FromsrcConfig {
   draft?: boolean;
 }
 
+/** Fully resolved config with all defaults applied */
 export type ResolvedConfig = Required<
   Pick<
     FromsrcConfig,
@@ -128,16 +130,19 @@ function parseConfig(value: unknown): FromsrcConfig | null {
   return config;
 }
 
+/** Type-safe helper for defining a fromsrc config */
 export function defineConfig(config: FromsrcConfig): FromsrcConfig {
   return config;
 }
 
+/** Resolve a partial config by merging with defaults */
 export function resolveConfig(config: FromsrcConfig): ResolvedConfig {
   const base: Record<string, unknown> = { ...defaults };
   const over: Record<string, unknown> = { ...config };
   return mergeConfig(base, over) as ResolvedConfig;
 }
 
+/** Load config from a fromsrc.config file in the given directory */
 export async function loadConfig(dir: string): Promise<FromsrcConfig> {
   for (const name of ["fromsrc.config.ts", "fromsrc.config.js"]) {
     try {
@@ -158,6 +163,7 @@ export async function loadConfig(dir: string): Promise<FromsrcConfig> {
   throw new Error("no config found");
 }
 
+/** Deep merge two config objects, with overrides taking precedence */
 export function mergeConfig(
   base: Record<string, unknown>,
   overrides: Record<string, unknown>

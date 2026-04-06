@@ -1,3 +1,4 @@
+/** Single analytics event with type, path, and timestamp */
 export interface AnalyticsEvent {
   type: "pageview" | "search" | "feedback" | "click";
   path: string;
@@ -5,6 +6,7 @@ export interface AnalyticsEvent {
   data?: Record<string, string>;
 }
 
+/** Configuration for the analytics tracker */
 export interface AnalyticsConfig {
   endpoint?: string;
   sampleRate?: number;
@@ -17,6 +19,7 @@ interface AnalyticsSummary {
   totalViews: number;
 }
 
+/** Create an analytics tracker with batched event dispatch */
 export function createAnalytics(config?: AnalyticsConfig) {
   const queue: AnalyticsEvent[] = [];
   const endpoint = config?.endpoint ?? "/api/analytics";
@@ -66,6 +69,7 @@ export function createAnalytics(config?: AnalyticsConfig) {
   return { flush, getQueue, track };
 }
 
+/** Generate an inline analytics script tag for client-side tracking */
 export function generateScript(config?: AnalyticsConfig): string {
   const ep = config?.endpoint ?? "/api/analytics";
   const sr = config?.sampleRate ?? 1;
@@ -74,6 +78,7 @@ export function generateScript(config?: AnalyticsConfig): string {
   return `<script>(function(){${dnt ? 'if(navigator.doNotTrack==="1")return;' : ""}${sr < 1 ? `if(Math.random()>${sr})return;` : ""}var q=[],e=${safe},h=history;function t(){q.push({type:"pageview",path:location.pathname,timestamp:+new Date})}function s(){if(q.length){var d=JSON.stringify(q);q=[];navigator.sendBeacon?navigator.sendBeacon(e,d):fetch(e,{method:"POST",body:d})}}t();var o=h.pushState;h.pushState=function(){o.apply(h,arguments);t()};onpopstate=t;setInterval(s,5e3);document.onvisibilitychange=function(){document.hidden&&s()}})()</script>`;
 }
 
+/** Aggregate raw events into top pages, search terms, and total views */
 export function aggregateEvents(events: AnalyticsEvent[]): AnalyticsSummary {
   const pages = new Map<string, number>();
   const terms = new Map<string, number>();

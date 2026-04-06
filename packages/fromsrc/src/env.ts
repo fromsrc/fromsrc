@@ -1,6 +1,9 @@
+/** Supported runtime environments */
 export type Environment = "development" | "production" | "test" | "preview";
+/** Map of feature flag names to their enabled state */
 export type FeatureFlags = Record<string, boolean>;
 
+/** Detect the current runtime environment from env vars */
 export function getEnv(): Environment {
   const vercel = process.env.VERCEL_ENV;
   if (vercel === "preview") {
@@ -20,18 +23,22 @@ export function getEnv(): Environment {
   return "development";
 }
 
+/** Check if running in development mode */
 export function isDev(): boolean {
   return getEnv() === "development";
 }
 
+/** Check if running in production mode */
 export function isProd(): boolean {
   return getEnv() === "production";
 }
 
+/** Check if running in Vercel preview mode */
 export function isPreview(): boolean {
   return getEnv() === "preview";
 }
 
+/** Resolve the base URL from Vercel, env vars, or localhost */
 export function getBaseUrl(): string {
   const vercel = process.env.VERCEL_URL;
   if (vercel) {
@@ -52,6 +59,7 @@ export function getBaseUrl(): string {
   return `http://localhost:${port}`;
 }
 
+/** Collect boolean feature flags from env vars with the given prefix */
 export function getFeatureFlags(prefix = "FEATURE_"): FeatureFlags {
   const flags: FeatureFlags = {};
   for (const [key, value] of Object.entries(process.env)) {
@@ -63,6 +71,7 @@ export function getFeatureFlags(prefix = "FEATURE_"): FeatureFlags {
   return flags;
 }
 
+/** Get a required env var or throw if missing */
 export function requireEnv(name: string): string {
   const value = process.env[name];
   if (value === undefined || value === "") {
@@ -71,6 +80,7 @@ export function requireEnv(name: string): string {
   return value;
 }
 
+/** Get an optional env var with an optional fallback */
 export function optionalEnv(
   name: string,
   fallback?: string
