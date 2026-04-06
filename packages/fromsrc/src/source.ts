@@ -3,6 +3,7 @@ import matter from "gray-matter";
 import type { DocMeta, Heading, SearchDoc } from "./content";
 import { z } from "./schema";
 
+/** Interface for providing documentation content to fromsrc. */
 export interface ContentSource {
   list(): Promise<DocMeta[]>;
   get(
@@ -11,6 +12,7 @@ export interface ContentSource {
   search?(): Promise<SearchDoc[]>;
 }
 
+/** Configuration for fetching documentation from a remote fromsrc instance. */
 export interface RemoteSourceConfig {
   baseUrl: string;
   index?: string;
@@ -20,6 +22,7 @@ export interface RemoteSourceConfig {
   ttl?: number;
 }
 
+/** Creates a content source that fetches docs from a remote URL with TTL caching. */
 export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
   const base = trimslash(config.baseUrl);
   const ttl = config.ttl ?? 1000 * 60 * 5;

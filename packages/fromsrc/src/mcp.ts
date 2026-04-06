@@ -3,6 +3,7 @@ import { localSearch } from "./search";
 import { trimQuery } from "./searchpolicy";
 import type { ContentSource } from "./source";
 
+/** Configuration for the MCP server manifest and handler. */
 export interface McpConfig {
   name: string;
   version: string;
@@ -32,6 +33,7 @@ interface McpManifest {
   tools: McpTool[];
 }
 
+/** Generates an MCP manifest with search, get, and list tool definitions. */
 export function generateMcpManifest(config: McpConfig): McpManifest {
   return {
     capabilities: {
@@ -93,6 +95,7 @@ interface McpHandler {
   listPages(): Promise<PageEntry[]>;
 }
 
+/** Creates an MCP handler that searches, retrieves, and lists docs from a content source. */
 export function createMcpHandler(
   config: McpConfig,
   source: ContentSource

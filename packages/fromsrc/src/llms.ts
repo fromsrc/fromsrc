@@ -1,5 +1,6 @@
 import type { Doc, DocMeta } from "./content";
 
+/** Configuration for generating llms.txt files. */
 export interface LlmsConfig {
   title: string;
   description: string;
@@ -21,6 +22,7 @@ function formatEntry(baseUrl: string, docsPath: string, doc: DocMeta): string {
   return `- [${escapeMarkdown(doc.title)}](${url})${desc}`;
 }
 
+/** Generates an llms.txt index with linked page titles and descriptions. */
 export function generateLlmsIndex(config: LlmsConfig, docs: DocMeta[]): string {
   const docsPath = clean(config.docsPath ?? "/docs");
   const lines = [
@@ -37,6 +39,7 @@ export function generateLlmsIndex(config: LlmsConfig, docs: DocMeta[]): string {
   return lines.join("\n");
 }
 
+/** Generates a full llms.txt with page index and inline content for each page. */
 export function generateLlmsFull(config: LlmsConfig, docs: Doc[]): string {
   const docsPath = clean(config.docsPath ?? "/docs");
   const lines = [
