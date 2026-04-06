@@ -1,7 +1,7 @@
 {
 	"core": {
-		"gzip": 35151,
-		"size": 124783
+		"gzip": 35162,
+		"size": 124802
 	},
 	"readtime": {
 		"gzip": 147,
@@ -12,7 +12,7 @@
 		"size": 1551
 	},
 	"searchindex": {
-		"gzip": 694,
+		"gzip": 696,
 		"size": 1365
 	},
 	"searchpolicy": {
@@ -24,16 +24,16 @@
 		"size": 517
 	},
 	"openapi": {
-		"gzip": 1825,
-		"size": 5162
+		"gzip": 1816,
+		"size": 5079
 	},
 	"algolia": {
-		"gzip": 809,
-		"size": 1565
+		"gzip": 815,
+		"size": 1584
 	},
 	"orama": {
-		"gzip": 754,
-		"size": 1591
+		"gzip": 767,
+		"size": 1618
 	},
 	"next": {
 		"gzip": 331,
