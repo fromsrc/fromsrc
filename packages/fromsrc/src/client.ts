@@ -252,7 +252,7 @@ export type {
   SidebarSection,
 } from "./components/sidebar";
 export { IsFolder, IsSidebarItem, Sidebar } from "./components/sidebar";
-export { SidebarFilter, filternavigation } from "./components/sidebarfilter";
+export { SidebarFilter, filterNavigation } from "./components/sidebarfilter";
 export type {
   SkeletonCardProps,
   SkeletonProps,

@@ -7,13 +7,13 @@ import type { SidebarFolder, SidebarSection } from "./sidebar";
 
 const matches = (text: string, q: string) =>
   text.toLowerCase().includes(q.toLowerCase());
-const foldermatches = (f: SidebarFolder, q: string): boolean =>
+const folderMatches = (f: SidebarFolder, q: string): boolean =>
   matches(f.title, q) ||
   f.items.some((i) =>
-    i.type === "folder" ? foldermatches(i, q) : matches(i.title, q)
+    i.type === "folder" ? folderMatches(i, q) : matches(i.title, q)
   );
 
-export function filternavigation(
+export function filterNavigation(
   nav: SidebarSection[],
   q: string
 ): SidebarSection[] {
@@ -27,7 +27,7 @@ export function filternavigation(
         if (!("type" in i)) {
           return matches(i.title, q);
         }
-        return i.type === "folder" ? foldermatches(i, q) : matches(i.title, q);
+        return i.type === "folder" ? folderMatches(i, q) : matches(i.title, q);
       }),
     }))
     .filter((s) => s.items.length > 0);
