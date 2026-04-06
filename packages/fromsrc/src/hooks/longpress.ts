@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 export interface LongPressHandlers {
   onMouseDown: (e: React.MouseEvent) => void;
@@ -25,6 +25,12 @@ export function useLongPress(
       clearTimeout(timer.current);
       timer.current = null;
     }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
   }, []);
 
   return {

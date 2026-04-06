@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type PermissionName =
   | "camera"
@@ -25,6 +25,9 @@ function toState(value: string): PermissionState {
 export function usePermission(name: PermissionName): PermissionState {
   const [state, setState] = useState<PermissionState>("unknown");
 
+  const statusRef = useRef<PermissionStatus | null>(null);
+  const handlerRef = useRef<(() => void) | null>(null);
+
   useEffect(() => {
     if (typeof navigator === "undefined" || !navigator.permissions) {
       return;
@@ -38,17 +41,25 @@ export function usePermission(name: PermissionName): PermissionState {
         if (!mounted) {
           return;
         }
+        statusRef.current = status;
         setState(toState(status.state));
-        status.addEventListener("change", () => {
+        const handler = () => {
           if (mounted) {
             setState(toState(status.state));
           }
-        });
+        };
+        handlerRef.current = handler;
+        status.addEventListener("change", handler);
       })
       .catch(() => {});
 
     return () => {
       mounted = false;
+      if (statusRef.current && handlerRef.current) {
+        statusRef.current.removeEventListener("change", handlerRef.current);
+      }
+      statusRef.current = null;
+      handlerRef.current = null;
     };
   }, [name]);
 

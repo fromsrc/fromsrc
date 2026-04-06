@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 export interface PreLinkProps {
   href: string;
@@ -41,6 +41,13 @@ export const PreLink = memo(function PreLink({
       clearTimeout(showTimer.current);
     }
     hideTimer.current = setTimeout(() => setVisible(false), 100);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (showTimer.current) clearTimeout(showTimer.current);
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    };
   }, []);
 
   const host = domain(href);

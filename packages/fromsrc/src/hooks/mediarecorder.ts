@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface MediaRecorderResult {
   recording: boolean;
@@ -15,6 +15,7 @@ export function useMediaRecorder(mimeType = "audio/webm"): MediaRecorderResult {
   const [recording, setRecording] = useState(false);
   const [blob, setBlob] = useState<Blob | null>(null);
   const [url, setUrl] = useState<string | null>(null);
+  const urlRef = useRef<string | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const supported = typeof window !== "undefined" && "MediaRecorder" in window;
@@ -33,8 +34,13 @@ export function useMediaRecorder(mimeType = "audio/webm"): MediaRecorderResult {
       };
       recorder.onstop = () => {
         const b = new Blob(chunksRef.current, { type: mimeType });
+        if (urlRef.current) {
+          URL.revokeObjectURL(urlRef.current);
+        }
+        const objectUrl = URL.createObjectURL(b);
+        urlRef.current = objectUrl;
         setBlob(b);
-        setUrl(URL.createObjectURL(b));
+        setUrl(objectUrl);
         setRecording(false);
       };
       recorderRef.current = recorder;
@@ -46,6 +52,14 @@ export function useMediaRecorder(mimeType = "audio/webm"): MediaRecorderResult {
 
   const stop = useCallback(() => {
     recorderRef.current?.stop();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (urlRef.current) {
+        URL.revokeObjectURL(urlRef.current);
+      }
+    };
   }, []);
 
   return { blob, recording, start, stop, supported, url };
