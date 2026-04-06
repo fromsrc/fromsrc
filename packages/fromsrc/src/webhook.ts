@@ -17,13 +17,13 @@ export interface WebhookResult {
   duration: number;
 }
 
-type jsonrecord = Record<string, unknown>;
+type JsonRecord = Record<string, unknown>;
 
 function sign(secret: string, timestamp: number): string {
   return btoa(`${secret}${timestamp}`);
 }
 
-function isrecord(value: unknown): value is jsonrecord {
+function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
@@ -32,7 +32,7 @@ function istype(value: unknown): value is WebhookEvent["type"] {
 }
 
 function isevent(value: unknown): value is WebhookEvent {
-  if (!isrecord(value)) {
+  if (!isRecord(value)) {
     return false;
   }
   if (!istype(value.type)) {
@@ -47,7 +47,7 @@ function isevent(value: unknown): value is WebhookEvent {
   ) {
     return false;
   }
-  if (value.metadata !== undefined && !isrecord(value.metadata)) {
+  if (value.metadata !== undefined && !isRecord(value.metadata)) {
     return false;
   }
   return true;

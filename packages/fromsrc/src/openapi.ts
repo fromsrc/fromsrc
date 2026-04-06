@@ -39,14 +39,14 @@ const HTTP_METHODS = [
   "trace",
 ] as const;
 
-type jsonrecord = Record<string, unknown>;
+type JsonRecord = Record<string, unknown>;
 
-function isrecord(value: unknown): value is jsonrecord {
+function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
-function asrecord(value: unknown): jsonrecord {
-  return isrecord(value) ? value : {};
+function asrecord(value: unknown): JsonRecord {
+  return isRecord(value) ? value : {};
 }
 
 function extractParameters(root: unknown, raw: unknown): OpenApiParameter[] {
@@ -106,7 +106,7 @@ function extractRequestBody(
 }
 
 function extractResponses(root: unknown, raw: unknown): OpenApiResponse[] {
-  if (!isrecord(raw)) {
+  if (!isRecord(raw)) {
     return [];
   }
   const list = Object.entries(raw).map(([status, val]) => {
@@ -139,7 +139,7 @@ function extractSecurity(raw: unknown): string[] | undefined {
   }
   const names = new Set<string>();
   for (const item of raw) {
-    if (!isrecord(item)) {
+    if (!isRecord(item)) {
       continue;
     }
     for (const key of Object.keys(item)) {

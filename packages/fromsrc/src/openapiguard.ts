@@ -1,6 +1,6 @@
 import type { OpenApiTag } from "./openapiutil";
 
-type jsonrecord = Record<string, unknown>;
+type JsonRecord = Record<string, unknown>;
 
 interface rootvalue {
   info: {
@@ -16,7 +16,7 @@ interface rootvalue {
   definitions?: Record<string, unknown>;
 }
 
-function isrecord(value: unknown): value is jsonrecord {
+function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
@@ -25,7 +25,7 @@ function totext(value: unknown): string | undefined {
 }
 
 function torecord(value: unknown): Record<string, unknown> | undefined {
-  return isrecord(value) ? value : undefined;
+  return isRecord(value) ? value : undefined;
 }
 
 function parseinfo(value: unknown): rootvalue["info"] {
@@ -75,7 +75,7 @@ function parsedefinitions(value: unknown): rootvalue["definitions"] {
 }
 
 function parseroot(value: unknown): rootvalue {
-  if (!isrecord(value)) {
+  if (!isRecord(value)) {
     throw new Error("invalid openapi specification");
   }
   return {
@@ -117,7 +117,7 @@ export function parsespec(spec: string | object): unknown {
     } catch {
       try {
         const parsed: unknown = parseyaml(text);
-        if (!isrecord(parsed)) {
+        if (!isRecord(parsed)) {
           throw new Error("invalid openapi specification");
         }
         return parsed;

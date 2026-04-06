@@ -78,10 +78,10 @@ export function generateEndpointSlug(method: string, path: string): string {
     .replace(/-$/, "")}`;
 }
 
-type jsonrecord = Record<string, unknown>;
+type JsonRecord = Record<string, unknown>;
 const MAX_SCHEMA_DEPTH = 40;
 
-function isrecord(value: unknown): value is jsonrecord {
+function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
@@ -92,7 +92,7 @@ export function resolveRef(root: unknown, ref: string): unknown {
   const parts = ref.slice(2).split("/");
   let current: unknown = root;
   for (const part of parts) {
-    if (!isrecord(current)) {
+    if (!isRecord(current)) {
       return {};
     }
     current = current[part];
@@ -112,7 +112,7 @@ export function resolveSchema(
   if (depth > MAX_SCHEMA_DEPTH) {
     return {};
   }
-  if (!isrecord(raw)) {
+  if (!isRecord(raw)) {
     return {};
   }
   if (typeof raw.$ref === "string") {
@@ -154,7 +154,7 @@ export function resolveSchema(
     );
   }
 
-  if (isrecord(raw.properties)) {
+  if (isRecord(raw.properties)) {
     schema.properties = {};
     for (const [key, val] of Object.entries(raw.properties)) {
       schema.properties[key] = resolveSchema(root, val, depth + 1, refs);
@@ -187,12 +187,12 @@ export function resolveContent(
   root: unknown,
   raw: unknown
 ): Record<string, { schema: OpenApiSchema }> | undefined {
-  if (!isrecord(raw)) {
+  if (!isRecord(raw)) {
     return undefined;
   }
   const result: Record<string, { schema: OpenApiSchema }> = {};
   for (const [mediaType, val] of Object.entries(raw)) {
-    const value = isrecord(val) ? val.schema : undefined;
+    const value = isRecord(val) ? val.schema : undefined;
     result[mediaType] = { schema: resolveSchema(root, value) };
   }
   return result;
