@@ -7,7 +7,7 @@ const files = [
   {
     file: join(root, "packages", "fromsrc", "src", "searchpolicy.ts"),
     name: "policy",
-    pattern: /export\s+const\s+searchmaxquery\s*=\s*(\d+)/,
+    pattern: /export\s+const\s+searchMaxQuery\s*=\s*(\d+)/,
   },
   {
     file: join(root, "app", "api", "search", "route.ts"),
@@ -17,7 +17,7 @@ const files = [
   {
     file: join(root, "app", "api", "search", "route.ts"),
     name: "api-usage",
-    pattern: /\.max\(searchmaxquery\)/,
+    pattern: /\.max\(searchMaxQuery\)/,
   },
   {
     file: join(root, "packages", "fromsrc", "src", "components", "search.tsx"),
@@ -27,7 +27,7 @@ const files = [
   {
     file: join(root, "packages", "fromsrc", "src", "components", "search.tsx"),
     name: "search-ui-usage",
-    pattern: /trimquery\(/,
+    pattern: /trimQuery\(/,
   },
   {
     file: join(root, "packages", "fromsrc", "src", "components", "searcher.ts"),
@@ -37,12 +37,12 @@ const files = [
   {
     file: join(root, "packages", "fromsrc", "src", "components", "searcher.ts"),
     name: "search-fetcher-usage-normalize",
-    pattern: /normalizequery\(/,
+    pattern: /normalizeQuery\(/,
   },
   {
     file: join(root, "packages", "fromsrc", "src", "components", "searcher.ts"),
     name: "search-fetcher-usage-trim",
-    pattern: /trimquery\(/,
+    pattern: /trimQuery\(/,
   },
 ];
 

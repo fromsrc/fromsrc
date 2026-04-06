@@ -19,7 +19,7 @@ export const list = [
     name: "readtime",
   },
   {
-    code: "import { scoreterms, termindex } from 'fromsrc/searchscore'; const data={title:'intro',slug:'/intro',description:'d',content:'text',titleindex:termindex(['intro']),slugindex:termindex(['intro']),descriptionindex:termindex(['d']),headingindex:termindex(['intro']),contentindex:termindex(['text'])}; export default scoreterms(['intro'],data);",
+    code: "import { scoreTerms, termIndex } from 'fromsrc/searchscore'; const data={title:'intro',slug:'/intro',description:'d',content:'text',titleIndex:termIndex(['intro']),slugIndex:termIndex(['intro']),descriptionIndex:termIndex(['d']),headingIndex:termIndex(['intro']),contentIndex:termIndex(['text'])}; export default scoreTerms(['intro'],data);",
     max: 1700,
     maxgzip: 740,
     name: "searchscore",
@@ -31,7 +31,7 @@ export const list = [
     name: "searchindex",
   },
   {
-    code: "import { normalizequery, searchmaxquery, trimquery } from 'fromsrc/searchpolicy'; export default [normalizequery('A   B'), trimquery('abc'), searchmaxquery];",
+    code: "import { normalizeQuery, searchMaxQuery, trimQuery } from 'fromsrc/searchpolicy'; export default [normalizeQuery('A   B'), trimQuery('abc'), searchMaxQuery];",
     max: 260,
     maxgzip: 170,
     name: "searchpolicy",
