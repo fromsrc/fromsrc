@@ -18,11 +18,11 @@ interface DiffLine {
   afterNum?: number;
 }
 
-function computediff(before: string, after: string): DiffLine[] {
-  const beforelines = before.split("\n");
-  const afterlines = after.split("\n");
-  const m = beforelines.length;
-  const n = afterlines.length;
+function computeDiff(before: string, after: string): DiffLine[] {
+  const beforeLines = before.split("\n");
+  const afterLines = after.split("\n");
+  const m = beforeLines.length;
+  const n = afterLines.length;
   const lcs: number[][] = Array.from({ length: m + 1 }, () =>
     Array(n + 1).fill(0)
   );
@@ -30,14 +30,14 @@ function computediff(before: string, after: string): DiffLine[] {
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       const row = lcs[i];
-      const prevrow = lcs[i - 1];
-      if (!row || !prevrow) {
+      const prevRow = lcs[i - 1];
+      if (!row || !prevRow) {
         continue;
       }
-      const diag = prevrow[j - 1] ?? 0;
-      const up = prevrow[j] ?? 0;
+      const diag = prevRow[j - 1] ?? 0;
+      const up = prevRow[j] ?? 0;
       const left = row[j - 1] ?? 0;
-      if (beforelines[i - 1] === afterlines[j - 1]) {
+      if (beforeLines[i - 1] === afterLines[j - 1]) {
         row[j] = diag + 1;
       } else {
         row[j] = Math.max(up, left);
@@ -48,51 +48,51 @@ function computediff(before: string, after: string): DiffLine[] {
   const result: DiffLine[] = [];
   let i = m;
   let j = n;
-  let beforenum = m;
-  let afternum = n;
+  let beforeNum = m;
+  let afterNum = n;
 
   while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && beforelines[i - 1] === afterlines[j - 1]) {
-      const content = beforelines[i - 1];
+    if (i > 0 && j > 0 && beforeLines[i - 1] === afterLines[j - 1]) {
+      const content = beforeLines[i - 1];
       if (content === undefined) {
         break;
       }
       result.unshift({
-        afterNum: afternum,
-        beforeNum: beforenum,
+        afterNum,
+        beforeNum,
         content,
         type: "context",
       });
       i--;
       j--;
-      beforenum--;
-      afternum--;
+      beforeNum--;
+      afterNum--;
     } else if (
       j > 0 &&
       (i === 0 || (lcs[i]?.[j - 1] ?? 0) >= (lcs[i - 1]?.[j] ?? 0))
     ) {
-      const content = afterlines[j - 1];
+      const content = afterLines[j - 1];
       if (content === undefined) {
         break;
       }
-      result.unshift({ afterNum: afternum, content, type: "add" });
+      result.unshift({ afterNum, content, type: "add" });
       j--;
-      afternum--;
+      afterNum--;
     } else if (i > 0) {
-      const content = beforelines[i - 1];
+      const content = beforeLines[i - 1];
       if (content === undefined) {
         break;
       }
-      result.unshift({ beforeNum: beforenum, content, type: "remove" });
+      result.unshift({ beforeNum, content, type: "remove" });
       i--;
-      beforenum--;
+      beforeNum--;
     }
   }
 
   return result;
 }
 
-const containerstyle = {
+const containerStyle = {
   backgroundColor: "#0d0d0d",
   border: "1px solid #1c1c1c",
   borderRadius: "8px",
@@ -101,7 +101,7 @@ const containerstyle = {
   position: "relative" as const,
 };
 
-const headerstyle = {
+const headerStyle = {
   alignItems: "center",
   backgroundColor: "#161b22",
   borderBottom: "1px solid #1c1c1c",
@@ -111,20 +111,20 @@ const headerstyle = {
   padding: "0 16px",
 };
 
-const titlestyle = {
+const titleStyle = {
   color: "#a0a0a0",
   fontFamily: "ui-monospace, monospace",
   fontSize: "0.8rem",
 };
 
-const linestyle = {
+const lineStyle = {
   display: "flex",
   fontFamily: "ui-monospace, monospace",
   fontSize: "13px",
   lineHeight: "1.6",
 };
 
-const linenumstyle = {
+const lineNumStyle = {
   color: "#4a4a4a",
   display: "inline-block",
   padding: "0 8px",
@@ -157,8 +157,8 @@ function DiffLineComponent({
     line.type === "add" ? "+ " : (line.type === "remove" ? "- " : "");
 
   return (
-    <div style={{ ...linestyle, backgroundColor: bg }}>
-      <span style={linenumstyle}>{num}</span>
+    <div style={{ ...lineStyle, backgroundColor: bg }}>
+      <span style={lineNumStyle}>{num}</span>
       <span style={{ flex: 1, paddingLeft: "8px", paddingRight: "16px" }}>
         <span style={{ color }}>
           {prefix}
@@ -176,15 +176,15 @@ export const DiffView = memo(function DiffView({
   title,
   mode = "unified",
 }: DiffViewProps): ReactNode {
-  const diff = useMemo(() => computediff(before, after), [before, after]);
-  const hasheader = title || lang;
+  const diff = useMemo(() => computeDiff(before, after), [before, after]);
+  const hasHeader = title || lang;
 
   if (mode === "split") {
     return (
-      <figure role="group" style={containerstyle}>
-        {hasheader && (
-          <div style={headerstyle}>
-            <span style={titlestyle}>{title || lang}</span>
+      <figure role="group" style={containerStyle}>
+        {hasHeader && (
+          <div style={headerStyle}>
+            <span style={titleStyle}>{title || lang}</span>
           </div>
         )}
         <div
@@ -215,10 +215,10 @@ export const DiffView = memo(function DiffView({
   }
 
   return (
-    <figure role="group" style={containerstyle}>
-      {hasheader && (
-        <div style={headerstyle}>
-          <span style={titlestyle}>{title || lang}</span>
+    <figure role="group" style={containerStyle}>
+      {hasHeader && (
+        <div style={headerStyle}>
+          <span style={titleStyle}>{title || lang}</span>
         </div>
       )}
       <div style={{ maxHeight: "500px", overflow: "auto" }}>
