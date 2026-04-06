@@ -10,7 +10,7 @@ export interface NetworkState {
   saveData?: boolean;
 }
 
-interface connectionstate {
+interface ConnectionState {
   downlink?: number;
   effectiveType?: string;
   rtt?: number;
@@ -19,13 +19,13 @@ interface connectionstate {
   removeEventListener?: (type: "change", listener: () => void) => void;
 }
 
-type connectionnavigator = Navigator & { connection?: connectionstate };
+type ConnectionNavigator = Navigator & { connection?: ConnectionState };
 
 function getState(): NetworkState {
   if (typeof navigator === "undefined") {
     return { online: true };
   }
-  const conn = (navigator as connectionnavigator).connection;
+  const conn = (navigator as ConnectionNavigator).connection;
   return {
     downlink: conn?.downlink,
     effectiveType: conn?.effectiveType,
@@ -45,7 +45,7 @@ export function useNetworkState(): NetworkState {
 
     window.addEventListener("online", update);
     window.addEventListener("offline", update);
-    const conn = (navigator as connectionnavigator).connection;
+    const conn = (navigator as ConnectionNavigator).connection;
     conn?.addEventListener?.("change", update);
 
     return () => {

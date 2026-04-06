@@ -8,16 +8,16 @@ export interface EyeDropperResult {
   pick: () => Promise<string | null>;
 }
 
-interface eyedropperresult {
+interface EyeDropperRawResult {
   sRGBHex: string;
 }
 
-interface eyedropperapi {
-  open: () => Promise<eyedropperresult>;
+interface EyeDropperApi {
+  open: () => Promise<EyeDropperRawResult>;
 }
 
-type eyedropperctor = new () => eyedropperapi;
-type eyedropperwindow = Window & { EyeDropper?: eyedropperctor };
+type EyeDropperCtor = new () => EyeDropperApi;
+type EyeDropperWindow = Window & { EyeDropper?: EyeDropperCtor };
 
 export function useEyeDropper(): EyeDropperResult {
   const [color, setColor] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export function useEyeDropper(): EyeDropperResult {
       return null;
     }
     try {
-      const Dropper = (window as eyedropperwindow).EyeDropper;
+      const Dropper = (window as EyeDropperWindow).EyeDropper;
       if (!Dropper) {
         return null;
       }

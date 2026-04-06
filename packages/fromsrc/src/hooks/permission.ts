@@ -12,11 +12,11 @@ export type PermissionName =
 
 export type PermissionState = "granted" | "denied" | "prompt" | "unknown";
 
-interface permissionquery {
+interface PermissionQuery {
   query: (options: { name: string }) => Promise<PermissionStatus>;
 }
 
-function tostate(value: string): PermissionState {
+function toState(value: string): PermissionState {
   return value === "granted" || value === "denied" || value === "prompt"
     ? value
     : "unknown";
@@ -32,16 +32,16 @@ export function usePermission(name: PermissionName): PermissionState {
 
     let mounted = true;
 
-    (navigator.permissions as permissionquery)
+    (navigator.permissions as PermissionQuery)
       .query({ name })
       .then((status) => {
         if (!mounted) {
           return;
         }
-        setState(tostate(status.state));
+        setState(toState(status.state));
         status.addEventListener("change", () => {
           if (mounted) {
-            setState(tostate(status.state));
+            setState(toState(status.state));
           }
         });
       })

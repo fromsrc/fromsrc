@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 
-interface changeevent {
+interface ChangeEvent {
   target: { value: unknown };
 }
 
@@ -23,7 +23,7 @@ export interface FormState<T extends Record<string, unknown>> {
   set: <K extends keyof T>(field: K, value: T[K]) => void;
   setError: (field: keyof T, error: string | undefined) => void;
   reset: () => void;
-  handleChange: <K extends keyof T>(field: K) => (e: changeevent) => void;
+  handleChange: <K extends keyof T>(field: K) => (e: ChangeEvent) => void;
   handleBlur: (field: keyof T) => () => void;
 }
 
@@ -63,7 +63,7 @@ export function useForm<T extends Record<string, unknown>>(
 
   const handleChange = useCallback(
     <K extends keyof T>(field: K) =>
-      (e: changeevent) =>
+      (e: ChangeEvent) =>
         set(field, e.target.value as T[K]),
     [set]
   );

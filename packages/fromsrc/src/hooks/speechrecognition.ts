@@ -10,32 +10,32 @@ export interface SpeechResult {
   stop: () => void;
 }
 
-interface speechalternative {
+interface SpeechAlternative {
   transcript: string;
 }
 
-interface speechresultitem {
-  0: speechalternative;
+interface SpeechResultItem {
+  0: SpeechAlternative;
 }
 
-interface speechresultevent {
-  results: ArrayLike<speechresultitem>;
+interface SpeechResultEvent {
+  results: ArrayLike<SpeechResultItem>;
 }
 
-interface speechinstance {
+interface SpeechInstance {
   lang: string;
   continuous: boolean;
   interimResults: boolean;
-  onresult: ((event: speechresultevent) => void) | null;
+  onresult: ((event: SpeechResultEvent) => void) | null;
   onend: (() => void) | null;
   start: () => void;
   stop: () => void;
 }
 
-type speechctor = new () => speechinstance;
-type speechwindow = Window & {
-  SpeechRecognition?: speechctor;
-  webkitSpeechRecognition?: speechctor;
+type SpeechCtor = new () => SpeechInstance;
+type SpeechWindow = Window & {
+  SpeechRecognition?: SpeechCtor;
+  webkitSpeechRecognition?: SpeechCtor;
 };
 
 export function useSpeechRecognition(lang = "en-US"): SpeechResult {
@@ -44,13 +44,13 @@ export function useSpeechRecognition(lang = "en-US"): SpeechResult {
   const supported =
     typeof window !== "undefined" &&
     ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
-  const recognitionRef = useRef<speechinstance | null>(null);
+  const recognitionRef = useRef<SpeechInstance | null>(null);
 
   const start = useCallback(() => {
     if (!supported) {
       return;
     }
-    const win = window as speechwindow;
+    const win = window as SpeechWindow;
     const SR = win.SpeechRecognition || win.webkitSpeechRecognition;
     if (!SR) {
       return;

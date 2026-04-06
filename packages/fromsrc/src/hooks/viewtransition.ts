@@ -9,19 +9,19 @@ export interface ViewTransitionResult {
   supported: boolean;
 }
 
-interface transition {
+interface Transition {
   finished: Promise<void>;
 }
 
-type transitiondocument = Document & {
-  startViewTransition?: (action: () => void) => transition;
+type TransitionDocument = Document & {
+  startViewTransition?: (action: () => void) => Transition;
 };
 
 export function useViewTransition(): ViewTransitionResult {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const supported =
     typeof document !== "undefined" &&
-    typeof (document as transitiondocument).startViewTransition === "function";
+    typeof (document as TransitionDocument).startViewTransition === "function";
 
   const startTransition = useCallback(
     (callback: () => void) => {
@@ -30,7 +30,7 @@ export function useViewTransition(): ViewTransitionResult {
         return;
       }
       setIsTransitioning(true);
-      const transition = (document as transitiondocument).startViewTransition?.(
+      const transition = (document as TransitionDocument).startViewTransition?.(
         callback
       );
       if (!transition) {
@@ -50,13 +50,13 @@ export function usePageTransition(): void {
   const previous = useRef(pathname);
   const supported =
     typeof document !== "undefined" &&
-    typeof (document as transitiondocument).startViewTransition === "function";
+    typeof (document as TransitionDocument).startViewTransition === "function";
 
   useEffect(() => {
     if (!supported || pathname === previous.current) {
       return;
     }
     previous.current = pathname;
-    (document as transitiondocument).startViewTransition?.(() => {});
+    (document as TransitionDocument).startViewTransition?.(() => {});
   }, [pathname, supported]);
 }

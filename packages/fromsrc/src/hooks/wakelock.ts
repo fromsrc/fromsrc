@@ -9,28 +9,28 @@ export interface WakeLockResult {
   release: () => Promise<void>;
 }
 
-interface wakesentinel {
+interface WakeSentinel {
   release: () => Promise<void>;
   addEventListener: (type: "release", listener: () => void) => void;
 }
 
-interface wakelockapi {
-  request: (type: "screen") => Promise<wakesentinel>;
+interface WakeLockApi {
+  request: (type: "screen") => Promise<WakeSentinel>;
 }
 
-type wakelocknavigator = Navigator & { wakeLock?: wakelockapi };
+type WakeLockNavigator = Navigator & { wakeLock?: WakeLockApi };
 
 export function useWakeLock(): WakeLockResult {
   const [active, setActive] = useState(false);
   const supported = typeof navigator !== "undefined" && "wakeLock" in navigator;
-  const sentinelRef = useRef<wakesentinel | null>(null);
+  const sentinelRef = useRef<WakeSentinel | null>(null);
 
   const request = useCallback(async () => {
     if (!supported) {
       return;
     }
     try {
-      const lock = (navigator as wakelocknavigator).wakeLock;
+      const lock = (navigator as WakeLockNavigator).wakeLock;
       if (!lock) {
         return;
       }
