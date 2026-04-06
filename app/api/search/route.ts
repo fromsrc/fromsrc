@@ -1,5 +1,5 @@
 import { localSearch, z } from "fromsrc";
-import { searchmaxquery } from "fromsrc/searchpolicy";
+import { searchMaxQuery } from "fromsrc/searchpolicy";
 
 import { sendjson, sendjsonwithheaders } from "@/app/api/_lib/json";
 import { getAllDocs, getSearchDocs } from "@/app/docs/_lib/content";
@@ -9,7 +9,7 @@ const schema = z.object({
   q: z.preprocess(
     (value) =>
       typeof value === "string" && value.trim() === "" ? undefined : value,
-    z.string().trim().min(1).max(searchmaxquery).optional()
+    z.string().trim().min(1).max(searchMaxQuery).optional()
   ),
 });
 

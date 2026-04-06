@@ -1,5 +1,5 @@
 import { z } from "fromsrc";
-import { searchmaxquery } from "fromsrc/searchpolicy";
+import { searchMaxQuery } from "fromsrc/searchpolicy";
 
 import { slugpathregex } from "@/app/api/_lib/slugpattern";
 
@@ -23,7 +23,7 @@ export const methodname = z.enum([
 export const method = z.object({ method: methodname });
 
 export const search = z.object({
-  query: z.string().trim().min(1).max(searchmaxquery),
+  query: z.string().trim().min(1).max(searchMaxQuery),
 });
 export const slug = z.string().trim().max(300).regex(slugpathregex);
 export const page = z.object({ slug });
