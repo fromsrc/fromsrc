@@ -17,14 +17,23 @@ import { getOptionId } from "./results";
 import { useSearcher } from "./searcher";
 import { Trigger } from "./trigger";
 
+/** Search component configuration for documentation sites */
 export interface SearchProps {
+  /** Base path for doc links (default: "/docs") */
   basePath?: string;
+  /** Documentation entries to search through */
   docs?: (DocMeta | SearchDoc)[];
+  /** Remote search API endpoint */
   endpoint?: string;
+  /** Hide the search trigger button */
   hidden?: boolean;
+  /** Search implementation to use (default: localSearch) */
   adapter?: SearchAdapter;
+  /** Input debounce delay in milliseconds (default: 100) */
   debounce?: number;
+  /** Maximum number of results to display (default: 8) */
   limit?: number;
+  /** Show recent search queries (default: true) */
   showRecent?: boolean;
 }
 
