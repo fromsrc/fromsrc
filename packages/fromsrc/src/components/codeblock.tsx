@@ -105,11 +105,25 @@ const WrapBtn = memo(function WrapBtn({
   );
 });
 
+/** Code block with syntax highlighting, copy button, and word wrap toggle */
 export interface CodeBlockProps {
   children: ReactNode;
+  /** Language identifier for syntax highlighting and icon */
   lang?: string;
+  /** Title shown in the header bar */
   title?: string;
+  /** Show line numbers */
   lines?: boolean;
+  /** Show copy button (default: true) */
+  showCopy?: boolean;
+  /** Show word wrap toggle (default: true) */
+  showWrap?: boolean;
+  /** Custom background color (default: uses CSS variable --color-code-bg or #0a0a0a) */
+  background?: string;
+  /** Custom border color (default: uses CSS variable --color-code-border or rgba(255,255,255,0.08)) */
+  borderColor?: string;
+  /** Custom header background (default: uses CSS variable --color-code-header or rgba(255,255,255,0.02)) */
+  headerBackground?: string;
 }
 
 export const CodeBlock = memo(function CodeBlock({
@@ -117,19 +131,24 @@ export const CodeBlock = memo(function CodeBlock({
   lang,
   title,
   lines,
+  showCopy = true,
+  showWrap = true,
+  background,
+  borderColor,
+  headerBackground,
 }: CodeBlockProps): ReactNode {
   const codeRef = useRef<HTMLDivElement>(null);
-  const hasheader = Boolean(title || lang);
+  const hasHeader = Boolean(title || lang);
   const label = title || lang;
-  const [wrap, setwrap] = useState(false);
+  const [wrap, setWrap] = useState(false);
 
   useEffect(() => {
     try {
-      setwrap(localStorage.getItem(wrapKey) === "1");
+      setWrap(localStorage.getItem(wrapKey) === "1");
     } catch {}
     const handler = (event: Event): void => {
       const value = (event as CustomEvent<string>).detail;
-      setwrap(value === "1");
+      setWrap(value === "1");
     };
     window.addEventListener(wrapEvent, handler);
     return () => window.removeEventListener(wrapEvent, handler);
@@ -138,28 +157,34 @@ export const CodeBlock = memo(function CodeBlock({
   const toggle = useCallback((): void => {
     const next = !wrap;
     const value = next ? "1" : "0";
-    setwrap(next);
+    setWrap(next);
     try {
       localStorage.setItem(wrapKey, value);
     } catch {}
     window.dispatchEvent(new CustomEvent(wrapEvent, { detail: value }));
   }, [wrap]);
 
-  const controls = (
+  const hasControls = showWrap || showCopy;
+
+  const controls = hasControls ? (
     <div style={{ alignItems: "center", display: "flex", gap: "4px" }}>
-      <WrapBtn wrap={wrap} toggle={toggle} />
-      <CopyBtn codeRef={codeRef} />
+      {showWrap && <WrapBtn wrap={wrap} toggle={toggle} />}
+      {showCopy && <CopyBtn codeRef={codeRef} />}
     </div>
-  );
+  ) : null;
+
+  const bg = background ?? "var(--color-code-bg, #0a0a0a)";
+  const border = borderColor ?? "var(--color-code-border, rgba(255,255,255,0.08))";
+  const headerBg = headerBackground ?? "var(--color-code-header, rgba(255,255,255,0.02))";
 
   return (
     <figure
       role="group"
-      aria-label={hasheader ? label : undefined}
+      aria-label={hasHeader ? label : undefined}
       data-line-numbers={lines || undefined}
       style={{
-        backgroundColor: "#0a0a0a",
-        border: "1px solid rgba(255,255,255,0.08)",
+        backgroundColor: bg,
+        border: `1px solid ${border}`,
         borderRadius: "12px",
         margin: "24px 0",
         overflow: "hidden",
@@ -167,12 +192,12 @@ export const CodeBlock = memo(function CodeBlock({
       }}
     >
       {lines && <style dangerouslySetInnerHTML={{ __html: lineNumberStyle }} />}
-      {hasheader && (
+      {hasHeader && (
         <div
           style={{
             alignItems: "center",
-            backgroundColor: "rgba(255,255,255,0.02)",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
+            backgroundColor: headerBg,
+            borderBottom: `1px solid ${border}`,
             display: "flex",
             height: "40px",
             justifyContent: "space-between",
@@ -198,7 +223,7 @@ export const CodeBlock = memo(function CodeBlock({
         ref={codeRef}
         tabIndex={0}
         role="region"
-        aria-label={hasheader ? `${label} code` : "code"}
+        aria-label={hasHeader ? `${label} code` : "code"}
         className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] focus:outline-none focus:ring-1 focus:ring-dim"
         style={{
           fontSize: "13px",
@@ -212,7 +237,7 @@ export const CodeBlock = memo(function CodeBlock({
       >
         {children}
       </div>
-      {!hasheader && (
+      {!hasHeader && controls && (
         <div
           style={{
             alignItems: "center",
