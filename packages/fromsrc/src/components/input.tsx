@@ -1,6 +1,7 @@
 "use client";
 
-import { forwardRef, memo, useId } from "react";
+import type { Ref } from "react";
+import { memo, useId } from "react";
 import type { ReactNode } from "react";
 
 import { ErrorMessage } from "./errormessage";
@@ -43,20 +44,18 @@ const sizes: Record<InputSize, string> = {
   sm: "h-8 px-2.5 text-xs",
 };
 
-function InputBase(
-  {
-    variant = "default",
-    size = "md",
-    label,
-    error,
-    hint,
-    tooltip,
-    className = "",
-    id,
-    ...props
-  }: InputProps,
-  ref: React.ForwardedRef<HTMLInputElement>
-): React.ReactElement {
+export const Input = memo(function Input({
+  ref,
+  variant = "default",
+  size = "md",
+  label,
+  error,
+  hint,
+  tooltip,
+  className = "",
+  id,
+  ...props
+}: InputProps & { ref?: Ref<HTMLInputElement> }): React.ReactElement {
   const generatedId = useId();
   const inputId = id || generatedId;
   const errorId = error ? `${inputId}-error` : undefined;
@@ -84,6 +83,4 @@ function InputBase(
       )}
     </div>
   );
-}
-
-export const Input = memo(forwardRef<HTMLInputElement, InputProps>(InputBase));
+});

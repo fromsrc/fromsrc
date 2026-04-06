@@ -1,6 +1,7 @@
 "use client";
 
-import { forwardRef, memo } from "react";
+import type { Ref } from "react";
+import { memo } from "react";
 import type { ComponentPropsWithoutRef, JSX } from "react";
 
 import { Spinner } from "./spinner";
@@ -43,46 +44,37 @@ const spinnerSizes: Record<ButtonSize, "sm" | "md" | "lg"> = {
   sm: "sm",
 };
 
-const ButtonInner = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      variant = "default",
-      size = "md",
-      loading,
-      disabled,
-      children,
-      className = "",
-      ...props
-    },
-    ref
-  ): JSX.Element => {
-    const isDisabled = disabled || loading;
+export const Button = memo(function Button({
+  ref,
+  variant = "default",
+  size = "md",
+  loading,
+  disabled,
+  children,
+  className = "",
+  ...props
+}: ButtonProps & { ref?: Ref<HTMLButtonElement> }): JSX.Element {
+  const isDisabled = disabled || loading;
 
-    return (
-      <button
-        ref={ref}
-        type={props.type ?? "button"}
-        disabled={isDisabled}
-        aria-disabled={isDisabled || undefined}
-        aria-busy={loading || undefined}
-        aria-live={loading ? "polite" : undefined}
-        className={`inline-flex items-center justify-center rounded-md border font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`.trim()}
-        {...props}
-      >
-        {loading && (
-          <Spinner
-            size={spinnerSizes[size]}
-            className="shrink-0"
-            aria-hidden="true"
-          />
-        )}
-        {children}
-      </button>
-    );
-  }
-);
-
-ButtonInner.displayName = "Button";
-
-/** Accessible button component with variants, sizes, and loading state */
-export const Button = memo(ButtonInner);
+  return (
+    <button
+      ref={ref}
+      type={props.type ?? "button"}
+      disabled={isDisabled}
+      aria-disabled={isDisabled || undefined}
+      aria-busy={loading || undefined}
+      aria-live={loading ? "polite" : undefined}
+      className={`inline-flex items-center justify-center rounded-md border font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`.trim()}
+      {...props}
+    >
+      {loading && (
+        <Spinner
+          size={spinnerSizes[size]}
+          className="shrink-0"
+          aria-hidden="true"
+        />
+      )}
+      {children}
+    </button>
+  );
+});

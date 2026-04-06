@@ -1,7 +1,7 @@
 "use client";
 
+import type { Ref } from "react";
 import {
-  forwardRef,
   memo,
   useCallback,
   useEffect,
@@ -57,26 +57,24 @@ const sizes: Record<TextareaSize, string> = {
 };
 
 export const Textarea = memo(
-  forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-    {
-      variant = "default",
-      size = "md",
-      label,
-      error,
-      hint,
-      autoresize = false,
-      showCount = false,
-      tooltip,
-      maxLength,
-      className = "",
-      id,
-      value,
-      defaultValue,
-      onChange,
-      ...props
-    },
-    ref
-  ): React.ReactElement {
+  function Textarea({
+    ref,
+    variant = "default",
+    size = "md",
+    label,
+    error,
+    hint,
+    autoresize = false,
+    showCount = false,
+    tooltip,
+    maxLength,
+    className = "",
+    id,
+    value,
+    defaultValue,
+    onChange,
+    ...props
+  }: TextareaProps & { ref?: Ref<HTMLTextAreaElement> }): React.ReactElement {
     const generatedId = useId();
     const textareaId = id || generatedId;
     const errorId = error ? `${textareaId}-error` : undefined;
@@ -165,5 +163,5 @@ export const Textarea = memo(
         </div>
       </div>
     );
-  })
+  }
 );
