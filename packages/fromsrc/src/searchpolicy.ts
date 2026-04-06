@@ -1,13 +1,13 @@
-export const searchmaxquery = 200;
+export const searchMaxQuery = 200;
 
-export function normalizequery(query: string): string {
+export function normalizeQuery(query: string): string {
   return query
     .toLowerCase()
     .replaceAll(/\s+/g, " ")
     .trim()
-    .slice(0, searchmaxquery);
+    .slice(0, searchMaxQuery);
 }
 
-export function trimquery(query: string): string {
-  return query.slice(0, searchmaxquery);
+export function trimQuery(query: string): string {
+  return query.slice(0, searchMaxQuery);
 }

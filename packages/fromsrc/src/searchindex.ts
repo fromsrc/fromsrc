@@ -54,14 +54,14 @@ export function tokenize(text: string, config?: IndexConfig): string[] {
     .filter((word) => word.length >= min);
 }
 
-function doctext(doc: SearchDocument): string {
+function docText(doc: SearchDocument): string {
   return [doc.title, doc.description ?? "", ...doc.headings, doc.content].join(
     " "
   );
 }
 
 function indexDocument(index: SearchIndex, idx: number, doc: SearchDocument) {
-  const tokens = tokenize(doctext(doc), index.config);
+  const tokens = tokenize(docText(doc), index.config);
   for (const token of tokens) {
     const existing = index.terms.get(token);
     if (existing) {
@@ -93,7 +93,7 @@ export function removeDocument(index: SearchIndex, path: string): void {
   if (!doc) {
     return;
   }
-  const lastidx = index.documents.length - 1;
+  const lastIdx = index.documents.length - 1;
   const remove = (token: string, target: number) => {
     const entries = index.terms.get(token);
     if (!entries) {
@@ -117,22 +117,22 @@ export function removeDocument(index: SearchIndex, path: string): void {
       }
     }
   };
-  for (const token of new Set(tokenize(doctext(doc), index.config))) {
+  for (const token of new Set(tokenize(docText(doc), index.config))) {
     remove(token, idx);
   }
-  if (idx === lastidx) {
+  if (idx === lastIdx) {
     index.documents.pop();
     return;
   }
-  const lastdoc = index.documents[lastidx];
-  if (!lastdoc) {
+  const lastDoc = index.documents[lastIdx];
+  if (!lastDoc) {
     index.documents.pop();
     return;
   }
-  for (const token of new Set(tokenize(doctext(lastdoc), index.config))) {
-    replace(token, lastidx, idx);
+  for (const token of new Set(tokenize(docText(lastDoc), index.config))) {
+    replace(token, lastIdx, idx);
   }
-  index.documents[idx] = lastdoc;
+  index.documents[idx] = lastDoc;
   index.documents.pop();
 }
 
@@ -171,12 +171,12 @@ export function serializeIndex(index: SearchIndex): string {
   });
 }
 
-function isrecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function issearchdocument(value: unknown): value is SearchDocument {
-  if (!isrecord(value)) {
+function isSearchDocument(value: unknown): value is SearchDocument {
+  if (!isRecord(value)) {
     return false;
   }
   if (typeof value.path !== "string") {
@@ -210,7 +210,7 @@ function issearchdocument(value: unknown): value is SearchDocument {
   return true;
 }
 
-function istermentry(value: unknown): value is [string, number[]] {
+function isTermEntry(value: unknown): value is [string, number[]] {
   if (!Array.isArray(value) || value.length !== 2) {
     return false;
   }
@@ -226,8 +226,8 @@ function istermentry(value: unknown): value is [string, number[]] {
   return true;
 }
 
-function isindexconfig(value: unknown): value is IndexConfig {
-  if (!isrecord(value)) {
+function isIndexConfig(value: unknown): value is IndexConfig {
+  if (!isRecord(value)) {
     return false;
   }
   if (value.stemming !== undefined && typeof value.stemming !== "boolean") {
@@ -252,15 +252,15 @@ function isindexconfig(value: unknown): value is IndexConfig {
 
 export function deserializeIndex(data: string): SearchIndex {
   const parsed: unknown = JSON.parse(data);
-  if (!isrecord(parsed)) {
+  if (!isRecord(parsed)) {
     throw new Error("invalid search index");
   }
   const documents = Array.isArray(parsed.documents) ? parsed.documents : null;
-  if (!documents || documents.some((item) => !issearchdocument(item))) {
+  if (!documents || documents.some((item) => !isSearchDocument(item))) {
     throw new Error("invalid search index documents");
   }
-  const termsraw = Array.isArray(parsed.terms) ? parsed.terms : null;
-  if (!termsraw || termsraw.some((item) => !istermentry(item))) {
+  const termsRaw = Array.isArray(parsed.terms) ? parsed.terms : null;
+  if (!termsRaw || termsRaw.some((item) => !isTermEntry(item))) {
     throw new Error("invalid search index terms");
   }
   const { version } = parsed;
@@ -268,13 +268,13 @@ export function deserializeIndex(data: string): SearchIndex {
     throw new TypeError("invalid search index version");
   }
   const { config } = parsed;
-  if (config !== undefined && !isindexconfig(config)) {
+  if (config !== undefined && !isIndexConfig(config)) {
     throw new Error("invalid search index config");
   }
   return {
     config,
     documents,
-    terms: new Map(termsraw),
+    terms: new Map(termsRaw),
     version,
   };
 }
