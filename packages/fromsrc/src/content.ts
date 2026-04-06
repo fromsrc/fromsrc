@@ -8,6 +8,7 @@ import { loadMeta, sortByMeta } from "./meta";
 import type { MetaFile } from "./meta";
 import { baseSchema } from "./schema";
 
+/** Minimal document metadata without content */
 export interface DocMeta {
   slug: string;
   title: string;
@@ -15,17 +16,20 @@ export interface DocMeta {
   order?: number;
 }
 
+/** Parsed heading extracted from markdown content */
 export interface Heading {
   id: string;
   text: string;
   level: number;
 }
 
+/** Document metadata with stripped content and headings for search indexing */
 export interface SearchDoc extends DocMeta {
   content: string;
   headings?: Heading[];
 }
 
+/** Document with parsed frontmatter and raw markdown content */
 export interface Doc<
   T extends Record<string, unknown> = Record<string, unknown>,
 > extends DocMeta {
@@ -94,6 +98,7 @@ async function resolveSource(
   return null;
 }
 
+/** Create a typed content source with schema validation and caching */
 export function defineContent<T extends SchemaType>(config: ContentConfig<T>) {
   const schema = config.schema ?? baseSchema;
 
@@ -364,6 +369,7 @@ function headingId(text: string): string {
     .replaceAll(/^-|-$/g, "");
 }
 
+/** Extract h2-h4 headings from markdown content with unique ids */
 export function extractHeadings(content: string): Heading[] {
   const headings: Heading[] = [];
   const seen = new Map<string, number>();
@@ -410,6 +416,7 @@ function stripMdx(content: string): string {
     .trim();
 }
 
+/** Get a single document by slug path, returns null if not found */
 export async function getDoc(
   docsDir: string,
   slug: string[]
@@ -446,6 +453,7 @@ export async function getDoc(
   }
 }
 
+/** Get all document metadata from a directory, sorted by meta order */
 export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
   const cacheKey = docsDir;
   if (isProduction()) {
@@ -513,6 +521,7 @@ export async function getAllDocs(docsDir: string): Promise<DocMeta[]> {
   return sorted;
 }
 
+/** Build grouped navigation sections from a docs directory */
 export async function getNavigation(
   docsDir: string
 ): Promise<{ title: string; items: DocMeta[] }[]> {
@@ -527,6 +536,7 @@ export async function getNavigation(
 
 const searchCache = new Map<string, SearchDoc[]>();
 
+/** Get all documents with stripped content and headings for search indexing */
 export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
   const cacheKey = docsDir;
   if (isProduction()) {
@@ -695,6 +705,7 @@ function groupKey(slug: string): string {
   return head;
 }
 
+/** Clear all in-memory content caches for file reads, metadata, and search */
 export function clearContentCache(): void {
   fileCache.clear();
   metaCache.clear();
