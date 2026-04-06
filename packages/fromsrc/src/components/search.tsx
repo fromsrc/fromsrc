@@ -10,7 +10,7 @@ import { useLocalStorage } from "../hooks/storage";
 import type { SearchResult } from "../search";
 import type { SearchAdapter } from "../search";
 import { localSearch } from "../search";
-import { trimquery } from "../searchpolicy";
+import { trimQuery } from "../searchpolicy";
 import { Panel } from "./panel";
 import { getRecentOptionId } from "./recent";
 import { getOptionId } from "./results";
@@ -73,7 +73,7 @@ export function Search({
   const requestRef = useRef(0);
   const lastFocus = useRef<HTMLElement | null>(null);
   const updateQuery = useCallback((next: string): void => {
-    const value = trimquery(next);
+    const value = trimQuery(next);
     queryRef.current = value;
     setQuery(value);
   }, []);

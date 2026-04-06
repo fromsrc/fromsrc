@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 
 import type { SearchResult } from "../search";
-import { normalizequery, trimquery } from "../searchpolicy";
+import { normalizeQuery, trimQuery } from "../searchpolicy";
 
 const schema = z.array(
   z.object({
@@ -30,7 +30,7 @@ const store = new Map<string, cacheentry>();
 const inflight = new Map<string, Promise<SearchResult[]>>();
 
 function key(endpoint: string, query: string, limit: number): string {
-  return `${endpoint}::${normalizequery(query)}::${limit}`;
+  return `${endpoint}::${normalizeQuery(query)}::${limit}`;
 }
 
 function getCache(key: string): cacheentry | null {
@@ -84,7 +84,7 @@ async function load(
 ): Promise<SearchResult[]> {
   const params = new URLSearchParams({
     limit: String(limit),
-    q: trimquery(query),
+    q: trimQuery(query),
   });
   const response = await fetch(`${endpoint}?${params}`, {
     headers: stale?.etag ? { "If-None-Match": stale.etag } : undefined,

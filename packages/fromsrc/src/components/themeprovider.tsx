@@ -20,7 +20,7 @@ export interface ThemeProviderProps {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function istheme(value: string | null): value is ThemeMode {
+function isTheme(value: string | null): value is ThemeMode {
   return value === "light" || value === "dark" || value === "system";
 }
 
@@ -49,7 +49,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     const stored = localStorage.getItem(storageKey);
-    if (istheme(stored) && stored !== theme) {
+    if (isTheme(stored) && stored !== theme) {
       setTheme(stored);
     }
   }, [storageKey]);
