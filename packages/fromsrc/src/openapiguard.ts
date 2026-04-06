@@ -1,3 +1,4 @@
+import { isRecord } from "./guard";
 import type { OpenApiTag } from "./openapiutil";
 
 type JsonRecord = Record<string, unknown>;
@@ -14,10 +15,6 @@ interface RootValue {
     schemas?: Record<string, unknown>;
   };
   definitions?: Record<string, unknown>;
-}
-
-function isRecord(value: unknown): value is JsonRecord {
-  return typeof value === "object" && value !== null;
 }
 
 function toText(value: unknown): string | undefined {

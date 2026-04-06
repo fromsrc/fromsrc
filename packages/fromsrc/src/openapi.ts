@@ -1,3 +1,4 @@
+import { isRecord } from "./guard";
 import { parseSpec, rootSchema } from "./openapiguard";
 import {
   generateEndpointSlug,
@@ -40,10 +41,6 @@ const HTTP_METHODS = [
 ] as const;
 
 type JsonRecord = Record<string, unknown>;
-
-function isRecord(value: unknown): value is JsonRecord {
-  return typeof value === "object" && value !== null;
-}
 
 function asRecord(value: unknown): JsonRecord {
   return isRecord(value) ? value : {};

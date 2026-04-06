@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { isRecord } from "./guard";
 
 export interface FromsrcConfig {
   title: string;
@@ -46,10 +47,6 @@ const defaults: Omit<ResolvedConfig, "title"> = {
   theme: "default",
   toc: { maxDepth: 3, minDepth: 2 },
 };
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
 
 function isString(value: unknown): value is string {
   return typeof value === "string";

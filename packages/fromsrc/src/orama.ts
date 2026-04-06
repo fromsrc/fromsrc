@@ -1,4 +1,5 @@
 import type { SearchDoc } from "./content";
+import { isRecord } from "./guard";
 import type { SearchAdapter, SearchResult } from "./search";
 
 export interface OramaConfig {
@@ -21,10 +22,6 @@ interface Hit {
   document?: Hit;
 }
 const MAX_DEPTH = 10;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
 
 function getString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;

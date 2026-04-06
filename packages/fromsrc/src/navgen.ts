@@ -1,5 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { basename, extname, join, relative } from "node:path";
+import { isRecord } from "./guard";
 
 export interface NavItem {
   title: string;
@@ -33,10 +34,6 @@ interface MetaEntry {
   title?: string;
   order?: number;
   icon?: string;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
 }
 
 function isMetaEntry(value: unknown): value is MetaEntry {

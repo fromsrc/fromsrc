@@ -1,4 +1,5 @@
 import type { SearchDoc } from "./content";
+import { isRecord } from "./guard";
 import type { SearchAdapter, SearchResult } from "./search";
 
 export interface AlgoliaConfig {
@@ -6,10 +7,6 @@ export interface AlgoliaConfig {
   readonly key: string;
   index: string;
   attributes?: string[];
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
 }
 
 function getString(value: unknown): string | undefined {

@@ -1,3 +1,5 @@
+import { isRecord } from "./guard";
+
 export type OpenApiMethod =
   | "GET"
   | "POST"
@@ -80,10 +82,6 @@ export function generateEndpointSlug(method: string, path: string): string {
 
 type JsonRecord = Record<string, unknown>;
 const MAX_SCHEMA_DEPTH = 40;
-
-function isRecord(value: unknown): value is JsonRecord {
-  return typeof value === "object" && value !== null;
-}
 
 export function resolveRef(root: unknown, ref: string): unknown {
   if (!ref.startsWith("#/")) {

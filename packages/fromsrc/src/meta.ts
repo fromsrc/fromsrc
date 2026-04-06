@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { isRecord } from "./guard";
 
 /** Shape of a _meta.json file that controls page ordering and display. */
 export interface MetaFile {
@@ -19,10 +20,6 @@ export interface PageTreeItem {
 
 const metaCache = new Map<string, MetaFile | null>();
 const isProduction = () => process.env.NODE_ENV === "production";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
 
 function isMetaFile(data: unknown): data is MetaFile {
   if (!isRecord(data)) {

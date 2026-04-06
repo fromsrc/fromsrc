@@ -1,3 +1,5 @@
+import { isRecord } from "./guard";
+
 export interface WebhookEvent {
   type: "created" | "updated" | "deleted";
   path: string;
@@ -21,10 +23,6 @@ type JsonRecord = Record<string, unknown>;
 
 function sign(secret: string, timestamp: number): string {
   return btoa(`${secret}${timestamp}`);
-}
-
-function isRecord(value: unknown): value is JsonRecord {
-  return typeof value === "object" && value !== null;
 }
 
 function isType(value: unknown): value is WebhookEvent["type"] {

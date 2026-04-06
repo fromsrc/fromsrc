@@ -1,5 +1,6 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
+import { isRecord } from "./guard";
 
 export interface WorkspacePackage {
   name: string;
@@ -26,10 +27,6 @@ export interface WorkspaceNavItem {
 }
 
 type JsonRecord = Record<string, unknown>;
-
-function isRecord(value: unknown): value is JsonRecord {
-  return typeof value === "object" && value !== null;
-}
 
 function parseName(raw: string): string | null {
   try {
