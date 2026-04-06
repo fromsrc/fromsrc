@@ -147,15 +147,14 @@ export function Sidebar({
     <>
       <div className="hidden lg:block shrink-0" style={{ width: widthvalue }} />
       <div
-        className="hidden lg:block fixed left-0 top-0 z-40 h-screen pointer-events-none"
+        className="hidden lg:block fixed left-0 top-0 z-40 h-screen pointer-events-none will-change-transform [backface-visibility:hidden]"
         style={{ width: widthvalue }}
       >
-        {collapsed && (
+        {collapsed && !hovered && (
           <div
             className="fixed inset-y-0 left-0 pointer-events-auto z-40"
-            style={{ width: hovered ? widthvalue : "3px" }}
+            style={{ width: "12px" }}
             onPointerEnter={handleEnter}
-            onPointerLeave={handleLeave}
           />
         )}
         <aside
@@ -163,7 +162,7 @@ export function Sidebar({
           aria-expanded={showExpanded}
           data-collapsed={collapsed}
           data-hovered={collapsed && hovered}
-          className={`${shadow} h-full flex flex-col bg-bg border-r border-line transition-[transform,box-shadow] duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)] pointer-events-auto`}
+          className={`${shadow} h-full flex flex-col bg-bg border-r border-line transition-[transform,box-shadow] duration-250 ease-[cubic-bezier(0.25,0.1,0.25,1)] pointer-events-auto will-change-transform [backface-visibility:hidden]`}
           style={{ transform: translate, width: widthvalue }}
           onPointerEnter={handleEnter}
           onPointerLeave={handleLeave}
