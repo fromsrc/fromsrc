@@ -144,17 +144,17 @@ function DiffLineComponent({
   const bg =
     line.type === "add"
       ? "rgba(46, 160, 67, 0.15)"
-      : (line.type === "remove"
+      : line.type === "remove"
         ? "rgba(248, 81, 73, 0.15)"
-        : "transparent");
+        : "transparent";
   const color =
     line.type === "add"
       ? "#3fb950"
-      : (line.type === "remove"
+      : line.type === "remove"
         ? "#f85149"
-        : "#e6edf3");
+        : "#e6edf3";
   const prefix =
-    line.type === "add" ? "+ " : (line.type === "remove" ? "- " : "");
+    line.type === "add" ? "+ " : line.type === "remove" ? "- " : "";
 
   return (
     <div style={{ ...lineStyle, backgroundColor: bg }}>

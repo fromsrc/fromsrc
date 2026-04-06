@@ -193,7 +193,9 @@ function RadioGroupBase({
     const nextRadio = radios[nextIndex];
     if (nextRadio) {
       nextRadio.focus();
-      const wrapper = nextRadio.closest("[data-radio-value]") as HTMLElement | null;
+      const wrapper = nextRadio.closest(
+        "[data-radio-value]"
+      ) as HTMLElement | null;
       const radioValue = wrapper?.dataset.radioValue;
       if (radioValue) {
         handleChange(radioValue);

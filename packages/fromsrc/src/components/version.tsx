@@ -108,7 +108,9 @@ export function VersionSelect({
           e.preventDefault();
           if (focused >= 0) {
             const version = versions[focused];
-            if (version) {selectVersion(version);}
+            if (version) {
+              selectVersion(version);
+            }
           }
           break;
         }

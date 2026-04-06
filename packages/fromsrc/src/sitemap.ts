@@ -23,11 +23,11 @@ export interface SitemapEntry {
 
 function escape(str: string): string {
   return str
-    .replaceAll('&', "&amp;")
-    .replaceAll('<', "&lt;")
-    .replaceAll('>', "&gt;")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
-    .replaceAll('\'', "&apos;");
+    .replaceAll("'", "&apos;");
 }
 
 function urlEntry(entry: SitemapEntry): string {

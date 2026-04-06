@@ -4,7 +4,8 @@ import { Foot } from "./components/foot";
 import { Hero } from "./components/hero";
 import { Nav } from "./components/nav";
 
-const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const font =
+  "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
 export default function Page() {
   return (

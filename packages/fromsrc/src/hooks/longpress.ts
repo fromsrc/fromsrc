@@ -27,11 +27,9 @@ export function useLongPress(
     }
   }, []);
 
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       if (timer.current) clearTimeout(timer.current);
-    };
-  }, []);
+    }, []);
 
   return {
     onMouseDown: start,

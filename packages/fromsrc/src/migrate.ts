@@ -63,9 +63,9 @@ export const migrateDocusaurus: MigrateTransform = (content, _filepath) => {
     /<TabItem\s+value="([^"]*)"(?:\s+label="([^"]*)")?>/g,
     '<Tab value="$1" label="$2">'
   );
-  out = out.replaceAll('</TabItem>', "</Tab>");
+  out = out.replaceAll("</TabItem>", "</Tab>");
   out = out.replaceAll(/<CodeBlock(?:\s+language="([^"]*)")?\s*>/g, "```$1");
-  out = out.replaceAll('</CodeBlock>', "```");
+  out = out.replaceAll("</CodeBlock>", "```");
   out = convertAdmonitions(out);
   out = out.replaceAll(/^sidebar_position:\s*.*$/gm, "");
   out = out.replaceAll(/^sidebar_label:\s*.*$/gm, "");
@@ -81,8 +81,8 @@ export const migrateNextra: MigrateTransform = (content, _filepath) => {
     '<Callout type="$1">'
   );
   out = out.replaceAll(/<Tabs\s+items=\{(\[.*?\])\}>/g, "<Tabs items={$1}>");
-  out = out.replaceAll('<Tabs.Tab>', "<Tab>");
-  out = out.replaceAll('</Tabs.Tab>', "</Tab>");
+  out = out.replaceAll("<Tabs.Tab>", "<Tab>");
+  out = out.replaceAll("</Tabs.Tab>", "</Tab>");
   return `${out.trim()}\n`;
 };
 
@@ -90,7 +90,7 @@ export const migrateNextra: MigrateTransform = (content, _filepath) => {
 export const migrateMintlify: MigrateTransform = (content, _filepath) => {
   let out = content;
   out = out.replaceAll(/<CardGroup(?:\s+cols=\{(\d+)\})?>/g, "<Cards>");
-  out = out.replaceAll('</CardGroup>', "</Cards>");
+  out = out.replaceAll("</CardGroup>", "</Cards>");
   out = out.replaceAll(/^api:\s*.*$/gm, "");
   out = out.replaceAll(/^openapi:\s*.*$/gm, "");
   out = out.replaceAll(/^auth:\s*.*$/gm, "");

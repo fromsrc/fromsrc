@@ -338,14 +338,18 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
     list,
     async search() {
       const cached = searchCache.get("search");
-      if (cached) {return cached;}
+      if (cached) {
+        return cached;
+      }
       const listed = await list();
       const values = await mapLimit<DocMeta, SearchDoc | null>(
         listed,
         SEARCH_CONCURRENCY,
         async (doc) => {
           const value = await get(doc.slug ? doc.slug.split("/") : []);
-          if (!value) {return null;}
+          if (!value) {
+            return null;
+          }
           const title =
             typeof value.data.title === "string" && value.data.title.length > 0
               ? value.data.title
@@ -365,7 +369,9 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
       );
       const docs: SearchDoc[] = [];
       for (const item of values) {
-        if (!item) {continue;}
+        if (!item) {
+          continue;
+        }
         docs.push(item);
       }
       searchCache.set("search", docs);

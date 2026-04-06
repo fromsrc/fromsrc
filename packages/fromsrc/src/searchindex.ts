@@ -163,7 +163,7 @@ export function search(
     }
   }
   return [...scores.entries()]
-    .sort((a, b) => b[1] - a[1])
+    .toSorted((a, b) => b[1] - a[1])
     .slice(0, limit)
     .map(([idx]) => index.documents[idx])
     .filter((doc): doc is SearchDocument => doc !== undefined);

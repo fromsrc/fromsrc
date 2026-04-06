@@ -44,7 +44,11 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<ThemeMode>(defaultTheme);
   const [resolved, setResolved] = useState<"light" | "dark">(
-    defaultTheme === "system" ? "dark" : defaultTheme === "light" ? "light" : "dark"
+    defaultTheme === "system"
+      ? "dark"
+      : defaultTheme === "light"
+        ? "light"
+        : "dark"
   );
 
   useEffect(() => {

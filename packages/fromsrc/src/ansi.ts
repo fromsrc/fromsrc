@@ -170,33 +170,55 @@ function ansi256ToHex(n: number): string {
 export function transformerAnsi(): ShikiTransformer {
   return {
     code(node) {
-      const {lang} = this.options;
-      if (lang !== "ansi" && lang !== "terminal") {return;}
+      const { lang } = this.options;
+      if (lang !== "ansi" && lang !== "terminal") {
+        return;
+      }
 
       const lines = node.children;
-      if (!Array.isArray(lines)) {return;}
+      if (!Array.isArray(lines)) {
+        return;
+      }
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        if (!line || line.type !== "element") {continue;}
+        if (!line || line.type !== "element") {
+          continue;
+        }
 
         const textNode = line.children[0];
-        if (!textNode || textNode.type !== "text") {continue;}
+        if (!textNode || textNode.type !== "text") {
+          continue;
+        }
 
         const text = textNode.value;
         const segments = parseAnsi(text);
 
-        if (segments.length === 0) {continue;}
+        if (segments.length === 0) {
+          continue;
+        }
 
         line.children = segments.map((seg) => {
           const styles: string[] = [];
 
-          if (seg.style.fg) {styles.push(`color: ${seg.style.fg}`);}
-          if (seg.style.bg) {styles.push(`background-color: ${seg.style.bg}`);}
-          if (seg.style.bold) {styles.push("font-weight: bold");}
-          if (seg.style.dim) {styles.push("opacity: 0.5");}
-          if (seg.style.italic) {styles.push("font-style: italic");}
-          if (seg.style.underline) {styles.push("text-decoration: underline");}
+          if (seg.style.fg) {
+            styles.push(`color: ${seg.style.fg}`);
+          }
+          if (seg.style.bg) {
+            styles.push(`background-color: ${seg.style.bg}`);
+          }
+          if (seg.style.bold) {
+            styles.push("font-weight: bold");
+          }
+          if (seg.style.dim) {
+            styles.push("opacity: 0.5");
+          }
+          if (seg.style.italic) {
+            styles.push("font-style: italic");
+          }
+          if (seg.style.underline) {
+            styles.push("text-decoration: underline");
+          }
 
           if (styles.length === 0) {
             return {

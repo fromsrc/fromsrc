@@ -16,14 +16,20 @@ function extractText(node: Element): string {
 
 const rehypeCopy: Plugin<[], Root> = () => (tree: Root) => {
   visit(tree, "element", (node: Element) => {
-    if (node.tagName !== "pre") {return;}
+    if (node.tagName !== "pre") {
+      return;
+    }
     const code = node.children.find(
       (child): child is Element =>
         child.type === "element" && child.tagName === "code"
     );
-    if (!code) {return;}
+    if (!code) {
+      return;
+    }
     const text = extractText(code).replace(/\n$/, "").trim();
-    if (!node.properties) {node.properties = {};}
+    if (!node.properties) {
+      node.properties = {};
+    }
     node.properties["data-copy"] = text;
   });
 };

@@ -93,7 +93,7 @@ export function rank(
       results.push({ item, matches: m, score: s });
     }
   }
-  return results.sort((a, b) => b.score - a.score);
+  return results.toSorted((a, b) => b.score - a.score);
 }
 
 export function bm25(items: RankableItem[], query: string): RankResult[] {
@@ -107,7 +107,9 @@ export function bm25(items: RankableItem[], query: string): RankResult[] {
   const avgdl = docs.reduce((s, d) => s + d.length, 0) / (docs.length || 1);
   const df = new Map<string, number>();
   for (const doc of docs) {
-    for (const t of new Set(doc)) {df.set(t, (df.get(t) ?? 0) + 1);}
+    for (const t of new Set(doc)) {
+      df.set(t, (df.get(t) ?? 0) + 1);
+    }
   }
   const n = docs.length;
   const results: RankResult[] = [];
@@ -136,7 +138,7 @@ export function bm25(items: RankableItem[], query: string): RankResult[] {
       results.push({ item, matches, score: s });
     }
   }
-  return results.sort((a, b) => b.score - a.score);
+  return results.toSorted((a, b) => b.score - a.score);
 }
 
 export function boostRecent(
@@ -156,5 +158,5 @@ export function boostRecent(
         1 + (maxBoost - 1) * (1 - (now - dateFn(r.item).getTime()) / range);
       return { ...r, score: r.score * boost };
     })
-    .sort((a, b) => b.score - a.score);
+    .toSorted((a, b) => b.score - a.score);
 }

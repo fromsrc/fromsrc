@@ -42,13 +42,17 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
     async get(slug) {
       const path = slug.length === 0 ? "index" : slug.join("/");
       const cached = fileCache.get(path);
-      if (cached) {return cached;}
+      if (cached) {
+        return cached;
+      }
       const normalized =
         slug.length === 0
           ? "index"
           : slug.map((part) => encodeURIComponent(part)).join("/");
       const res = await fetch(`${rawUrl}/${normalized}`);
-      if (!res.ok) {return null;}
+      if (!res.ok) {
+        return null;
+      }
       const source = await res.text();
       const parsed = parseFrontmatter(source);
       const docs = await this.list();
@@ -56,8 +60,12 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
         (doc) => doc.slug === path || (path === "index" && doc.slug === "")
       );
       const data: Record<string, unknown> = { ...parsed.data };
-      if (item?.title) {data.title = item.title;}
-      if (item?.description) {data.description = item.description;}
+      if (item?.title) {
+        data.title = item.title;
+      }
+      if (item?.description) {
+        data.description = item.description;
+      }
       const value = { content: parsed.content, data };
       fileCache.set(path, value);
       return value;
@@ -65,7 +73,9 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
 
     async list() {
       const cached = listCache.get("list");
-      if (cached) {return cached;}
+      if (cached) {
+        return cached;
+      }
       const docs = await loadDocs(docsUrl);
       if (docs.length > 0) {
         listCache.set("list", docs);
@@ -78,7 +88,9 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
 
     async search() {
       const cached = searchCache.get("search");
-      if (cached) {return cached;}
+      if (cached) {
+        return cached;
+      }
       const docs = await loadSearch(searchIndexUrl);
       searchCache.set("search", docs);
       return docs;

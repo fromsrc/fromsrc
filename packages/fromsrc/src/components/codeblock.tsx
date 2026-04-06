@@ -174,8 +174,10 @@ export const CodeBlock = memo(function CodeBlock({
   ) : null;
 
   const bg = background ?? "var(--color-code-bg, #0a0a0a)";
-  const border = borderColor ?? "var(--color-code-border, rgba(255,255,255,0.08))";
-  const headerBg = headerBackground ?? "var(--color-code-header, rgba(255,255,255,0.02))";
+  const border =
+    borderColor ?? "var(--color-code-border, rgba(255,255,255,0.08))";
+  const headerBg =
+    headerBackground ?? "var(--color-code-header, rgba(255,255,255,0.02))";
 
   return (
     <figure

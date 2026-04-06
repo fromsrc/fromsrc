@@ -7,9 +7,31 @@ const d = "text-white/25";
 
 export const heroauth: file = {
   lines: [
-    { content: <><span className={d}>---</span></>, num: 1 },
-    { content: <><span className={k}>title:</span> <span className={v}>Authentication</span></>, num: 2 },
-    { content: <><span className={d}>---</span></>, num: 3 },
+    {
+      content: (
+        <>
+          <span className={d}>---</span>
+        </>
+      ),
+      num: 1,
+    },
+    {
+      content: (
+        <>
+          <span className={k}>title:</span>{" "}
+          <span className={v}>Authentication</span>
+        </>
+      ),
+      num: 2,
+    },
+    {
+      content: (
+        <>
+          <span className={d}>---</span>
+        </>
+      ),
+      num: 3,
+    },
     { content: <>&nbsp;</>, num: 4 },
     {
       content: (
@@ -23,9 +45,23 @@ export const heroauth: file = {
       num: 5,
     },
     { content: <>&nbsp;</>, num: 6 },
-    { content: <><span className={k}># OAuth 2.0</span></>, num: 7 },
+    {
+      content: (
+        <>
+          <span className={k}># OAuth 2.0</span>
+        </>
+      ),
+      num: 7,
+    },
     { content: <>&nbsp;</>, num: 8 },
-    { content: <><span className={v}>Configure OAuth providers for SSO.</span></>, num: 9 },
+    {
+      content: (
+        <>
+          <span className={v}>Configure OAuth providers for SSO.</span>
+        </>
+      ),
+      num: 9,
+    },
     { content: <>&nbsp;</>, num: 10 },
     {
       content: (
@@ -33,8 +69,7 @@ export const heroauth: file = {
           <span className={d}>{"<"}</span>
           <span className={v}>ApiEndpoint</span>{" "}
           <span className={k}>method=</span>
-          <span className={p}>"POST"</span>{" "}
-          <span className={k}>path=</span>
+          <span className={p}>"POST"</span> <span className={k}>path=</span>
           <span className={p}>"/auth/token"</span>{" "}
           <span className={d}>/{">"}</span>
         </>

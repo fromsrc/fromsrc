@@ -59,23 +59,29 @@ const keymap: Record<string, string> = {
 
 const rehypeCode: Plugin<[], Root> = () => (tree: Root) => {
   visit(tree, "element", (node: Element) => {
-    if (node.tagName !== "pre") {return;}
+    if (node.tagName !== "pre") {
+      return;
+    }
 
     const code = node.children.find(
       (child): child is Element =>
         child.type === "element" && child.tagName === "code"
     );
-    if (!code) {return;}
+    if (!code) {
+      return;
+    }
 
     const fromData = code.properties?.["data-meta"];
     const fromMeta = code.properties?.meta;
     const meta =
       typeof fromData === "string"
         ? fromData
-        : (typeof fromMeta === "string"
+        : typeof fromMeta === "string"
           ? fromMeta
-          : "");
-    if (!meta) {return;}
+          : "";
+    if (!meta) {
+      return;
+    }
 
     const attrs = parse(meta);
 

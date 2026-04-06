@@ -35,7 +35,7 @@ function stripTypes(code: string): string {
   result = result.replaceAll(/:\s*\([^)]*\)\s*=>/g, "");
 
   result = result.replaceAll(/\bas\s+\w+/g, "");
-  result = result.replaceAll('!', "");
+  result = result.replaceAll("!", "");
 
   result = result.replaceAll(/\breadonly\s+/g, "");
 
@@ -109,13 +109,18 @@ export const remarkTs2Js: Plugin<[], Root> = () => (tree) => {
       index === null ||
       index === undefined ||
       typeof index !== "number"
-    )
-      {return;}
+    ) {
+      return;
+    }
 
-    const {lang} = node;
-    if (!lang || !["typescript", "ts", "tsx"].includes(lang)) {return;}
+    const { lang } = node;
+    if (!lang || !["typescript", "ts", "tsx"].includes(lang)) {
+      return;
+    }
 
-    if (node.meta?.includes("no-js")) {return;}
+    if (node.meta?.includes("no-js")) {
+      return;
+    }
 
     const jsCode = stripTypes(node.value);
 

@@ -146,7 +146,7 @@ function searchContent(
     ...terms.map((term) => content.indexOf(term)),
   ];
   const idx =
-    positions.filter((value) => value >= 0).sort((a, b) => a - b)[0] ?? -1;
+    positions.filter((value) => value >= 0).toSorted((a, b) => a - b)[0] ?? -1;
   if (idx === -1) {
     return null;
   }
@@ -183,7 +183,7 @@ function searchHeadings(
       (score, term) => score + (heading.normalized.includes(term) ? 3 : 0),
       0
     );
-    const levelBoost = heading.level === 2 ? 8 : (heading.level === 3 ? 5 : 3);
+    const levelBoost = heading.level === 2 ? 8 : heading.level === 3 ? 5 : 3;
     const score = fuzzy(heading.normalized, query) * 2 + termScore + levelBoost;
     if (score > 0 && (!best || score > best.score)) {
       best = {

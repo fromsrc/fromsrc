@@ -55,7 +55,7 @@ function methodRank(method: string): number {
 }
 
 function sorted(endpoints: OpenApiEndpoint[]): OpenApiEndpoint[] {
-  return [...endpoints].sort((left, right) => {
+  return [...endpoints].toSorted((left, right) => {
     if (left.path === right.path) {
       return methodRank(left.method) - methodRank(right.method);
     }
@@ -93,7 +93,7 @@ function groups(endpoints: OpenApiEndpoint[]): [string, OpenApiEndpoint[]][] {
       map.set(name, [endpoint]);
     }
   }
-  return [...map.entries()].sort((left, right) => {
+  return [...map.entries()].toSorted((left, right) => {
     if (left[0] === "untagged") {
       return 1;
     }

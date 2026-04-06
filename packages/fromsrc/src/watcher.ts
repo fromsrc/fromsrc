@@ -25,7 +25,7 @@ export type WatchHandler = (event: WatchEvent) => void;
 function toSlug(dir: string, filepath: string): string {
   return relative(dir, filepath)
     .replace(extname(filepath), "")
-    .replaceAll('\\', "/")
+    .replaceAll("\\", "/")
     .replace(/\/index$/, "");
 }
 

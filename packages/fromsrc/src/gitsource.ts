@@ -88,9 +88,9 @@ export function createGitSource(config: GitSourceConfig) {
 function globToRegex(glob: string): RegExp {
   const escaped = glob
     .replaceAll(/[.+^${}()|[\]\\]/g, "\\$&")
-    .replaceAll('**', "\0")
-    .replaceAll('*', "[^/]*")
-    .replaceAll('\0', ".*")
-    .replaceAll('?', "[^/]");
+    .replaceAll("**", "\0")
+    .replaceAll("*", "[^/]*")
+    .replaceAll("\0", ".*")
+    .replaceAll("?", "[^/]");
   return new RegExp(`^${escaped}$`);
 }

@@ -16,9 +16,8 @@ export function Native() {
             </h2>
 
             <p className="mt-5 text-sm text-[#888] leading-relaxed max-w-md">
-              Every page exposes content endpoints out of the box.
-              Feed docs to LLMs, build RAG pipelines, or connect
-              via Model Context Protocol.
+              Every page exposes content endpoints out of the box. Feed docs to
+              LLMs, build RAG pipelines, or connect via Model Context Protocol.
             </p>
 
             <div className="mt-10 space-y-0">
@@ -43,12 +42,18 @@ export function Native() {
 
           <div className="overflow-hidden rounded-lg border border-white/10 bg-[#050505] shadow-[0_40px_80px_rgba(0,0,0,0.55)] ring-1 ring-white/5">
             <div className="border-b border-white/[0.06] bg-black/15 px-4 py-2">
-              <span className="text-[11px] font-mono text-white/35">terminal</span>
+              <span className="text-[11px] font-mono text-white/35">
+                terminal
+              </span>
             </div>
             <div className="p-5 font-mono text-[13px] leading-[1.8] whitespace-pre">
               <div className="flex gap-3">
-                <span className="text-white/30 select-none" aria-hidden="true">$</span>
-                <span className="text-white/70">curl https://your-docs.com/api/llms/auth</span>
+                <span className="text-white/30 select-none" aria-hidden="true">
+                  $
+                </span>
+                <span className="text-white/70">
+                  curl https://your-docs.com/api/llms/auth
+                </span>
               </div>
               <div className="mt-4 pl-4 border-l border-white/[0.08] text-white/40 space-y-0.5">
                 <p className="text-white/20"># Authentication</p>

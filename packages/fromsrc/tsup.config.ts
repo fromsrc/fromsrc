@@ -36,7 +36,7 @@ function patch(file: string) {
     "import(/* webpackIgnore: true */ $1mermaid$1)"
   );
   text = text.replaceAll(
-    'import(join(dir, name))',
+    "import(join(dir, name))",
     "import(/* webpackIgnore: true */ join(dir, name))"
   );
   writeFileSync(file, text);

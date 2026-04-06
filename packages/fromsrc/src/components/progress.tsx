@@ -85,12 +85,12 @@ export const ProgressSteps = memo(function ProgressSteps({
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium border transition-colors duration-200 ease-out ${
                 i < current
                   ? "bg-accent border-accent text-bg"
-                  : (i === current
+                  : i === current
                     ? "border-accent text-accent"
-                    : "border-line text-muted")
+                    : "border-line text-muted"
               }`}
               aria-current={i === current ? "step" : undefined}
-              aria-label={`Step ${i + 1}${labels?.[i] ? `: ${labels[i]}` : ""}${i < current ? " completed" : (i === current ? " current" : "")}`}
+              aria-label={`Step ${i + 1}${labels?.[i] ? `: ${labels[i]}` : ""}${i < current ? " completed" : i === current ? " current" : ""}`}
             >
               {i + 1}
             </div>

@@ -112,7 +112,7 @@ function RatingBase({
             aria-posinset={index}
             aria-setsize={max}
             disabled={readonly}
-            tabIndex={readonly ? -1 : (focus === i ? 0 : -1)}
+            tabIndex={readonly ? -1 : focus === i ? 0 : -1}
             onClick={() => handleClick(index)}
             onKeyDown={(e) => handleKeyDown(e, i)}
             onFocus={() => handleFocus(i)}

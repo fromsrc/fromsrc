@@ -43,12 +43,10 @@ export const PreLink = memo(function PreLink({
     hideTimer.current = setTimeout(() => setVisible(false), 100);
   }, []);
 
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       if (showTimer.current) clearTimeout(showTimer.current);
       if (hideTimer.current) clearTimeout(hideTimer.current);
-    };
-  }, []);
+    }, []);
 
   const host = domain(href);
   const isExternal = typeof window !== "undefined" && external(href);

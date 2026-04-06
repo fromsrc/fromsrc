@@ -60,7 +60,7 @@ export function Table<T extends Record<string, unknown>>({
     if (!sortKey || !sortDir) {
       return data;
     }
-    return [...data].sort((a, b) => {
+    return [...data].toSorted((a, b) => {
       const va: unknown = a[sortKey];
       const vb: unknown = b[sortKey];
       if (va === vb) {
@@ -83,7 +83,7 @@ export function Table<T extends Record<string, unknown>>({
     (key: keyof T & string): void => {
       if (sortKey === key) {
         setSortDir(
-          sortDir === "asc" ? "desc" : (sortDir === "desc" ? null : "asc")
+          sortDir === "asc" ? "desc" : sortDir === "desc" ? null : "asc"
         );
         if (sortDir === "desc") {
           setSortKey(null);
@@ -141,9 +141,9 @@ export function Table<T extends Record<string, unknown>>({
                 className={`text-left ${padding} font-medium text-fg ${col.hideOnMobile ? "hidden sm:table-cell" : ""}`}
                 aria-sort={
                   col.sortable && sortKey === col.key && sortDir
-                    ? (sortDir === "asc"
+                    ? sortDir === "asc"
                       ? "ascending"
-                      : "descending")
+                      : "descending"
                     : undefined
                 }
               >
@@ -214,14 +214,14 @@ const SortIcon = memo(function SortIcon({
     >
       {direction === "asc" ? (
         <path d="M8 4l4 5H4l4-5z" />
-      ) : (direction === "desc" ? (
+      ) : direction === "desc" ? (
         <path d="M8 12l-4-5h8l-4 5z" />
       ) : (
         <>
           <path d="M8 4l3 3.5H5L8 4z" opacity={0.5} />
           <path d="M8 12l-3-3.5h6L8 12z" opacity={0.5} />
         </>
-      ))}
+      )}
     </svg>
   );
 });

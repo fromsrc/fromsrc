@@ -29,17 +29,23 @@ const rehypeSlug: Plugin<[], Root> = () => (tree: Root) => {
   const seen = new Set<string>();
 
   visit(tree, "element", (node: Element) => {
-    if (!headings.has(node.tagName)) {return;}
+    if (!headings.has(node.tagName)) {
+      return;
+    }
 
     const raw = node.properties?.id;
     const text =
       typeof raw === "string" && raw.length > 0 ? raw : extractText(node);
     let slug = generateSlug(text);
-    if (!slug) {return;}
+    if (!slug) {
+      return;
+    }
 
     if (seen.has(slug)) {
       let counter = 1;
-      while (seen.has(`${slug}-${counter}`)) {counter++;}
+      while (seen.has(`${slug}-${counter}`)) {
+        counter++;
+      }
       slug = `${slug}-${counter}`;
     }
 

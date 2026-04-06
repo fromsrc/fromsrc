@@ -67,13 +67,15 @@ interface FigureNode {
   type: "mdxJsxFlowElement";
   name: "figure";
   attributes: [];
-  children: (| Root["children"][number]
+  children: (
+    | Root["children"][number]
     | {
         type: "mdxJsxFlowElement";
         name: "figcaption";
         attributes: [];
         children: [{ type: "text"; value: string }];
-      })[];
+      }
+  )[];
 }
 
 function wrapInFigure(

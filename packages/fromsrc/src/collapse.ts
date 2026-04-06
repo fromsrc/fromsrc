@@ -33,17 +33,25 @@ export function transformerCollapse(): ShikiTransformer {
       }
 
       if (found) {
-        if (isStart) {this.addClassToHast(node, "collapse-start");}
-        if (isEnd) {this.addClassToHast(node, "collapse-end");}
+        if (isStart) {
+          this.addClassToHast(node, "collapse-start");
+        }
+        if (isEnd) {
+          this.addClassToHast(node, "collapse-end");
+        }
       }
     },
     name: "collapse",
     pre(node) {
       const codeEl = node.children[0];
-      if (!codeEl || codeEl.type !== "element") {return;}
+      if (!codeEl || codeEl.type !== "element") {
+        return;
+      }
 
       const lines = "children" in codeEl ? codeEl.children : [];
-      if (!lines || !Array.isArray(lines)) {return;}
+      if (!lines || !Array.isArray(lines)) {
+        return;
+      }
 
       let inCollapse = false;
       let collapseStart = -1;
@@ -51,8 +59,12 @@ export function transformerCollapse(): ShikiTransformer {
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        if (!line || line.type !== "element") {continue;}
-        if (!line.properties) {continue;}
+        if (!line || line.type !== "element") {
+          continue;
+        }
+        if (!line.properties) {
+          continue;
+        }
 
         const classes = Array.isArray(line.properties.class)
           ? line.properties.class

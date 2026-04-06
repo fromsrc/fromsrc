@@ -55,7 +55,7 @@ export function compareVersions(a: string, b: string): number {
 
 /** Sort versions in descending order (newest first) */
 export function sortVersions(versions: DocVersion[]): DocVersion[] {
-  return [...versions].sort((a, b) => compareVersions(b.label, a.label));
+  return [...versions].toSorted((a, b) => compareVersions(b.label, a.label));
 }
 
 /** Resolve a URL path to its version and relative page path */

@@ -52,7 +52,10 @@ export const viewport: Viewport = {
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className={`${mono.variable} ${serif.variable} bg-bg text-fg`} suppressHydrationWarning>
+      <body
+        className={`${mono.variable} ${serif.variable} bg-bg text-fg`}
+        suppressHydrationWarning
+      >
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-surface focus:text-fg focus:border focus:border-line focus:rounded-md focus:text-sm"

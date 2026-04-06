@@ -1,5 +1,6 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
+
 import { isRecord } from "./guard";
 
 /** Package within a monorepo workspace with docs */

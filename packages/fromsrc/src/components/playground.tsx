@@ -74,7 +74,9 @@ function PlaygroundBase({
     setResponse(null);
     const hdrs: Record<string, string> = {};
     for (const h of headers) {
-      if (h.key.trim()) {hdrs[h.key.trim()] = h.value;}
+      if (h.key.trim()) {
+        hdrs[h.key.trim()] = h.value;
+      }
     }
     const start = performance.now();
     try {

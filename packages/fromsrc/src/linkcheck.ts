@@ -161,7 +161,7 @@ export async function checkInternalLinks(
       if (link.type === "anchor") {
         const slug = link.href.slice(1);
         const heading = new RegExp(
-          `^#{1,6}\\s+.*${slug.replaceAll('-', "[\\s-]")}`,
+          `^#{1,6}\\s+.*${slug.replaceAll("-", "[\\s-]")}`,
           "im"
         );
         const status = heading.test(content) ? "ok" : "broken";

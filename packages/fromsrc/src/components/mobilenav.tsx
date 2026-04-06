@@ -310,9 +310,7 @@ export function MobileNav({
                         <li key={item.slug || i}>
                           <NavLink
                             href={
-                              item.slug
-                                ? `${basePath}/${item.slug}`
-                                : basePath
+                              item.slug ? `${basePath}/${item.slug}` : basePath
                             }
                             onClick={close}
                           >

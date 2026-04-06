@@ -46,9 +46,9 @@ function PageTransitionBase({
           opacity: visible ? 1 : 0,
           transform:
             mode === "slide"
-              ? (visible
+              ? visible
                 ? "translateY(0)"
-                : "translateY(8px)")
+                : "translateY(8px)"
               : undefined,
           transition: `opacity ${duration}ms ease, transform ${duration}ms ease`,
         };

@@ -98,7 +98,10 @@ export default async function DocPage({ params }: Props) {
             <div className="mb-3">
               <Breadcrumb base="/docs" />
             </div>
-            <h1 className="text-3xl font-semibold tracking-tight mb-3" style={{ color: "#ffffff" }}>
+            <h1
+              className="text-3xl font-semibold tracking-tight mb-3"
+              style={{ color: "#ffffff" }}
+            >
               {doc.title}
             </h1>
             {doc.description && (
@@ -112,12 +115,16 @@ export default async function DocPage({ params }: Props) {
             <MDX source={doc.content} />
           </div>
 
-          <footer className="mt-16 pt-6 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-            <div className="flex items-center justify-between text-xs mb-8" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <footer
+            className="mt-16 pt-6 border-t"
+            style={{ borderColor: "rgba(255,255,255,0.06)" }}
+          >
+            <div
+              className="flex items-center justify-between text-xs mb-8"
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
               <div className="flex items-center gap-4">
-                {modified && (
-                  <span>Last updated {formatdate(modified)}</span>
-                )}
+                {modified && <span>Last updated {formatdate(modified)}</span>}
                 <span>{readTime} min read</span>
               </div>
               <a
@@ -127,8 +134,19 @@ export default async function DocPage({ params }: Props) {
                 className="inline-flex items-center gap-1.5 hover:text-white/60 transition-colors"
                 style={{ color: "rgba(255,255,255,0.3)" }}
               >
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                <svg
+                  className="w-3 h-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
                 </svg>
                 Edit on GitHub
               </a>
@@ -141,12 +159,33 @@ export default async function DocPage({ params }: Props) {
                   className="group flex items-center gap-3 py-3 px-4 rounded-xl border hover:bg-white/[0.02] transition-colors flex-1"
                   style={{ borderColor: "rgba(255,255,255,0.08)" }}
                 >
-                  <svg className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+                  <svg
+                    className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M15 19l-7-7 7-7"
+                    />
                   </svg>
                   <div className="text-left">
-                    <div className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Previous</div>
-                    <div className="text-sm font-medium" style={{ color: "#e6e6e6" }}>{prev.title}</div>
+                    <div
+                      className="text-xs"
+                      style={{ color: "rgba(255,255,255,0.35)" }}
+                    >
+                      Previous
+                    </div>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#e6e6e6" }}
+                    >
+                      {prev.title}
+                    </div>
                   </div>
                 </Link>
               ) : (
@@ -159,11 +198,32 @@ export default async function DocPage({ params }: Props) {
                   style={{ borderColor: "rgba(255,255,255,0.08)" }}
                 >
                   <div className="text-right">
-                    <div className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Next</div>
-                    <div className="text-sm font-medium" style={{ color: "#e6e6e6" }}>{next.title}</div>
+                    <div
+                      className="text-xs"
+                      style={{ color: "rgba(255,255,255,0.35)" }}
+                    >
+                      Next
+                    </div>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#e6e6e6" }}
+                    >
+                      {next.title}
+                    </div>
                   </div>
-                  <svg className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </Link>
               ) : (

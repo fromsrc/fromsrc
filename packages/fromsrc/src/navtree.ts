@@ -19,7 +19,7 @@ export interface NavTreeConfig {
 }
 
 function titleize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1).replaceAll('-', " ");
+  return s.charAt(0).toUpperCase() + s.slice(1).replaceAll("-", " ");
 }
 
 /** Build a hierarchical navigation tree from flat doc metadata */
@@ -27,9 +27,7 @@ export function buildNavTree(config: NavTreeConfig): NavNode[] {
   const { docs, basePath = "/docs" } = config;
   const root: NavNode[] = [];
   const map = new Map<string, NavNode>();
-  const sorted = [...docs].sort(
-    (a, b) => (a.order ?? 99) - (b.order ?? 99)
-  );
+  const sorted = [...docs].toSorted((a, b) => (a.order ?? 99) - (b.order ?? 99));
 
   for (const doc of sorted) {
     const segments = doc.slug.split("/").filter(Boolean);
@@ -77,7 +75,9 @@ export function buildNavTree(config: NavTreeConfig): NavNode[] {
   function sortNodes(nodes: NavNode[]) {
     nodes.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
     for (const node of nodes) {
-      if (node.children.length > 0) {sortNodes(node.children);}
+      if (node.children.length > 0) {
+        sortNodes(node.children);
+      }
     }
   }
   sortNodes(root);

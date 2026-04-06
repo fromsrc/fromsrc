@@ -11,9 +11,9 @@ export interface SnippetOptions {
 
 function escape(t: string): string {
   return t
-    .replaceAll('&', "&amp;")
-    .replaceAll('<', "&lt;")
-    .replaceAll('>', "&gt;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function findAll(

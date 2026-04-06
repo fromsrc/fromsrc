@@ -17,7 +17,9 @@ const config = {
 const source: ContentSource = {
   async get(slug) {
     const doc = await getDoc(slug);
-    if (!doc) {return null;}
+    if (!doc) {
+      return null;
+    }
     return { content: doc.content, data: doc.data };
   },
   list() {

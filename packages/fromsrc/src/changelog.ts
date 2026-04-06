@@ -120,9 +120,9 @@ export function parseChangelog(content: string): ChangelogEntry[] {
 
 function escape(s: string): string {
   return s
-    .replaceAll('&', "&amp;")
-    .replaceAll('<', "&lt;")
-    .replaceAll('>', "&gt;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 /** Generate an RSS feed from changelog entries */

@@ -75,7 +75,9 @@ export function ToastProvider({
 
   useEffect(
     () => () => {
-      for (const timer of timers.current.values()) {clearTimeout(timer);}
+      for (const timer of timers.current.values()) {
+        clearTimeout(timer);
+      }
       timers.current.clear();
     },
     []

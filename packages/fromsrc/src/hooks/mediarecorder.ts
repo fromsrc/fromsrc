@@ -54,13 +54,11 @@ export function useMediaRecorder(mimeType = "audio/webm"): MediaRecorderResult {
     recorderRef.current?.stop();
   }, []);
 
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       if (urlRef.current) {
         URL.revokeObjectURL(urlRef.current);
       }
-    };
-  }, []);
+    }, []);
 
   return { blob, recording, start, stop, supported, url };
 }

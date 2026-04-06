@@ -127,7 +127,7 @@ function extractResponses(root: unknown, raw: unknown): OpenApiResponse[] {
     const numeric = Number(status);
     return Number.isFinite(numeric) ? numeric : Number.MAX_SAFE_INTEGER - 1;
   };
-  return list.sort((left, right) => rank(left.status) - rank(right.status));
+  return list.toSorted((left, right) => rank(left.status) - rank(right.status));
 }
 
 function extractSecurity(raw: unknown): string[] | undefined {

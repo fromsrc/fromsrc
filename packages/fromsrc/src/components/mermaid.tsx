@@ -49,7 +49,7 @@ function MermaidBase({ chart, label }: MermaidProps): ReactElement {
         });
 
         const { svg: rendered } = await mermaid.render(
-          id.replaceAll(':', ""),
+          id.replaceAll(":", ""),
           chart.replaceAll("\\n", "\n")
         );
 

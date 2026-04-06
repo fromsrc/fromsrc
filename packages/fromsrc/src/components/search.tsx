@@ -101,7 +101,8 @@ export function Search({
   }, [endpoint, remote.results, value]);
   const results = endpoint ? remoteResults : local;
   const loading = endpoint ? remote.loading : adapterLoading;
-  const hasRecent = showRecent && value.trim().length === 0 && recent.length > 0;
+  const hasRecent =
+    showRecent && value.trim().length === 0 && recent.length > 0;
   const safe =
     results.length === 0 ? -1 : Math.min(selected, results.length - 1);
   const safeRecent = hasRecent ? Math.min(selected, recent.length - 1) : -1;

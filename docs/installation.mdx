@@ -201,6 +201,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     ```bash
     bun add fromsrc
     ```
+
   </AccordionItem>
   <AccordionItem title="adapter not resolving">
     Verify the subpath import matches your framework:
@@ -216,6 +217,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     import { createAlgoliaAdapter } from "fromsrc/algolia"
     import { createOramaAdapter } from "fromsrc/orama"
     ```
+
   </AccordionItem>
   <AccordionItem title="bundle size got bigger">
     Run the tree-shake regression check:
@@ -225,6 +227,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     ```
 
     This validates root, utility, and adapter imports stay inside budget.
+
   </AccordionItem>
   <AccordionItem title="search not working">
     Search indexes content from your docs folder. Ensure you have `.mdx` files
@@ -246,6 +249,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     bun run dev:restart
     bun run dev:tail 80
     ```
+
   </AccordionItem>
 </Accordion>
 

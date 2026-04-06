@@ -10,7 +10,7 @@ export interface TocProgressProps {
 }
 
 const indent = (level: number) =>
-  level >= 4 ? "pl-8" : (level === 3 ? "pl-4" : "");
+  level >= 4 ? "pl-8" : level === 3 ? "pl-4" : "";
 
 function TocProgressBase({
   headings,

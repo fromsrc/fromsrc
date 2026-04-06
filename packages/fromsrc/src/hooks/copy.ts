@@ -18,7 +18,9 @@ export function useCopy(duration: number = 1500): CopyResult {
 
   useEffect(
     () => () => {
-      if (timeoutRef.current) {clearTimeout(timeoutRef.current);}
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     },
     []
   );

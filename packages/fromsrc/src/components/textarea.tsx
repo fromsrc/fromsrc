@@ -1,14 +1,7 @@
 "use client";
 
 import type { Ref } from "react";
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { memo, useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 import { ErrorMessage } from "./errormessage";
@@ -56,112 +49,106 @@ const sizes: Record<TextareaSize, string> = {
   sm: "px-2.5 py-1.5 text-xs min-h-[60px]",
 };
 
-export const Textarea = memo(
-  function Textarea({
-    ref,
-    variant = "default",
-    size = "md",
-    label,
-    error,
-    hint,
-    autoresize = false,
-    showCount = false,
-    tooltip,
-    maxLength,
-    className = "",
-    id,
-    value,
-    defaultValue,
-    onChange,
-    ...props
-  }: TextareaProps & { ref?: Ref<HTMLTextAreaElement> }): React.ReactElement {
-    const generatedId = useId();
-    const textareaId = id || generatedId;
-    const errorId = error ? `${textareaId}-error` : undefined;
-    const hintId = hint && !error ? `${textareaId}-hint` : undefined;
-    const countId = showCount ? `${textareaId}-count` : undefined;
-    const describedBy =
-      [errorId, hintId, countId].filter(Boolean).join(" ") || undefined;
+export const Textarea = memo(function Textarea({
+  ref,
+  variant = "default",
+  size = "md",
+  label,
+  error,
+  hint,
+  autoresize = false,
+  showCount = false,
+  tooltip,
+  maxLength,
+  className = "",
+  id,
+  value,
+  defaultValue,
+  onChange,
+  ...props
+}: TextareaProps & { ref?: Ref<HTMLTextAreaElement> }): React.ReactElement {
+  const generatedId = useId();
+  const textareaId = id || generatedId;
+  const errorId = error ? `${textareaId}-error` : undefined;
+  const hintId = hint && !error ? `${textareaId}-hint` : undefined;
+  const countId = showCount ? `${textareaId}-count` : undefined;
+  const describedBy =
+    [errorId, hintId, countId].filter(Boolean).join(" ") || undefined;
 
-    const actualVariant = error ? "error" : variant;
+  const actualVariant = error ? "error" : variant;
 
-    const internalRef = useRef<HTMLTextAreaElement>(null);
-    const [charCount, setCharCount] = useState(() => {
-      const initial = value ?? defaultValue ?? "";
-      return typeof initial === "string" ? initial.length : 0;
-    });
+  const internalRef = useRef<HTMLTextAreaElement>(null);
+  const [charCount, setCharCount] = useState(() => {
+    const initial = value ?? defaultValue ?? "";
+    return typeof initial === "string" ? initial.length : 0;
+  });
 
-    const resize = useCallback(() => {
-      const textarea = internalRef.current;
-      if (!textarea || !autoresize) {
-        return;
-      }
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }, [autoresize]);
+  const resize = useCallback(() => {
+    const textarea = internalRef.current;
+    if (!textarea || !autoresize) {
+      return;
+    }
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [autoresize]);
 
-    useEffect(() => {
+  useEffect(() => {
+    resize();
+  }, [resize, value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+    setCharCount(e.target.value.length);
+    if (autoresize) {
       resize();
-    }, [resize, value]);
+    }
+    onChange?.(e);
+  };
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-      setCharCount(e.target.value.length);
-      if (autoresize) {
-        resize();
+  const setRefs = useCallback(
+    (node: HTMLTextAreaElement | null): void => {
+      internalRef.current = node;
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref) {
+        ref.current = node;
       }
-      onChange?.(e);
-    };
+    },
+    [ref]
+  );
 
-    const setRefs = useCallback(
-      (node: HTMLTextAreaElement | null): void => {
-        internalRef.current = node;
-        if (typeof ref === "function") {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      },
-      [ref]
-    );
-
-    return (
-      <div className="flex flex-col gap-1.5">
-        {label && (
-          <FormLabel label={label} tooltip={tooltip} htmlFor={textareaId} />
-        )}
-        <textarea
-          ref={setRefs}
-          id={textareaId}
-          aria-invalid={actualVariant === "error" ? true : undefined}
-          aria-describedby={describedBy}
-          maxLength={maxLength}
-          value={value}
-          defaultValue={defaultValue}
-          onChange={handleChange}
-          className={`rounded-md border outline-none transition-colors resize-vertical ${variants[actualVariant]} ${sizes[size]} ${autoresize ? "resize-none overflow-hidden" : ""} ${className}`.trim()}
-          {...props}
-        />
-        <div className="flex justify-between gap-2">
-          <div className="flex-1">
-            {error && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
-            {hint && !error && (
-              <span id={hintId} className="text-xs text-muted">
-                {hint}
-              </span>
-            )}
-          </div>
-          {showCount && (
-            <span
-              id={countId}
-              className="text-xs text-muted"
-              aria-live="polite"
-            >
-              {charCount}
-              {maxLength ? `/${maxLength}` : ""}
+  return (
+    <div className="flex flex-col gap-1.5">
+      {label && (
+        <FormLabel label={label} tooltip={tooltip} htmlFor={textareaId} />
+      )}
+      <textarea
+        ref={setRefs}
+        id={textareaId}
+        aria-invalid={actualVariant === "error" ? true : undefined}
+        aria-describedby={describedBy}
+        maxLength={maxLength}
+        value={value}
+        defaultValue={defaultValue}
+        onChange={handleChange}
+        className={`rounded-md border outline-none transition-colors resize-vertical ${variants[actualVariant]} ${sizes[size]} ${autoresize ? "resize-none overflow-hidden" : ""} ${className}`.trim()}
+        {...props}
+      />
+      <div className="flex justify-between gap-2">
+        <div className="flex-1">
+          {error && <ErrorMessage id={errorId}>{error}</ErrorMessage>}
+          {hint && !error && (
+            <span id={hintId} className="text-xs text-muted">
+              {hint}
             </span>
           )}
         </div>
+        {showCount && (
+          <span id={countId} className="text-xs text-muted" aria-live="polite">
+            {charCount}
+            {maxLength ? `/${maxLength}` : ""}
+          </span>
+        )}
       </div>
-    );
-  }
-);
+    </div>
+  );
+});

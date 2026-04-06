@@ -34,7 +34,7 @@ function TocDefaultBase({
   } | null>(null);
   const [thumb, setThumb] = useState({ height: 0, top: 0 });
 
-  const range = activeRange.length > 0 ? activeRange : (active ? [active] : []);
+  const range = activeRange.length > 0 ? activeRange : active ? [active] : [];
   const isActive = (id: string): boolean => range.includes(id);
 
   useEffect(() => {

@@ -13,7 +13,7 @@ export interface RedirectConfig {
 function compile(source: string): { regex: RegExp; keys: string[] } {
   const keys: string[] = [];
   const pattern = source
-    .replaceAll('/*', () => {
+    .replaceAll("/*", () => {
       keys.push("*");
       return "/(.*)";
     })

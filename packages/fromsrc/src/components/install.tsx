@@ -46,8 +46,7 @@ function InstallBase({
     }
   }
   const GetTabId = useCallback(
-    (Value: Manager): string =>
-      `${Id}-tab-${MapRef.current.get(Value) ?? 0}`,
+    (Value: Manager): string => `${Id}-tab-${MapRef.current.get(Value) ?? 0}`,
     [Id]
   );
 
@@ -58,13 +57,11 @@ function InstallBase({
 
       switch (E.key) {
         case "ArrowLeft": {
-          NextIndex =
-            CurrentIndex > 0 ? CurrentIndex - 1 : Managers.length - 1;
+          NextIndex = CurrentIndex > 0 ? CurrentIndex - 1 : Managers.length - 1;
           break;
         }
         case "ArrowRight": {
-          NextIndex =
-            CurrentIndex < Managers.length - 1 ? CurrentIndex + 1 : 0;
+          NextIndex = CurrentIndex < Managers.length - 1 ? CurrentIndex + 1 : 0;
           break;
         }
         case "Home": {
@@ -86,9 +83,7 @@ function InstallBase({
         setActive(Next);
       }
       const Tabs =
-        TablistRef.current?.querySelectorAll<HTMLButtonElement>(
-          '[role="tab"]'
-        );
+        TablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
       Tabs?.[NextIndex]?.focus();
     },
     [Active]
@@ -142,9 +137,7 @@ function InstallBase({
                 background: "transparent",
                 border: "none",
                 borderBottom:
-                  Active === M
-                    ? "2px solid #fafafa"
-                    : "2px solid transparent",
+                  Active === M ? "2px solid #fafafa" : "2px solid transparent",
                 color: Active === M ? "#fafafa" : "#737373",
                 cursor: "pointer",
                 fontSize: "13px",

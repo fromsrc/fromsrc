@@ -105,7 +105,7 @@ export function defineCollection<T extends z.ZodRawShape>(
       return a < b ? -1 : 1;
     }
     if (typeof a === "boolean" && typeof b === "boolean") {
-      return a === b ? 0 : (a ? 1 : -1);
+      return a === b ? 0 : a ? 1 : -1;
     }
     return String(a).localeCompare(String(b));
   }
@@ -132,7 +132,7 @@ export function defineCollection<T extends z.ZodRawShape>(
     name: config.name,
     sort: async (key, order = "asc") => {
       const items = await load();
-      return [...items].sort((a, b) => {
+      return [...items].toSorted((a, b) => {
         const va = key === "slug" ? a.slug : a.data[key];
         const vb = key === "slug" ? b.slug : b.data[key];
         const result = compare(va, vb);

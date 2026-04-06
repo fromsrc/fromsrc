@@ -30,7 +30,9 @@ export function useClipboard(timeout = 2000): ClipboardResult {
 
   useEffect(
     () => () => {
-      if (timer.current) {clearTimeout(timer.current);}
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
     },
     []
   );

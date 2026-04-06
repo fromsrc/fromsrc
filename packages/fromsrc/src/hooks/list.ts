@@ -40,7 +40,7 @@ export function useList<T>(initial: T[] = []): ListResult<T> {
   }, []);
 
   const sort = useCallback((fn: (a: T, b: T) => number) => {
-    setItems((prev) => [...prev].sort(fn));
+    setItems((prev) => [...prev].toSorted(fn));
   }, []);
 
   return {

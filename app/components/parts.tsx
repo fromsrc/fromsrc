@@ -1,10 +1,25 @@
 const components = [
-  "sidebar", "toc", "codeblock", "tabs", "callout", "steps",
-  "search", "accordion", "cards", "openapi", "math", "mermaid",
+  "sidebar",
+  "toc",
+  "codeblock",
+  "tabs",
+  "callout",
+  "steps",
+  "search",
+  "accordion",
+  "cards",
+  "openapi",
+  "math",
+  "mermaid",
 ];
 
 const frameworks = [
-  "next.js", "vite", "astro", "react router", "tanstack", "remix",
+  "next.js",
+  "vite",
+  "astro",
+  "react router",
+  "tanstack",
+  "remix",
 ];
 
 export function Parts() {
@@ -37,7 +52,10 @@ export function Parts() {
         <div className="border-t border-white/[0.06] pt-8">
           <div className="flex flex-wrap items-center justify-center gap-6">
             {frameworks.map((f) => (
-              <span key={f} className="text-[11px] font-mono text-white/20 uppercase tracking-wider">
+              <span
+                key={f}
+                className="text-[11px] font-mono text-white/20 uppercase tracking-wider"
+              >
                 {f}
               </span>
             ))}

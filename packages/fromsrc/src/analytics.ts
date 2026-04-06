@@ -97,11 +97,11 @@ export function aggregateEvents(events: AnalyticsEvent[]): AnalyticsSummary {
 
   const topPages = [...pages.entries()]
     .map(([path, views]) => ({ path, views }))
-    .sort((a, b) => b.views - a.views);
+    .toSorted((a, b) => b.views - a.views);
 
   const searchTerms = [...terms.entries()]
     .map(([term, count]) => ({ count, term }))
-    .sort((a, b) => b.count - a.count);
+    .toSorted((a, b) => b.count - a.count);
 
   return { searchTerms, topPages, totalViews };
 }

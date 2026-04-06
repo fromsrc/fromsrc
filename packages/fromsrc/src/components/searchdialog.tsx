@@ -120,7 +120,7 @@ export const SearchDialog = memo(function SearchDialog({
         <div className="max-h-72 overflow-y-auto">
           {loading ? (
             <div className="p-4 text-center text-muted text-sm">Loading...</div>
-          ) : (results && results.length === 0 && query.trim() ? (
+          ) : results && results.length === 0 && query.trim() ? (
             <div className="p-4 text-center text-muted text-sm">No results</div>
           ) : (
             results?.map((r, i) => (
@@ -141,7 +141,7 @@ export const SearchDialog = memo(function SearchDialog({
                 )}
               </a>
             ))
-          ))}
+          )}
         </div>
       </div>
     </div>

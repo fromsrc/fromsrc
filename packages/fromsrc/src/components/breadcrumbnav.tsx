@@ -19,7 +19,7 @@ interface Crumb {
 }
 
 function format(slug: string): string {
-  return slug.replaceAll('-', " ").replaceAll(/\b\w/g, (c) => c.toUpperCase());
+  return slug.replaceAll("-", " ").replaceAll(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function build(path: string, labels?: Record<string, string>): Crumb[] {
@@ -44,9 +44,9 @@ function jsonld(crumbs: Crumb[], homeLabel: string, homeHref: string): string {
       })),
     ],
   })
-    .replaceAll('<', "\\u003c")
-    .replaceAll('\u2028', "\\u2028")
-    .replaceAll('\u2029', "\\u2029");
+    .replaceAll("<", "\\u003c")
+    .replaceAll("\u2028", "\\u2028")
+    .replaceAll("\u2029", "\\u2029");
 }
 
 function BreadcrumbNavBase({

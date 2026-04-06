@@ -48,7 +48,7 @@ function EndpointBase({
   return (
     <article
       className="my-6 rounded-lg border border-line overflow-hidden"
-      aria-labelledby={`endpoint-${method}-${path.replaceAll('/', "-")}`}
+      aria-labelledby={`endpoint-${method}-${path.replaceAll("/", "-")}`}
     >
       <header className="flex items-center gap-3 px-4 py-3 bg-surface/50 border-b border-line">
         <span
@@ -59,7 +59,7 @@ function EndpointBase({
           {method}
         </span>
         <code
-          id={`endpoint-${method}-${path.replaceAll('/', "-")}`}
+          id={`endpoint-${method}-${path.replaceAll("/", "-")}`}
           className="text-sm font-mono text-fg"
         >
           {path}
@@ -227,7 +227,7 @@ function ResponseBase({
   const number = typeof status === "string" ? Number(status) : status;
   const isSuccess = Number.isFinite(number) && number >= 200 && number < 300;
   const isError = Number.isFinite(number) && number >= 400;
-  const statusLabel = isSuccess ? "success" : (isError ? "error" : "redirect");
+  const statusLabel = isSuccess ? "success" : isError ? "error" : "redirect";
 
   return (
     <section className="my-4" aria-labelledby={`response-${status}`}>
@@ -237,9 +237,9 @@ function ResponseBase({
           className={`px-1.5 py-0.5 text-xs font-mono rounded ${
             isSuccess
               ? "bg-emerald-500/10 text-emerald-400"
-              : (isError
+              : isError
                 ? "bg-red-500/10 text-red-400"
-                : "bg-amber-500/10 text-amber-400")
+                : "bg-amber-500/10 text-amber-400"
           }`}
           role="status"
           aria-label={`HTTP ${status} ${statusLabel}`}

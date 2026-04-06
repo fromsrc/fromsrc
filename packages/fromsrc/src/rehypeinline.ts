@@ -4,16 +4,24 @@ import { visit } from "unist-util-visit";
 
 export const rehypeInlineCode: Plugin<[], Root> = () => (tree: Root) => {
   visit(tree, "element", (node: Element, _index, parent) => {
-    if (node.tagName !== "code") {return;}
+    if (node.tagName !== "code") {
+      return;
+    }
 
-    if (parent && parent.type === "element" && parent.tagName === "pre") {return;}
+    if (parent && parent.type === "element" && parent.tagName === "pre") {
+      return;
+    }
 
     const textNode = node.children[0];
-    if (!textNode || textNode.type !== "text") {return;}
+    if (!textNode || textNode.type !== "text") {
+      return;
+    }
 
     const text = textNode.value;
     const match = text.match(/\{:(\w+)\}$/);
-    if (!match) {return;}
+    if (!match) {
+      return;
+    }
 
     const lang = match[1];
     const cleanText = text.slice(0, -match[0].length);

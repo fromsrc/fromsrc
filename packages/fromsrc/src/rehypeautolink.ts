@@ -36,11 +36,15 @@ export function rehypeAutolink(options?: AutolinkOptions): Plugin<[], Root> {
 
   return () => (tree: Root) => {
     visit(tree, "element", (node: Element) => {
-      if (!headings.has(node.tagName)) {return;}
+      if (!headings.has(node.tagName)) {
+        return;
+      }
 
       const raw = node.properties?.id;
       const id = typeof raw === "string" ? raw : undefined;
-      if (!id) {return;}
+      if (!id) {
+        return;
+      }
 
       const link = anchor(id, className, extra);
 

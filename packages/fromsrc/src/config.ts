@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+
 import { isRecord } from "./guard";
 
 /** User-facing configuration for a fromsrc project */

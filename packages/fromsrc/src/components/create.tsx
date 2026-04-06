@@ -9,9 +9,7 @@ export interface CreateProps {
   package?: string;
 }
 
-function CreateBase({
-  package: Pkg = "fromsrc",
-}: CreateProps): ReactElement {
+function CreateBase({ package: Pkg = "fromsrc" }: CreateProps): ReactElement {
   return <Install package={Pkg} mode="create" />;
 }
 

@@ -8,7 +8,7 @@ let metacount = 0;
 let foldercount = 0;
 
 function rel(value) {
-  return value.slice(root.length + 1).replaceAll('\\', "/");
+  return value.slice(root.length + 1).replaceAll("\\", "/");
 }
 
 function isseparator(value) {

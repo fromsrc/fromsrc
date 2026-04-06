@@ -103,7 +103,9 @@ export function createMcpHandler(
   return {
     async getPage(slug) {
       const result = await source.get(slug.split("/"));
-      if (!result) {return null;}
+      if (!result) {
+        return null;
+      }
       return result.content;
     },
 
@@ -117,7 +119,9 @@ export function createMcpHandler(
     },
 
     async search(query) {
-      if (!source.search) {return [];}
+      if (!source.search) {
+        return [];
+      }
       const docs = await source.search();
       const results = await Promise.resolve(
         localSearch.search(trimQuery(query), docs, 10)

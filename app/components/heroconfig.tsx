@@ -12,8 +12,7 @@ export const heroconfig: file = {
         <>
           <span className={p}>import</span>{" "}
           <span className={v}>{"{ defineConfig }"}</span>{" "}
-          <span className={p}>from</span>{" "}
-          <span className={k}>"fromsrc"</span>
+          <span className={p}>from</span> <span className={k}>"fromsrc"</span>
         </>
       ),
       num: 1,
@@ -32,8 +31,9 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          {"  "}<span className={k}>title:</span>{" "}
-          <span className={p}>"My Docs"</span>,
+          {"  "}
+          <span className={k}>title:</span> <span className={p}>"My Docs"</span>
+          ,
         </>
       ),
       num: 4,
@@ -41,7 +41,8 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          {"  "}<span className={k}>description:</span>{" "}
+          {"  "}
+          <span className={k}>description:</span>{" "}
           <span className={p}>"API documentation"</span>,
         </>
       ),
@@ -50,8 +51,8 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          {"  "}<span className={k}>llmsTxt:</span>{" "}
-          <span className={v}>true</span>,
+          {"  "}
+          <span className={k}>llmsTxt:</span> <span className={v}>true</span>,
         </>
       ),
       num: 6,
@@ -59,8 +60,8 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          {"  "}<span className={k}>mcp:</span>{" "}
-          <span className={v}>true</span>,
+          {"  "}
+          <span className={k}>mcp:</span> <span className={v}>true</span>,
         </>
       ),
       num: 7,
@@ -68,11 +69,10 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          {"  "}<span className={k}>search:</span>{" "}
-          <span className={d}>{"{"}</span>{" "}
+          {"  "}
+          <span className={k}>search:</span> <span className={d}>{"{"}</span>{" "}
           <span className={k}>provider:</span>{" "}
-          <span className={p}>"orama"</span>{" "}
-          <span className={d}>{"}"}</span>,
+          <span className={p}>"orama"</span> <span className={d}>{"}"}</span>,
         </>
       ),
       num: 8,
@@ -80,11 +80,10 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          {"  "}<span className={k}>theme:</span>{" "}
-          <span className={d}>{"{"}</span>{" "}
+          {"  "}
+          <span className={k}>theme:</span> <span className={d}>{"{"}</span>{" "}
           <span className={k}>accent:</span>{" "}
-          <span className={p}>"#ef4444"</span>{" "}
-          <span className={d}>{"}"}</span>,
+          <span className={p}>"#ef4444"</span> <span className={d}>{"}"}</span>,
         </>
       ),
       num: 9,
@@ -92,10 +91,9 @@ export const heroconfig: file = {
     {
       content: (
         <>
-          {"  "}<span className={k}>sidebar:</span>{" "}
-          <span className={d}>{"{"}</span>{" "}
-          <span className={k}>collapsed:</span>{" "}
-          <span className={v}>false</span>{" "}
+          {"  "}
+          <span className={k}>sidebar:</span> <span className={d}>{"{"}</span>{" "}
+          <span className={k}>collapsed:</span> <span className={v}>false</span>{" "}
           <span className={d}>{"}"}</span>,
         </>
       ),

@@ -27,9 +27,9 @@ export const Skeleton = memo(function Skeleton({
   const radiusClass =
     rounded === true
       ? "rounded"
-      : (rounded === false
+      : rounded === false
         ? ""
-        : `rounded-${rounded}`);
+        : `rounded-${rounded}`;
 
   return (
     <div

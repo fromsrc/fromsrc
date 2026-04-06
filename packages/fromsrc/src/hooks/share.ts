@@ -23,7 +23,9 @@ export function useShare(duration: number = 1500): ShareResult {
 
   useEffect(
     () => () => {
-      if (timeoutRef.current) {clearTimeout(timeoutRef.current);}
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     },
     []
   );

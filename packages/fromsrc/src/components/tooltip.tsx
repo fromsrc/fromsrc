@@ -53,7 +53,9 @@ export function Tooltip({
 
   useEffect(
     () => () => {
-      if (timeoutRef.current) {clearTimeout(timeoutRef.current);}
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     },
     []
   );

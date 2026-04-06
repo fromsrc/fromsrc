@@ -65,9 +65,9 @@ function parseHits(value: unknown): Hit[] {
   }
   const hits = Array.isArray(value.hits)
     ? value.hits
-    : (Array.isArray(value.results)
+    : Array.isArray(value.results)
       ? value.results
-      : []);
+      : [];
   return hits.map(parseHit).filter((item): item is Hit => item !== null);
 }
 

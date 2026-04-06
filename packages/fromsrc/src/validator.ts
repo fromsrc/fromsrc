@@ -64,34 +64,37 @@ function scan(
 
 export const builtinRules = {
   frontmatterRequired: createRule("frontmatterRequired", (content) => {
-    if (!content.startsWith("---"))
-      {return [
+    if (!content.startsWith("---")) {
+      return [
         {
           rule: "frontmatterRequired",
           message: "missing frontmatter",
           severity: "error",
         },
-      ];}
-    if (content.indexOf("---", 3) === -1)
-      {return [
+      ];
+    }
+    if (content.indexOf("---", 3) === -1) {
+      return [
         {
           rule: "frontmatterRequired",
           message: "unclosed frontmatter",
           severity: "error",
         },
-      ];}
+      ];
+    }
     return [];
   }),
   maxLength: createRule("maxLength", (content) => {
     const count = content.split("\n").length;
-    if (count > 500)
-      {return [
+    if (count > 500) {
+      return [
         {
           rule: "maxLength",
           message: `${count} lines exceeds 500`,
           severity: "warning",
         },
-      ];}
+      ];
+    }
     return [];
   }),
   noEmptyLinks: createRule("noEmptyLinks", (content) =>
@@ -123,14 +126,15 @@ export const builtinRules = {
   ),
   titleRequired: createRule("titleRequired", (content) => {
     const first = content.split("\n").find((l) => l.startsWith("#"));
-    if (!first)
-      {return [
+    if (!first) {
+      return [
         {
           rule: "titleRequired",
           message: "missing heading",
           severity: "error",
         },
-      ];}
+      ];
+    }
     return [];
   }),
 } as const;

@@ -21,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: doc.slug.startsWith("api/") ? "weekly" : "monthly",
     lastModified: dates.get(filepath(doc.slug)) ?? new Date(),
     priority:
-      doc.slug === "" ? 0.9 : (doc.slug.startsWith("components/") ? 0.7 : 0.8),
+      doc.slug === "" ? 0.9 : doc.slug.startsWith("components/") ? 0.7 : 0.8,
     url: `${base}/docs${doc.slug ? `/${doc.slug}` : ""}`,
   }));
 

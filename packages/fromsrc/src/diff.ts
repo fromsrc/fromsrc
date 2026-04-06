@@ -69,7 +69,7 @@ function backtrack(
       i--;
     }
   }
-  return result.reverse();
+  return result.toReversed();
 }
 
 function applyContext(lines: DiffLine[], ctx: number): DiffLine[] {
@@ -165,7 +165,7 @@ export function formatDiff(result: DiffResult): string {
   output.push(`@@ -${oldStart},${oldCount} +${newStart},${newCount} @@`);
   for (const line of lines) {
     const prefix =
-      line.type === "add" ? "+" : (line.type === "remove" ? "-" : " ");
+      line.type === "add" ? "+" : line.type === "remove" ? "-" : " ";
     output.push(`${prefix}${line.content}`);
   }
   return output.join("\n");

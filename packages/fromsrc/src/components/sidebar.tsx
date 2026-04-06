@@ -37,7 +37,9 @@ export function IsFolder(item: SectionItem): item is SidebarFolder {
 }
 
 export function IsSidebarItem(item: SectionItem): item is SidebarItem {
-  return "href" in item && typeof item.href === "string" && item.href.length > 0;
+  return (
+    "href" in item && typeof item.href === "string" && item.href.length > 0
+  );
 }
 
 interface Props {

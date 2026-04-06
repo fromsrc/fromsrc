@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+
 import { isRecord } from "./guard";
 
 /** Shape of a _meta.json file that controls page ordering and display. */
@@ -93,7 +94,7 @@ export function sortByMeta<T extends { slug: string }>(
     }
   });
 
-  return [...items].sort((a, b) => {
+  return [...items].toSorted((a, b) => {
     const aName = getBasename(a.slug, prefix);
     const bName = getBasename(b.slug, prefix);
     const aOrder = order.get(aName) ?? 999;

@@ -318,7 +318,9 @@ function ContentBase({ source }: ContentProps): JSX.Element {
                     const match = meta.match(/title="([^"]*)"/);
                     if (match) {
                       const title = match[1];
-                      if (title) {node.properties["data-title"] = title;}
+                      if (title) {
+                        node.properties["data-title"] = title;
+                      }
                     }
                   },
                 },

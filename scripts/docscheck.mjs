@@ -72,7 +72,7 @@ function doclinks(text) {
 }
 
 function route(file) {
-  const relative = file.slice(docsroot.length + 1).replaceAll('\\', "/");
+  const relative = file.slice(docsroot.length + 1).replaceAll("\\", "/");
   if (relative === "index.mdx") {
     return "/docs";
   }
@@ -115,9 +115,9 @@ function normalizeanchor(value) {
 const issues = [];
 const list = await files(docsroot);
 const routes = new Set(list.map(route));
-const fileset = new Set(list.map((file) => file.replaceAll('\\', "/")));
+const fileset = new Set(list.map((file) => file.replaceAll("\\", "/")));
 const routefile = new Map(
-  list.map((file) => [route(file), file.replaceAll('\\', "/")])
+  list.map((file) => [route(file), file.replaceAll("\\", "/")])
 );
 const idcache = new Map();
 
@@ -129,7 +129,7 @@ function localfile(file, target) {
   const direct = resolve(dirname(file), pathname);
   const options = [direct, `${direct}.mdx`, join(direct, "index.mdx")];
   for (const option of options) {
-    const normalized = option.replaceAll('\\', "/");
+    const normalized = option.replaceAll("\\", "/");
     if (fileset.has(normalized)) {
       return normalized;
     }

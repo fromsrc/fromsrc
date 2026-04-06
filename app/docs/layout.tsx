@@ -20,7 +20,15 @@ export default async function DocsLayout({
       <SearchModal />
       <Shortcuts />
       <HeadingCopy />
-      <div className="flex min-h-screen" style={{ background: "#0a0a0a", color: "#e6e6e6", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>
+      <div
+        className="flex min-h-screen"
+        style={{
+          background: "#0a0a0a",
+          color: "#e6e6e6",
+          fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        }}
+      >
         <KeyboardNav docs={docs} />
         <Sidebar />
         <main id="main" className="flex-1 min-w-0">

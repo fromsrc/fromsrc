@@ -30,14 +30,14 @@ function BreadcrumbBase({
   const pathname = usePathname();
   const normalizedBase = base.replaceAll(/^\/+|\/+$/g, "");
   const fallbackRoot =
-    normalizedBase.length > 0 ? normalizedBase.replaceAll('-', " ") : "home";
+    normalizedBase.length > 0 ? normalizedBase.replaceAll("-", " ") : "home";
   const root = rootLabel ?? fallbackRoot;
   const index = indexLabel ?? "index";
   const segments = pathname.replace(base, "").split("/").filter(Boolean);
 
   const items: BreadcrumbItem[] = segments.map((segment, i) => ({
     href: `${base}/${segments.slice(0, i + 1).join("/")}`,
-    label: segment.replaceAll('-', " "),
+    label: segment.replaceAll("-", " "),
   }));
 
   return (

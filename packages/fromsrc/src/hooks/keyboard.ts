@@ -26,10 +26,10 @@ function sortDocs(docs: DocMeta[]): DocMeta[] {
   const sortByOrder = (a: DocMeta, b: DocMeta) =>
     (a.order ?? 999) - (b.order ?? 999);
   return [
-    ...intro.sort(sortByOrder),
-    ...components.sort(sortByOrder),
-    ...api.sort(sortByOrder),
-    ...other.sort(sortByOrder),
+    ...intro.toSorted(sortByOrder),
+    ...components.toSorted(sortByOrder),
+    ...api.toSorted(sortByOrder),
+    ...other.toSorted(sortByOrder),
   ];
 }
 

@@ -9,6 +9,8 @@ const blockednode = new Set([
 ]);
 
 export function isnodeblocked(target) {
-  if (target.startsWith("node:")) {return true;}
+  if (target.startsWith("node:")) {
+    return true;
+  }
   return blockednode.has(target);
 }

@@ -1,5 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { basename, extname, join, relative } from "node:path";
+
 import { isRecord } from "./guard";
 
 /** Single navigation entry with optional nested children */
@@ -134,7 +135,7 @@ async function scanDir(
       continue;
     }
     const full = join(dir, entry.name);
-    const rel = relative(root, full).replaceAll('\\', "/");
+    const rel = relative(root, full).replaceAll("\\", "/");
     if (entry.isDirectory()) {
       const children = await scanDir(full, root, exts, h1);
       const idx = children.find((c) => basename(c.path).startsWith("index"));
@@ -186,7 +187,7 @@ export async function generateNav(config: NavConfig): Promise<NavTree> {
 /** Sort navigation items by order then title alphabetically */
 export function sortNav(items: NavItem[]): NavItem[] {
   return [...items]
-    .sort(
+    .toSorted(
       (a, b) =>
         (a.order ?? 999) - (b.order ?? 999) || a.title.localeCompare(b.title)
     )

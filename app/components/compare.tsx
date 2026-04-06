@@ -7,7 +7,8 @@ export function Compare() {
         <div
           className="absolute inset-0 opacity-[0.06]"
           style={{
-            backgroundImage: "radial-gradient(circle, rgba(242,236,228,0.5) 1px, transparent 1px)",
+            backgroundImage:
+              "radial-gradient(circle, rgba(242,236,228,0.5) 1px, transparent 1px)",
             backgroundSize: "14px 14px",
           }}
           aria-hidden="true"
@@ -21,10 +22,13 @@ export function Compare() {
               designed for devs.
             </h2>
 
-            <p className="text-[#f2ece4]/50 text-sm leading-relaxed max-w-md mb-12" style={{ fontFamily: "var(--font-serif)" }}>
-              Incremental builds that don't crash at 3,000 pages.
-              Direct component imports in MDX. AI endpoints on every page.
-              Everything you need, nothing you don't.
+            <p
+              className="text-[#f2ece4]/50 text-sm leading-relaxed max-w-md mb-12"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
+              Incremental builds that don't crash at 3,000 pages. Direct
+              component imports in MDX. AI endpoints on every page. Everything
+              you need, nothing you don't.
             </p>
 
             <Link
@@ -39,7 +43,8 @@ export function Compare() {
             <div
               className="absolute inset-0 opacity-[0.12]"
               style={{
-                backgroundImage: "radial-gradient(circle, rgba(242,236,228,0.4) 1.5px, transparent 1.5px)",
+                backgroundImage:
+                  "radial-gradient(circle, rgba(242,236,228,0.4) 1.5px, transparent 1.5px)",
                 backgroundSize: "12px 12px",
               }}
               aria-hidden="true"
@@ -49,7 +54,8 @@ export function Compare() {
 
         <div className="border-t border-[#f2ece4]/10 px-10 min-[1024px]:px-16 py-5">
           <p className="text-[10px] uppercase tracking-[0.2em] text-[#f2ece4]/30 text-center">
-            next.js · vite · astro · react router · tanstack · remix · any react framework
+            next.js · vite · astro · react router · tanstack · remix · any react
+            framework
           </p>
         </div>
       </div>
