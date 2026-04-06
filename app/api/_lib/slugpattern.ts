@@ -1,8 +1,8 @@
-export const segmentpattern = "^[a-z0-9][a-z0-9_-]*$";
-export const segmentmdpattern = "^[a-z0-9][a-z0-9_-]*(?:\\.md)?$";
-export const slugpathpattern =
+export const segmentPattern = "^[a-z0-9][a-z0-9_-]*$";
+export const segmentMdPattern = "^[a-z0-9][a-z0-9_-]*(?:\\.md)?$";
+export const slugPathPattern =
   "^$|^[a-z0-9][a-z0-9_-]*(?:/[a-z0-9][a-z0-9_-]*)*$";
 
-export const segmentregex = new RegExp(segmentpattern);
-export const segmentmdregex = new RegExp(segmentmdpattern);
-export const slugpathregex = new RegExp(slugpathpattern);
+export const segmentRegex = new RegExp(segmentPattern);
+export const segmentMdRegex = new RegExp(segmentMdPattern);
+export const slugPathRegex = new RegExp(slugPathPattern);

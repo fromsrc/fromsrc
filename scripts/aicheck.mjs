@@ -32,7 +32,7 @@ const rules = [
   {
     file: "app/api/docs/[...slug]/route.ts",
     name: "docs-markdown",
-    patterns: ['from "@/app/api/_lib/text"', "return sendmarkdown("],
+    patterns: ['from "@/app/api/_lib/text"', "return sendMarkdown("],
   },
   {
     file: "app/api/mcp/route.ts",

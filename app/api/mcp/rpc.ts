@@ -1,12 +1,12 @@
 import { z } from "fromsrc";
 import { searchMaxQuery } from "fromsrc/searchpolicy";
 
-import { slugpathregex } from "@/app/api/_lib/slugpattern";
+import { slugPathRegex } from "@/app/api/_lib/slugpattern";
 
 export const protocol = "2025-06-18";
 export const supported = new Set(["2025-06-18", "2025-03-26", "2024-11-05"]);
 
-export const methodname = z.enum([
+export const methodName = z.enum([
   "search_docs",
   "get_page",
   "list_pages",
@@ -20,12 +20,12 @@ export const methodname = z.enum([
   "ping",
 ]);
 
-export const method = z.object({ method: methodname });
+export const method = z.object({ method: methodName });
 
 export const search = z.object({
   query: z.string().trim().min(1).max(searchMaxQuery),
 });
-export const slug = z.string().trim().max(300).regex(slugpathregex);
+export const slug = z.string().trim().max(300).regex(slugPathRegex);
 export const page = z.object({ slug });
 export const list = z
   .object({
@@ -33,7 +33,7 @@ export const list = z
     limit: z.coerce.number().int().min(1).max(100).optional(),
   })
   .optional();
-export const toolcall = z.object({
+export const toolCall = z.object({
   arguments: z.record(z.unknown()).optional(),
   name: z.string().trim().min(1).max(128),
 });
@@ -51,10 +51,10 @@ export const init = z.object({
   protocolVersion: z.string().trim().min(1),
 });
 
-const rpcid = z.union([z.string(), z.number(), z.null()]).optional();
-export const rpcmethod = z.object({
-  id: rpcid,
+const rpcId = z.union([z.string(), z.number(), z.null()]).optional();
+export const rpcMethod = z.object({
+  id: rpcId,
   jsonrpc: z.literal("2.0"),
-  method: methodname,
+  method: methodName,
   params: z.unknown().optional(),
 });

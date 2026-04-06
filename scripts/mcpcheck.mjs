@@ -28,8 +28,8 @@ function unique(values) {
   return [...new Set(values)];
 }
 
-function parseenum(text) {
-  const block = text.match(/methodname\s*=\s*z\.enum\(\[([\s\S]*?)\]\)/);
+function parseEnum(text) {
+  const block = text.match(/methodName\s*=\s*z\.enum\(\[([\s\S]*?)\]\)/);
   if (!block) {
     return [];
   }
@@ -38,7 +38,7 @@ function parseenum(text) {
   );
 }
 
-function parsecases(text) {
+function parseCases(text) {
   return unique(
     [...text.matchAll(/case\s+"([^"]+)"/g)].map((item) => item[1] ?? "")
   );
@@ -57,15 +57,15 @@ const [rpc, ops, manifest, docs] = await Promise.all([
   readFile(files.docs, "utf8"),
 ]);
 
-const enumlist = parseenum(rpc);
-const caselist = parsecases(ops);
-const enummiss = missing(enumlist, needed);
-const casemiss = missing(caselist, needed);
-if (enummiss.length > 0) {
-  issues.push(`rpc methods missing: ${enummiss.join(", ")}`);
+const enumList = parseEnum(rpc);
+const caseList = parseCases(ops);
+const enumMiss = missing(enumList, needed);
+const caseMiss = missing(caseList, needed);
+if (enumMiss.length > 0) {
+  issues.push(`rpc methods missing: ${enumMiss.join(", ")}`);
 }
-if (casemiss.length > 0) {
-  issues.push(`ops handlers missing: ${casemiss.join(", ")}`);
+if (caseMiss.length > 0) {
+  issues.push(`ops handlers missing: ${caseMiss.join(", ")}`);
 }
 
 for (const name of needed) {
@@ -87,7 +87,7 @@ if (!ops.includes("fromsrc://docs/{slug}")) {
 if (!rpc.includes("export const slug =")) {
   issues.push("slug schema missing");
 }
-if (!rpc.includes("slugpathregex")) {
+if (!rpc.includes("slugPathRegex")) {
   issues.push("slug schema missing shared pattern");
 }
 if (!rpc.includes("export const page = z.object({ slug })")) {

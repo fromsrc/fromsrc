@@ -12,7 +12,7 @@ const files = [
     path: "packages/create-fromsrc/src/frameworks.ts",
   },
   {
-    expect: ['import { frameworks, parseframework } from "./frameworks"'],
+    expect: ['import { frameworks, parseFramework } from "./frameworks"'],
     path: "packages/create-fromsrc/src/index.ts",
   },
   {

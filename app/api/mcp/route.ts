@@ -6,7 +6,7 @@ import { sendJson } from "@/app/api/_lib/json";
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content";
 
 import { execute } from "./ops";
-import { method, rpcmethod } from "./rpc";
+import { method, rpcMethod } from "./rpc";
 
 const config = {
   baseUrl: siteUrl(),
@@ -31,7 +31,7 @@ const source: ContentSource = {
 };
 
 const handler = createMcpHandler(config, source);
-const legacybody = z.object({
+const legacyBody = z.object({
   method: method.shape.method,
   params: z.unknown().optional(),
 });
@@ -40,12 +40,12 @@ const cors = {
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Origin": "*",
 };
-const cachecontrol =
+const cacheControl =
   "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800";
 
-function sendrpc(
-  rpc: z.SafeParseReturnType<unknown, z.infer<typeof rpcmethod>>,
-  id: z.infer<typeof rpcmethod>["id"],
+function sendRpc(
+  rpc: z.SafeParseReturnType<unknown, z.infer<typeof rpcMethod>>,
+  id: z.infer<typeof rpcMethod>["id"],
   result: unknown,
   status = 200
 ): Response {
@@ -61,9 +61,9 @@ function sendrpc(
   );
 }
 
-function senderror(
-  rpc: z.SafeParseReturnType<unknown, z.infer<typeof rpcmethod>>,
-  id: z.infer<typeof rpcmethod>["id"],
+function sendError(
+  rpc: z.SafeParseReturnType<unknown, z.infer<typeof rpcMethod>>,
+  id: z.infer<typeof rpcMethod>["id"],
   code: number,
   message: string,
   status = 400
@@ -83,7 +83,7 @@ export function OPTIONS() {
 
 export function GET(request: Request) {
   const manifest = generateMcpManifest(config);
-  const response = sendJson(request, manifest, cachecontrol);
+  const response = sendJson(request, manifest, cacheControl);
   for (const [key, value] of Object.entries(cors)) {
     response.headers.set(key, value);
   }
@@ -101,7 +101,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const rpc = rpcmethod.safeParse(body);
+  const rpc = rpcMethod.safeParse(body);
   const id = rpc.success ? rpc.data.id : undefined;
   let name: z.infer<typeof method>["method"];
   let params: unknown;
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
     name = rpc.data.method;
     ({ params } = rpc.data);
   } else {
-    const legacy = legacybody.safeParse(body);
+    const legacy = legacyBody.safeParse(body);
     if (!legacy.success) {
       return Response.json(
         { error: "invalid method" },
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
 
   const result = await execute({ config, handler, name, params });
   if (!result.ok) {
-    return senderror(rpc, id, result.code, result.message, result.status);
+    return sendError(rpc, id, result.code, result.message, result.status);
   }
-  return sendrpc(rpc, id, result.result, result.status ?? 200);
+  return sendRpc(rpc, id, result.result, result.status ?? 200);
 }

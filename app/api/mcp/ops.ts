@@ -10,43 +10,43 @@ import {
   search,
   slug,
   supported,
-  toolcall,
+  toolCall,
 } from "./rpc";
 
-interface config {
+interface Config {
   name: string;
   version: string;
   baseUrl: string;
 }
 
-interface pageitem {
+interface PageItem {
   slug: string;
   title: string;
   description?: string;
 }
 
-interface handler {
+interface Handler {
   search(
     query: string
   ): Promise<{ slug: string; title: string; snippet?: string }[]>;
   getPage(slug: string): Promise<string | null>;
-  listPages(): Promise<pageitem[]>;
+  listPages(): Promise<PageItem[]>;
 }
 
-interface core {
-  name: z.infer<typeof import("./rpc").methodname>;
+interface Core {
+  name: z.infer<typeof import("./rpc").methodName>;
   params: unknown;
-  config: config;
-  handler: handler;
+  config: Config;
+  handler: Handler;
 }
 
-interface ok {
+interface Ok {
   ok: true;
   result: unknown;
   status?: number;
 }
 
-interface fail {
+interface Fail {
   ok: false;
   code: number;
   message: string;
@@ -78,7 +78,7 @@ function uri(slug: string): string {
   return `fromsrc://docs/${safe}`;
 }
 
-function parseslug(uri: string): string | null {
+function parseSlug(uri: string): string | null {
   const prefix = "fromsrc://docs/";
   if (!uri.startsWith(prefix)) {
     return null;
@@ -90,14 +90,14 @@ function parseslug(uri: string): string | null {
   return value;
 }
 
-function safeslug(value: string | null): string | null {
+function safeSlug(value: string | null): string | null {
   if (value === null) {
     return null;
   }
   return slug.safeParse(value).success ? value : null;
 }
 
-function toolresult(
+function toolResult(
   text: string,
   structured?: Record<string, unknown>
 ): {
@@ -112,7 +112,7 @@ function toolresult(
   };
 }
 
-export async function execute(core: core): Promise<ok | fail> {
+export async function execute(core: Core): Promise<Ok | Fail> {
   switch (core.name) {
     case "initialize": {
       const parsed = init.safeParse(core.params);
@@ -216,7 +216,7 @@ export async function execute(core: core): Promise<ok | fail> {
       };
     }
     case "tools/call": {
-      const parsed = toolcall.safeParse(core.params);
+      const parsed = toolCall.safeParse(core.params);
       if (!parsed.success) {
         return {
           code: -32602,
@@ -239,7 +239,7 @@ export async function execute(core: core): Promise<ok | fail> {
         const results = await core.handler.search(query.data.query);
         return {
           ok: true,
-          result: toolresult(JSON.stringify(results), { results }),
+          result: toolResult(JSON.stringify(results), { results }),
         };
       }
       if (parsed.data.name === "get_page") {
@@ -256,7 +256,7 @@ export async function execute(core: core): Promise<ok | fail> {
         if (!content) {
           return { code: -32004, message: "not found", ok: false, status: 404 };
         }
-        return { ok: true, result: toolresult(content, { content }) };
+        return { ok: true, result: toolResult(content, { content }) };
       }
       if (parsed.data.name === "list_pages") {
         const listed = list.safeParse(args);
@@ -272,11 +272,11 @@ export async function execute(core: core): Promise<ok | fail> {
         if (!listed.data) {
           return {
             ok: true,
-            result: toolresult(JSON.stringify(pages), { pages }),
+            result: toolResult(JSON.stringify(pages), { pages }),
           };
         }
         const result = paged(pages, listed.data);
-        return { ok: true, result: toolresult(JSON.stringify(result), result) };
+        return { ok: true, result: toolResult(JSON.stringify(result), result) };
       }
       return { code: -32_601, message: "unknown tool", ok: false, status: 400 };
     }
@@ -340,7 +340,7 @@ export async function execute(core: core): Promise<ok | fail> {
           status: 400,
         };
       }
-      const value = safeslug(parseslug(parsed.data.uri));
+      const value = safeSlug(parseSlug(parsed.data.uri));
       if (value === null) {
         return {
           code: -32602,

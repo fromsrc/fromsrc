@@ -9,7 +9,7 @@ import type { SearchIndex } from "fromsrc";
 import { sendJsonWithHeaders } from "@/app/api/_lib/json";
 import { getSearchDocs } from "@/app/docs/_lib/content";
 
-interface entry {
+interface Entry {
   at: number;
   value: IndexPayload;
 }
@@ -21,9 +21,9 @@ interface IndexPayload {
 }
 
 const ttl = 1000 * 60 * 5;
-const cachecontrol =
+const cacheControl =
   "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800";
-let cached: entry | null = null;
+let cached: Entry | null = null;
 let inflight: Promise<IndexPayload> | null = null;
 
 async function build(): Promise<IndexPayload> {
@@ -68,7 +68,7 @@ export async function GET(request: Request) {
   const hit = Boolean(cached && Date.now() - cached.at < ttl);
   const value = await load();
   const duration = performance.now() - started;
-  return sendJsonWithHeaders(request, value, cachecontrol, {
+  return sendJsonWithHeaders(request, value, cacheControl, {
     "Server-Timing": `index;dur=${duration.toFixed(2)}`,
     "X-Search-Index-Cache": hit ? "hit" : "miss",
     "X-Search-Index-Count": String(value.documents.length),

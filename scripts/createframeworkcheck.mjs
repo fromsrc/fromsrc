@@ -1,7 +1,7 @@
 import {
   aliases,
   frameworks,
-  parseframework,
+  parseFramework,
 } from "../packages/create-fromsrc/src/frameworks";
 import { frameworks as sharedframeworks } from "./frameworkset.mjs";
 
@@ -70,27 +70,27 @@ for (const key of aliaskeys) {
   if (!frameworks.includes(value)) {
     issues.push(`alias points to unknown framework: ${key} -> ${value}`);
   }
-  const parsed = parseframework(key);
+  const parsed = parseFramework(key);
   if (parsed !== value) {
-    issues.push(`parseframework failed alias ${key}`);
+    issues.push(`parseFramework failed alias ${key}`);
   }
 }
 
 for (const name of frameworks) {
-  if (parseframework(name) !== name) {
-    issues.push(`parseframework failed canonical ${name}`);
+  if (parseFramework(name) !== name) {
+    issues.push(`parseFramework failed canonical ${name}`);
   }
-  if (parseframework(name.toUpperCase()) !== name) {
-    issues.push(`parseframework failed case fold ${name}`);
+  if (parseFramework(name.toUpperCase()) !== name) {
+    issues.push(`parseFramework failed case fold ${name}`);
   }
 }
 
-if (parseframework() !== undefined) {
-  issues.push("parseframework(undefined) must be undefined");
+if (parseFramework() !== undefined) {
+  issues.push("parseFramework(undefined) must be undefined");
 }
 
-if (parseframework("unknown-framework") !== undefined) {
-  issues.push("parseframework must reject invalid framework");
+if (parseFramework("unknown-framework") !== undefined) {
+  issues.push("parseFramework must reject invalid framework");
 }
 
 if (issues.length > 0) {

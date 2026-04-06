@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { slugparams } from "@/app/api/_lib/slug";
+import { slugParams } from "@/app/api/_lib/slug";
 import { send } from "@/app/api/_lib/text";
 import { getAllDocs, getDoc } from "@/app/docs/_lib/content";
 
@@ -11,7 +11,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> }
 ) {
-  const parsed = slugparams.safeParse(await params);
+  const parsed = slugParams.safeParse(await params);
   if (!parsed.success) {
     return send(request, "bad request", cache, 400);
   }

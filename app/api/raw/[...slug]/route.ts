@@ -2,7 +2,7 @@ import { join } from "node:path";
 
 import { getDoc } from "fromsrc";
 
-import { slugparams } from "@/app/api/_lib/slug";
+import { slugParams } from "@/app/api/_lib/slug";
 import { send } from "@/app/api/_lib/text";
 
 const docsDir = join(process.cwd(), "docs");
@@ -13,7 +13,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string[] }> }
 ) {
-  const parsed = slugparams.safeParse(await params);
+  const parsed = slugParams.safeParse(await params);
   if (!parsed.success) {
     return send(request, "bad request", cache, 400);
   }

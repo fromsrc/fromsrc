@@ -9,19 +9,19 @@ const rules = [
     name: "docs",
     patterns: [
       'from "@/app/api/_lib/slug"',
-      "slugparamsmd.safeParse(",
-      "normalizeslug(",
+      "slugParamsMd.safeParse(",
+      "normalizeSlug(",
     ],
   },
   {
     file: "app/api/raw/[...slug]/route.ts",
     name: "raw",
-    patterns: ['from "@/app/api/_lib/slug"', "slugparams.safeParse("],
+    patterns: ['from "@/app/api/_lib/slug"', "slugParams.safeParse("],
   },
   {
     file: "app/api/llms/[...slug]/route.ts",
     name: "llms",
-    patterns: ['from "@/app/api/_lib/slug"', "slugparams.safeParse("],
+    patterns: ['from "@/app/api/_lib/slug"', "slugParams.safeParse("],
   },
 ];
 

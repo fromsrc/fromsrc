@@ -21,9 +21,9 @@ function reject(text, value, label) {
 
 const slug = load("app/api/_lib/slug.ts");
 expect(slug, "slug: z.array(segment).default([])", "slug params");
-expect(slug, "slug: z.array(segmentmd).default([])", "slug params md");
+expect(slug, "slug: z.array(segmentMd).default([])", "slug params md");
 reject(slug, "z.array(segment).min(1)", "slug params");
-reject(slug, "z.array(segmentmd).min(1)", "slug params md");
+reject(slug, "z.array(segmentMd).min(1)", "slug params md");
 
 const nativeui = load("app/components/native.tsx");
 for (const path of [

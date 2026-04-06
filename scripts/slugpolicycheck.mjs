@@ -28,9 +28,9 @@ const [pattern, slug, rpc, docs] = await Promise.all([
   load(files.docs),
 ]);
 
-const segment = pattern.match(/segmentpattern\s*=\s*"([^"]+)"/);
+const segment = pattern.match(/segmentPattern\s*=\s*"([^"]+)"/);
 if (!segment) {
-  issues.push("missing segmentpattern export");
+  issues.push("missing segmentPattern export");
 } else {
   const value = segment[1] ?? "";
   if (!docs.includes(`const segment = /${value}/;`)) {
@@ -41,17 +41,17 @@ if (!segment) {
 if (!slug.includes('from "@/app/api/_lib/slugpattern"')) {
   issues.push("slug route parser missing shared pattern import");
 }
-if (!slug.includes("segmentregex")) {
+if (!slug.includes("segmentRegex")) {
   issues.push("slug route parser missing shared segment regex usage");
 }
-if (!slug.includes("segmentmdregex")) {
+if (!slug.includes("segmentMdRegex")) {
   issues.push("slug route parser missing shared md segment regex usage");
 }
 
 if (!rpc.includes('from "@/app/api/_lib/slugpattern"')) {
   issues.push("mcp rpc missing shared pattern import");
 }
-if (!rpc.includes("slugpathregex")) {
+if (!rpc.includes("slugPathRegex")) {
   issues.push("mcp rpc missing shared slug path regex usage");
 }
 

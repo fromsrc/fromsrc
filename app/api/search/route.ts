@@ -13,17 +13,17 @@ const schema = z.object({
   ),
 });
 
-interface entry {
+interface Entry {
   at: number;
-  value: row[];
+  value: Row[];
 }
 
-interface cacheentry<T> {
+interface CacheEntry<T> {
   at: number;
   value: T;
 }
 
-interface row {
+interface Row {
   slug: string;
   title: string;
   description?: string;
@@ -33,29 +33,29 @@ interface row {
   score: number;
 }
 
-interface computev {
-  rows: row[];
+interface ComputeV {
+  rows: Row[];
   docsHit: boolean;
 }
 
-const cache = new Map<string, entry>();
-const inflight = new Map<string, Promise<computev>>();
-let allCache: cacheentry<Awaited<ReturnType<typeof getAllDocs>>> | null = null;
-let searchCache: cacheentry<Awaited<ReturnType<typeof getSearchDocs>>> | null =
+const cache = new Map<string, Entry>();
+const inflight = new Map<string, Promise<ComputeV>>();
+let allCache: CacheEntry<Awaited<ReturnType<typeof getAllDocs>>> | null = null;
+let searchCache: CacheEntry<Awaited<ReturnType<typeof getSearchDocs>>> | null =
   null;
 let allInflight: Promise<Awaited<ReturnType<typeof getAllDocs>>> | null = null;
 let searchInflight: Promise<Awaited<ReturnType<typeof getSearchDocs>>> | null =
   null;
 const ttl = 1000 * 60 * 5;
 const max = 200;
-const cachecontrol =
+const cacheControl =
   "public, max-age=60, s-maxage=300, stale-while-revalidate=86400";
 
 function normalize(text: string | undefined): string {
   return text?.toLowerCase().replaceAll(/\s+/g, " ").trim() ?? "";
 }
 
-function get(key: string): row[] | null {
+function get(key: string): Row[] | null {
   const item = cache.get(key);
   if (!item) {
     return null;
@@ -67,7 +67,7 @@ function get(key: string): row[] | null {
   return item.value;
 }
 
-function set(key: string, value: row[]): row[] {
+function set(key: string, value: Row[]): Row[] {
   if (cache.size >= max) {
     const first = cache.keys().next();
     if (!first.done) {
@@ -78,15 +78,15 @@ function set(key: string, value: row[]): row[] {
   return value;
 }
 
-function valid<T>(entry: cacheentry<T> | null): boolean {
+function valid<T>(entry: CacheEntry<T> | null): boolean {
   return Boolean(entry && Date.now() - entry.at <= ttl);
 }
 
-function doccachehit(query: string): boolean {
+function docCacheHit(query: string): boolean {
   return query ? valid(searchCache) : valid(allCache);
 }
 
-async function loadall(): Promise<{
+async function loadAll(): Promise<{
   value: Awaited<ReturnType<typeof getAllDocs>>;
   hit: boolean;
 }> {
@@ -106,7 +106,7 @@ async function loadall(): Promise<{
   return { hit: false, value };
 }
 
-async function loadsearch(): Promise<{
+async function loadSearch(): Promise<{
   value: Awaited<ReturnType<typeof getSearchDocs>>;
   hit: boolean;
 }> {
@@ -129,9 +129,9 @@ async function loadsearch(): Promise<{
 async function compute(
   query: string | undefined,
   limit: number
-): Promise<computev> {
+): Promise<ComputeV> {
   if (!query) {
-    const docs = await loadall();
+    const docs = await loadAll();
     return {
       docsHit: docs.hit,
       rows: docs.value.slice(0, limit).map((doc) => ({
@@ -144,7 +144,7 @@ async function compute(
       })),
     };
   }
-  const docs = await loadsearch();
+  const docs = await loadSearch();
   const results = await localSearch.search(query, docs.value, limit);
   return {
     docsHit: docs.hit,
@@ -168,7 +168,7 @@ export async function GET(request: Request) {
     q: url.searchParams.get("q") ?? undefined,
   });
   if (!parsed.success) {
-    return sendJson(request, [], cachecontrol, 400);
+    return sendJson(request, [], cacheControl, 400);
   }
   const values = parsed.data;
   const query = normalize(values.q);
@@ -176,10 +176,10 @@ export async function GET(request: Request) {
   const cached = get(key);
   if (cached) {
     const duration = performance.now() - started;
-    return sendJsonWithHeaders(request, cached, cachecontrol, {
+    return sendJsonWithHeaders(request, cached, cacheControl, {
       "Server-Timing": `search;dur=${duration.toFixed(2)}`,
       "X-Search-Cache": "hit",
-      "X-Search-Docs-Cache": doccachehit(query) ? "hit" : "miss",
+      "X-Search-Docs-Cache": docCacheHit(query) ? "hit" : "miss",
       "X-Search-Result-Count": String(cached.length),
     });
   }
@@ -195,7 +195,7 @@ export async function GET(request: Request) {
     }
   });
   const duration = performance.now() - started;
-  return sendJsonWithHeaders(request, set(key, computed.rows), cachecontrol, {
+  return sendJsonWithHeaders(request, set(key, computed.rows), cacheControl, {
     "Server-Timing": `search;dur=${duration.toFixed(2)}`,
     "X-Search-Cache": "miss",
     "X-Search-Docs-Cache": computed.docsHit ? "hit" : "miss",

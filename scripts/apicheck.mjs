@@ -25,7 +25,7 @@ const rules = [
     patterns: [
       'from "@/app/api/_lib/json"',
       "sendJsonWithHeaders(",
-      "const cachecontrol =",
+      "const cacheControl =",
     ],
   },
   {
@@ -34,7 +34,7 @@ const rules = [
     patterns: [
       'from "@/app/api/_lib/json"',
       "sendJsonWithHeaders(",
-      "const cachecontrol =",
+      "const cacheControl =",
     ],
   },
   {
@@ -43,7 +43,7 @@ const rules = [
     patterns: [
       'from "@/app/api/_lib/json"',
       "sendJson(",
-      "const cachecontrol =",
+      "const cacheControl =",
     ],
   },
   {
