@@ -4,26 +4,26 @@ import { createElement } from "react";
 
 import type {
   FrameworkAdapter,
-  fromsrcimageprops,
-  fromsrclinkprops,
+  FromsrcImageProps,
+  FromsrcLinkProps,
 } from "./adapter";
-import { back, push, usepath } from "./browser";
+import { back, push, usePath } from "./browser";
 
 function link({
   href,
   children,
   prefetch: _prefetch,
   ...rest
-}: fromsrclinkprops) {
+}: FromsrcLinkProps) {
   return createElement("a", { href, ...rest }, children);
 }
 
-function image({ src, alt, ...rest }: fromsrcimageprops) {
+function image({ src, alt, ...rest }: FromsrcImageProps) {
   return createElement("img", { alt, src, ...rest });
 }
 
 function pathname(): string {
-  return usepath();
+  return usePath();
 }
 
 function router() {
@@ -33,7 +33,7 @@ function router() {
   };
 }
 
-export function createbrowseradapter(): FrameworkAdapter {
+export function createBrowserAdapter(): FrameworkAdapter {
   return {
     Image: image,
     Link: link,

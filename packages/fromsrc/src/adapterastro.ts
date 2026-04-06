@@ -1,5 +1,5 @@
 "use client";
 
-import { createbrowseradapter } from "./adapterbrowser";
+import { createBrowserAdapter } from "./adapterbrowser";
 
-export const astroAdapter = createbrowseradapter();
+export const astroAdapter = createBrowserAdapter();

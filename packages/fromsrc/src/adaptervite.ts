@@ -1,5 +1,5 @@
 "use client";
 
-import { createbrowseradapter } from "./adapterbrowser";
+import { createBrowserAdapter } from "./adapterbrowser";
 
-export const viteAdapter = createbrowseradapter();
+export const viteAdapter = createBrowserAdapter();

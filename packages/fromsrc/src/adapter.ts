@@ -3,14 +3,14 @@
 import { createContext, createElement, useContext } from "react";
 import type { ComponentPropsWithoutRef, ComponentType, ReactNode } from "react";
 
-import { usepath } from "./browser";
+import { usePath } from "./browser";
 
-export type fromsrclinkprops = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
+export type FromsrcLinkProps = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
   href: string;
   prefetch?: boolean;
 };
 
-export type fromsrcimageprops = Omit<
+export type FromsrcImageProps = Omit<
   ComponentPropsWithoutRef<"img">,
   "src" | "alt"
 > & {
@@ -19,23 +19,23 @@ export type fromsrcimageprops = Omit<
 };
 
 export interface FrameworkAdapter {
-  Link: ComponentType<fromsrclinkprops>;
-  Image?: ComponentType<fromsrcimageprops>;
+  Link: ComponentType<FromsrcLinkProps>;
+  Image?: ComponentType<FromsrcImageProps>;
   usePathname: () => string;
   useRouter: () => { push: (url: string) => void; back: () => void };
   compileMdx?: (source: string, options?: unknown) => Promise<unknown>;
 }
 
-function defaultLink({ href, children, ...rest }: fromsrclinkprops) {
+function defaultLink({ href, children, ...rest }: FromsrcLinkProps) {
   return createElement("a", { href, ...rest }, children);
 }
 
-function defaultImage({ src, alt, ...rest }: fromsrcimageprops) {
+function defaultImage({ src, alt, ...rest }: FromsrcImageProps) {
   return createElement("img", { alt, src, ...rest });
 }
 
 function defaultUsePathname(): string {
-  return usepath();
+  return usePath();
 }
 
 function defaultUseRouter() {

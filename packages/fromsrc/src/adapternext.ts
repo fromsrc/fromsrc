@@ -7,15 +7,15 @@ import { createElement } from "react";
 
 import type {
   FrameworkAdapter,
-  fromsrcimageprops,
-  fromsrclinkprops,
+  FromsrcImageProps,
+  FromsrcLinkProps,
 } from "./adapter";
 
-function Link({ href, children, prefetch, ...rest }: fromsrclinkprops) {
+function Link({ href, children, prefetch, ...rest }: FromsrcLinkProps) {
   return createElement(NextLink, { href, prefetch, ...rest }, children);
 }
 
-function Image({ src, alt, width, height, ...rest }: fromsrcimageprops) {
+function Image({ src, alt, width, height, ...rest }: FromsrcImageProps) {
   const nextWidth = Number(width) > 0 ? Number(width) : 1200;
   const nextHeight = Number(height) > 0 ? Number(height) : 630;
   return createElement(NextImage, {

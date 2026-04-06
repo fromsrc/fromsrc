@@ -9,7 +9,7 @@ function current(): string {
   return window.location.pathname;
 }
 
-export function usepath(): string {
+export function usePath(): string {
   const [value, setValue] = useState(current);
 
   useEffect(() => {
