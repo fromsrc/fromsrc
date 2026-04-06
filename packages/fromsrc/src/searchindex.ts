@@ -1,3 +1,5 @@
+import { isRecord } from "./guard";
+
 export interface SearchDocument {
   path: string;
   title: string;
@@ -43,6 +45,7 @@ const DEFAULT_STOPS = new Set([
   "that",
 ]);
 
+/** Split text into normalized, filtered search tokens */
 export function tokenize(text: string, config?: IndexConfig): string[] {
   const stops = config?.stopWords ? new Set(config.stopWords) : DEFAULT_STOPS;
   const min = config?.minLength ?? 2;
@@ -74,16 +77,19 @@ function indexDocument(index: SearchIndex, idx: number, doc: SearchDocument) {
   }
 }
 
+/** Create an empty search index with optional configuration */
 export function createIndex(config?: IndexConfig): SearchIndex {
   return { config, documents: [], terms: new Map(), version: 1 };
 }
 
+/** Add a document to the search index and update term mappings */
 export function addDocument(index: SearchIndex, doc: SearchDocument): void {
   const idx = index.documents.length;
   index.documents.push(doc);
   indexDocument(index, idx, doc);
 }
 
+/** Remove a document from the index by path */
 export function removeDocument(index: SearchIndex, path: string): void {
   const idx = index.documents.findIndex((d) => d.path === path);
   if (idx === -1) {
@@ -136,6 +142,7 @@ export function removeDocument(index: SearchIndex, path: string): void {
   index.documents.pop();
 }
 
+/** Search the index for documents matching the query */
 export function search(
   index: SearchIndex,
   query: string,
@@ -162,6 +169,7 @@ export function search(
     .filter((doc): doc is SearchDocument => doc !== undefined);
 }
 
+/** Serialize a search index to a JSON string for persistence */
 export function serializeIndex(index: SearchIndex): string {
   return JSON.stringify({
     config: index.config,
@@ -169,10 +177,6 @@ export function serializeIndex(index: SearchIndex): string {
     terms: [...index.terms.entries()],
     version: index.version,
   });
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
 }
 
 function isSearchDocument(value: unknown): value is SearchDocument {
@@ -250,6 +254,7 @@ function isIndexConfig(value: unknown): value is IndexConfig {
   return true;
 }
 
+/** Deserialize a JSON string back into a validated search index */
 export function deserializeIndex(data: string): SearchIndex {
   const parsed: unknown = JSON.parse(data);
   if (!isRecord(parsed)) {

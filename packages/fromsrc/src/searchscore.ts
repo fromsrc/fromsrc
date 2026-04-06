@@ -1,10 +1,12 @@
 import { typoMatch } from "./searchtypo";
 
+/** A word list and set for fast exact and fuzzy lookups */
 export interface TermIndex {
   list: string[];
   set: Set<string>;
 }
 
+/** Pre-indexed document fields used for scoring search results */
 export interface SearchTermData {
   title: string;
   slug: string;
@@ -17,6 +19,7 @@ export interface SearchTermData {
   contentIndex: TermIndex;
 }
 
+/** Numeric weights controlling how each field contributes to search score */
 export interface SearchWeights {
   titleExact: number;
   titleTypo: number;
@@ -28,6 +31,7 @@ export interface SearchWeights {
   contentExact: number;
 }
 
+/** Default scoring weights for search fields */
 export const defaultWeights: SearchWeights = {
   contentExact: 2,
   descriptionExact: 4,
@@ -43,6 +47,7 @@ export function termIndex(words: string[]): TermIndex {
   return { list: words, set: new Set(words) };
 }
 
+/** Score a set of search terms against pre-indexed document data */
 export function scoreTerms(
   terms: string[],
   data: SearchTermData,
