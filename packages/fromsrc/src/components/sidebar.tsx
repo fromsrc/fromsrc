@@ -32,11 +32,11 @@ export interface SidebarSection {
 
 export type SectionItem = SidebarItem | SidebarFolder | DocMeta;
 
-export function isfolder(item: SectionItem): item is SidebarFolder {
+export function IsFolder(item: SectionItem): item is SidebarFolder {
   return "type" in item && item.type === "folder";
 }
 
-export function issidebaritem(item: SectionItem): item is SidebarItem {
+export function IsSidebarItem(item: SectionItem): item is SidebarItem {
   return "href" in item && typeof item.href === "string" && item.href.length > 0;
 }
 
@@ -344,7 +344,7 @@ function SidebarNav({
           </h3>
           <ul role="list" className="space-y-px">
             {section.items.map((item, i) => {
-              if (isfolder(item)) {
+              if (IsFolder(item)) {
                 return (
                   <Folder
                     key={i}
@@ -355,7 +355,7 @@ function SidebarNav({
                   />
                 );
               }
-              if (issidebaritem(item)) {
+              if (IsSidebarItem(item)) {
                 return (
                   <li key={i}>
                     <NavLink href={item.href} icon={item.icon}>

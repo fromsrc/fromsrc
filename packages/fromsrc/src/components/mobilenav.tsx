@@ -10,7 +10,7 @@ import { useFocusTrap } from "../hooks/focustrap";
 import { useScrollLock } from "../hooks/scrolllock";
 import { NavLink } from "./navlink";
 import { Search } from "./search";
-import { isfolder, issidebaritem } from "./sidebar";
+import { IsFolder, IsSidebarItem } from "./sidebar";
 import type { SidebarFolder, SidebarSection } from "./sidebar";
 
 export interface MobileNavProps {
@@ -283,7 +283,7 @@ export function MobileNav({
                   </h3>
                   <ul role="list" className="space-y-0.5">
                     {section.items.map((item, i) => {
-                      if (isfolder(item)) {
+                      if (IsFolder(item)) {
                         return (
                           <MobileFolder
                             key={i}
@@ -293,7 +293,7 @@ export function MobileNav({
                           />
                         );
                       }
-                      if (issidebaritem(item)) {
+                      if (IsSidebarItem(item)) {
                         return (
                           <li key={i}>
                             <NavLink
