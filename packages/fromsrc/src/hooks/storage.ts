@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type StorageSetter<T> = (value: T | ((prev: T) => T)) => void;
 const local = (): Storage => localStorage;
 const session = (): Storage => sessionStorage;
 
-function issamekind<T>(value: unknown, sample: T): value is T {
+function isSameKind<T>(value: unknown, sample: T): value is T {
   if (sample === null) {
     return value === null;
   }
@@ -20,10 +20,10 @@ function issamekind<T>(value: unknown, sample: T): value is T {
   return typeof value === kind;
 }
 
-function parsestored<T>(raw: string, fallback: T): T | null {
+function parseStored<T>(raw: string, fallback: T): T | null {
   try {
     const parsed: unknown = JSON.parse(raw);
-    return issamekind(parsed, fallback) ? parsed : null;
+    return isSameKind(parsed, fallback) ? parsed : null;
   } catch {
     return null;
   }
@@ -35,18 +35,19 @@ function useStorage<T>(
   defaultValue: T
 ): [T, StorageSetter<T>] {
   const [value, setValue] = useState<T>(defaultValue);
+  const defaultRef = useRef(defaultValue);
 
   useEffect((): void => {
     try {
       const stored: string | null = getStorage().getItem(key);
       if (stored !== null) {
-        const parsed = parsestored(stored, defaultValue);
+        const parsed = parseStored(stored, defaultRef.current);
         if (parsed !== null) {
           setValue(parsed);
         }
       }
     } catch {}
-  }, [defaultValue, getStorage, key]);
+  }, [getStorage, key]);
 
   const setStoredValue: StorageSetter<T> = useCallback(
     (newValue: T | ((prev: T) => T)): void => {
