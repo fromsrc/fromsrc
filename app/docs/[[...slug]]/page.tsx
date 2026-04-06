@@ -5,18 +5,18 @@ import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { repourl, siteurl } from "@/app/_lib/site";
+import { repoUrl, siteUrl } from "@/app/_lib/site";
 
 import { MDX } from "../_components/mdx";
 import { getAllDocs, getDoc } from "../_lib/content";
-import { jsonld, neighbors, ogquery, orderdocs } from "../_lib/pageutil";
+import { jsonld, neighbors, ogQuery, orderDocs } from "../_lib/pageutil";
 
 interface Props {
   params: Promise<{ slug?: string[] }>;
 }
 
-const site = siteurl();
-const repo = repourl();
+const site = siteUrl();
+const repo = repoUrl();
 
 export async function generateStaticParams(): Promise<{ slug: string[] }[]> {
   const docs = await getAllDocs();
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "not found" };
   }
 
-  const query = ogquery(doc.title, doc.description);
+  const query = ogQuery(doc.title, doc.description);
 
   return {
     description: doc.description,
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function formatdate(date: Date | null): string {
+function formatDate(date: Date | null): string {
   if (!date) {
     return "";
   }
@@ -72,7 +72,7 @@ export default async function DocPage({ params }: Props) {
   }
   const { slug = [] } = await params;
   const [doc, rawDocs] = await Promise.all([getDoc(slug), getAllDocs()]);
-  const allDocs = orderdocs(rawDocs);
+  const allDocs = orderDocs(rawDocs);
 
   if (!doc) {
     notFound();
@@ -124,7 +124,7 @@ export default async function DocPage({ params }: Props) {
               style={{ color: "rgba(255,255,255,0.3)" }}
             >
               <div className="flex items-center gap-4">
-                {modified && <span>Last updated {formatdate(modified)}</span>}
+                {modified && <span>Last updated {formatDate(modified)}</span>}
                 <span>{readTime} min read</span>
               </div>
               <a

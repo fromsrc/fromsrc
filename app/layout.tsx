@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import "katex/dist/katex.min.css";
 import "./globals.css";
-import { siteurl } from "./_lib/site";
+import { siteUrl } from "./_lib/site";
 
 const mono = DM_Mono({
   display: "swap",
@@ -20,7 +20,7 @@ const serif = Playfair_Display({
   weight: ["400", "500", "600"],
 });
 
-const site = siteurl();
+const site = siteUrl();
 
 export const metadata: Metadata = {
   description: "MDX docs framework. AI-native. Open source.",

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { siteurl } from "./_lib/site";
+import { siteUrl } from "./_lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -29,6 +29,6 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "ClaudeBot",
       },
     ],
-    sitemap: `${siteurl()}/sitemap.xml`,
+    sitemap: `${siteUrl()}/sitemap.xml`,
   };
 }

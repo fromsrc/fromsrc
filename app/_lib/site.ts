@@ -6,7 +6,7 @@ function normalize(url: string): string {
   return value.endsWith("/") ? value.slice(0, -1) : value;
 }
 
-export function siteurl(): string {
+export function siteUrl(): string {
   return normalize(
     process.env.SITE_URL ??
       process.env.NEXT_PUBLIC_SITE_URL ??
@@ -14,7 +14,7 @@ export function siteurl(): string {
   );
 }
 
-export function repourl(): string {
+export function repoUrl(): string {
   return normalize(
     process.env.NEXT_PUBLIC_GITHUB_REPO ?? "https://github.com/fromsrc/fromsrc"
   );

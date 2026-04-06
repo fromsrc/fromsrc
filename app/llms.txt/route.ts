@@ -1,11 +1,11 @@
 import { generateLlmsIndex } from "fromsrc";
 
-import { siteurl } from "@/app/_lib/site";
+import { siteUrl } from "@/app/_lib/site";
 import { send } from "@/app/api/_lib/text";
 import { getAllDocs } from "@/app/docs/_lib/content";
 
 const config = {
-  baseUrl: siteurl(),
+  baseUrl: siteUrl(),
   description: "documentation framework for developers",
   title: "fromsrc documentation",
 };

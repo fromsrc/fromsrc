@@ -1,7 +1,7 @@
 import { createMcpHandler, generateMcpManifest, z } from "fromsrc";
 import type { ContentSource } from "fromsrc";
 
-import { siteurl } from "@/app/_lib/site";
+import { siteUrl } from "@/app/_lib/site";
 import { sendjson } from "@/app/api/_lib/json";
 import { getAllDocs, getDoc, getSearchDocs } from "@/app/docs/_lib/content";
 
@@ -9,7 +9,7 @@ import { execute } from "./ops";
 import { method, rpcmethod } from "./rpc";
 
 const config = {
-  baseUrl: siteurl(),
+  baseUrl: siteUrl(),
   name: "fromsrc",
   version: "1.0.0",
 };

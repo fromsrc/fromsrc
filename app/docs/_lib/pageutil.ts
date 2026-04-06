@@ -6,7 +6,7 @@ interface docrow {
   description?: string;
 }
 
-export function orderdocs(docs: DocMeta[]): DocMeta[] {
+export function orderDocs(docs: DocMeta[]): DocMeta[] {
   const intro: DocMeta[] = [];
   const components: DocMeta[] = [];
   const api: DocMeta[] = [];
@@ -47,7 +47,7 @@ export function neighbors(
   };
 }
 
-export function ogquery(title: string, description?: string): URLSearchParams {
+export function ogQuery(title: string, description?: string): URLSearchParams {
   const query = new URLSearchParams({ title });
   if (description) {
     query.set("description", description);
