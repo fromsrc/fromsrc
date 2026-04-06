@@ -1,4 +1,4 @@
-import { parsespec, rootschema } from "./openapiguard";
+import { parseSpec, rootSchema } from "./openapiguard";
 import {
   generateEndpointSlug,
   resolveContent,
@@ -45,7 +45,7 @@ function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
-function asrecord(value: unknown): JsonRecord {
+function asRecord(value: unknown): JsonRecord {
   return isRecord(value) ? value : {};
 }
 
@@ -54,10 +54,10 @@ function extractParameters(root: unknown, raw: unknown): OpenApiParameter[] {
     return [];
   }
   return raw.flatMap((item) => {
-    const input = asrecord(item);
+    const input = asRecord(item);
     const ref =
       typeof input.$ref === "string" ? resolveRef(root, input.$ref) : input;
-    const resolved = asrecord(ref);
+    const resolved = asRecord(ref);
     const name = typeof resolved.name === "string" ? resolved.name : "";
     const location = resolved.in;
     if (!["query", "path", "header", "cookie"].includes(String(location))) {
@@ -90,10 +90,10 @@ function extractRequestBody(
   if (!raw) {
     return undefined;
   }
-  const input = asrecord(raw);
+  const input = asRecord(raw);
   const ref =
     typeof input.$ref === "string" ? resolveRef(root, input.$ref) : input;
-  const resolved = asrecord(ref);
+  const resolved = asRecord(ref);
   return {
     content: resolveContent(root, resolved.content) ?? {},
     description:
@@ -110,10 +110,10 @@ function extractResponses(root: unknown, raw: unknown): OpenApiResponse[] {
     return [];
   }
   const list = Object.entries(raw).map(([status, val]) => {
-    const input = asrecord(val);
+    const input = asRecord(val);
     const ref =
       typeof input.$ref === "string" ? resolveRef(root, input.$ref) : input;
-    const resolved = asrecord(ref);
+    const resolved = asRecord(ref);
     return {
       content: resolveContent(root, resolved.content),
       description:
@@ -150,16 +150,16 @@ function extractSecurity(raw: unknown): string[] | undefined {
 }
 
 function extractEndpoints(root: unknown): OpenApiEndpoint[] {
-  const doc = asrecord(root);
-  const paths = asrecord(doc.paths);
+  const doc = asRecord(root);
+  const paths = asRecord(doc.paths);
   const endpoints: OpenApiEndpoint[] = [];
 
   for (const [path, methodset] of Object.entries(paths)) {
-    const methods = asrecord(methodset);
+    const methods = asRecord(methodset);
     const shared = methods.parameters;
 
     for (const method of HTTP_METHODS) {
-      const op = asrecord(methods[method]);
+      const op = asRecord(methods[method]);
       if (Object.keys(op).length === 0) {
         continue;
       }
@@ -194,8 +194,8 @@ function extractEndpoints(root: unknown): OpenApiEndpoint[] {
 }
 
 function extractSchemas(root: unknown): Record<string, OpenApiSchema> {
-  const parsed = rootschema.parse(root);
-  const raw = asrecord(parsed.components?.schemas ?? parsed.definitions);
+  const parsed = rootSchema.parse(root);
+  const raw = asRecord(parsed.components?.schemas ?? parsed.definitions);
   const schemas: Record<string, OpenApiSchema> = {};
   for (const [name, val] of Object.entries(raw)) {
     schemas[name] = resolveSchema(root, val);
@@ -207,7 +207,7 @@ function extractTags(
   root: unknown,
   endpoints: OpenApiEndpoint[]
 ): OpenApiTag[] {
-  const parsed = rootschema.parse(root);
+  const parsed = rootSchema.parse(root);
   const explicit: OpenApiTag[] = parsed.tags;
 
   const named = new Set(explicit.map((t) => t.name));
@@ -224,8 +224,8 @@ function extractTags(
 }
 
 export function parseOpenApi(spec: string | object): OpenApiSpec {
-  const root = parsespec(spec);
-  const parsed = rootschema.parse(root);
+  const root = parseSpec(spec);
+  const parsed = rootSchema.parse(root);
 
   const endpoints = extractEndpoints(root);
 

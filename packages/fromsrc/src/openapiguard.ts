@@ -2,7 +2,7 @@ import type { OpenApiTag } from "./openapiutil";
 
 type JsonRecord = Record<string, unknown>;
 
-interface rootvalue {
+interface RootValue {
   info: {
     title: string;
     version: string;
@@ -20,85 +20,85 @@ function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
-function totext(value: unknown): string | undefined {
+function toText(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-function torecord(value: unknown): Record<string, unknown> | undefined {
+function toRecord(value: unknown): Record<string, unknown> | undefined {
   return isRecord(value) ? value : undefined;
 }
 
-function parseinfo(value: unknown): rootvalue["info"] {
-  const input = torecord(value) ?? {};
+function parseInfo(value: unknown): RootValue["info"] {
+  const input = toRecord(value) ?? {};
   return {
-    description: totext(input.description),
-    title: totext(input.title) ?? "",
-    version: totext(input.version) ?? "",
+    description: toText(input.description),
+    title: toText(input.title) ?? "",
+    version: toText(input.version) ?? "",
   };
 }
 
-function parsetags(value: unknown): OpenApiTag[] {
+function parseTags(value: unknown): OpenApiTag[] {
   if (!Array.isArray(value)) {
     return [];
   }
   return value.flatMap((item) => {
-    const input = torecord(item);
+    const input = toRecord(item);
     if (!input) {
       return [];
     }
-    const name = totext(input.name);
+    const name = toText(input.name);
     if (!name || name.length === 0) {
       return [];
     }
-    return [{ description: totext(input.description), name }];
+    return [{ description: toText(input.description), name }];
   });
 }
 
-function parsepaths(value: unknown): Record<string, unknown> {
-  return torecord(value) ?? {};
+function parsePaths(value: unknown): Record<string, unknown> {
+  return toRecord(value) ?? {};
 }
 
-function parsecomponents(value: unknown): rootvalue["components"] {
-  const input = torecord(value);
+function parseComponents(value: unknown): RootValue["components"] {
+  const input = toRecord(value);
   if (!input) {
     return undefined;
   }
-  const schemas = torecord(input.schemas);
+  const schemas = toRecord(input.schemas);
   if (!schemas) {
     return undefined;
   }
   return { schemas };
 }
 
-function parsedefinitions(value: unknown): rootvalue["definitions"] {
-  return torecord(value);
+function parseDefinitions(value: unknown): RootValue["definitions"] {
+  return toRecord(value);
 }
 
-function parseroot(value: unknown): rootvalue {
+function parseRoot(value: unknown): RootValue {
   if (!isRecord(value)) {
     throw new Error("invalid openapi specification");
   }
   return {
-    components: parsecomponents(value.components),
-    definitions: parsedefinitions(value.definitions),
-    info: parseinfo(value.info),
-    paths: parsepaths(value.paths),
-    tags: parsetags(value.tags),
+    components: parseComponents(value.components),
+    definitions: parseDefinitions(value.definitions),
+    info: parseInfo(value.info),
+    paths: parsePaths(value.paths),
+    tags: parseTags(value.tags),
   };
 }
 
-export const rootschema = {
-  parse: parseroot,
+export const rootSchema = {
+  parse: parseRoot,
 };
 
-interface buncore {
+interface BunCore {
   YAML?: {
     parse: (input: string) => unknown;
   };
 }
 
-function parseyaml(spec: string): unknown {
-  const runtime = globalThis as typeof globalThis & { Bun?: buncore };
+function parseYaml(spec: string): unknown {
+  const runtime = globalThis as typeof globalThis & { Bun?: BunCore };
   const parser = runtime.Bun?.YAML?.parse;
   if (!parser) {
     throw new Error("invalid openapi specification");
@@ -106,7 +106,7 @@ function parseyaml(spec: string): unknown {
   return parser(spec);
 }
 
-export function parsespec(spec: string | object): unknown {
+export function parseSpec(spec: string | object): unknown {
   if (typeof spec === "string") {
     const text = spec.trim();
     if (text.length === 0) {
@@ -116,7 +116,7 @@ export function parsespec(spec: string | object): unknown {
       return JSON.parse(text);
     } catch {
       try {
-        const parsed: unknown = parseyaml(text);
+        const parsed: unknown = parseYaml(text);
         if (!isRecord(parsed)) {
           throw new Error("invalid openapi specification");
         }
