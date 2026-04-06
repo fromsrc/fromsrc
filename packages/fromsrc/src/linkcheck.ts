@@ -1,6 +1,7 @@
 import { readFile, readdir, access } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
+/** Result of checking a single link */
 export interface LinkCheckResult {
   source: string;
   href: string;
@@ -8,18 +9,21 @@ export interface LinkCheckResult {
   status: "ok" | "broken" | "unknown";
 }
 
+/** Configuration for the link checker */
 export interface LinkCheckConfig {
   dir: string;
   extensions?: string[];
   baseUrl?: string;
 }
 
+/** Summary report with total links and broken count */
 export interface LinkCheckReport {
   total: number;
   broken: number;
   results: LinkCheckResult[];
 }
 
+/** Check if a link href is internal (relative or anchor) */
 export function isInternalLink(href: string): boolean {
   if (
     href.startsWith("http://") ||
@@ -36,6 +40,7 @@ export function isInternalLink(href: string): boolean {
   );
 }
 
+/** Resolve a relative link href against a source file path */
 export function resolveLink(source: string, href: string): string {
   if (href.startsWith("/")) {
     return href;
@@ -43,9 +48,10 @@ export function resolveLink(source: string, href: string): string {
   return resolve(dirname(source), href);
 }
 
+/** Extract all markdown links from content with their types */
 export function extractLinks(
   content: string,
-  source: string
+  _source: string
 ): { href: string; type: "internal" | "anchor" | "external" }[] {
   const results: { href: string; type: "internal" | "anchor" | "external" }[] =
     [];
@@ -130,6 +136,7 @@ async function gather(dir: string, exts: string[]): Promise<string[]> {
   return files;
 }
 
+/** Check all internal and anchor links in a docs directory */
 export async function checkInternalLinks(
   config: LinkCheckConfig
 ): Promise<LinkCheckReport> {
@@ -199,6 +206,7 @@ export async function checkInternalLinks(
   };
 }
 
+/** Format a link check report as a human-readable string */
 export function formatReport(report: LinkCheckReport): string {
   const lines = [`${report.total} links, ${report.broken} broken`];
   for (const r of report.results.filter((r) => r.status === "broken")) {

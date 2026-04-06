@@ -1,8 +1,10 @@
+/** Single changelog item within a release entry */
 export interface ChangelogItem {
   type: "added" | "changed" | "fixed" | "removed" | "deprecated" | "security";
   description: string;
 }
 
+/** Parsed changelog entry for a single version release */
 export interface ChangelogEntry {
   version: string;
   date: string;
@@ -13,6 +15,7 @@ export interface ChangelogEntry {
   items: ChangelogItem[];
 }
 
+/** Configuration for changelog parsing */
 export interface ChangelogConfig {
   file?: string;
 }
@@ -36,7 +39,7 @@ function detectType(
   if (!previous) {
     return "major";
   }
-  const [ma, mi, pa] = version.split(".").map(Number);
+  const [ma, mi] = version.split(".").map(Number);
   const [pma, pmi] = previous.split(".").map(Number);
   if (ma !== pma) {
     return "major";
@@ -51,6 +54,7 @@ function detectBreaking(items: ChangelogItem[]): boolean {
   return items.some((i) => /\bBREAKING\b/i.test(i.description));
 }
 
+/** Parse a keep-a-changelog formatted string into structured entries */
 export function parseChangelog(content: string): ChangelogEntry[] {
   const entries: ChangelogEntry[] = [];
   const blocks = content.split(/^## /m).slice(1);
@@ -121,6 +125,7 @@ function escape(s: string): string {
     .replaceAll('>', "&gt;");
 }
 
+/** Generate an RSS feed from changelog entries */
 export function generateChangelogRss(
   config: { title: string; baseUrl: string; description: string },
   entries: ChangelogEntry[]
@@ -145,12 +150,14 @@ export function generateChangelogRss(
   );
 }
 
+/** Get the most recent changelog entry */
 export function latestVersion(
   entries: ChangelogEntry[]
 ): ChangelogEntry | undefined {
   return entries[0];
 }
 
+/** Filter changelog entries by release type */
 export function filterByType(
   entries: ChangelogEntry[],
   type: ChangelogEntry["type"]
@@ -158,6 +165,7 @@ export function filterByType(
   return entries.filter((e) => e.type === type);
 }
 
+/** Filter entries that contain breaking changes */
 export function hasBreaking(entries: ChangelogEntry[]): ChangelogEntry[] {
   return entries.filter((e) => e.breaking);
 }

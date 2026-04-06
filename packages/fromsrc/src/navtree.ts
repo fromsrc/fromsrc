@@ -1,5 +1,6 @@
 import type { DocMeta } from "./content";
 
+/** Tree node representing a navigation entry with nested children */
 export interface NavNode {
   title: string;
   slug: string;
@@ -10,6 +11,7 @@ export interface NavNode {
   badge?: string;
 }
 
+/** Configuration for building a navigation tree from doc metadata */
 export interface NavTreeConfig {
   docs: DocMeta[];
   basePath?: string;
@@ -20,6 +22,7 @@ function titleize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1).replaceAll('-', " ");
 }
 
+/** Build a hierarchical navigation tree from flat doc metadata */
 export function buildNavTree(config: NavTreeConfig): NavNode[] {
   const { docs, basePath = "/docs" } = config;
   const root: NavNode[] = [];
@@ -81,6 +84,7 @@ export function buildNavTree(config: NavTreeConfig): NavNode[] {
   return root;
 }
 
+/** Flatten a nested navigation tree into a single-level array */
 export function flattenNavTree(nodes: NavNode[]): NavNode[] {
   const result: NavNode[] = [];
   for (const node of nodes) {
@@ -92,6 +96,7 @@ export function flattenNavTree(nodes: NavNode[]): NavNode[] {
   return result;
 }
 
+/** Find a navigation node by slug in a nested tree */
 export function findNavNode(nodes: NavNode[], slug: string): NavNode | null {
   for (const node of nodes) {
     if (node.slug === slug) {
@@ -105,6 +110,7 @@ export function findNavNode(nodes: NavNode[], slug: string): NavNode | null {
   return null;
 }
 
+/** Build breadcrumb trail from root to the given slug */
 export function getNavBreadcrumbs(nodes: NavNode[], slug: string): NavNode[] {
   function walk(current: NavNode[], path: NavNode[]): NavNode[] | null {
     for (const node of current) {
@@ -122,11 +128,12 @@ export function getNavBreadcrumbs(nodes: NavNode[], slug: string): NavNode[] {
   return walk(nodes, []) ?? [];
 }
 
+/** Get previous and next navigable pages relative to a slug */
 export function getPrevNext(nodes: NavNode[], slug: string) {
   const flat = flattenNavTree(nodes).filter((n) => n.href);
   const i = flat.findIndex((n) => n.slug === slug);
   if (i === -1) {
-    return { next: null as NavNode | null, prev: null as NavNode | null };
+    return { next: null, prev: null };
   }
   const prev = i > 0 ? (flat[i - 1] ?? null) : null;
   const next = i < flat.length - 1 ? (flat[i + 1] ?? null) : null;

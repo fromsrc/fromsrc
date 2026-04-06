@@ -2,6 +2,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
 import { isRecord } from "./guard";
 
+/** Package within a monorepo workspace with docs */
 export interface WorkspacePackage {
   name: string;
   path: string;
@@ -9,24 +10,25 @@ export interface WorkspacePackage {
   slug: string;
 }
 
+/** Configuration for discovering workspace packages */
 export interface WorkspaceConfig {
   root: string;
   packages: string[];
   docsDir?: string;
 }
 
+/** Result of workspace discovery with packages and navigation */
 export interface WorkspaceResult {
   packages: WorkspacePackage[];
   navigation: WorkspaceNavItem[];
 }
 
+/** Navigation item for workspace package listing */
 export interface WorkspaceNavItem {
   label: string;
   slug: string;
   children?: WorkspaceNavItem[];
 }
-
-type JsonRecord = Record<string, unknown>;
 
 function parseName(raw: string): string | null {
   try {
@@ -71,6 +73,7 @@ async function matchGlob(root: string, pattern: string): Promise<string[]> {
   return dirs;
 }
 
+/** Discover workspace packages that contain a docs directory */
 export async function discoverPackages(
   config: WorkspaceConfig
 ): Promise<WorkspacePackage[]> {
@@ -99,6 +102,7 @@ export async function discoverPackages(
   return results;
 }
 
+/** Build navigation items from discovered workspace packages */
 export function buildWorkspaceNav(
   packages: WorkspacePackage[]
 ): WorkspaceNavItem[] {
@@ -109,6 +113,7 @@ export function buildWorkspaceNav(
   }));
 }
 
+/** Resolve a slug to a file path within a workspace package */
 export function resolveWorkspacePath(
   packages: WorkspacePackage[],
   slug: string
@@ -122,6 +127,7 @@ export function resolveWorkspacePath(
   return join(pkg.docsDir, `${file}.mdx`);
 }
 
+/** Merge multiple navigation sections into a single flat list */
 export function mergeNavigation(
   sections: WorkspaceNavItem[][]
 ): WorkspaceNavItem[] {
