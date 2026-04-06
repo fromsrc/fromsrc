@@ -1,3 +1,4 @@
+/** Site-wide SEO configuration */
 export interface SeoConfig {
   baseUrl: string;
   siteName: string;
@@ -7,6 +8,7 @@ export interface SeoConfig {
   locale?: string;
 }
 
+/** Per-page SEO properties */
 export interface PageSeo {
   title: string;
   description?: string;
@@ -18,6 +20,7 @@ export interface PageSeo {
   noindex?: boolean;
 }
 
+/** Create SEO utilities for generating meta tags, canonical URLs, and JSON-LD */
 export function createSeo(config: SeoConfig) {
   const locale = config.locale ?? "en_US";
   const template = config.titleTemplate ?? "%s";

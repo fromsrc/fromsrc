@@ -1,3 +1,4 @@
+/** Documentation version with label and path */
 export interface DocVersion {
   label: string;
   path: string;
@@ -5,17 +6,20 @@ export interface DocVersion {
   isDefault?: boolean;
 }
 
+/** Configuration for multi-version documentation */
 export interface VersionConfig {
   versions: DocVersion[];
   versionedPaths?: string[];
 }
 
+/** Resolved page within a specific documentation version */
 export interface VersionedPage {
   version: DocVersion;
   path: string;
   alternateVersions: DocVersion[];
 }
 
+/** Parse a semver label into major, minor, and patch numbers */
 export function parseVersion(label: string): {
   major: number;
   minor: number;
@@ -33,6 +37,7 @@ export function parseVersion(label: string): {
   };
 }
 
+/** Compare two version labels, returning -1, 0, or 1 */
 export function compareVersions(a: string, b: string): number {
   const va = parseVersion(a);
   const vb = parseVersion(b);
@@ -48,10 +53,12 @@ export function compareVersions(a: string, b: string): number {
   return 0;
 }
 
+/** Sort versions in descending order (newest first) */
 export function sortVersions(versions: DocVersion[]): DocVersion[] {
   return [...versions].sort((a, b) => compareVersions(b.label, a.label));
 }
 
+/** Resolve a URL path to its version and relative page path */
 export function resolveVersion(
   path: string,
   config: VersionConfig
@@ -72,6 +79,7 @@ export function resolveVersion(
   };
 }
 
+/** Get the latest version from config, falling back to highest semver */
 export function getLatestVersion(config: VersionConfig): DocVersion {
   const latest = config.versions.find((v) => v.isLatest);
   if (latest) {
@@ -80,6 +88,7 @@ export function getLatestVersion(config: VersionConfig): DocVersion {
   return sortVersions(config.versions)[0] ?? { label: "latest", path: "/" };
 }
 
+/** Check if a path belongs to a versioned documentation route */
 export function isVersionedPath(path: string, config: VersionConfig): boolean {
   const segments = path.split("/").filter(Boolean);
   const first = segments[0];
@@ -94,6 +103,7 @@ export function isVersionedPath(path: string, config: VersionConfig): boolean {
   );
 }
 
+/** Create a version switcher with resolve, switch, and latest helpers */
 export function createVersionSwitcher(config: VersionConfig) {
   return {
     latest: () => getLatestVersion(config),

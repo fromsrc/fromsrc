@@ -1,13 +1,16 @@
+/** Single test case with a name and async-compatible function */
 export interface TestCase {
   name: string;
   fn: () => Promise<void> | void;
 }
+/** Result of a single test case execution */
 export interface TestResult {
   name: string;
   passed: boolean;
   error?: string;
   duration: number;
 }
+/** Aggregated results from running a test suite */
 export interface TestSuite {
   name: string;
   results: TestResult[];
@@ -36,6 +39,7 @@ function collectHeadingIds(content: string): string[] {
     .filter(Boolean);
 }
 
+/** Create a lightweight test suite for docs validation */
 export function createTestSuite(name: string) {
   const cases: TestCase[] = [];
 
@@ -76,6 +80,7 @@ export function createTestSuite(name: string) {
   return { run, test };
 }
 
+/** Assert that content has valid frontmatter with required fields */
 export function assertFrontmatter(content: string, fields: string[]) {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
   if (!match) {
@@ -113,6 +118,7 @@ export function assertFrontmatter(content: string, fields: string[]) {
   }
 }
 
+/** Assert heading structure is valid with no duplicates or skipped levels */
 export function assertHeadings(
   content: string,
   options?: { minCount?: number; maxDepth?: number; sequential?: boolean }
@@ -159,6 +165,7 @@ export function assertHeadings(
   }
 }
 
+/** Assert all markdown links have valid text and non-placeholder URLs */
 export function assertLinks(content: string) {
   const placeholders = new Set([
     "#",
@@ -188,6 +195,7 @@ export function assertLinks(content: string) {
   }
 }
 
+/** Assert content word count falls within min/max bounds */
 export function assertLength(
   content: string,
   options: { minWords?: number; maxWords?: number }
@@ -208,6 +216,7 @@ export function assertLength(
   }
 }
 
+/** Format test suite results as a human-readable string */
 export function formatTestSuite(suite: TestSuite): string {
   const lines = [
     `${suite.name}: ${suite.passed}/${suite.results.length} passed (${Math.round(suite.duration)}ms)`,

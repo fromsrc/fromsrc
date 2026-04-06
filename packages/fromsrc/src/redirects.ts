@@ -1,9 +1,11 @@
+/** Single redirect rule with source, destination, and permanence */
 export interface Redirect {
   source: string;
   destination: string;
   permanent?: boolean;
 }
 
+/** Configuration containing a list of redirect rules */
 export interface RedirectConfig {
   redirects: Redirect[];
 }
@@ -37,6 +39,7 @@ function substitute(
   return result;
 }
 
+/** Create a redirect matcher with Next.js and Vercel config export */
 export function createRedirects(config: RedirectConfig) {
   const compiled = config.redirects.map((r) => ({
     ...r,
@@ -92,6 +95,7 @@ export function createRedirects(config: RedirectConfig) {
   return { match, toNextConfig, toVercelConfig };
 }
 
+/** Parse a plain-text redirects file into redirect rules */
 export function parseRedirectsFile(content: string): Redirect[] {
   return content
     .split("\n")

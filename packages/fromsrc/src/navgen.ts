@@ -2,6 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { basename, extname, join, relative } from "node:path";
 import { isRecord } from "./guard";
 
+/** Single navigation entry with optional nested children */
 export interface NavItem {
   title: string;
   path: string;
@@ -9,16 +10,19 @@ export interface NavItem {
   order?: number;
   icon?: string;
 }
+/** Configuration for filesystem-based navigation generation */
 export interface NavConfig {
   dir: string;
   extensions?: string[];
   orderFile?: string;
   titleFromFile?: boolean;
 }
+/** Navigation tree with hierarchical and flattened views */
 export interface NavTree {
   items: NavItem[];
   flat: NavItem[];
 }
+/** Sidebar-specific navigation item with href instead of path */
 export interface SidebarItem {
   title: string;
   href: string;
@@ -167,6 +171,7 @@ async function scanDir(
   return sortNav(items);
 }
 
+/** Generate navigation tree by scanning a directory of docs files */
 export async function generateNav(config: NavConfig): Promise<NavTree> {
   const exts = config.extensions ?? [".mdx", ".md"];
   const items = await scanDir(
@@ -178,6 +183,7 @@ export async function generateNav(config: NavConfig): Promise<NavTree> {
   return { flat: flattenNav(items), items };
 }
 
+/** Sort navigation items by order then title alphabetically */
 export function sortNav(items: NavItem[]): NavItem[] {
   return [...items]
     .sort(
@@ -187,6 +193,7 @@ export function sortNav(items: NavItem[]): NavItem[] {
     .map((i) => (i.children ? { ...i, children: sortNav(i.children) } : i));
 }
 
+/** Flatten a nested navigation tree into a single-level array */
 export function flattenNav(items: NavItem[]): NavItem[] {
   const r: NavItem[] = [];
   for (const i of items) {
@@ -198,6 +205,7 @@ export function flattenNav(items: NavItem[]): NavItem[] {
   return r;
 }
 
+/** Find a navigation item by path in a nested tree */
 export function findNavItem(
   items: NavItem[],
   path: string
@@ -216,6 +224,7 @@ export function findNavItem(
   return undefined;
 }
 
+/** Convert navigation items to sidebar-compatible format */
 export function navToSidebar(items: NavItem[]): SidebarItem[] {
   return items.map((i) => ({
     href: i.path,
@@ -225,6 +234,7 @@ export function navToSidebar(items: NavItem[]): SidebarItem[] {
   }));
 }
 
+/** Build breadcrumb trail from root to the given path */
 export function breadcrumbFromPath(items: NavItem[], path: string): NavItem[] {
   function walk(cur: NavItem[], trail: NavItem[]): NavItem[] | null {
     for (const i of cur) {

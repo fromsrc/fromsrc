@@ -1,3 +1,4 @@
+/** Generate a prefetch link for a docs page by slug */
 export function preloadPage(slug: string) {
   return {
     href: `/docs/${slug}`,
@@ -5,6 +6,7 @@ export function preloadPage(slug: string) {
   };
 }
 
+/** Generate a prefetch link for the search API endpoint */
 export function preloadSearch() {
   return {
     href: "/api/search",
@@ -12,6 +14,7 @@ export function preloadSearch() {
   };
 }
 
+/** Default configuration for preload behavior */
 export const preloadConfig = {
   hoverDelay: 65,
   intersectionThreshold: 0.1,

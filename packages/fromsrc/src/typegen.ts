@@ -3,12 +3,14 @@ import { join } from "node:path";
 
 import matter from "gray-matter";
 
+/** Configuration for generating TypeScript types from frontmatter */
 export interface TypegenConfig {
   dir: string;
   output: string;
   schemaName?: string;
 }
 
+/** Infer a TypeScript type string from a runtime value */
 export function inferType(value: unknown): string {
   if (value === null || value === undefined) {
     return "unknown";
@@ -57,6 +59,7 @@ async function scanFiles(dir: string): Promise<string[]> {
   return paths;
 }
 
+/** Generate a TypeScript interface from MDX frontmatter fields */
 export async function generateTypes(config: TypegenConfig): Promise<string> {
   const name = config.schemaName ?? "DocFrontmatter";
   const files = await scanFiles(config.dir);
@@ -99,6 +102,7 @@ export async function generateTypes(config: TypegenConfig): Promise<string> {
   return lines.join("\n") + "\n";
 }
 
+/** Generate and write TypeScript types to a file */
 export async function writeTypes(config: TypegenConfig): Promise<void> {
   const content = await generateTypes(config);
   await writeFile(config.output, content, "utf8");

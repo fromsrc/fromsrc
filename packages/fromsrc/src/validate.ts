@@ -1,6 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
+/** Issue found during link validation */
 export interface LinkIssue {
   file: string;
   line: number;
@@ -8,11 +9,13 @@ export interface LinkIssue {
   type: "broken" | "external";
 }
 
+/** Options for link validation */
 export interface ValidateOptions {
   docsDir: string;
   checkExternal?: boolean;
 }
 
+/** Scan docs directory for broken internal and external links */
 export async function validateLinks(
   options: ValidateOptions
 ): Promise<LinkIssue[]> {

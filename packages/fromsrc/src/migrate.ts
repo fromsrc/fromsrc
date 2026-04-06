@@ -1,19 +1,23 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, extname, join, relative } from "node:path";
 
+/** Supported documentation framework sources for migration */
 export type MigrateSource = "docusaurus" | "nextra" | "mintlify";
 
+/** Configuration for migrating docs from another framework */
 export interface MigrateConfig {
   source: MigrateSource;
   inputDir: string;
   outputDir: string;
 }
 
+/** Result of a migration operation */
 export interface MigrateResult {
   files: number;
   warnings: string[];
 }
 
+/** Function that transforms content from a source framework format */
 export type MigrateTransform = (content: string, filepath: string) => string;
 
 function convertAdmonitions(content: string): string {
@@ -48,6 +52,7 @@ function convertAdmonitions(content: string): string {
   return result.join("\n");
 }
 
+/** Transform Docusaurus-flavored markdown to fromsrc format */
 export const migrateDocusaurus: MigrateTransform = (content, _filepath) => {
   let out = content;
   out = out.replaceAll(
@@ -68,6 +73,7 @@ export const migrateDocusaurus: MigrateTransform = (content, _filepath) => {
   return `${out.trim()}\n`;
 };
 
+/** Transform Nextra-flavored markdown to fromsrc format */
 export const migrateNextra: MigrateTransform = (content, _filepath) => {
   let out = content;
   out = out.replaceAll(
@@ -80,6 +86,7 @@ export const migrateNextra: MigrateTransform = (content, _filepath) => {
   return `${out.trim()}\n`;
 };
 
+/** Transform Mintlify-flavored markdown to fromsrc format */
 export const migrateMintlify: MigrateTransform = (content, _filepath) => {
   let out = content;
   out = out.replaceAll(/<CardGroup(?:\s+cols=\{(\d+)\})?>/g, "<Cards>");
@@ -113,6 +120,7 @@ async function collectFiles(dir: string): Promise<string[]> {
   return results;
 }
 
+/** Migrate docs from another framework to fromsrc format */
 export async function migrate(config: MigrateConfig): Promise<MigrateResult> {
   const { source, inputDir, outputDir } = config;
   const transform = transforms[source];

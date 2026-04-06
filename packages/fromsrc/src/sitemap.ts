@@ -1,10 +1,12 @@
 import type { DocMeta } from "./content";
 
+/** Configuration for sitemap generation */
 export interface SitemapConfig {
   baseUrl: string;
   docsPrefix?: string;
 }
 
+/** Single URL entry in a sitemap */
 export interface SitemapEntry {
   url: string;
   lastmod?: string;
@@ -43,6 +45,7 @@ function urlEntry(entry: SitemapEntry): string {
   return xml;
 }
 
+/** Generate XML sitemap from a list of URL entries */
 export function generateSitemap(
   config: SitemapConfig,
   entries: SitemapEntry[]
@@ -56,6 +59,7 @@ export function generateSitemap(
   ].join("\n");
 }
 
+/** Generate XML sitemap index referencing multiple sitemaps */
 export function generateSitemapIndex(
   baseUrl: string,
   sitemaps: string[]
@@ -74,6 +78,7 @@ export function generateSitemapIndex(
   ].join("\n");
 }
 
+/** Convert sitemap entries to an RSS feed XML string */
 export function entriesToRss(
   config: { title: string; description: string; baseUrl: string; link: string },
   entries: SitemapEntry[]
@@ -104,6 +109,7 @@ function depth(slug: string): number {
   return slug.split("/").length;
 }
 
+/** Convert doc metadata to sitemap entries with depth-based priority */
 export function docsToEntries(
   config: SitemapConfig,
   docs: DocMeta[]

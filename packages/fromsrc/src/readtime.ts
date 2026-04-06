@@ -1,3 +1,4 @@
+/** Calculate estimated reading time in minutes for content */
 export function calcReadTime(content: string, wpm = 200): number {
   const text = content.trim();
   if (!text) {

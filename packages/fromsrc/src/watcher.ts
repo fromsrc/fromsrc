@@ -5,18 +5,21 @@ import { extname, join, relative } from "node:path";
 import { clearContentCache } from "./content";
 import { clearMetaCache } from "./meta";
 
+/** Configuration for the filesystem watcher */
 export interface WatcherConfig {
   dir: string;
   extensions?: string[];
   ignore?: string[];
 }
 
+/** Event emitted when a watched file is added, changed, or removed */
 export interface WatchEvent {
   type: "add" | "change" | "remove";
   path: string;
   slug: string;
 }
 
+/** Callback invoked when a watch event occurs */
 export type WatchHandler = (event: WatchEvent) => void;
 
 function toSlug(dir: string, filepath: string): string {
@@ -44,6 +47,7 @@ function collectFiles(dir: string, exts: string[]): Set<string> {
   return files;
 }
 
+/** Create a debounced filesystem watcher for docs content */
 export function createWatcher(config: WatcherConfig) {
   const exts = config.extensions ?? [".mdx", ".md"];
   const ignore = config.ignore ?? ["node_modules", ".git"];
@@ -124,6 +128,7 @@ export function createWatcher(config: WatcherConfig) {
   };
 }
 
+/** Clear all content and metadata caches */
 export function clearAllCaches() {
   clearContentCache();
   clearMetaCache();

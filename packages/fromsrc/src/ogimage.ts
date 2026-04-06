@@ -1,3 +1,4 @@
+/** Configuration for generating Open Graph images */
 export interface OgImageConfig {
   title: string;
   description?: string;
@@ -9,6 +10,7 @@ export interface OgImageConfig {
   height?: number;
 }
 
+/** Metadata describing a generated OG image */
 export interface OgImageMeta {
   url: string;
   width: number;
@@ -17,6 +19,7 @@ export interface OgImageMeta {
   type: string;
 }
 
+/** Build an OG image URL with query parameters */
 export function ogImageUrl(
   base: string,
   params: Record<string, string | undefined>
@@ -30,6 +33,7 @@ export function ogImageUrl(
   return url.toString();
 }
 
+/** Generate OG image metadata from config */
 export function generateOgMeta(
   base: string,
   config: OgImageConfig
@@ -55,6 +59,7 @@ export function generateOgMeta(
   };
 }
 
+/** Create default OG image template with theme-aware colors */
 export function defaultTemplate(config: OgImageConfig) {
   const dark = config.theme === "dark";
   return {
@@ -77,6 +82,7 @@ type MetaTag =
   | { property: string; content: string }
   | { name: string; content: string };
 
+/** Generate OpenGraph and Twitter meta tags for social sharing */
 export function socialMeta(config: OgImageConfig & { url: string }): MetaTag[] {
   const width = config.width ?? 1200;
   const height = config.height ?? 630;
