@@ -22,7 +22,7 @@ interface hit {
 }
 const MAX_DEPTH = 10;
 
-function isrecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
@@ -35,13 +35,13 @@ function getnumber(value: unknown): number | undefined {
 }
 
 function parsehit(value: unknown, depth = 0): hit | null {
-  if (!isrecord(value)) {
+  if (!isRecord(value)) {
     return null;
   }
   if (depth > MAX_DEPTH) {
     return null;
   }
-  const nested = isrecord(value.document)
+  const nested = isRecord(value.document)
     ? parsehit(value.document, depth + 1)
     : null;
   const document = nested ?? undefined;
@@ -63,7 +63,7 @@ function parsehits(value: unknown): hit[] {
   if (Array.isArray(value)) {
     return value.map(parsehit).filter((item): item is hit => item !== null);
   }
-  if (!isrecord(value)) {
+  if (!isRecord(value)) {
     return [];
   }
   const hits = Array.isArray(value.hits)

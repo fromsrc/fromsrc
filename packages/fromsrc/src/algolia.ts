@@ -8,7 +8,7 @@ export interface AlgoliaConfig {
   attributes?: string[];
 }
 
-function isrecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
@@ -31,14 +31,14 @@ function fallback(docs: SearchDoc[], limit: number): SearchResult[] {
 }
 
 function parsehits(value: unknown): Record<string, unknown>[] {
-  if (!isrecord(value)) {
+  if (!isRecord(value)) {
     return [];
   }
   const { hits } = value;
   if (!Array.isArray(hits)) {
     return [];
   }
-  return hits.filter(isrecord);
+  return hits.filter(isRecord);
 }
 
 function maphit(
@@ -46,20 +46,20 @@ function maphit(
   index: number,
   total: number
 ): SearchResult | null {
-  const snippetresult = isrecord(hit._snippetResult)
+  const snippetResult = isRecord(hit._snippetResult)
     ? hit._snippetResult
     : null;
   const contentmeta =
-    snippetresult && isrecord(snippetresult.content)
-      ? snippetresult.content
+    snippetResult && isRecord(snippetResult.content)
+      ? snippetResult.content
       : null;
   const descriptionmeta =
-    snippetresult && isrecord(snippetresult.description)
-      ? snippetresult.description
+    snippetResult && isRecord(snippetResult.description)
+      ? snippetResult.description
       : null;
   const headingmeta =
-    snippetresult && isrecord(snippetresult.heading)
-      ? snippetresult.heading
+    snippetResult && isRecord(snippetResult.heading)
+      ? snippetResult.heading
       : null;
   const slug = getstring(hit.slug) ?? getstring(hit.path);
   const heading = getstring(hit.heading);
