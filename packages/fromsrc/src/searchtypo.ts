@@ -1,4 +1,4 @@
-function oneedit(left: string, right: string): boolean {
+function oneEdit(left: string, right: string): boolean {
   const a = left.length;
   const b = right.length;
   if (Math.abs(a - b) > 1) {
@@ -50,7 +50,7 @@ function oneedit(left: string, right: string): boolean {
   return true;
 }
 
-export function typomatch(term: string, words: string[]): boolean {
+export function typoMatch(term: string, words: string[]): boolean {
   if (term.length < 3) {
     return false;
   }
@@ -58,7 +58,7 @@ export function typomatch(term: string, words: string[]): boolean {
     if (Math.abs(word.length - term.length) > 1) {
       continue;
     }
-    if (word === term || oneedit(term, word)) {
+    if (word === term || oneEdit(term, word)) {
       return true;
     }
   }

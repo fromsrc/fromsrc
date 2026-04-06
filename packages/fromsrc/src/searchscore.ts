@@ -1,23 +1,23 @@
-import { typomatch } from "./searchtypo";
+import { typoMatch } from "./searchtypo";
 
-export interface Termindex {
+export interface TermIndex {
   list: string[];
   set: Set<string>;
 }
 
-export interface Searchtermdata {
+export interface SearchTermData {
   title: string;
   slug: string;
   description: string;
   content: string;
-  titleindex: Termindex;
-  slugindex: Termindex;
-  descriptionindex: Termindex;
-  headingindex: Termindex;
-  contentindex: Termindex;
+  titleIndex: TermIndex;
+  slugIndex: TermIndex;
+  descriptionIndex: TermIndex;
+  headingIndex: TermIndex;
+  contentIndex: TermIndex;
 }
 
-export interface Searchweights {
+export interface SearchWeights {
   titleExact: number;
   titleTypo: number;
   slugExact: number;
@@ -28,7 +28,7 @@ export interface Searchweights {
   contentExact: number;
 }
 
-export const defaultweights: Searchweights = {
+export const defaultWeights: SearchWeights = {
   contentExact: 2,
   descriptionExact: 4,
   descriptionTypo: 2,
@@ -39,49 +39,49 @@ export const defaultweights: Searchweights = {
   titleTypo: 5,
 };
 
-export function termindex(words: string[]): Termindex {
+export function termIndex(words: string[]): TermIndex {
   return { list: words, set: new Set(words) };
 }
 
-export function scoreterms(
+export function scoreTerms(
   terms: string[],
-  data: Searchtermdata,
-  weights: Searchweights = defaultweights
+  data: SearchTermData,
+  weights: SearchWeights = defaultWeights
 ): number {
   let score = 0;
   for (const term of terms) {
-    if (data.title.includes(term) || data.titleindex.set.has(term)) {
+    if (data.title.includes(term) || data.titleIndex.set.has(term)) {
       score += weights.titleExact;
       continue;
     }
-    if (typomatch(term, data.titleindex.list)) {
+    if (typoMatch(term, data.titleIndex.list)) {
       score += weights.titleTypo;
       continue;
     }
-    if (data.slug.includes(term) || data.slugindex.set.has(term)) {
+    if (data.slug.includes(term) || data.slugIndex.set.has(term)) {
       score += weights.slugExact;
       continue;
     }
-    if (typomatch(term, data.slugindex.list)) {
+    if (typoMatch(term, data.slugIndex.list)) {
       score += weights.slugTypo;
       continue;
     }
     if (
       data.description.includes(term) ||
-      data.descriptionindex.set.has(term)
+      data.descriptionIndex.set.has(term)
     ) {
       score += weights.descriptionExact;
       continue;
     }
-    if (typomatch(term, data.descriptionindex.list)) {
+    if (typoMatch(term, data.descriptionIndex.list)) {
       score += weights.descriptionTypo;
       continue;
     }
-    if (typomatch(term, data.headingindex.list)) {
+    if (typoMatch(term, data.headingIndex.list)) {
       score += weights.headingTypo;
       continue;
     }
-    if (data.contentindex.set.has(term) || data.content.includes(term)) {
+    if (data.contentIndex.set.has(term) || data.content.includes(term)) {
       score += weights.contentExact;
     }
   }

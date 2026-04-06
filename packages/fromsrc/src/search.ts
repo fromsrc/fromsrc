@@ -1,6 +1,6 @@
 import type { SearchDoc } from "./content";
-import { defaultweights, scoreterms, termindex } from "./searchscore";
-import type { Searchweights, Termindex } from "./searchscore";
+import { defaultWeights, scoreTerms, termIndex } from "./searchscore";
+import type { SearchWeights, TermIndex } from "./searchscore";
 
 export interface SearchResult {
   doc: SearchDoc;
@@ -20,7 +20,7 @@ export interface SearchAdapter {
 }
 
 export interface LocalSearchOptions {
-  weights?: Partial<Searchweights>;
+  weights?: Partial<SearchWeights>;
 }
 
 interface ContentMatch {
@@ -40,14 +40,14 @@ interface SearchIndexDoc {
   title: string;
   description: string;
   content: string;
-  contentraw: string;
+  contentRaw: string;
   slug: string;
   headings: { id: string; text: string; level: number; normalized: string }[];
-  titleindex: Termindex;
-  descriptionindex: Termindex;
-  slugindex: Termindex;
-  headingindex: Termindex;
-  contentindex: Termindex;
+  titleIndex: TermIndex;
+  descriptionIndex: TermIndex;
+  slugIndex: TermIndex;
+  headingIndex: TermIndex;
+  contentIndex: TermIndex;
 }
 
 const indexCache = new WeakMap<SearchDoc[], SearchIndexDoc[]>();
@@ -106,12 +106,12 @@ function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
   }
   const indexed = docs.map((doc) => ({
     content: doc.content.toLowerCase(),
-    contentindex: termindex(words(doc.content.toLowerCase())),
-    contentraw: doc.content,
+    contentIndex: termIndex(words(doc.content.toLowerCase())),
+    contentRaw: doc.content,
     description: normalize(doc.description),
-    descriptionindex: termindex(words(normalize(doc.description))),
+    descriptionIndex: termIndex(words(normalize(doc.description))),
     doc,
-    headingindex: termindex(
+    headingIndex: termIndex(
       words(
         (doc.headings ?? []).map((heading) => normalize(heading.text)).join(" ")
       )
@@ -123,9 +123,9 @@ function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
       text: heading.text,
     })),
     slug: normalize(doc.slug),
-    slugindex: termindex(words(normalize(doc.slug))),
+    slugIndex: termIndex(words(normalize(doc.slug))),
     title: normalize(doc.title),
-    titleindex: termindex(words(normalize(doc.title))),
+    titleIndex: termIndex(words(normalize(doc.title))),
   }));
   indexCache.set(docs, indexed);
   return indexed;
@@ -133,7 +133,7 @@ function getIndex(docs: SearchDoc[]): SearchIndexDoc[] {
 
 function searchContent(
   content: string | undefined,
-  contentraw: string | undefined,
+  contentRaw: string | undefined,
   query: string,
   terms: string[]
 ): ContentMatch | null {
@@ -156,7 +156,7 @@ function searchContent(
   );
 
   const start = Math.max(0, idx - 40);
-  const source = contentraw ?? content;
+  const source = contentRaw ?? content;
   const end = Math.min(source.length, idx + query.length + 60);
   const prefix = start > 0 ? "..." : "";
   const suffix = end < source.length ? "..." : "";
@@ -228,8 +228,8 @@ function push(
 export function createLocalSearch(
   options: LocalSearchOptions = {}
 ): SearchAdapter {
-  const weights: Searchweights = {
-    ...defaultweights,
+  const weights: SearchWeights = {
+    ...defaultWeights,
     ...options.weights,
   };
 
@@ -259,22 +259,22 @@ export function createLocalSearch(
         const headingResult = searchHeadings(item.headings, normalized, terms);
         const contentResult = searchContent(
           item.content,
-          item.contentraw,
+          item.contentRaw,
           normalized,
           terms
         );
-        const termScore = scoreterms(
+        const termScore = scoreTerms(
           terms,
           {
             content: item.content,
-            contentindex: item.contentindex,
+            contentIndex: item.contentIndex,
             description: item.description,
-            descriptionindex: item.descriptionindex,
-            headingindex: item.headingindex,
+            descriptionIndex: item.descriptionIndex,
+            headingIndex: item.headingIndex,
             slug: item.slug,
-            slugindex: item.slugindex,
+            slugIndex: item.slugIndex,
             title: item.title,
-            titleindex: item.titleindex,
+            titleIndex: item.titleIndex,
           },
           weights
         );
