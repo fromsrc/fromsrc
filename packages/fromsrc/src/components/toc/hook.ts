@@ -14,7 +14,7 @@ export interface TocState {
   activeRange: string[];
 }
 
-function cleanheading(text: string): string {
+function cleanHeading(text: string): string {
   return text.replace(/\s*#+\s*$/, "").trim();
 }
 
@@ -36,7 +36,7 @@ export function useToc(multi = false): TocState {
           items.push({
             id: el.id,
             level: Number.isFinite(level) ? level : 2,
-            text: cleanheading(el.textContent || ""),
+            text: cleanHeading(el.textContent || ""),
           });
         }
       });
