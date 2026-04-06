@@ -75,7 +75,8 @@ jobs:
 
           git fetch --tags --force
 
-          prev=$(git tag --sort=-v:refname | head -1)
+          current="v$version"
+          prev=$(git tag --sort=-v:refname | grep -v "^$current$" | head -1)
 
           if [ -n "$prev" ]; then
             range="$prev..HEAD"
