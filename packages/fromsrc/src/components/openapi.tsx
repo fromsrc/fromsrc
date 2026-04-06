@@ -15,21 +15,21 @@ export interface OpenapiProps {
   group?: "none" | "tag";
 }
 
-function bypath(endpoint: OpenApiEndpoint, path: string): boolean {
+function byPath(endpoint: OpenApiEndpoint, path: string): boolean {
   return endpoint.path.toLowerCase().includes(path.toLowerCase());
 }
 
-function bymethod(endpoint: OpenApiEndpoint, method: string): boolean {
+function byMethod(endpoint: OpenApiEndpoint, method: string): boolean {
   return endpoint.method.toLowerCase() === method.toLowerCase();
 }
 
-function bytag(endpoint: OpenApiEndpoint, tag: string): boolean {
+function byTag(endpoint: OpenApiEndpoint, tag: string): boolean {
   return endpoint.tags.some(
     (entry) => entry.toLowerCase() === tag.toLowerCase()
   );
 }
 
-function parsedspec(spec: string | object): OpenApiSpec | null {
+function parsedSpec(spec: string | object): OpenApiSpec | null {
   try {
     return parseOpenApi(spec);
   } catch {
@@ -37,7 +37,7 @@ function parsedspec(spec: string | object): OpenApiSpec | null {
   }
 }
 
-function methodrank(method: string): number {
+function methodRank(method: string): number {
   const list = [
     "get",
     "post",
@@ -55,20 +55,20 @@ function methodrank(method: string): number {
 function sorted(endpoints: OpenApiEndpoint[]): OpenApiEndpoint[] {
   return [...endpoints].sort((left, right) => {
     if (left.path === right.path) {
-      return methodrank(left.method) - methodrank(right.method);
+      return methodRank(left.method) - methodRank(right.method);
     }
     return left.path.localeCompare(right.path);
   });
 }
 
-function formatseclabel(list: string[] | undefined): string | null {
+function formatSecLabel(list: string[] | undefined): string | null {
   if (!list || list.length === 0) {
     return null;
   }
   return list.join(", ");
 }
 
-function tagname(endpoint: OpenApiEndpoint): string {
+function tagName(endpoint: OpenApiEndpoint): string {
   const first = endpoint.tags[0];
   if (!first) {
     return "untagged";
@@ -76,14 +76,14 @@ function tagname(endpoint: OpenApiEndpoint): string {
   return first;
 }
 
-function tagid(name: string): string {
+function tagId(name: string): string {
   return `tag-${name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`;
 }
 
 function groups(endpoints: OpenApiEndpoint[]): [string, OpenApiEndpoint[]][] {
   const map = new Map<string, OpenApiEndpoint[]>();
   for (const endpoint of endpoints) {
-    const name = tagname(endpoint);
+    const name = tagName(endpoint);
     const list = map.get(name);
     if (list) {
       list.push(endpoint);
@@ -102,8 +102,8 @@ function groups(endpoints: OpenApiEndpoint[]): [string, OpenApiEndpoint[]][] {
   });
 }
 
-function endpointmeta(endpoint: OpenApiEndpoint): JSX.Element {
-  const security = formatseclabel(endpoint.security);
+function endpointMeta(endpoint: OpenApiEndpoint): JSX.Element {
+  const security = formatSecLabel(endpoint.security);
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2 text-xs">
       {endpoint.operationId && (
@@ -133,7 +133,7 @@ function endpointmeta(endpoint: OpenApiEndpoint): JSX.Element {
   );
 }
 
-function endpointview(endpoint: OpenApiEndpoint): JSX.Element {
+function endpointView(endpoint: OpenApiEndpoint): JSX.Element {
   return (
     <Endpoint
       key={`${endpoint.method}-${endpoint.path}`}
@@ -141,7 +141,7 @@ function endpointview(endpoint: OpenApiEndpoint): JSX.Element {
       path={endpoint.path}
       description={endpoint.summary ?? endpoint.description}
     >
-      {endpointmeta(endpoint)}
+      {endpointMeta(endpoint)}
       {endpoint.parameters.length > 0 && (
         <div className="mb-4" role="list" aria-label="parameters">
           {endpoint.parameters.map((parameter) => (
@@ -199,7 +199,7 @@ function OpenapiBase({
   path,
   group = "none",
 }: OpenapiProps): JSX.Element {
-  const parsed = useMemo(() => parsedspec(spec), [spec]);
+  const parsed = useMemo(() => parsedSpec(spec), [spec]);
 
   const endpoints = useMemo(() => {
     if (!parsed) {
@@ -207,13 +207,13 @@ function OpenapiBase({
     }
     let list = parsed.endpoints;
     if (tag) {
-      list = list.filter((entry) => bytag(entry, tag));
+      list = list.filter((entry) => byTag(entry, tag));
     }
     if (method) {
-      list = list.filter((entry) => bymethod(entry, method));
+      list = list.filter((entry) => byMethod(entry, method));
     }
     if (path) {
-      list = list.filter((entry) => bypath(entry, path));
+      list = list.filter((entry) => byPath(entry, path));
     }
     return sorted(list);
   }, [parsed, tag, method, path]);
@@ -229,7 +229,7 @@ function OpenapiBase({
   const list = group === "tag" ? groups(endpoints) : [];
   const items = list.map(([name, value]) => ({
     count: value.length,
-    id: tagid(name),
+    id: tagId(name),
     name,
   }));
 
@@ -246,9 +246,9 @@ function OpenapiBase({
         <div className="space-y-8">
           <OpenapiTags items={items} />
           {list.map(([name, list]) => (
-            <section key={name} aria-labelledby={tagid(name)}>
+            <section key={name} aria-labelledby={tagId(name)}>
               <h3
-                id={tagid(name)}
+                id={tagId(name)}
                 className="mb-2 flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-dim"
               >
                 <span>{name}</span>
@@ -256,12 +256,12 @@ function OpenapiBase({
                   {list.length}
                 </span>
               </h3>
-              <div>{list.map(endpointview)}</div>
+              <div>{list.map(endpointView)}</div>
             </section>
           ))}
         </div>
       ) : (
-        <div>{endpoints.map(endpointview)}</div>
+        <div>{endpoints.map(endpointView)}</div>
       )}
     </section>
   );

@@ -6,12 +6,12 @@ import type { ReactNode } from "react";
 import { useCopy } from "../hooks/copy";
 import { LangIcon } from "./langicon";
 
-const wrapkey = "fromsrc-code-wrap";
-const wrapevent = "fromsrc-code-wrap-event";
-const linenumberstyle = `[data-line-numbers] code{counter-reset:line}[data-line-numbers] .line::before{counter-increment:line;content:counter(line);display:inline-block;width:3ch;margin-right:1.5ch;text-align:right;color:#4a4a4a;user-select:none;-webkit-user-select:none;font-variant-numeric:tabular-nums}`;
+const wrapKey = "fromsrc-code-wrap";
+const wrapEvent = "fromsrc-code-wrap-event";
+const lineNumberStyle = `[data-line-numbers] code{counter-reset:line}[data-line-numbers] .line::before{counter-increment:line;content:counter(line);display:inline-block;width:3ch;margin-right:1.5ch;text-align:right;color:#4a4a4a;user-select:none;-webkit-user-select:none;font-variant-numeric:tabular-nums}`;
 
-const iconstyle = { height: 14, width: 14 };
-const btnstyle = {
+const iconStyle = { height: 14, width: 14 };
+const btnStyle = {
   alignItems: "center",
   background: "transparent",
   border: "none",
@@ -23,20 +23,20 @@ const btnstyle = {
   transition: "color 0.15s",
 } as const;
 
-interface copybtnprops {
-  coderef: React.RefObject<HTMLDivElement | null>;
+interface CopyBtnProps {
+  codeRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const CopyBtn = memo(function CopyBtn({ coderef }: copybtnprops): ReactNode {
+const CopyBtn = memo(function CopyBtn({ codeRef }: CopyBtnProps): ReactNode {
   const { copied, copy } = useCopy();
   return (
     <>
       <button
         type="button"
-        onClick={() => copy(coderef.current?.textContent ?? "")}
+        onClick={() => copy(codeRef.current?.textContent ?? "")}
         aria-label={copied ? "Copied" : "Copy code"}
         className="hover:text-neutral-50"
-        style={{ ...btnstyle, color: copied ? "#22c55e" : "#737373" }}
+        style={{ ...btnStyle, color: copied ? "#22c55e" : "#737373" }}
       >
         {copied ? (
           <svg
@@ -44,7 +44,7 @@ const CopyBtn = memo(function CopyBtn({ coderef }: copybtnprops): ReactNode {
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            style={iconstyle}
+            style={iconStyle}
             aria-hidden="true"
           >
             <polyline points="20 6 9 17 4 12" />
@@ -55,7 +55,7 @@ const CopyBtn = memo(function CopyBtn({ coderef }: copybtnprops): ReactNode {
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            style={iconstyle}
+            style={iconStyle}
             aria-hidden="true"
           >
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
@@ -70,7 +70,7 @@ const CopyBtn = memo(function CopyBtn({ coderef }: copybtnprops): ReactNode {
   );
 });
 
-interface wrapbtnprops {
+interface WrapBtnProps {
   wrap: boolean;
   toggle: () => void;
 }
@@ -78,21 +78,21 @@ interface wrapbtnprops {
 const WrapBtn = memo(function WrapBtn({
   wrap,
   toggle,
-}: wrapbtnprops): ReactNode {
+}: WrapBtnProps): ReactNode {
   return (
     <button
       type="button"
       onClick={toggle}
       aria-label="Toggle word wrap"
       className="hover:text-neutral-50"
-      style={{ ...btnstyle, color: wrap ? "#ef4444" : "#737373" }}
+      style={{ ...btnStyle, color: wrap ? "#ef4444" : "#737373" }}
     >
       <svg
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        style={iconstyle}
+        style={iconStyle}
         aria-hidden="true"
       >
         <path
@@ -118,21 +118,21 @@ export const CodeBlock = memo(function CodeBlock({
   title,
   lines,
 }: CodeBlockProps): ReactNode {
-  const coderef = useRef<HTMLDivElement>(null);
+  const codeRef = useRef<HTMLDivElement>(null);
   const hasheader = Boolean(title || lang);
   const label = title || lang;
   const [wrap, setwrap] = useState(false);
 
   useEffect(() => {
     try {
-      setwrap(localStorage.getItem(wrapkey) === "1");
+      setwrap(localStorage.getItem(wrapKey) === "1");
     } catch {}
     const handler = (event: Event): void => {
       const value = (event as CustomEvent<string>).detail;
       setwrap(value === "1");
     };
-    window.addEventListener(wrapevent, handler);
-    return () => window.removeEventListener(wrapevent, handler);
+    window.addEventListener(wrapEvent, handler);
+    return () => window.removeEventListener(wrapEvent, handler);
   }, []);
 
   const toggle = useCallback((): void => {
@@ -140,15 +140,15 @@ export const CodeBlock = memo(function CodeBlock({
     const value = next ? "1" : "0";
     setwrap(next);
     try {
-      localStorage.setItem(wrapkey, value);
+      localStorage.setItem(wrapKey, value);
     } catch {}
-    window.dispatchEvent(new CustomEvent(wrapevent, { detail: value }));
+    window.dispatchEvent(new CustomEvent(wrapEvent, { detail: value }));
   }, [wrap]);
 
   const controls = (
     <div style={{ alignItems: "center", display: "flex", gap: "4px" }}>
       <WrapBtn wrap={wrap} toggle={toggle} />
-      <CopyBtn coderef={coderef} />
+      <CopyBtn codeRef={codeRef} />
     </div>
   );
 
@@ -166,7 +166,7 @@ export const CodeBlock = memo(function CodeBlock({
         position: "relative",
       }}
     >
-      {lines && <style dangerouslySetInnerHTML={{ __html: linenumberstyle }} />}
+      {lines && <style dangerouslySetInnerHTML={{ __html: lineNumberStyle }} />}
       {hasheader && (
         <div
           style={{
@@ -195,7 +195,7 @@ export const CodeBlock = memo(function CodeBlock({
         </div>
       )}
       <div
-        ref={coderef}
+        ref={codeRef}
         tabIndex={0}
         role="region"
         aria-label={hasheader ? `${label} code` : "code"}

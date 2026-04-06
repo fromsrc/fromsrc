@@ -507,7 +507,7 @@ export { rehypeCopy } from "./rehypecopy";
 export {
   type TwoslashAnnotation,
   type TwoslashResult,
-  parseannotations,
+  parseAnnotations,
   serialize as serializeTwoslash,
   remarkTwoslash,
 } from "./remarktwoslash";

@@ -13,7 +13,7 @@ function scalar(value: unknown): string {
   return JSON.stringify(value);
 }
 
-function typestring(schema: OpenApiSchema | undefined): string {
+function typeString(schema: OpenApiSchema | undefined): string {
   if (!schema) {
     return "unknown";
   }
@@ -21,16 +21,16 @@ function typestring(schema: OpenApiSchema | undefined): string {
     return schema.enum.join(" | ");
   }
   if (schema.type === "array") {
-    return `${typestring(schema.items)}[]`;
+    return `${typeString(schema.items)}[]`;
   }
   if (schema.oneOf?.length) {
-    return schema.oneOf.map((part) => typestring(part)).join(" | ");
+    return schema.oneOf.map((part) => typeString(part)).join(" | ");
   }
   if (schema.anyOf?.length) {
-    return schema.anyOf.map((part) => typestring(part)).join(" | ");
+    return schema.anyOf.map((part) => typeString(part)).join(" | ");
   }
   if (schema.allOf?.length) {
-    return schema.allOf.map((part) => typestring(part)).join(" & ");
+    return schema.allOf.map((part) => typeString(part)).join(" & ");
   }
   return schema.type ?? "object";
 }
@@ -57,7 +57,7 @@ function OpenapischemaBase({
       <div className="flex items-center gap-2 flex-wrap">
         {name && <code className="text-xs font-mono text-fg">{name}</code>}
         <code className="text-xs font-mono text-muted">
-          {typestring(schema)}
+          {typeString(schema)}
         </code>
         {required && (
           <span className="text-[10px] uppercase tracking-wide text-red-400">

@@ -18,7 +18,7 @@ export interface LanguageSwitchProps {
   onChange?: (code: string) => void;
 }
 
-function isnode(value: EventTarget | null): value is Node {
+function isNode(value: EventTarget | null): value is Node {
   return value instanceof Node;
 }
 
@@ -37,7 +37,7 @@ function LanguageSwitchBase({
 
   useEffect((): (() => void) => {
     function handleClick(e: globalThis.MouseEvent): void {
-      if (ref.current && isnode(e.target) && !ref.current.contains(e.target)) {
+      if (ref.current && isNode(e.target) && !ref.current.contains(e.target)) {
         setOpen(false);
       }
     }

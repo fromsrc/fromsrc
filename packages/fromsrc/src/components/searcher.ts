@@ -18,7 +18,7 @@ const schema = z.array(
   })
 );
 
-interface cacheentry {
+interface CacheEntry {
   at: number;
   etag?: string;
   results: SearchResult[];
@@ -26,14 +26,14 @@ interface cacheentry {
 
 const ttl = 1000 * 60 * 5;
 const max = 200;
-const store = new Map<string, cacheentry>();
+const store = new Map<string, CacheEntry>();
 const inflight = new Map<string, Promise<SearchResult[]>>();
 
 function key(endpoint: string, query: string, limit: number): string {
   return `${endpoint}::${normalizeQuery(query)}::${limit}`;
 }
 
-function getCache(key: string): cacheentry | null {
+function getCache(key: string): CacheEntry | null {
   const value = store.get(key);
   if (!value) {
     return null;
@@ -79,7 +79,7 @@ async function load(
   endpoint: string,
   query: string,
   limit: number,
-  stale?: cacheentry,
+  stale?: CacheEntry,
   signal?: AbortSignal
 ): Promise<SearchResult[]> {
   const params = new URLSearchParams({

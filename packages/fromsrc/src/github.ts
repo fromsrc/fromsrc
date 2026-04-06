@@ -60,7 +60,7 @@ function createCache<T>() {
   };
 }
 
-async function maplimit<T, R>(
+async function mapLimit<T, R>(
   items: readonly T[],
   limit: number,
   run: (item: T, index: number) => Promise<R>
@@ -86,7 +86,7 @@ async function maplimit<T, R>(
   return output;
 }
 
-function waitms(res: Response, attempt: number): number {
+function waitMs(res: Response, attempt: number): number {
   const retry = Number(res.headers.get("retry-after") ?? "");
   if (Number.isFinite(retry) && retry > 0) {
     return retry * 1000;
@@ -114,7 +114,7 @@ async function request(
     if (!limited || attempt === RATE_RETRIES - 1) {
       return res;
     }
-    await sleep(waitms(res, attempt));
+    await sleep(waitMs(res, attempt));
   }
   return new Response(null, { status: 429 });
 }
@@ -338,7 +338,7 @@ export function createGithubSource(config: GithubSourceConfig): ContentSource {
       const cached = searchCache.get("search");
       if (cached) {return cached;}
       const listed = await list();
-      const values = await maplimit<DocMeta, SearchDoc | null>(
+      const values = await mapLimit<DocMeta, SearchDoc | null>(
         listed,
         SEARCH_CONCURRENCY,
         async (doc) => {

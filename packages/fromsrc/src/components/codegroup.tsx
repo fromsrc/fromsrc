@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
 
 const key = "fromsrc-code-lang";
 
-interface codegroupcontext {
+interface CodeGroupContext {
   active: string;
   set: (value: string) => void;
   add: (value: string) => void;
@@ -24,7 +24,7 @@ interface codegroupcontext {
   prefix: string;
 }
 
-const context = createContext<codegroupcontext | null>(null);
+const context = createContext<CodeGroupContext | null>(null);
 
 export interface CodeGroupProps {
   children: ReactNode;
