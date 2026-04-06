@@ -24,24 +24,24 @@ export interface RemoteSourceConfig {
 
 /** Creates a content source that fetches docs from a remote URL with TTL caching. */
 export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
-  const base = trimslash(config.baseUrl);
+  const base = trimSlash(config.baseUrl);
   const ttl = config.ttl ?? 1000 * 60 * 5;
   const indexUrl = config.index || `${base}/llms.txt`;
   const docsUrl = config.docsEndpoint || `${base}/api/docs?limit=1000`;
-  const rawUrl = trimslash(config.rawEndpoint || `${base}/api/raw`);
+  const rawUrl = trimSlash(config.rawEndpoint || `${base}/api/raw`);
   const searchIndexUrl =
     config.searchIndexEndpoint || `${base}/api/search-index`;
-  const listcache = createcache<DocMeta[]>(ttl);
-  const filecache = createcache<{
+  const listCache = createCache<DocMeta[]>(ttl);
+  const fileCache = createCache<{
     content: string;
     data: Record<string, unknown>;
   }>(ttl);
-  const searchcache = createcache<SearchDoc[]>(ttl);
+  const searchCache = createCache<SearchDoc[]>(ttl);
 
   return {
     async get(slug) {
       const path = slug.length === 0 ? "index" : slug.join("/");
-      const cached = filecache.get(path);
+      const cached = fileCache.get(path);
       if (cached) {return cached;}
       const normalized =
         slug.length === 0
@@ -50,7 +50,7 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
       const res = await fetch(`${rawUrl}/${normalized}`);
       if (!res.ok) {return null;}
       const source = await res.text();
-      const parsed = parsefrontmatter(source);
+      const parsed = parseFrontmatter(source);
       const docs = await this.list();
       const item = docs.find(
         (doc) => doc.slug === path || (path === "index" && doc.slug === "")
@@ -59,40 +59,40 @@ export function createRemoteSource(config: RemoteSourceConfig): ContentSource {
       if (item?.title) {data.title = item.title;}
       if (item?.description) {data.description = item.description;}
       const value = { content: parsed.content, data };
-      filecache.set(path, value);
+      fileCache.set(path, value);
       return value;
     },
 
     async list() {
-      const cached = listcache.get("list");
+      const cached = listCache.get("list");
       if (cached) {return cached;}
-      const docs = await loaddocs(docsUrl);
+      const docs = await loadDocs(docsUrl);
       if (docs.length > 0) {
-        listcache.set("list", docs);
+        listCache.set("list", docs);
         return docs;
       }
-      const llms = await loadllms(indexUrl, base);
-      listcache.set("list", llms);
+      const llms = await loadLlms(indexUrl, base);
+      listCache.set("list", llms);
       return llms;
     },
 
     async search() {
-      const cached = searchcache.get("search");
+      const cached = searchCache.get("search");
       if (cached) {return cached;}
-      const docs = await loadsearch(searchIndexUrl);
-      searchcache.set("search", docs);
+      const docs = await loadSearch(searchIndexUrl);
+      searchCache.set("search", docs);
       return docs;
     },
   };
 }
 
-interface cacheentry<T> {
+interface CacheEntry<T> {
   data: T;
   at: number;
 }
 
-function createcache<T>(ttl: number) {
-  const store = new Map<string, cacheentry<T>>();
+function createCache<T>(ttl: number) {
+  const store = new Map<string, CacheEntry<T>>();
   return {
     get(key: string): T | null {
       const value = store.get(key);
@@ -133,7 +133,7 @@ const indexSchema = z.object({
   ),
 });
 
-async function loaddocs(url: string): Promise<DocMeta[]> {
+async function loadDocs(url: string): Promise<DocMeta[]> {
   try {
     const res = await fetch(url);
     if (!res.ok) {
@@ -146,7 +146,7 @@ async function loaddocs(url: string): Promise<DocMeta[]> {
   }
 }
 
-async function loadsearch(url: string): Promise<SearchDoc[]> {
+async function loadSearch(url: string): Promise<SearchDoc[]> {
   try {
     const res = await fetch(url);
     if (!res.ok) {
@@ -157,7 +157,7 @@ async function loadsearch(url: string): Promise<SearchDoc[]> {
       content: doc.content,
       description: doc.description,
       headings: headings(doc.headings),
-      slug: normalizepath(doc.path),
+      slug: normalizePath(doc.path),
       title: doc.title,
     }));
   } catch {
@@ -165,7 +165,7 @@ async function loadsearch(url: string): Promise<SearchDoc[]> {
   }
 }
 
-async function loadllms(url: string, base: string): Promise<DocMeta[]> {
+async function loadLlms(url: string, base: string): Promise<DocMeta[]> {
   try {
     const res = await fetch(url);
     if (!res.ok) {
@@ -193,7 +193,7 @@ function parseLlmsIndex(text: string, baseUrl: string): DocMeta[] {
       continue;
     }
     const description = match[3]?.trim();
-    const slug = slugfrom(url, baseUrl);
+    const slug = slugFrom(url, baseUrl);
     if (!slug && url !== `${baseUrl}/docs`) {
       continue;
     }
@@ -204,8 +204,8 @@ function parseLlmsIndex(text: string, baseUrl: string): DocMeta[] {
   return docs;
 }
 
-function slugfrom(value: string, base: string): string {
-  const parsed = parseurl(value, base);
+function slugFrom(value: string, base: string): string {
+  const parsed = parseUrl(value, base);
   if (!parsed) {
     return "";
   }
@@ -213,10 +213,10 @@ function slugfrom(value: string, base: string): string {
     .replace(/^\/docs\/?/, "")
     .replace(/\/$/, "")
     .trim();
-  return normalizepath(path);
+  return normalizePath(path);
 }
 
-function parseurl(value: string, base: string): URL | null {
+function parseUrl(value: string, base: string): URL | null {
   try {
     return new URL(value, base);
   } catch {
@@ -224,15 +224,15 @@ function parseurl(value: string, base: string): URL | null {
   }
 }
 
-function normalizepath(value: string): string {
+function normalizePath(value: string): string {
   return value.replace(/^\/+/, "").replace(/\/+$/, "");
 }
 
-function trimslash(value: string): string {
+function trimSlash(value: string): string {
   return value.replace(/\/+$/, "");
 }
 
-function headingid(text: string): string {
+function headingId(text: string): string {
   return text
     .toLowerCase()
     .replaceAll(/\s+/g, "-")
@@ -241,7 +241,7 @@ function headingid(text: string): string {
     .replaceAll(/^-|-$/g, "");
 }
 
-function parsefrontmatter(source: string): {
+function parseFrontmatter(source: string): {
   content: string;
   data: Record<string, unknown>;
 } {
@@ -264,7 +264,7 @@ function headings(values: string[]): Heading[] | undefined {
   const seen = new Map<string, number>();
   const list: Heading[] = [];
   for (const text of values) {
-    const base = headingid(text);
+    const base = headingId(text);
     if (!base) {
       continue;
     }
