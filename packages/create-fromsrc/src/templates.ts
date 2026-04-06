@@ -142,7 +142,7 @@ export function packageJson(name: string, framework: Framework): string {
   throw new Error(`unsupported framework: ${framework}`);
 }
 
-export const nextconfig = `import type { NextConfig } from "next"
+export const nextConfig = `import type { NextConfig } from "next"
 
 const config: NextConfig = {}
 
@@ -218,11 +218,11 @@ export function tsconfig(framework: Framework) {
   );
 }
 
-export const nextenv = `/// <reference types="next" />
+export const nextEnv = `/// <reference types="next" />
 /// <reference types="next/image-types/global" />
 `;
 
-export const tailwindconfig = `import type { Config } from "tailwindcss"
+export const tailwindConfig = `import type { Config } from "tailwindcss"
 
 const config: Config = {
 \tcontent: ["./app/**/*.{ts,tsx}", "./content/**/*.mdx"],
@@ -235,14 +235,14 @@ const config: Config = {
 export default config
 `;
 
-export const postcssconfig = `export default {
+export const postcssConfig = `export default {
 \tplugins: {
 \t\t"@tailwindcss/postcss": {},
 \t},
 }
 `;
 
-export const nextglobalscss = `@import "tailwindcss";
+export const nextGlobalsCss = `@import "tailwindcss";
 
 @theme {
 \t--color-bg: #0c0c0c;
@@ -296,7 +296,7 @@ export const nextglobalscss = `@import "tailwindcss";
 }
 `;
 
-export const globalscss = `* {
+export const globalsCss = `* {
 \tbox-sizing: border-box;
 \tmargin: 0;
 \tpadding: 0;
@@ -343,7 +343,7 @@ if (root) {
 `;
 }
 
-export const browserapp = `import { marked } from "marked"
+export const browserApp = `import { marked } from "marked"
 import doc from "../content/docs/index.mdx?raw"
 
 function text(value: string): string {
@@ -393,7 +393,7 @@ export function app() {
 }
 `;
 
-export const vitehtml = `<!doctype html>
+export const viteHtml = `<!doctype html>
 <html lang="en">
 \t<head>
 \t\t<meta charset="UTF-8" />
@@ -407,16 +407,16 @@ export const vitehtml = `<!doctype html>
 </html>
 `;
 
-export const astroconfig = `import { defineConfig } from "astro/config"
+export const astroConfig = `import { defineConfig } from "astro/config"
 
 export default defineConfig({})
 `;
 
-export const astroindex = `---
+export const astroIndex = `---
 return Astro.redirect("/docs")
 ---`;
 
-export const astropage = `---
+export const astroPage = `---
 import { marked } from "marked"
 import doc from "../../content/docs/index.mdx?raw"
 const html = String(marked.parse(doc))
@@ -462,7 +462,7 @@ const links = Array.from(doc.matchAll(/^##\\s+(.+)$/gm))
 </html>
 `;
 
-export const astroenv = `/// <reference types="astro/client" />
+export const astroEnv = `/// <reference types="astro/client" />
 /// <reference types="vite/client" />
 
 declare module "*.mdx?raw" {
@@ -471,7 +471,7 @@ declare module "*.mdx?raw" {
 }
 `;
 
-export const rawenv = `/// <reference types="vite/client" />
+export const rawEnv = `/// <reference types="vite/client" />
 
 declare module "*.mdx?raw" {
 \tconst value: string
@@ -479,7 +479,7 @@ declare module "*.mdx?raw" {
 }
 `;
 
-export const remixviteconfig = `import { vitePlugin as remix } from "@remix-run/dev"
+export const remixViteConfig = `import { vitePlugin as remix } from "@remix-run/dev"
 import { defineConfig } from "vite"
 
 export default defineConfig({
@@ -487,7 +487,7 @@ export default defineConfig({
 })
 `;
 
-export const remixroot = `import {
+export const remixRoot = `import {
 \tLinks,
 \tMeta,
 \tOutlet,
@@ -514,7 +514,7 @@ export default function Root() {
 }
 `;
 
-export const remixrootindex = `import { redirect } from "@remix-run/node"
+export const remixRootIndex = `import { redirect } from "@remix-run/node"
 
 export async function loader() {
 \treturn redirect("/docs")
@@ -525,7 +525,7 @@ export default function Index() {
 }
 `;
 
-export const remixdocs = `import { marked } from "marked"
+export const remixDocs = `import { marked } from "marked"
 import doc from "../../content/docs/index.mdx?raw"
 
 function text(value: string): string {

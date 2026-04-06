@@ -22,7 +22,7 @@ export default function Home() {
 }
 `;
 
-export const docslayout = `import type { ReactNode } from "react"
+export const docsLayout = `import type { ReactNode } from "react"
 
 export default function DocsLayout({ children }: { children: ReactNode }) {
 \treturn (
@@ -51,7 +51,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
 }
 `;
 
-export const docspage = `import { readFile } from "node:fs/promises"
+export const docsPage = `import { readFile } from "node:fs/promises"
 import { isAbsolute, relative, resolve } from "node:path"
 import { MDXRemote } from "next-mdx-remote/rsc"
 
@@ -105,7 +105,7 @@ export default async function DocPage({ params }: Props) {
 }
 `;
 
-export const welcomemdx = `---
+export const welcomeMdx = `---
 title: getting started
 description: learn how to use fromsrc
 ---
@@ -127,7 +127,7 @@ bun add fromsrc
 - deploy to vercel
 `;
 
-export const metajson = JSON.stringify(
+export const metaJson = JSON.stringify(
   {
     pages: ["index"],
   },
