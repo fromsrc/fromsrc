@@ -46,7 +46,7 @@ const metaCache = new Map<string, DocMeta[]>();
 const isProduction = () => process.env.NODE_ENV === "production";
 const isDraft = (data: Record<string, unknown>) => data.draft === true;
 
-function isnotfound(error: unknown): boolean {
+function isNotFound(error: unknown): boolean {
   return (
     typeof error === "object" &&
     error !== null &&
@@ -79,7 +79,7 @@ async function resolveSource(
     const source = await readCached(filepath);
     return { actualPath: path, filepath, source };
   } catch (error) {
-    if (!isnotfound(error)) {
+    if (!isNotFound(error)) {
       throw error;
     }
   }
@@ -87,7 +87,7 @@ async function resolveSource(
     const source = await readCached(indexPath);
     return { actualPath: `${path}/index`, filepath: indexPath, source };
   } catch (error) {
-    if (!isnotfound(error)) {
+    if (!isNotFound(error)) {
       throw error;
     }
   }
@@ -586,36 +586,36 @@ export async function getSearchDocs(docsDir: string): Promise<SearchDoc[]> {
   return sorted;
 }
 
-interface navsection<T> {
+interface NavSection<T> {
   key: string;
   title: string;
   items: T[];
 }
 
-interface navitem {
+interface NavItem {
   slug: string;
   order?: number;
 }
 
-function fallbacktitle(key: string): string {
+function fallbackTitle(key: string): string {
   if (key === "") {
     return "docs";
   }
   return key.replaceAll('-', " ");
 }
 
-async function buildNavigation<T extends navitem>(
+async function buildNavigation<T extends NavItem>(
   docs: T[],
   docsDir: string
 ): Promise<{ title: string; items: T[] }[]> {
-  const grouped = new Map<string, navsection<T>>();
+  const grouped = new Map<string, NavSection<T>>();
 
   for (const doc of docs) {
-    const key = groupkey(doc.slug);
+    const key = groupKey(doc.slug);
     const section = grouped.get(key) ?? {
       items: [],
       key,
-      title: fallbacktitle(key),
+      title: fallbackTitle(key),
     };
     section.items.push(doc);
     grouped.set(key, section);
@@ -673,7 +673,7 @@ function sectionOrder(pages: string[] | undefined): Map<string, number> {
     return order;
   }
   for (const page of pages) {
-    const key = groupkey(page);
+    const key = groupKey(page);
     if (!order.has(key)) {
       order.set(key, order.size);
     }
@@ -681,7 +681,7 @@ function sectionOrder(pages: string[] | undefined): Map<string, number> {
   return order;
 }
 
-function groupkey(slug: string): string {
+function groupKey(slug: string): string {
   if (!slug || slug === "index") {
     return "";
   }
