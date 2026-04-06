@@ -2,7 +2,7 @@ import type { SearchDoc } from "./content";
 import type { SearchAdapter, SearchResult } from "./search";
 
 export interface AlgoliaConfig {
-  appid: string;
+  appId: string;
   readonly key: string;
   index: string;
   attributes?: string[];
@@ -12,7 +12,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function getstring(value: unknown): string | undefined {
+function getString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
@@ -30,7 +30,7 @@ function fallback(docs: SearchDoc[], limit: number): SearchResult[] {
   return docs.slice(0, limit).map((doc) => ({ doc, score: 0 }));
 }
 
-function parsehits(value: unknown): Record<string, unknown>[] {
+function parseHits(value: unknown): Record<string, unknown>[] {
   if (!isRecord(value)) {
     return [];
   }
@@ -41,7 +41,7 @@ function parsehits(value: unknown): Record<string, unknown>[] {
   return hits.filter(isRecord);
 }
 
-function maphit(
+function mapHit(
   hit: Record<string, unknown>,
   index: number,
   total: number
@@ -49,35 +49,35 @@ function maphit(
   const snippetResult = isRecord(hit._snippetResult)
     ? hit._snippetResult
     : null;
-  const contentmeta =
+  const contentMeta =
     snippetResult && isRecord(snippetResult.content)
       ? snippetResult.content
       : null;
-  const descriptionmeta =
+  const descriptionMeta =
     snippetResult && isRecord(snippetResult.description)
       ? snippetResult.description
       : null;
-  const headingmeta =
+  const headingMeta =
     snippetResult && isRecord(snippetResult.heading)
       ? snippetResult.heading
       : null;
-  const slug = getstring(hit.slug) ?? getstring(hit.path);
-  const heading = getstring(hit.heading);
-  const title = getstring(hit.title) ?? heading ?? slug;
+  const slug = getString(hit.slug) ?? getString(hit.path);
+  const heading = getString(hit.heading);
+  const title = getString(hit.title) ?? heading ?? slug;
   if (!slug || !title) {
     return null;
   }
   const snippet =
-    getstring(contentmeta?.value) ??
-    getstring(descriptionmeta?.value) ??
-    getstring(headingmeta?.value) ??
-    getstring(hit.description) ??
-    getstring(hit.content);
+    getString(contentMeta?.value) ??
+    getString(descriptionMeta?.value) ??
+    getString(headingMeta?.value) ??
+    getString(hit.description) ??
+    getString(hit.content);
   return {
-    anchor: getstring(hit.anchor),
+    anchor: getString(hit.anchor),
     doc: normalize({
-      content: getstring(hit.content) ?? "",
-      description: getstring(hit.description),
+      content: getString(hit.content) ?? "",
+      description: getString(hit.description),
       slug,
       title,
     }),
@@ -110,13 +110,13 @@ export function createAlgoliaAdapter(config: AlgoliaConfig): SearchAdapter {
       if (!value) {
         return fallback(docs, limit);
       }
-      const url = `https://${config.appid}-dsn.algolia.net/1/indexes/${encodeURIComponent(config.index)}/query`;
+      const url = `https://${config.appId}-dsn.algolia.net/1/indexes/${encodeURIComponent(config.index)}/query`;
       const response = await fetch(url, {
         body: JSON.stringify({ ...body, hitsPerPage: limit, query: value }),
         headers: {
           "content-type": "application/json",
           "x-algolia-api-key": config.key,
-          "x-algolia-application-id": config.appid,
+          "x-algolia-application-id": config.appId,
         },
         method: "POST",
       });
@@ -124,14 +124,14 @@ export function createAlgoliaAdapter(config: AlgoliaConfig): SearchAdapter {
         return [];
       }
       const json = await response.json();
-      const hits = parsehits(json);
+      const hits = parseHits(json);
       const result: SearchResult[] = [];
       for (let i = 0; i < hits.length; i++) {
         const hit = hits[i];
         if (!hit) {
           continue;
         }
-        const item = maphit(hit, i, hits.length);
+        const item = mapHit(hit, i, hits.length);
         if (item) {
           result.push(item);
         }
@@ -140,5 +140,3 @@ export function createAlgoliaAdapter(config: AlgoliaConfig): SearchAdapter {
     },
   };
 }
-
-export const createalgoliaadapter = createAlgoliaAdapter;

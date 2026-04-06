@@ -8,7 +8,7 @@ export interface OramaConfig {
   headers?: Record<string, string>;
 }
 
-interface hit {
+interface Hit {
   slug?: string;
   path?: string;
   title?: string;
@@ -18,7 +18,7 @@ interface hit {
   heading?: string;
   snippet?: string;
   score?: number;
-  document?: hit;
+  document?: Hit;
 }
 const MAX_DEPTH = 10;
 
@@ -26,15 +26,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function getstring(value: unknown): string | undefined {
+function getString(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-function getnumber(value: unknown): number | undefined {
+function getNumber(value: unknown): number | undefined {
   return typeof value === "number" ? value : undefined;
 }
 
-function parsehit(value: unknown, depth = 0): hit | null {
+function parseHit(value: unknown, depth = 0): Hit | null {
   if (!isRecord(value)) {
     return null;
   }
@@ -42,26 +42,26 @@ function parsehit(value: unknown, depth = 0): hit | null {
     return null;
   }
   const nested = isRecord(value.document)
-    ? parsehit(value.document, depth + 1)
+    ? parseHit(value.document, depth + 1)
     : null;
   const document = nested ?? undefined;
   return {
-    anchor: getstring(value.anchor),
-    content: getstring(value.content),
-    description: getstring(value.description),
+    anchor: getString(value.anchor),
+    content: getString(value.content),
+    description: getString(value.description),
     document,
-    heading: getstring(value.heading),
-    path: getstring(value.path),
-    score: getnumber(value.score),
-    slug: getstring(value.slug),
-    snippet: getstring(value.snippet),
-    title: getstring(value.title),
+    heading: getString(value.heading),
+    path: getString(value.path),
+    score: getNumber(value.score),
+    slug: getString(value.slug),
+    snippet: getString(value.snippet),
+    title: getString(value.title),
   };
 }
 
-function parsehits(value: unknown): hit[] {
+function parseHits(value: unknown): Hit[] {
   if (Array.isArray(value)) {
-    return value.map(parsehit).filter((item): item is hit => item !== null);
+    return value.map(parseHit).filter((item): item is Hit => item !== null);
   }
   if (!isRecord(value)) {
     return [];
@@ -71,7 +71,7 @@ function parsehits(value: unknown): hit[] {
     : (Array.isArray(value.results)
       ? value.results
       : []);
-  return hits.map(parsehit).filter((item): item is hit => item !== null);
+  return hits.map(parseHit).filter((item): item is Hit => item !== null);
 }
 
 function normalize(doc: SearchDoc): SearchDoc {
@@ -88,7 +88,7 @@ function fallback(docs: SearchDoc[], limit: number): SearchResult[] {
   return docs.slice(0, limit).map((doc) => ({ doc, score: 0 }));
 }
 
-function maphit(entry: hit, index: number, total: number): SearchResult | null {
+function mapHit(entry: Hit, index: number, total: number): SearchResult | null {
   const source = entry.document ?? entry;
   const slug = source.slug ?? source.path;
   const title = source.title ?? source.heading ?? slug;
@@ -138,14 +138,14 @@ export function createOramaAdapter(config: OramaConfig): SearchAdapter {
         return [];
       }
       const json = await response.json();
-      const hits = parsehits(json);
+      const hits = parseHits(json);
       const result: SearchResult[] = [];
       for (let i = 0; i < hits.length; i++) {
         const hit = hits[i];
         if (!hit) {
           continue;
         }
-        const item = maphit(hit, i, hits.length);
+        const item = mapHit(hit, i, hits.length);
         if (item) {
           result.push(item);
         }
@@ -154,5 +154,3 @@ export function createOramaAdapter(config: OramaConfig): SearchAdapter {
     },
   };
 }
-
-export const createoramaadapter = createOramaAdapter;
