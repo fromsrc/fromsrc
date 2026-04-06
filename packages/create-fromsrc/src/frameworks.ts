@@ -19,7 +19,7 @@ export const aliases = {
   ts: "tanstack",
 } as const satisfies Record<string, Framework>;
 
-export function parseframework(
+export function parseFramework(
   value: string | undefined
 ): Framework | undefined {
   if (!value) {

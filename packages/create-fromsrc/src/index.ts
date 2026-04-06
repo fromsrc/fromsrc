@@ -1,4 +1,4 @@
-import { frameworks, parseframework } from "./frameworks";
+import { frameworks, parseFramework } from "./frameworks";
 import type { Framework } from "./frameworks";
 import { generate } from "./generate";
 import { ask, close, select } from "./prompt";
@@ -160,7 +160,7 @@ async function main() {
   }
   const argname = readflag("name", "n");
   const positionalname = positional();
-  const argframework = parseframework(readflag("framework", "f"));
+  const argframework = parseFramework(readflag("framework", "f"));
   const rawframework = readflag("framework", "f");
 
   if (rawframework && !argframework) {

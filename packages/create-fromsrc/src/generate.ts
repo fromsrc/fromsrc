@@ -16,12 +16,12 @@ import {
   astroenv,
   astropage,
   browserapp,
-  browserentry,
+  browserEntry,
   gitignore,
   globalscss,
   nextglobalscss,
   nextenv,
-  packagejson,
+  packageJson,
   nextconfig,
   postcssconfig,
   remixdocs,
@@ -77,7 +77,7 @@ export function generate(options: Options) {
   mkdirSync(target, { recursive: true });
   write(target, "content/docs/index.mdx", welcomemdx);
 
-  write(target, "package.json", packagejson(name, framework));
+  write(target, "package.json", packageJson(name, framework));
   write(target, "tsconfig.json", tsconfig(framework));
   write(target, ".gitignore", gitignore);
 
@@ -115,7 +115,7 @@ export function generate(options: Options) {
 
   write(target, "index.html", vitehtml);
   write(target, "src/env.d.ts", rawenv);
-  write(target, "src/main.tsx", browserentry());
+  write(target, "src/main.tsx", browserEntry());
   write(target, "src/app.tsx", browserapp);
   write(target, "src/globals.css", globalscss);
 

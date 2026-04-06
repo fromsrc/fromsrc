@@ -1,6 +1,6 @@
 import type { Framework } from "./frameworks";
 
-export function packagejson(name: string, framework: Framework): string {
+export function packageJson(name: string, framework: Framework): string {
   const base = {
     dependencies: {
       fromsrc: "latest",
@@ -326,7 +326,7 @@ export const gitignore = `node_modules
 dist
 `;
 
-export function browserentry() {
+export function browserEntry() {
   return `import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { app } from "./app"
