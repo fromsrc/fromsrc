@@ -47,7 +47,7 @@ const defaults: Omit<ResolvedConfig, "title"> = {
   toc: { maxDepth: 3, minDepth: 2 },
 };
 
-function isrecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
@@ -60,7 +60,7 @@ function isboolean(value: unknown): value is boolean {
 }
 
 function parseconfig(value: unknown): FromsrcConfig | null {
-  if (!isrecord(value)) {
+  if (!isRecord(value)) {
     return null;
   }
   const { title } = value;
@@ -92,16 +92,16 @@ function parseconfig(value: unknown): FromsrcConfig | null {
   if (isboolean(value.draft)) {
     config.draft = value.draft;
   }
-  if (isrecord(value.search)) {
+  if (isRecord(value.search)) {
     const provider = isstring(value.search.provider)
       ? value.search.provider
       : undefined;
-    const options = isrecord(value.search.options)
+    const options = isRecord(value.search.options)
       ? value.search.options
       : undefined;
     config.search = { options, provider };
   }
-  if (isrecord(value.sidebar)) {
+  if (isRecord(value.sidebar)) {
     const defaultOpen = isboolean(value.sidebar.defaultOpen)
       ? value.sidebar.defaultOpen
       : undefined;
@@ -110,14 +110,14 @@ function parseconfig(value: unknown): FromsrcConfig | null {
       : undefined;
     config.sidebar = { collapsible, defaultOpen };
   }
-  if (isrecord(value.toc)) {
+  if (isRecord(value.toc)) {
     const minDepth =
       typeof value.toc.minDepth === "number" ? value.toc.minDepth : undefined;
     const maxDepth =
       typeof value.toc.maxDepth === "number" ? value.toc.maxDepth : undefined;
     config.toc = { maxDepth, minDepth };
   }
-  if (isrecord(value.i18n)) {
+  if (isRecord(value.i18n)) {
     const defaultLocale = isstring(value.i18n.defaultLocale)
       ? value.i18n.defaultLocale
       : undefined;

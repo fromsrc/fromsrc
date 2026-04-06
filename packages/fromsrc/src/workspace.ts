@@ -25,16 +25,16 @@ export interface WorkspaceNavItem {
   children?: WorkspaceNavItem[];
 }
 
-type jsonrecord = Record<string, unknown>;
+type JsonRecord = Record<string, unknown>;
 
-function isrecord(value: unknown): value is jsonrecord {
+function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null;
 }
 
 function parsename(raw: string): string | null {
   try {
     const parsed: unknown = JSON.parse(raw);
-    if (!isrecord(parsed)) {
+    if (!isRecord(parsed)) {
       return null;
     }
     const { name } = parsed;

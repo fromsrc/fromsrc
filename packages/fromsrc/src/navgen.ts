@@ -35,12 +35,12 @@ interface metaentry {
   icon?: string;
 }
 
-function isrecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
 function ismetaentry(value: unknown): value is metaentry {
-  if (!isrecord(value)) {
+  if (!isRecord(value)) {
     return false;
   }
   const { title } = value;
@@ -82,7 +82,7 @@ async function readMeta(
     try {
       const raw = await readFile(join(dir, name), "utf8");
       const parsed = name.endsWith(".json") ? parsejson(raw) : parsemetats(raw);
-      if (!isrecord(parsed)) {
+      if (!isRecord(parsed)) {
         return {};
       }
       const result: Record<string, string | metaentry> = {};
