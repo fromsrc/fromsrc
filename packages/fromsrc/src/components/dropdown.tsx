@@ -34,7 +34,7 @@ export function Dropdown({
   const [open, setOpen] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(-1);
   const ref = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const id = useId();
 
   const selectableItems = items.filter(
@@ -133,12 +133,11 @@ export function Dropdown({
 
   return (
     <div ref={ref} className="relative inline-block">
-      <div
+      <button
+        type="button"
         ref={triggerRef}
         onClick={handleTriggerClick}
         onKeyDown={handleKeyDown}
-        tabIndex={0}
-        role="button"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
@@ -147,7 +146,7 @@ export function Dropdown({
         }
       >
         {trigger}
-      </div>
+      </button>
       {open && (
         <div
           id={menuId}
