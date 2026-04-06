@@ -1,12 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
+/** Shape of a _meta.json file that controls page ordering and display. */
 export interface MetaFile {
   title?: string;
   icon?: string;
   pages?: string[];
 }
 
+/** A node in the sidebar navigation tree. */
 export interface PageTreeItem {
   type: "page" | "folder" | "separator";
   slug?: string;
@@ -45,6 +47,7 @@ function isMetaFile(data: unknown): data is MetaFile {
   return true;
 }
 
+/** Loads and parses a _meta.json file from the given directory. */
 export async function loadMeta(dir: string): Promise<MetaFile | null> {
   if (isProduction()) {
     const cached = metaCache.get(dir);
@@ -76,6 +79,7 @@ export async function loadMeta(dir: string): Promise<MetaFile | null> {
   }
 }
 
+/** Sorts items according to the page order defined in a meta file. */
 export function sortByMeta<T extends { slug: string }>(
   items: T[],
   pages: string[] | undefined,
@@ -107,6 +111,7 @@ function getBasename(slug: string, prefix: string): string {
   return parts[0] || "index";
 }
 
+/** Clears the in-memory meta file cache. */
 export function clearMetaCache() {
   metaCache.clear();
 }
